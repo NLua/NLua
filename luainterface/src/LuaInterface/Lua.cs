@@ -491,6 +491,243 @@ namespace LuaInterface
 		 * Lets go of a previously allocated reference to a table, function
 		 * or userdata
 		 */
+
+      #region lua debug functions
+
+      /// <summary>
+      /// lua hook calback delegate
+      /// </summary>
+      /// <author>Reinhard Ostermeier</author>
+      private LuaHookFunction hookCallback = null;
+
+      /// <summary>
+      /// Activates the debug hook
+      /// </summary>
+      /// <param name="mask">Mask</param>
+      /// <param name="count">Count</param>
+      /// <returns>see lua docs. -1 if hook is already set</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public int SetDebugHook(EventMasks mask, int count)
+      {
+         if (hookCallback == null)
+         {
+            hookCallback = new LuaHookFunction(DebugHookCallback);
+            return LuaDLL.lua_sethook(luaState, hookCallback, (int)mask, count);
+         }
+         return -1;
+      }
+
+      /// <summary>
+      /// Removes the debug hook
+      /// </summary>
+      /// <returns>see lua docs</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public int RemoveDebugHook()
+      {
+         hookCallback = null;
+         return LuaDLL.lua_sethook(luaState, null, 0, 0);
+      }
+
+      /// <summary>
+      /// Gets the hook mask.
+      /// </summary>
+      /// <returns>hook mask</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public EventMasks GetHookMask()
+      {
+         return (EventMasks)LuaDLL.lua_gethookmask(luaState);
+      }
+
+      /// <summary>
+      /// Gets the hook count
+      /// </summary>
+      /// <returns>see lua docs</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public int GetHookCount()
+      {
+         return LuaDLL.lua_gethookcount(luaState);
+      }
+
+      /// <summary>
+      /// Gets the stack entry on a given level
+      /// </summary>
+      /// <param name="level">level</param>
+      /// <param name="luaDebug">lua debug structure</param>
+      /// <returns>Returns true if level was allowed, false if level was invalid.</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public bool GetStack(int level, out LuaDebug luaDebug)
+      {
+         luaDebug = new LuaDebug();
+         IntPtr ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
+         System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
+         try
+         {
+            return LuaDLL.lua_getstack(luaState, level, ld) != 0;
+         }
+         finally
+         {
+            luaDebug = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(ld, typeof(LuaDebug));
+            System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
+         }
+      }
+
+      /// <summary>
+      /// Gets info (see lua docs)
+      /// </summary>
+      /// <param name="what">what (see lua docs)</param>
+      /// <param name="luaDebug">lua debug structure</param>
+      /// <returns>see lua docs</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public int GetInfo(String what, ref LuaDebug luaDebug)
+      {
+         IntPtr ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
+         System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
+         try
+         {
+            return LuaDLL.lua_getinfo(luaState, what, ld);
+         }
+         finally
+         {
+            luaDebug = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(ld, typeof(LuaDebug));
+            System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
+         }
+      }
+
+      /// <summary>
+      /// Gets local (see lua docs)
+      /// </summary>
+      /// <param name="luaDebug">lua debug structure</param>
+      /// <param name="n">see lua docs</param>
+      /// <returns>see lua docs</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public String GetLocal(LuaDebug luaDebug, int n)
+      {
+         IntPtr ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
+         System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
+         try
+         {
+            return LuaDLL.lua_getlocal(luaState, ld, n);
+         }
+         finally
+         {
+            System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
+         }
+      }
+
+      /// <summary>
+      /// Sets local (see lua docs)
+      /// </summary>
+      /// <param name="luaDebug">lua debug structure</param>
+      /// <param name="n">see lua docs</param>
+      /// <returns>see lua docs</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public String SetLocal(LuaDebug luaDebug, int n)
+      {
+         IntPtr ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
+         System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
+         try
+         {
+            return LuaDLL.lua_setlocal(luaState, ld, n);
+         }
+         finally
+         {
+            System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
+         }
+      }
+
+      /// <summary>
+      /// Gets up value (see lua docs)
+      /// </summary>
+      /// <param name="funcindex">see lua docs</param>
+      /// <param name="n">see lua docs</param>
+      /// <returns>see lua docs</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public String GetUpValue(int funcindex, int n)
+      {
+         return LuaDLL.lua_getupvalue(luaState, funcindex, n);
+      }
+
+      /// <summary>
+      /// Sets up value (see lua docs)
+      /// </summary>
+      /// <param name="funcindex">see lua docs</param>
+      /// <param name="n">see lua docs</param>
+      /// <returns>see lua docs</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public String SetUpValue(int funcindex, int n)
+      {
+         return LuaDLL.lua_setupvalue(luaState, funcindex, n);
+      }
+
+      /// <summary>
+      /// Delegate that is called on lua hook callback
+      /// </summary>
+      /// <param name="luaState">lua state</param>
+      /// <param name="luaDebug">Pointer to LuaDebug (lua_debug) structure</param>
+      /// <author>Reinhard Ostermeier</author>
+      private void DebugHookCallback(IntPtr luaState, IntPtr luaDebug)
+      {
+         try
+         {
+            LuaDebug ld = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(luaDebug, typeof(LuaDebug));
+            EventHandler<DebugHookEventArgs> temp = DebugHook;
+            if (temp != null)
+            {
+               temp(this, new DebugHookEventArgs(ld));
+            }
+         }
+         catch (Exception ex)
+         {
+            OnHookException(new HookExceptionEventArgs(ex));
+         }
+      }
+
+      /// <summary>
+      /// Event that is raised when an exception occures during a hook call.
+      /// </summary>
+      /// <author>Reinhard Ostermeier</author>
+      public event EventHandler<HookExceptionEventArgs> HookException;
+      private void OnHookException(HookExceptionEventArgs e)
+      {
+         EventHandler<HookExceptionEventArgs> temp = HookException;
+         if (temp != null)
+         {
+            temp(this, e);
+         }
+      }
+
+      /// <summary>
+      /// Event when lua hook callback is called
+      /// </summary>
+      /// <remarks>
+      /// Is only raised if SetDebugHook is called before.
+      /// </remarks>
+      /// <author>Reinhard Ostermeier</author>
+      public event EventHandler<DebugHookEventArgs> DebugHook;
+
+      /// <summary>
+      /// Pops a value from the lua stack.
+      /// </summary>
+      /// <returns>Returns the top value from the lua stack.</returns>
+      /// <author>Reinhard Ostermeier</author>
+      public object Pop()
+      {
+         int top = Lua511.LuaDLL.lua_gettop(luaState);
+         return translator.popValues(luaState, top - 1)[0];
+      }
+
+      /// <summary>
+      /// Pushes a value onto the lua stack.
+      /// </summary>
+      /// <param name="value">Value to push.</param>
+      /// <author>Reinhard Ostermeier</author>
+      public void Push(object value)
+      {
+         translator.push(luaState, value);
+      }
+
+      #endregion
+
 		internal void dispose(int reference) 
 		{
             if (luaState != IntPtr.Zero) //Fix submitted by Qingrui Li
@@ -614,5 +851,99 @@ namespace LuaInterface
         }
 
         #endregion
-    }
+   }
+
+   /// <summary>
+   /// Event codes for lua hook function
+   /// </summary>
+   /// <remarks>
+   /// Do not change any of the values because they must match the lua values
+   /// </remarks>
+   /// <author>Reinhard Ostermeier</author>
+   public enum EventCodes
+   {
+      LUA_HOOKCALL = 0,
+      LUA_HOOKRET = 1,
+      LUA_HOOKLINE = 2,
+      LUA_HOOKCOUNT = 3,
+      LUA_HOOKTAILRET = 4,
+   }
+
+   /// <summary>
+   /// Event masks for lua hook callback
+   /// </summary>
+   /// <remarks>
+   /// Do not change any of the values because they must match the lua values
+   /// </remarks>
+   /// <author>Reinhard Ostermeier</author>
+   [Flags]
+   public enum EventMasks
+   {
+      LUA_MASKCALL = (1 << EventCodes.LUA_HOOKCALL),
+      LUA_MASKRET = (1 << EventCodes.LUA_HOOKRET),
+      LUA_MASKLINE = (1 << EventCodes.LUA_HOOKLINE),
+      LUA_MASKCOUNT = (1 << EventCodes.LUA_HOOKCOUNT),
+      LUA_MASKALL = Int32.MaxValue,
+   }
+
+   /// <summary>
+   /// Structure for lua debug information
+   /// </summary>
+   /// <remarks>
+   /// Do not change this struct because it must match the lua structure lua_debug
+   /// </remarks>
+   /// <author>Reinhard Ostermeier</author>
+   [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+   public struct LuaDebug
+   {
+      public EventCodes eventCode;
+      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
+      public String name;
+      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
+      public String namewhat;
+      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
+      public String what;
+      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
+      public String source;
+      public int currentline;
+      public int nups;
+      public int linedefined;
+      public int lastlinedefined;
+      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 60/*LUA_IDSIZE*/)]
+      public String shortsrc;
+      public int i_ci;
+   }
+
+   /// <summary>
+   /// Event args for hook callback event
+   /// </summary>
+   /// <author>Reinhard Ostermeier</author>
+   public class DebugHookEventArgs : EventArgs
+   {
+      private readonly LuaDebug luaDebug;
+
+      public DebugHookEventArgs(LuaDebug luaDebug)
+      {
+         this.luaDebug = luaDebug;
+      }
+
+      public LuaDebug LuaDebug
+      {
+         get { return luaDebug; }
+      }
+   }
+
+   public class HookExceptionEventArgs : EventArgs
+   {
+      private readonly Exception m_Exception;
+      public Exception Exception
+      {
+         get { return m_Exception; }
+      }
+
+      public HookExceptionEventArgs(Exception ex)
+      {
+         m_Exception = ex;
+      }
+   }
 }

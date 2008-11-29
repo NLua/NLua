@@ -177,7 +177,7 @@ static CallInfo *growCI (lua_State *L) {
   return ++L->ci;
 }
 
-
+// modified by Reinhard Ostermeier to intialize all members of ar (lua_debug)
 void luaD_callhook (lua_State *L, int event, int line) {
   lua_Hook hook = L->hook;
   if (hook && L->allowhook) {
@@ -185,7 +185,15 @@ void luaD_callhook (lua_State *L, int event, int line) {
     ptrdiff_t ci_top = savestack(L, L->ci->top);
     lua_Debug ar;
     ar.event = event;
+    ar.name = NULL;
+    ar.namewhat = NULL;
+    ar.what = NULL;
+    ar.source = NULL;
     ar.currentline = line;
+    ar.nups = 0;
+    ar.linedefined = 0;
+    ar.lastlinedefined = 0;
+    ar.short_src[0] = 0;
     if (event == LUA_HOOKTAILRET)
       ar.i_ci = 0;  /* tail call; no debug information about it */
     else

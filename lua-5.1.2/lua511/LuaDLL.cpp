@@ -125,7 +125,8 @@ namespace Lua511
 	 */
 	public delegate int LuaCSFunction(IntPtr luaState);
 
-
+   // delegate for lua debug hook callback (by Reinhard Ostermeier)
+   public delegate void LuaHookFunction(IntPtr luaState, IntPtr luaDebug);
 
 
 	// To fix the strings:
@@ -708,6 +709,100 @@ namespace Lua511
 			if(udata!=NULL) return *udata;
 			return -1;
 		}
+
+
+      // lua debug hook functions added by Reinhard Ostermeier
+
+      static int lua_sethook(IntPtr luaState, LuaHookFunction^ func, int mask, int count)
+      {
+         IntPtr p;
+         if (func == nullptr)
+         {
+            p = IntPtr::Zero;
+         }
+         else
+         {
+            p = Marshal::GetFunctionPointerForDelegate(func);
+         }
+         return ::lua_sethook(toState, (lua_Hook)p.ToPointer(), mask, count);
+      }
+
+      static int lua_gethookmask(IntPtr luaState)
+      {
+         return ::lua_gethookmask(toState);
+      }
+
+      static int lua_gethookcount(IntPtr luaState)
+      {
+         return ::lua_gethookcount(toState);
+      }
+
+      static int lua_getstack(IntPtr luaState, int level, IntPtr luaDebug)
+      {
+         return ::lua_getstack(toState, level, (lua_Debug*)luaDebug.ToPointer());
+      }
+
+      static int lua_getinfo(IntPtr luaState, String^ what, IntPtr luaDebug)
+      {
+         char *cs = (char *) Marshal::StringToHGlobalAnsi(what).ToPointer();
+         int ret = ::lua_getinfo(toState, cs, (lua_Debug*)luaDebug.ToPointer());
+			Marshal::FreeHGlobal(IntPtr(cs));
+         return ret;
+      }
+
+      static String^ lua_getlocal(IntPtr luaState, IntPtr luaDebug, int n)
+      {
+         const char* str = ::lua_getlocal(toState, (lua_Debug*)luaDebug.ToPointer(), n);
+         if (str == NULL)
+         {
+            return nullptr;
+         }
+         else
+         {
+            return gcnew String(str);
+         }
+      }
+
+      static String^ lua_setlocal(IntPtr luaState, IntPtr luaDebug, int n)
+      {
+         const char* str = ::lua_setlocal(toState, (lua_Debug*)luaDebug.ToPointer(), n);
+         if(str == NULL)
+         {
+            return nullptr;
+         }
+         else
+         {
+            return gcnew String(str);
+         }
+      }
+
+      static String^ lua_getupvalue(IntPtr luaState, int funcindex, int n)
+      {
+         const char* str = ::lua_getupvalue(toState, funcindex, n);
+         if(str == NULL)
+         {
+            return nullptr;
+         }
+         else
+         {
+            return gcnew String(str);
+         }
+      }
+
+      static String^ lua_setupvalue(IntPtr luaState, int funcindex, int n)
+      {
+         const char* str = ::lua_setupvalue(toState, funcindex, n);
+         if(str == NULL)
+         {
+            return nullptr;
+         }
+         else
+         {
+            return gcnew String(str);
+         }
+      }
+
+      // end of lua debug hook functions
 
 private:
 
