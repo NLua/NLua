@@ -13,6 +13,7 @@ using namespace System::Security;
 // #include <atlstr.h>
 #include <stdio.h>
 #using <mscorlib.dll>
+#include <string.h>
 
 // #define LUA_BUILD_AS_DLL
 #define LUA_LIB
@@ -660,7 +661,8 @@ namespace Lua511
 			char *cs1 = (char *) Marshal::StringToHGlobalAnsi(buff).ToPointer();
 			char *cs2 = (char *) Marshal::StringToHGlobalAnsi(name).ToPointer();
 
-			int result = ::luaL_loadbuffer(toState, cs1, buff->Length, cs2);
+			//CP: fix for MBCS, changed to use cs1's length (reported by qingrui.li)
+			int result = ::luaL_loadbuffer(toState, cs1, strlen(cs1), cs2);
 
 			Marshal::FreeHGlobal(IntPtr(cs1));
 			Marshal::FreeHGlobal(IntPtr(cs2));
