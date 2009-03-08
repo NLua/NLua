@@ -101,33 +101,41 @@ namespace LuaInterface
             //LuaDLL.lua_atunlock(luaState, unlockCallback = new LuaCSFunction(UnlockCallback));
         }
 
+        private bool _StatePassed;
+
     	/*
     	 * CAUTION: LuaInterface.Lua instances can't share the same lua state! 
     	 */
     	public Lua(Int64 luaState)
     	{
-        		IntPtr lState = new IntPtr(luaState);
+    		IntPtr lState = new IntPtr(luaState);
+    		LuaDLL.lua_pushstring(lState, "LUAINTERFACE LOADED");
+            LuaDLL.lua_gettable(lState, (int)LuaIndexes.LUA_REGISTRYINDEX);
+    		
+            if(LuaDLL.lua_toboolean(lState,-1)) 
+            {
+        		LuaDLL.lua_settop(lState,-2);
+        		throw new LuaException("There is already a LuaInterface.Lua instance associated with this Lua state");
+    		} 
+            else 
+            {
+        		LuaDLL.lua_settop(lState,-2);
         		LuaDLL.lua_pushstring(lState, "LUAINTERFACE LOADED");
-                LuaDLL.lua_gettable(lState, (int)LuaIndexes.LUA_REGISTRYINDEX);
-        		if(LuaDLL.lua_toboolean(lState,-1)) {
-            		LuaDLL.lua_settop(lState,-2);
-            		throw new LuaException("There is already a LuaInterface.Lua instance associated with this Lua state");
-        		} else {
-            		LuaDLL.lua_settop(lState,-2);
-            		LuaDLL.lua_pushstring(lState, "LUAINTERFACE LOADED");
-            		LuaDLL.lua_pushboolean(lState, true);
-                    LuaDLL.lua_settable(lState, (int)LuaIndexes.LUA_REGISTRYINDEX);
-            		this.luaState=lState;
-                    LuaDLL.lua_pushvalue(lState, (int)LuaIndexes.LUA_GLOBALSINDEX);
-					LuaDLL.lua_getglobal(lState, "luanet");
-					LuaDLL.lua_pushstring(lState, "getmetatable");
-					LuaDLL.lua_getglobal(lState, "getmetatable");
-					LuaDLL.lua_settable(lState, -3);
-                    LuaDLL.lua_replace(lState, (int)LuaIndexes.LUA_GLOBALSINDEX);
-					translator=new ObjectTranslator(this, this.luaState);
-                    LuaDLL.lua_replace(lState, (int)LuaIndexes.LUA_GLOBALSINDEX);
-					LuaDLL.luaL_dostring(lState, Lua.init_luanet);	// steffenj: lua_dostring renamed to luaL_dostring
-        		}
+        		LuaDLL.lua_pushboolean(lState, true);
+                LuaDLL.lua_settable(lState, (int)LuaIndexes.LUA_REGISTRYINDEX);
+        		this.luaState=lState;
+                LuaDLL.lua_pushvalue(lState, (int)LuaIndexes.LUA_GLOBALSINDEX);
+				LuaDLL.lua_getglobal(lState, "luanet");
+				LuaDLL.lua_pushstring(lState, "getmetatable");
+				LuaDLL.lua_getglobal(lState, "getmetatable");
+				LuaDLL.lua_settable(lState, -3);
+                LuaDLL.lua_replace(lState, (int)LuaIndexes.LUA_GLOBALSINDEX);
+				translator=new ObjectTranslator(this, this.luaState);
+                LuaDLL.lua_replace(lState, (int)LuaIndexes.LUA_GLOBALSINDEX);
+				LuaDLL.luaL_dostring(lState, Lua.init_luanet);	// steffenj: lua_dostring renamed to luaL_dostring
+    		}
+                
+            _StatePassed = true;
     	}
 
         /// <summary>
@@ -156,9 +164,12 @@ namespace LuaInterface
 
         public void Close()
         {
+            if (_StatePassed)
+                return;
+
             if (luaState != IntPtr.Zero)
                 LuaDLL.lua_close(luaState);
-            luaState = IntPtr.Zero;
+            //luaState = IntPtr.Zero; <- suggested by Christopher Cebulski http://luaforge.net/forum/forum.php?thread_id=44593&forum_id=146
         }
 
         static int PanicCallback(IntPtr luaState)
@@ -266,6 +277,29 @@ namespace LuaInterface
 
             return null;            // Never reached - keeps compiler happy
 		}
+
+        /// <summary>
+        /// Executes a Lua chnk and returns all the chunk's return values in an array.
+        /// </summary>
+        /// <param name="chunk">Chunk to execute</param>
+        /// <param name="chunkName">Name to associate with the chunk</param>
+        /// <returns></returns>
+        public object[] DoString(string chunk, string chunkName)
+        {
+            int oldTop = LuaDLL.lua_gettop(luaState);
+            if (LuaDLL.luaL_loadbuffer(luaState, chunk, chunkName) == 0)
+            {
+                if (LuaDLL.lua_pcall(luaState, 0, -1, 0) == 0)
+                    return translator.popValues(luaState, oldTop);
+                else
+                    ThrowExceptionFromError(oldTop);
+            }
+            else
+                ThrowExceptionFromError(oldTop);
+
+            return null;            // Never reached - keeps compiler happy
+        }
+
 		/*
 		 * Excutes a Lua file and returns all the chunk's return
 		 * values in an array

@@ -1077,10 +1077,32 @@ namespace LuaInterface.Tests
             for (int i = 0; i < 10000; i++)
             {
                 using (Lua lua = new Lua())
-                { }
+                {                    
+                    _Calc(lua, i);
+                }
             }
 
             Console.WriteLine("Was using " + startingMem / 1024 / 1024 + "MB, now using: " + System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024 + "MB");
+        }
+
+        private void _Calc(Lua lua, int i)
+        {
+            lua.DoString(
+                     "sqrt = math.sqrt;" +
+                     "sqr = function(x) return math.pow(x,2); end;" +
+                     "log = math.log;" +
+                     "log10 = math.log10;" +
+                     "exp = math.exp;" +
+                     "sin = math.sin;" +
+                     "cos = math.cos;" +
+                     "tan = math.tan;" +
+                     "abs = math.abs;"
+                     );
+
+            lua.DoString("function calcVP(a,b) return a+b end");
+
+            LuaFunction lf = lua.GetFunction("calcVP");
+            Object[] ret = lf.Call(i, 20);
         }
 
         private void TestThreading()
@@ -1104,7 +1126,6 @@ namespace LuaInterface.Tests
                     }
                     catch 
                     {
-                        //Console.WriteLine("Failure detected");
                         failureDetected = true;
                     }
                     completed++;
@@ -1265,6 +1286,49 @@ namespace LuaInterface.Tests
 
         }
 
+        public void TestExceptionWithChunkOverload()
+        {
+            Init();
+
+            try
+            {
+                _Lua.DoString("thiswillthrowanerror", "MyChunk");
+            }
+            catch(Exception e)
+            {
+                if (e.Message.StartsWith("[string \"MyChunk\"]"))
+                    Console.WriteLine("Chunk overload passed");
+                else
+                    Console.WriteLine("Chunk overload failed");
+            }
+        }
+
+        public void TestGenerics()
+        {
+            Init();
+
+            TestClassGeneric<string> genericClass = new TestClassGeneric<string>();
+
+            _Lua.RegisterFunction("genericMethod", genericClass, typeof(TestClassGeneric<>).GetMethod("GenericMethod"));
+            _Lua.RegisterFunction("regularMethod", genericClass, typeof(TestClassGeneric<>).GetMethod("RegularMethod"));
+            
+            try
+            {
+                _Lua.DoString("genericMethod('thestring')");
+            }
+            catch { }
+
+            try
+            {
+                _Lua.DoString("regularMethod()");
+            }
+            catch { }
+
+            if (genericClass.GenericMethodSuccess && genericClass.RegularMethodSuccess)
+                Console.WriteLine("Generics passed");
+            else
+                Console.WriteLine("Generics failed");
+        }
 
         public static int func(int x, int y)
         {
@@ -1414,6 +1478,12 @@ namespace LuaInterface.Tests
 
             Console.WriteLine("Test event exceptions...");
             obj.TestEventException();
+
+            Console.WriteLine("Test chunk overload exception...");
+            obj.TestExceptionWithChunkOverload();
+
+            Console.WriteLine("Test generics...");
+            obj.TestGenerics();
 
             Console.WriteLine("Test threading...");
             obj.TestThreading();

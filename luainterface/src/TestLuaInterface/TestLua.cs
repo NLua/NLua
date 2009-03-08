@@ -95,6 +95,33 @@ namespace LuaInterface.Tests
         }
     }
 
+    public class TestClassGeneric<T>
+    {
+        private bool _RegularMethodSuccess;
+
+        public bool RegularMethodSuccess
+        {
+            get { return _RegularMethodSuccess; }
+        }
+        
+        private bool _GenericMethodSuccess;
+        
+        public bool GenericMethodSuccess
+        {
+            get { return _GenericMethodSuccess; }
+        }
+
+        public void GenericMethod<T>(T value)
+        {
+            _GenericMethodSuccess = true;
+        }
+
+        public void RegularMethod()
+        {
+            _RegularMethodSuccess = true;
+        }
+    }
+
     /*
 	 * Sample class used in several test cases to check if
 	 * Lua scripts are accessing objects correctly
