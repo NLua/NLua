@@ -3,7 +3,7 @@ LuaInterface 2.0.0
 
 Copyright © 2003-2006 Fabio Mascarenhas de Queiroz
 
-Maintainer: Kevin Hester, kevinh@geeksville.com
+Maintainer: Craig Presti, craig@vastpark.com
 
 lua51.dll and lua51.exe are Copyright © 2005 Tecgraf, PUC-Rio
 
@@ -19,6 +19,21 @@ methods from Lua and use LuaInterface from within your .net application.
 * Look at samples/testluaform.lua to see examples of how to use 
 .net from inside Lua
 * More instructions for installing and using in the doc/guide.pdf file.
+
+What's new in LuaInterface 2.0.3
+------------------------------
+* Fix: Private methods accessible via LuaInterface
+* Fix: Method overload lookup failures
+* Fix: Lua DoFile memory leaks when file not found (submitted by Paul Moore)
+* Fix: Lua Dispose not freeing memory (submitted by Paul Moore)
+* Fix: Better support for accessing indexers
+* Fix: Parsing error for MBCS characters (qingrui.li)
+* Fix: Dispose errors originating from LuaTable, LuaFunction, LuaUserData
+* Fix: LuaInterface no longer disposes the state when passed one via the overloaded constructor
+* Added: LoadString and LoadFile (submitted by Paul Moore)
+* Added: Overloaded DoString
+* Added: Lua debugging support (rostermeier)
+
 
 What's new in LuaInterface 2.0.1
 ------------------------------

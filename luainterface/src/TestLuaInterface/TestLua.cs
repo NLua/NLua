@@ -95,8 +95,14 @@ namespace LuaInterface.Tests
         }
     }
 
+    /// <summary>
+    /// Generic class with generic and non-generic methods
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class TestClassGeneric<T>
     {
+        private object _PassedValue;
+
         private bool _RegularMethodSuccess;
 
         public bool RegularMethodSuccess
@@ -111,14 +117,56 @@ namespace LuaInterface.Tests
             get { return _GenericMethodSuccess; }
         }
 
-        public void GenericMethod<T>(T value)
+        public void GenericMethod(T value)
         {
+            _PassedValue = value;
             _GenericMethodSuccess = true;
         }
 
         public void RegularMethod()
         {
             _RegularMethodSuccess = true;
+        }
+
+        /// <summary>
+        /// Returns true if the generic method was successfully passed a matching value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool Validate(T value)
+        {
+            return value.Equals(_PassedValue);
+        }
+    }
+
+    /// <summary>
+    /// Normal class containing a generic method
+    /// </summary>
+    public class TestClassWithGenericMethod
+    {
+        private object _PassedValue;
+
+        public object PassedValue
+        {
+            get { return _PassedValue; }
+        }
+
+        private bool _GenericMethodSuccess;
+
+        public bool GenericMethodSuccess
+        {
+            get { return _GenericMethodSuccess; }
+        }
+
+        public void GenericMethod<T>(T value)
+        {
+            _PassedValue = value;
+            _GenericMethodSuccess = true;
+        }
+
+        internal bool Validate<T>(T value)
+        {
+            return value.Equals(_PassedValue);
         }
     }
 

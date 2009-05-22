@@ -228,16 +228,44 @@ namespace LuaInterface
             }
             else // Method from MethodBase instance 
             {
-                if (!methodToCall.IsStatic && !methodToCall.IsConstructor && targetObject == null)
+                if (methodToCall.ContainsGenericParameters)
                 {
-                    targetObject = _ExtractTarget(luaState, 1);
-                    LuaDLL.lua_remove(luaState, 1); // Pops the receiver
+                    bool isMethod = _Translator.matchParameters(luaState, methodToCall, ref _LastCalledMethod);
+
+                    if (methodToCall.IsGenericMethodDefinition)
+                    {
+                        //need to make a concrete type of the generic method definition
+                        List<Type> typeArgs = new List<Type>();
+
+                        foreach (object arg in _LastCalledMethod.args)
+                            typeArgs.Add(arg.GetType());
+                    
+                        MethodInfo concreteMethod = (methodToCall as MethodInfo).MakeGenericMethod(typeArgs.ToArray());
+                        
+                        _Translator.push(luaState, concreteMethod.Invoke(targetObject, _LastCalledMethod.args));
+                        failedCall = false;
+                    }
+                    else if(methodToCall.ContainsGenericParameters)
+                    {
+                        _Translator.throwError(luaState, "unable to invoke method on generic class as the current method is an open generic method");
+                        LuaDLL.lua_pushnil(luaState);
+                        return 1;
+                    }
                 }
-                if (!_Translator.matchParameters(luaState, methodToCall, ref _LastCalledMethod))
+                else
                 {
-                    _Translator.throwError(luaState, "invalid arguments to method call");
-                    LuaDLL.lua_pushnil(luaState);
-                    return 1;
+                    if (!methodToCall.IsStatic && !methodToCall.IsConstructor && targetObject == null)
+                    {
+                        targetObject = _ExtractTarget(luaState, 1);
+                        LuaDLL.lua_remove(luaState, 1); // Pops the receiver
+                    }
+
+                    if (!_Translator.matchParameters(luaState, methodToCall, ref _LastCalledMethod))
+                    {
+                        _Translator.throwError(luaState, "invalid arguments to method call");
+                        LuaDLL.lua_pushnil(luaState);
+                        return 1;
+                    }
                 }
             }
 
