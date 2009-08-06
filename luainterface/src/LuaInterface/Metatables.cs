@@ -161,9 +161,28 @@ namespace LuaInterface
             // Try to access by array if the type is right and index is an int (lua numbers always come across as double)
             if (objType.IsArray && index is double)
             {
-                object[] arr = (object[])obj;
+                int intIndex = (int)((double)index);
 
-                translator.push(luaState, arr[(int)((double)index)]);
+                if (objType.UnderlyingSystemType == typeof(float[]))
+                {
+                    float[] arr = ((float[])obj);
+                    translator.push(luaState, arr[intIndex]);
+                }
+                else if (objType.UnderlyingSystemType == typeof(double[]))
+                {
+                    double[] arr = ((double[])obj);
+                    translator.push(luaState, arr[intIndex]);
+                }
+                else if (objType.UnderlyingSystemType == typeof(int[]))
+                {
+                    int[] arr = ((int[])obj);
+                    translator.push(luaState, arr[intIndex]);
+                }
+                else
+                {
+                    object[] arr = (object[])obj;
+                    translator.push(luaState, arr[intIndex]);
+                }
             } 
             else
             {
