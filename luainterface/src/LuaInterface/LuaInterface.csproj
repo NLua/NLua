@@ -10,8 +10,7 @@
     <RootNamespace>LuaInterface</RootNamespace>
     <AssemblyName>LuaInterface</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>luainterface.snk</AssemblyOriginatorKeyFile>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
@@ -59,6 +58,9 @@
     <Compile Include="LuaBase.cs" />
     <Compile Include="LuaException.cs" />
     <Compile Include="LuaFunction.cs" />
+    <Compile Include="LuaGlobalAttribute.cs" />
+    <Compile Include="LuaHideAttribute.cs" />
+    <Compile Include="LuaRegistrationHelper.cs" />
     <Compile Include="LuaTable.cs" />
     <Compile Include="LuaUserData.cs" />
     <Compile Include="Metatables.cs" />

@@ -4,6 +4,7 @@ namespace LuaInterface
 	using System;
 	using System.IO;
 	using System.Collections;
+    using System.Collections.Generic;
 	using System.Collections.Specialized;
 	using System.Reflection;
     using System.Threading;
@@ -20,7 +21,8 @@ namespace LuaInterface
 	 * - removed all Open*Lib() functions 
 	 * - all libs automatically open in the Lua class constructor (just assign nil to unwanted libs)
 	 * */
-	public class Lua : IDisposable
+	[CLSCompliant(true)]
+    public class Lua : IDisposable
 	{
 
 		static string init_luanet =
@@ -192,19 +194,19 @@ namespace LuaInterface
             object err = translator.getObject(luaState, -1);
             LuaDLL.lua_settop(luaState, oldTop);
 
-            // If the 'error' on the stack is an actual C# exception, just rethrow it.  Otherwise the value must have started
-            // as a true Lua error and is best interpreted as a string - wrap it in a LuaException and rethrow.
-            Exception thrown = err as Exception;
+            Exception ex = err as Exception;
 
-            if (thrown == null)
+            // A true Lua error, best interpreted as a string - wrap it in a LuaException and rethrow.
+            if (ex == null)
             {
                 if (err == null)
                     err = "Unknown Lua Error";
 
-                thrown = new LuaException(err.ToString());
+                throw new LuaException(err.ToString());
             }
 
-            throw thrown;
+            // If the 'error' on the stack is an actual C# exception, wrap and rethrow it to preserve the stack trace
+            throw new LuaException(".NET exception occured", ex);
         }
 
 
@@ -230,7 +232,7 @@ namespace LuaInterface
         }
 
         /// <summary>
-        /// CP: Submitted by Paul Moore
+        /// 
         /// </summary>
         /// <param name="chunk"></param>
         /// <param name="name"></param>
@@ -240,11 +242,15 @@ namespace LuaInterface
             int oldTop = LuaDLL.lua_gettop(luaState);
             if (LuaDLL.luaL_loadbuffer(luaState, chunk, name) != 0)
                 ThrowExceptionFromError(oldTop);
-            return translator.getFunction(luaState, -1);
+            
+            LuaFunction result = translator.getFunction(luaState, -1);
+            translator.popValues(luaState, oldTop);
+            
+            return result;
         }
 
         /// <summary>
-        /// CP: Submitted by Paul Moore
+        /// 
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
@@ -254,7 +260,10 @@ namespace LuaInterface
             if (LuaDLL.luaL_loadfile(luaState, fileName) != 0)
                 ThrowExceptionFromError(oldTop);
 
-            return translator.getFunction(luaState, -1);
+            LuaFunction result = translator.getFunction(luaState, -1);
+            translator.popValues(luaState, oldTop);
+
+            return result;
         }
 
 
@@ -360,8 +369,124 @@ namespace LuaInterface
 					setObject(remainingPath,value);
 				}
 				LuaDLL.lua_settop(luaState,oldTop);
-			}
+
+                // Globals auto-complete
+                if (value == null)
+                {
+                    // Remove now obsolete entries
+                    globals.Remove(fullPath);
+                }
+                else
+                {
+                    // Add new entries
+                    if (!globals.Contains(fullPath))
+                        registerGlobal(fullPath, value.GetType(), 0);
+                }
+            }
 		}
+
+        #region Globals auto-complete
+        private readonly List<string> globals = new List<string>();
+        private bool globalsSorted;
+
+        /// <summary>
+        /// An alphabetically sorted list of all globals (objects, methods, etc.) externally added to this Lua instance
+        /// </summary>
+        /// <remarks>Members of globals are also listed. The formatting is optimized for text input auto-completion.</remarks>
+        public IEnumerable<string> Globals
+        {
+            get
+            {
+                // Only sort list when necessary
+                if (!globalsSorted)
+                {
+                    globals.Sort();
+                    globalsSorted = true;
+                }
+
+                return globals;
+            }
+        }
+
+        /// <summary>
+        /// Adds an entry to <see cref="globals"/> (recursivley handles 2 levels of members)
+        /// </summary>
+        /// <param name="path">The index accessor path ot the entry</param>
+        /// <param name="type">The type of the entry</param>
+        /// <param name="recursionCounter">How deep have we gone with recursion?</param>
+        private void registerGlobal(string path, Type type, int recursionCounter)
+        {
+            // If the type is a global method, list it directly
+            if (type == typeof(LuaCSFunction))
+            {
+                // Format for easy method invocation
+                globals.Add(path + "(");
+            }
+            // If the type is a class or an interface and recursion hasn't been running too long, list the members
+            else if ((type.IsClass || type.IsInterface) && type != typeof(string) && recursionCounter < 2)
+            {
+                #region Methods
+                foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (
+                        // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
+                        (method.GetCustomAttributes(typeof(LuaHideAttribute), false).Length == 0) &&
+                        (method.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Length == 0) &&
+                        // Exclude some generic .NET methods that wouldn't be very usefull in Lua
+                        method.Name != "GetType" && method.Name != "GetHashCode" && method.Name != "Equals" &&
+                        method.Name != "ToString" && method.Name != "Clone" && method.Name != "Dispose" &&
+                        method.Name != "GetEnumerator" && method.Name != "CopyTo" &&
+                        !method.Name.StartsWith("get_", StringComparison.Ordinal) &&
+                        !method.Name.StartsWith("set_", StringComparison.Ordinal) &&
+                        !method.Name.StartsWith("add_", StringComparison.Ordinal) &&
+                        !method.Name.StartsWith("remove_", StringComparison.Ordinal))
+                    {
+                        // Format for easy method invocation
+                        string command = path + ":" + method.Name + "(";
+                        if (method.GetParameters().Length == 0) command += ")";
+                        globals.Add(command);
+                    }
+                }
+                #endregion
+
+                #region Fields
+                foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (
+                        // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
+                        (field.GetCustomAttributes(typeof(LuaHideAttribute), false).Length == 0) &&
+                        (field.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Length == 0))
+                    {
+                        // Go into recursion for members
+                        registerGlobal(path + "." + field.Name, field.FieldType, recursionCounter + 1);
+                    }
+                }
+                #endregion
+
+                #region Properties
+                foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (
+                        // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
+                        (property.GetCustomAttributes(typeof(LuaHideAttribute), false).Length == 0) &&
+                        (property.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Length == 0)
+                        // Exclude some generic .NET properties that wouldn't be very usefull in Lua
+                        && property.Name != "Item")
+                    {
+                        // Go into recursion for members
+                        registerGlobal(path + "." + property.Name, property.PropertyType, recursionCounter + 1);
+                    }
+                }
+                #endregion
+            }
+            // Otherwise simply add the element to the list
+            else globals.Add(path);
+
+            // List will need to be sorted on next access
+            globalsSorted = false;
+        }
+        #endregion
+
 		/*
 		 * Navigates a table in the top of the stack, returning
 		 * the value of the specified field
