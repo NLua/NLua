@@ -189,24 +189,19 @@ namespace LuaInterface
         /// <summary>
         /// Assuming we have a Lua error string sitting on the stack, throw a C# exception out to the user's app
         /// </summary>
+        /// <exception cref="LuaScriptException">Thrown if the script caused an exception</exception>
         void ThrowExceptionFromError(int oldTop)
         {
             object err = translator.getObject(luaState, -1);
             LuaDLL.lua_settop(luaState, oldTop);
 
-            Exception ex = err as Exception;
+            // A pre-wrapped exception - just rethrow it (stack trace of InnerException will be preserved)
+            LuaScriptException luaEx = err as LuaScriptException;
+            if (luaEx != null) throw luaEx;
 
-            // A true Lua error, best interpreted as a string - wrap it in a LuaException and rethrow.
-            if (ex == null)
-            {
-                if (err == null)
-                    err = "Unknown Lua Error";
-
-                throw new LuaException(err.ToString());
-            }
-
-            // If the 'error' on the stack is an actual C# exception, wrap and rethrow it to preserve the stack trace
-            throw new LuaException(".NET exception occured", ex);
+            // A non-wrapped Lua error (best interpreted as a string) - wrap it and throw it
+            if (err == null) err = "Unknown Lua Error";
+            throw new LuaScriptException(err.ToString(), "");
         }
 
 
@@ -231,6 +226,13 @@ namespace LuaInterface
                 return 0;
         }
 
+        private bool executing;
+
+        /// <summary>
+        /// True while a script is being executed
+        /// </summary>
+        public bool IsExecuting { get { return executing; } }
+
         /// <summary>
         /// 
         /// </summary>
@@ -240,9 +242,15 @@ namespace LuaInterface
         public LuaFunction LoadString(string chunk, string name)
         {
             int oldTop = LuaDLL.lua_gettop(luaState);
-            if (LuaDLL.luaL_loadbuffer(luaState, chunk, name) != 0)
-                ThrowExceptionFromError(oldTop);
-            
+
+            executing = true;
+            try
+            {
+                if (LuaDLL.luaL_loadbuffer(luaState, chunk, name) != 0)
+                    ThrowExceptionFromError(oldTop);
+            }
+            finally { executing = false; }
+
             LuaFunction result = translator.getFunction(luaState, -1);
             translator.popValues(luaState, oldTop);
             
@@ -274,14 +282,19 @@ namespace LuaInterface
 		public object[] DoString(string chunk) 
 		{
 			int oldTop=LuaDLL.lua_gettop(luaState);
-			if(LuaDLL.luaL_loadbuffer(luaState,chunk,"chunk")==0) 
-			{
-                if (LuaDLL.lua_pcall(luaState, 0, -1, 0) == 0)
-                    return translator.popValues(luaState, oldTop);
-                else
-                    ThrowExceptionFromError(oldTop);
-			} 
-			else
+            if (LuaDLL.luaL_loadbuffer(luaState, chunk, "chunk") == 0)
+            {
+                executing = true;
+                try
+                {
+                    if (LuaDLL.lua_pcall(luaState, 0, -1, 0) == 0)
+                        return translator.popValues(luaState, oldTop);
+                    else
+                        ThrowExceptionFromError(oldTop);
+                }
+                finally { executing = false; }
+            }
+            else
                 ThrowExceptionFromError(oldTop);
 
             return null;            // Never reached - keeps compiler happy
@@ -296,12 +309,17 @@ namespace LuaInterface
         public object[] DoString(string chunk, string chunkName)
         {
             int oldTop = LuaDLL.lua_gettop(luaState);
+            executing = true;
             if (LuaDLL.luaL_loadbuffer(luaState, chunk, chunkName) == 0)
             {
-                if (LuaDLL.lua_pcall(luaState, 0, -1, 0) == 0)
-                    return translator.popValues(luaState, oldTop);
-                else
-                    ThrowExceptionFromError(oldTop);
+                try
+                {
+                    if (LuaDLL.lua_pcall(luaState, 0, -1, 0) == 0)
+                        return translator.popValues(luaState, oldTop);
+                    else
+                        ThrowExceptionFromError(oldTop);
+                }
+                finally { executing = false; }
             }
             else
                 ThrowExceptionFromError(oldTop);
@@ -318,10 +336,15 @@ namespace LuaInterface
 			int oldTop=LuaDLL.lua_gettop(luaState);
 			if(LuaDLL.luaL_loadfile(luaState,fileName)==0) 
 			{
-                if (LuaDLL.lua_pcall(luaState, 0, -1, 0) == 0)
-                    return translator.popValues(luaState, oldTop);
-                else
-                    ThrowExceptionFromError(oldTop);
+			    executing = true;
+                try
+                {
+                    if (LuaDLL.lua_pcall(luaState, 0, -1, 0) == 0)
+                        return translator.popValues(luaState, oldTop);
+                    else
+                        ThrowExceptionFromError(oldTop);
+                }
+                finally { executing = false; }
 			} 
 			else
                 ThrowExceptionFromError(oldTop);
@@ -577,10 +600,15 @@ namespace LuaInterface
 				{
 					translator.push(luaState,args[i]);
 				}
-			}
-            int error = LuaDLL.lua_pcall(luaState, nArgs, -1, 0);
-            if (error != 0)
-                ThrowExceptionFromError(oldTop);
+            }
+            executing = true;
+            try
+            {
+                int error = LuaDLL.lua_pcall(luaState, nArgs, -1, 0);
+                if (error != 0)
+                    ThrowExceptionFromError(oldTop);
+            }
+            finally { executing = false; }
 
             if(returnTypes != null)
 			    return translator.popValues(luaState,oldTop,returnTypes);
@@ -659,7 +687,7 @@ namespace LuaInterface
       /// <author>Reinhard Ostermeier</author>
       private LuaHookFunction hookCallback = null;
 
-      /// <summary>
+	    /// <summary>
       /// Activates the debug hook
       /// </summary>
       /// <param name="mask">Mask</param>

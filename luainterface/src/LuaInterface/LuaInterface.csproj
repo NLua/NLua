@@ -61,6 +61,7 @@
     <Compile Include="LuaGlobalAttribute.cs" />
     <Compile Include="LuaHideAttribute.cs" />
     <Compile Include="LuaRegistrationHelper.cs" />
+    <Compile Include="LuaScriptException.cs" />
     <Compile Include="LuaTable.cs" />
     <Compile Include="LuaUserData.cs" />
     <Compile Include="Metatables.cs" />

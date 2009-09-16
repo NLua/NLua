@@ -158,27 +158,40 @@ namespace LuaInterface
 		/*
 		 * Passes errors (argument e) to the Lua interpreter
 		 */
-		internal void throwError(IntPtr luaState,object e) 
-		{
-            // If the argument is a mere string, we are free to add extra info to it (as opposed to some private C# exception object or somesuch, which we just pass up)
-            if (e is string)
+        internal void throwError(IntPtr luaState, object e)
+        {
+            // We use this to remove anything pushed by luaL_where
+            int oldTop = LuaDLL.lua_gettop(luaState);
+
+            // Stack frame #1 is our C# wrapper, so not very interesting to the user
+            // Stack frame #2 must be the lua code that called us, so that's what we want to use
+            LuaDLL.luaL_where(luaState, 1);
+            object[] curlev = popValues(luaState, oldTop);
+
+            // Determine the position in the script where the exception was triggered
+            string errLocation = "";
+            if (curlev.Length > 0)
+                errLocation = curlev[0].ToString();
+
+            string message = e as string;
+            if (message != null)
             {
-                // We use this to remove anything pushed by luaL_where
-                int oldTop = LuaDLL.lua_gettop(luaState);
-
-                // Stack frame #1 is our C# wrapper, so not very interesting to the user
-                // Stack frame #2 must be the lua code that called us, so that's what we want to use
-                LuaDLL.luaL_where(luaState, 2);
-                object[] curlev = popValues(luaState, oldTop);
-                // Debug.WriteLine(curlev);
-
-                if (curlev.Length > 0)
-                    e = curlev[0].ToString() + e;
+                // Wrap Lua error (just a string) and store the error location
+                e = new LuaScriptException(message, errLocation);
+            }
+            else
+            {
+                Exception ex = e as Exception;
+                if (ex != null)
+                {
+                    // Wrap generic .NET exception as an InnerException and store the error location
+                    e = new LuaScriptException(ex, errLocation);
+                }
             }
 
-			push(luaState,e);
-			LuaDLL.lua_error(luaState);
-		}
+            push(luaState, e);
+            LuaDLL.lua_error(luaState);
+        }
 		/*
 		 * Implementation of load_assembly. Throws an error
 		 * if the assembly is not found.
