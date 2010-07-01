@@ -197,30 +197,37 @@ namespace LuaInterface
 		 * if the assembly is not found.
 		 */
 		private int loadAssembly(IntPtr luaState) 
-		{
-			string assemblyName=LuaDLL.lua_tostring(luaState,1);
-			try 
-			{
-				Assembly assembly=Assembly.LoadWithPartialName(assemblyName);
+		{            
+            try
+            {
+                string assemblyName=LuaDLL.lua_tostring(luaState,1);
+
+                Assembly assembly = null;
 
                 try
                 {
-                    // If we couldn't find it based on a name, see if we can use it as a filename and find it
-                    if (assembly == null)
-                        assembly = Assembly.Load(AssemblyName.GetAssemblyName(assemblyName));
+                    assembly = Assembly.LoadWithPartialName(assemblyName);
                 }
-                catch (Exception)
+                catch (BadImageFormatException)
                 {
-                    // ignore - it might not even be a filename
+                    // The assemblyName was invalid.  It is most likely a path.
                 }
 
-				if(assembly!=null && !assemblies.Contains(assembly))
-					assemblies.Add(assembly);
-			} 
+                if (assembly == null)
+                {
+                    assembly = Assembly.Load(AssemblyName.GetAssemblyName(assemblyName));
+                }
+
+                if (assembly != null && !assemblies.Contains(assembly))
+                {
+                    assemblies.Add(assembly);
+                }
+            } 
 			catch(Exception e) 
 			{
 				throwError(luaState,e);
 			}
+
 			return 0;
 		}
         
