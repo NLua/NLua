@@ -980,7 +980,11 @@ namespace LuaInterface.Tests
             bool err = (bool)_Lua["err"];
             Exception errMsg = (Exception)_Lua["errMsg"];
             TestOk(!err);
-            TestOk("exception test" == errMsg.Message);
+            TestOk(errMsg.InnerException != null);
+            if (errMsg.InnerException != null)
+            {
+                TestOk("exception test" == errMsg.InnerException.Message);
+            }
             //Console.WriteLine("interface returned: "+errMsg.ToString());
 
             Destroy();
@@ -1077,7 +1081,7 @@ namespace LuaInterface.Tests
             for (int i = 0; i < 10000; i++)
             {
                 using (Lua lua = new Lua())
-                {                    
+                {
                     _Calc(lua, i);
                 }
             }
@@ -1124,7 +1128,7 @@ namespace LuaInterface.Tests
                     {
                         _Lua.DoString("dowork()");
                     }
-                    catch 
+                    catch
                     {
                         failureDetected = true;
                     }
@@ -1136,7 +1140,7 @@ namespace LuaInterface.Tests
                 Thread.Sleep(50);
 
             if (failureDetected)
-                Console.WriteLine("==Problem with threading!==");           
+                Console.WriteLine("==Problem with threading!==");
         }
 
         private void TestPrivateMethod()
@@ -1294,7 +1298,7 @@ namespace LuaInterface.Tests
             {
                 _Lua.DoString("thiswillthrowanerror", "MyChunk");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 if (e.Message.StartsWith("[string \"MyChunk\"]"))
                     Console.WriteLine("Chunk overload passed");
@@ -1314,7 +1318,7 @@ namespace LuaInterface.Tests
 
             //_Lua.RegisterFunction("genericMethod", genericClass, typeof(TestClassGeneric<>).GetMethod("GenericMethod"));
             //_Lua.RegisterFunction("regularMethod", genericClass, typeof(TestClassGeneric<>).GetMethod("RegularMethod"));
-            
+
             //try
             //{
             //    _Lua.DoString("genericMethod('thestring')");
@@ -1357,8 +1361,8 @@ namespace LuaInterface.Tests
 
             if (!classWithGenericMethod.GenericMethodSuccess || (classWithGenericMethod.PassedValue as TestClass).val != 56)
                 passed = false;
-            
-            if(passed)
+
+            if (passed)
                 Console.WriteLine("Class with generic method passed");
             else
                 Console.WriteLine("Class with generic method failed");
@@ -1401,7 +1405,7 @@ namespace LuaInterface.Tests
         {
             Console.WriteLine("Starting interpreter...");
             Lua l = new Lua();
-            
+
             // Pause so we can connect with the debugger
             // Thread.Sleep(30000);
 
@@ -1517,7 +1521,7 @@ namespace LuaInterface.Tests
 
             Console.WriteLine("Test generics...");
             obj.TestGenerics();
-            
+
             Console.WriteLine("Test threading...");
             obj.TestThreading();
 
