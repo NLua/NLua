@@ -31,6 +31,10 @@ namespace LuaInterface
         public int index;
         // Type-conversion function
         public ExtractValue extractValue;
+
+        public bool isParamsArray;
+
+        public Type paramsArrayType;
     }
 
     /*
@@ -82,12 +86,12 @@ namespace LuaInterface
             _Translator = translator;
             _MethodName = methodName;
             _TargetType = targetType;
-            
+
             if (targetType != null)
                 _ExtractTarget = translator.typeChecker.getExtractor(targetType);
 
             _BindingType = bindingType;
-            
+
             //CP: Removed NonPublic binding search and added IgnoreCase
             _Members = targetType.UnderlyingSystemType.GetMember(methodName, MemberTypes.Method, bindingType | BindingFlags.Public | BindingFlags.IgnoreCase/*|BindingFlags.NonPublic*/);
         }
@@ -144,8 +148,38 @@ namespace LuaInterface
                         {
                             for (int i = 0; i < _LastCalledMethod.argTypes.Length; i++)
                             {
-                                _LastCalledMethod.args[_LastCalledMethod.argTypes[i].index] =
-                                    _LastCalledMethod.argTypes[i].extractValue(luaState, i + 1 + numStackToSkip);
+                                if (_LastCalledMethod.argTypes[i].isParamsArray)
+                                {
+                                    object luaParamValue = _LastCalledMethod.argTypes[i].extractValue(luaState, i + 1 + numStackToSkip);
+
+                                    Type paramArrayType = _LastCalledMethod.argTypes[i].paramsArrayType;
+
+                                    Array paramArray;
+
+                                    if (luaParamValue is LuaTable)
+                                    {
+                                        LuaTable table = (LuaTable)luaParamValue;
+
+                                        paramArray = Array.CreateInstance(paramArrayType, table.Values.Count);
+
+                                        for (int x = 1; x <= table.Values.Count; x++)
+                                        {
+                                            paramArray.SetValue(Convert.ChangeType(table[x], paramArrayType), x - 1);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        paramArray = Array.CreateInstance(paramArrayType, 1);
+                                        paramArray.SetValue(luaParamValue, 0);
+                                    }
+
+                                    _LastCalledMethod.args[_LastCalledMethod.argTypes[i].index] = paramArray;
+                                }
+                                else
+                                {
+                                    _LastCalledMethod.args[_LastCalledMethod.argTypes[i].index] =
+                                        _LastCalledMethod.argTypes[i].extractValue(luaState, i + 1 + numStackToSkip);
+                                }
 
                                 if (_LastCalledMethod.args[_LastCalledMethod.argTypes[i].index] == null &&
                                     !LuaDLL.lua_isnil(luaState, i + 1 + numStackToSkip))
@@ -239,13 +273,13 @@ namespace LuaInterface
 
                         foreach (object arg in _LastCalledMethod.args)
                             typeArgs.Add(arg.GetType());
-                    
+
                         MethodInfo concreteMethod = (methodToCall as MethodInfo).MakeGenericMethod(typeArgs.ToArray());
-                        
+
                         _Translator.push(luaState, concreteMethod.Invoke(targetObject, _LastCalledMethod.args));
                         failedCall = false;
                     }
-                    else if(methodToCall.ContainsGenericParameters)
+                    else if (methodToCall.ContainsGenericParameters)
                     {
                         _Translator.throwError(luaState, "unable to invoke method on generic class as the current method is an open generic method");
                         LuaDLL.lua_pushnil(luaState);

@@ -81,7 +81,7 @@ namespace LuaInterface
         }
 
 
-        public System.Collections.IEnumerator GetEnumerator()
+        public System.Collections.IDictionaryEnumerator GetEnumerator()
         {
             return _Interpreter.GetTableDict(this).GetEnumerator();
         }

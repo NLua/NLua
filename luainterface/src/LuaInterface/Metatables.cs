@@ -148,7 +148,7 @@ namespace LuaInterface
             Type objType = obj.GetType();
 
             // Handle the most common case, looking up the method by name. 
-            
+
             // CP: This will fail when using indexers and attempting to get a value with the same name as a property of the object, 
             // ie: xmlelement['item'] <- item is a property of xmlelement
             try
@@ -183,13 +183,13 @@ namespace LuaInterface
                     object[] arr = (object[])obj;
                     translator.push(luaState, arr[intIndex]);
                 }
-            } 
+            }
             else
             {
                 // Try to use get_Item to index into this .net object
                 //MethodInfo getter = objType.GetMethod("get_Item");
                 MethodInfo[] methods = objType.GetMethods();
-                
+
                 foreach (MethodInfo mInfo in methods)
                 {
                     if (mInfo.Name == "get_Item")
@@ -235,7 +235,7 @@ namespace LuaInterface
                     }
                 }
 
-                
+
             }
 
             LuaDLL.lua_pushboolean(luaState, false);
@@ -288,7 +288,7 @@ namespace LuaInterface
 
             if (cachedMember != null)
                 return true;
-            
+
             //CP: Removed NonPublic binding search
             MemberInfo[] members = objType.GetMember(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase/* | BindingFlags.NonPublic*/);
             return (members.Length > 0);
@@ -371,7 +371,7 @@ namespace LuaInterface
                         else
                             LuaDLL.lua_pushnil(luaState);
                     }
-                    catch(TargetInvocationException e)  // Convert this exception into a Lua error
+                    catch (TargetInvocationException e)  // Convert this exception into a Lua error
                     {
                         ThrowError(luaState, e);
                         LuaDLL.lua_pushnil(luaState);
@@ -383,7 +383,7 @@ namespace LuaInterface
                     if (cachedMember == null) setMemberCache(memberCache, objType, methodName, member);
                     translator.push(luaState, new RegisterEventHandler(translator.pendingEvents, obj, eventInfo));
                 }
-                else if(!implicitStatic)
+                else if (!implicitStatic)
                 {
                     if (member.MemberType == MemberTypes.NestedType)
                     {
@@ -406,7 +406,7 @@ namespace LuaInterface
                     {
                         // Member type must be 'method'
                         LuaCSFunction wrapper = new LuaCSFunction((new LuaMethodWrapper(translator, objType, methodName, bindingType)).call);
-                        
+
                         if (cachedMember == null) setMemberCache(memberCache, objType, methodName, wrapper);
                         translator.pushFunction(luaState, wrapper);
                         translator.push(luaState, true);
@@ -627,7 +627,7 @@ namespace LuaInterface
             string detail;
             bool success = trySetMember(luaState, targetType, target, bindingType, out detail);
 
-            if(!success)
+            if (!success)
                 translator.throwError(luaState, detail);
 
             return 0;
@@ -781,14 +781,58 @@ namespace LuaInterface
                 else if (_IsTypeCorrect(luaState, currentLuaParam, currentNetParam, out extractValue))  // Type checking
                 {
                     int index = paramList.Add(extractValue(luaState, currentLuaParam));
+
                     MethodArgs methodArg = new MethodArgs();
                     methodArg.index = index;
                     methodArg.extractValue = extractValue;
                     argTypes.Add(methodArg);
+
                     if (currentNetParam.ParameterType.IsByRef)
                         outList.Add(index);
                     currentLuaParam++;
                 }  // Type does not match, ignore if the parameter is optional
+                else if (_IsParamsArray(luaState, currentLuaParam, currentNetParam, out extractValue))
+                {
+                    object luaParamValue = extractValue(luaState, currentLuaParam);
+
+                    Type paramArrayType = currentNetParam.ParameterType.GetElementType();
+
+                    Array paramArray;
+
+                    if (luaParamValue is LuaTable)
+                    {
+                        LuaTable table = (LuaTable)luaParamValue;
+                        IDictionaryEnumerator tableEnumerator = table.GetEnumerator();
+
+                        paramArray = Array.CreateInstance(paramArrayType, table.Values.Count);
+
+                        tableEnumerator.Reset();
+
+                        int paramArrayIndex = 0;
+
+                        while(tableEnumerator.MoveNext())
+                        {
+                            paramArray.SetValue(Convert.ChangeType(tableEnumerator.Value, currentNetParam.ParameterType.GetElementType()), paramArrayIndex);
+                            paramArrayIndex++;
+                        }
+                    }
+                    else
+                    {
+                        paramArray = Array.CreateInstance(paramArrayType, 1);
+                        paramArray.SetValue(luaParamValue, 0);
+                    }
+
+                    int index = paramList.Add(paramArray);
+
+                    MethodArgs methodArg = new MethodArgs();
+                    methodArg.index = index;
+                    methodArg.extractValue = extractValue;
+                    methodArg.isParamsArray = true;
+                    methodArg.paramsArrayType = paramArrayType;
+                    argTypes.Add(methodArg);
+
+                    currentLuaParam++;
+                }
                 else if (currentNetParam.IsOptional)
                 {
                     paramList.Add(currentNetParam.DefaultValue);
@@ -832,6 +876,67 @@ namespace LuaInterface
                 Debug.WriteLine("Type wasn't correct");
                 return false;
             }
+        }
+
+        private bool _IsParamsArray(IntPtr luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
+        {
+            extractValue = null;
+
+            if (currentNetParam.GetCustomAttributes(typeof(ParamArrayAttribute), false).Length > 0)
+            {
+                LuaTypes luaType;
+
+                try
+                {
+                    luaType = LuaDLL.lua_type(luaState, currentLuaParam);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Could not retrieve lua type while attempting to determine params Array Status.");
+                    Debug.WriteLine(ex.Message);
+                    extractValue = null;
+                    return false;
+                }
+
+                if (luaType == LuaTypes.LUA_TTABLE)
+                {
+                    try
+                    {
+                        extractValue = translator.typeChecker.getExtractor(typeof(LuaTable));
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("An error occurred during an attempt to retrieve a LuaTable extractor while checking for params array status.");
+                    }
+
+                    if (extractValue != null)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    Type paramElementType = currentNetParam.ParameterType.GetElementType();
+
+                    try
+                    {
+                        extractValue = translator.typeChecker.checkType(luaState, currentLuaParam, paramElementType);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(string.Format("An error occurred during an attempt to retrieve an extractor ({0}) while checking for params array status.", paramElementType.FullName));
+                    }
+
+                    if (extractValue != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            Debug.WriteLine("Type wasn't Params object.");
+
+            return false;
         }
     }
 }
