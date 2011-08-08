@@ -13,7 +13,27 @@ namespace LuaInterface
      */
     struct MethodCache
     {
-        public MethodBase cachedMethod;
+        private MethodBase _cachedMethod;
+
+        public MethodBase cachedMethod
+        {
+            get
+            {
+                return _cachedMethod;
+            }
+            set
+            {
+                _cachedMethod = value;
+                MethodInfo mi = value as MethodInfo;
+                if (mi != null)
+                {
+                    IsReturnVoid = string.Compare(mi.ReturnType.Name, "System.Void", true) == 0;                    
+                }
+            }
+        }
+        
+        public bool IsReturnVoid;
+
         // List or arguments
         public object[] args;
         // Positions of out parameters
@@ -338,6 +358,17 @@ namespace LuaInterface
                 //for(int i=0;i<lastCalledMethod.outList.Length;i++)
                 _Translator.push(luaState, _LastCalledMethod.args[_LastCalledMethod.outList[index]]);
             }
+
+            //by isSingle 2010-09-10 11:26:31 
+            //Desc: 
+            //  if not return void,we need add 1,
+            //  or we will lost the function's return value 
+            //  when call dotnet function like "int foo(arg1,out arg2,out arg3)" in lua code 
+            if (!_LastCalledMethod.IsReturnVoid && nReturnValues > 0)
+            {
+                nReturnValues++;
+            }
+
             return nReturnValues < 1 ? 1 : nReturnValues;
         }
     }
