@@ -4,11 +4,434 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using LuaInterface.Test.Mock;
+using System.Reflection;
+using System.Threading;
 
 namespace LuaInterface.Test
 {
     public class LuaTests
     {
+        /*
+        * Tests capturing an exception
+        */
+        [Fact]
+        public void ThrowException()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('mscorlib')");
+                lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                lua.DoString("TestClass=luanet.import_type('LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("test=TestClass()");
+                lua.DoString("err,errMsg=pcall(test.exceptionMethod,test)");
+                bool err = (bool)lua["err"];
+                Exception errMsg = (Exception)lua["errMsg"];
+                
+                Assert.False(err);
+                Assert.NotNull(errMsg.InnerException);                
+                Assert.Equal("exception test", errMsg.InnerException.Message);
+                
+            }
+        }
+
+        /*
+         * Tests capturing an exception
+         */
+        [Fact]
+        public void ThrowUncaughtException()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('mscorlib')");
+                lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                lua.DoString("TestClass=luanet.import_type('LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("test=TestClass()");
+
+                try
+                {
+                    lua.DoString("test:exceptionMethod()");
+
+                    //failed
+                    Assert.True(false);
+                }
+                catch (Exception e)
+                {
+                    //passed
+                    Assert.True(true);
+                }
+            }
+        }
+
+
+        /*
+         * Tests nullable fields
+         */
+        [Fact]
+        public void TestNullable()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('mscorlib')");
+                lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                lua.DoString("TestClass=luanet.import_type('LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("test=TestClass()");
+
+                lua.DoString("val=test.NullableBool");
+                
+                Assert.Null((object)lua["val"]);
+
+                lua.DoString("test.NullableBool = true");
+                lua.DoString("val=test.NullableBool");
+                Assert.True((bool)lua["val"]);
+            }
+        }
+
+
+        /*
+         * Tests structure assignment
+         */
+        [Fact]
+        public void TestStructs()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                lua.DoString("TestClass=luanet.import_type('LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("test=TestClass()");
+                lua.DoString("TestStruct=luanet.import_type('LuaInterface.Test.Mock.TestStruct')");
+
+                lua.DoString("struct=TestStruct(2)");
+                lua.DoString("test.Struct = struct");
+                lua.DoString("val=test.Struct.val");
+                Assert.Equal(2.0d, (double)lua["val"]);
+            }
+        }
+
+        [Fact]
+        public void TestMethodOverloads()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('mscorlib')");
+                lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                lua.DoString("TestClass=luanet.import_type('LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("test=TestClass()");
+                lua.DoString("test:MethodOverload()");
+                lua.DoString("test:MethodOverload(test)");
+                lua.DoString("test:MethodOverload(1,1,1)");
+                lua.DoString("test:MethodOverload(2,2,i)\r\nprint(i)");
+            }
+        }
+
+        [Fact]
+        public void TestDispose()
+        {
+            System.GC.Collect();
+            long startingMem = System.Diagnostics.Process.GetCurrentProcess().WorkingSet64;
+
+            for (int i = 0; i < 10000; i++)
+            {
+                using (Lua lua = new Lua())
+                {
+                    _Calc(lua, i);
+                }
+            }
+
+            //TODO: make this test assert so that it is useful
+
+            Console.WriteLine("Was using " + startingMem / 1024 / 1024 + "MB, now using: " + System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024 + "MB");
+        }
+
+        private void _Calc(Lua lua, int i)
+        {
+            lua.DoString(
+                     "sqrt = math.sqrt;" +
+                     "sqr = function(x) return math.pow(x,2); end;" +
+                     "log = math.log;" +
+                     "log10 = math.log10;" +
+                     "exp = math.exp;" +
+                     "sin = math.sin;" +
+                     "cos = math.cos;" +
+                     "tan = math.tan;" +
+                     "abs = math.abs;"
+                     );
+
+            lua.DoString("function calcVP(a,b) return a+b end");
+
+            LuaFunction lf = lua.GetFunction("calcVP");
+            Object[] ret = lf.Call(i, 20);
+        }
+
+        [Fact]
+        public void TestThreading()
+        {
+            using (Lua lua = new Lua())
+            {
+                DoWorkClass doWork = new DoWorkClass();
+                lua.RegisterFunction("dowork", doWork, typeof(DoWorkClass).GetMethod("DoWork"));
+
+                bool failureDetected = false;
+                int completed = 0;
+                int iterations = 500;
+
+                for (int i = 0; i < iterations; i++)
+                {
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object o)
+                    {
+                        try
+                        {
+                            lua.DoString("dowork()");
+                        }
+                        catch
+                        {
+                            failureDetected = true;
+                        }
+                        completed++;
+                    }));
+                }
+
+                while (completed < iterations && !failureDetected)
+                    Thread.Sleep(50);
+
+                Assert.False(failureDetected);
+            }
+        }
+
+        [Fact]
+        public void TestPrivateMethod()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('mscorlib')");
+                lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                lua.DoString("TestClass=luanet.import_type('LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("test=TestClass()");
+                
+                try
+                {
+                    lua.DoString("test:_PrivateMethod()");
+                }
+                catch
+                {
+                    Assert.True(true);
+                    return;
+                }
+
+                Assert.True(false);
+            }
+        }
+
+        /*
+         * Tests functions
+         */
+        [Fact]
+        public void TestFunctions()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('mscorlib')");
+                lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                lua.RegisterFunction("p", null, typeof(System.Console).GetMethod("WriteLine", new Type[] { typeof(String) }));
+
+                /// Lua command that works (prints to console)
+                lua.DoString("p('Foo')");
+
+                /// Yet this works...
+                lua.DoString("string.gsub('some string', '(%w+)', function(s) p(s) end)");
+
+                /// This fails if you don't fix Lua5.1 lstrlib.c/add_value to treat LUA_TUSERDATA the same as LUA_FUNCTION
+                lua.DoString("string.gsub('some string', '(%w+)', p)");
+            }
+        }
+
+
+        /*
+         * Tests making an object from a Lua table and calling one of
+         * methods the table overrides.
+         */
+        [Fact]
+        public void LuaTableOverridedMethod()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                lua.DoString("TestClass=luanet.import_type('LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("test={}");
+                lua.DoString("function test:overridableMethod(x,y) return x*y; end");
+                lua.DoString("luanet.make_object(test,'LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("a=TestClass.callOverridable(test,2,3)");
+                int a = (int)lua.GetNumber("a");
+                lua.DoString("luanet.free_object(test)");
+                Assert.Equal(6, a);
+            }
+        }
+
+
+        /*
+         * Tests making an object from a Lua table and calling a method
+         * the table does not override.
+         */
+        [Fact]
+        public void LuaTableInheritedMethod()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                lua.DoString("TestClass=luanet.import_type('LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("test={}");
+                lua.DoString("function test:overridableMethod(x,y) return x*y; end");
+                lua.DoString("luanet.make_object(test,'LuaInterface.Test.Mock.TestClass')");
+                lua.DoString("test:setVal(3)");
+                lua.DoString("a=test.testval");
+                int a = (int)lua.GetNumber("a");
+                lua.DoString("luanet.free_object(test)");
+
+                Assert.Equal(3, a);
+
+                //Console.WriteLine("interface returned: "+a);
+            }
+        }
+
+
+        /// <summary>
+        /// Basic multiply method which expects 2 floats
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="val2"></param>
+        /// <returns></returns>
+        private float _TestException(float val, float val2)
+        {
+            return val * val2;
+        }
+
+
+        [Fact]
+        public void TestEventException()
+        {
+            using (Lua lua = new Lua())
+            {
+                //Register a C# function
+                MethodInfo testException = this.GetType().GetMethod("_TestException", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance, null, new Type[] { typeof(float), typeof(float) }, null);
+                lua.RegisterFunction("Multiply", this, testException);
+
+                //create the lua event handler code for the entity
+                //includes the bad code!
+                lua.DoString("function OnClick(sender, eventArgs)\r\n" +
+                              "--Multiply expects 2 floats, but instead receives 2 strings\r\n" +
+                              "Multiply(asd, we)\r\n" +
+                            "end");
+
+                //create the lua event handler code for the entity
+                //good code
+                //lua.DoString("function OnClick(sender, eventArgs)\r\n" +
+                //              "--Multiply expects 2 floats\r\n" +
+                //              "Multiply(2, 50)\r\n" +
+                //            "end");
+
+                //Create the event handler script
+                lua.DoString("function SubscribeEntity(e)\r\ne.Clicked:Add(OnClick)\r\nend");
+
+                //Create the entity object
+                Entity entity = new Entity();
+
+                //Register the entity object with the event handler inside lua
+                LuaFunction lf = lua.GetFunction("SubscribeEntity");
+                lf.Call(new object[1] { entity });
+
+                try
+                {
+                    //Cause the event to be fired
+                    entity.Click();
+
+                    //failed
+                    Assert.True(false);
+                }
+                catch (LuaException e)
+                {
+                    //passed
+                    Assert.True(true);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestExceptionWithChunkOverload()
+        {
+            using (Lua lua = new Lua())
+            {
+                try
+                {
+                    lua.DoString("thiswillthrowanerror", "MyChunk");
+                }
+                catch (Exception e)
+                {
+                    Assert.True(e.Message.StartsWith("[string \"MyChunk\"]"));
+                }
+            }
+        }
+
+        [Fact]
+        public void TestGenerics()
+        {
+            //Im not sure support for generic classes is possible to implement, see: http://msdn.microsoft.com/en-us/library/system.reflection.methodinfo.containsgenericparameters.aspx
+            //specifically the line that says: "If the ContainsGenericParameters property returns true, the method cannot be invoked"
+
+            //TestClassGeneric<string> genericClass = new TestClassGeneric<string>();
+
+            //lua.RegisterFunction("genericMethod", genericClass, typeof(TestClassGeneric<>).GetMethod("GenericMethod"));
+            //lua.RegisterFunction("regularMethod", genericClass, typeof(TestClassGeneric<>).GetMethod("RegularMethod"));
+
+            using (Lua lua = new Lua())
+            {
+                TestClassWithGenericMethod classWithGenericMethod = new TestClassWithGenericMethod();
+
+                lua.RegisterFunction("genericMethod2", classWithGenericMethod, typeof(TestClassWithGenericMethod).GetMethod("GenericMethod"));
+
+                try
+                {
+                    lua.DoString("genericMethod2(100)");
+                }
+                catch { }
+
+                Assert.True(classWithGenericMethod.GenericMethodSuccess);
+                Assert.True(classWithGenericMethod.Validate<double>(100)); //note the gotcha: numbers are all being passed to generic methods as doubles                    
+
+                try
+                {
+                    lua.DoString("luanet.load_assembly('LuaInterface.Test')");
+                    lua.DoString("TestClass=luanet.import_type('LuaInterface.Test.Mock.TestClass')");
+                    lua.DoString("test=TestClass(56)");
+                    lua.DoString("genericMethod2(test)");
+                }
+                catch { }
+
+                Assert.True(classWithGenericMethod.GenericMethodSuccess);
+                Assert.Equal(56, (classWithGenericMethod.PassedValue as TestClass).val);
+            }
+        }
+
+
+        [Fact]
+        public void RegisterFunctionStressTest()
+        {
+            LuaFunction fc = null;
+            const int Count = 200;  // it seems to work with 41
+
+            using (Lua lua = new Lua())
+            {
+
+                MyClass t = new MyClass();
+
+                for (int i = 1; i < Count - 1; ++i)
+                {
+                    fc = lua.RegisterFunction("func" + i, t, typeof(MyClass).GetMethod("Func1"));
+                }
+                fc = lua.RegisterFunction("func" + (Count - 1), t, typeof(MyClass).GetMethod("Func1"));
+
+                lua.DoString("print(func1())");
+            }
+        }
+
         [Fact]
         public void TestMultipleOutParameters()
         {
