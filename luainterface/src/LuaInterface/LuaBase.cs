@@ -7,7 +7,7 @@ namespace LuaInterface
     /// <summary>
     /// Base class to provide consistent disposal flow across lua objects. Uses code provided by Yves Duhoux and suggestions by Hans Schmeidenbacher and Qingrui Li 
     /// </summary>
-    public abstract class LuaBase
+    public abstract class LuaBase : IDisposable
     {
         private bool _Disposed;
         protected int _Reference;
@@ -33,7 +33,7 @@ namespace LuaInterface
                     if (_Reference != 0)
                         _Interpreter.dispose(_Reference);
                 }
-
+                _Interpreter = null;
                 _Disposed = true;
             }
         }
