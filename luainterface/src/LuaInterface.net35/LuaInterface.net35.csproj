@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{817FF371-DB5F-4382-8E68-F1E569D20A81}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LuaInterface</RootNamespace>
+    <AssemblyName>LuaInterface</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="lua51">
+      <HintPath>..\..\lib\lua51\net35\lua51.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\LuaInterface\CheckType.cs">
+      <Link>CheckType.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\GenerateEventAssembly.cs">
+      <Link>GenerateEventAssembly.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\Lua.cs">
+      <Link>Lua.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\LuaBase.cs">
+      <Link>LuaBase.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\LuaException.cs">
+      <Link>LuaException.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\LuaFunction.cs">
+      <Link>LuaFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\LuaGlobalAttribute.cs">
+      <Link>LuaGlobalAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\LuaHideAttribute.cs">
+      <Link>LuaHideAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\LuaRegistrationHelper.cs">
+      <Link>LuaRegistrationHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\LuaScriptException.cs">
+      <Link>LuaScriptException.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\LuaTable.cs">
+      <Link>LuaTable.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\LuaUserData.cs">
+      <Link>LuaUserData.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\Metatables.cs">
+      <Link>Metatables.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\MethodWrapper.cs">
+      <Link>MethodWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\ObjectTranslator.cs">
+      <Link>ObjectTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\LuaInterface\ProxyType.cs">
+      <Link>ProxyType.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties ProjectLinkerExcludeFilter="\\?desktop(\\.*)?$;\\?silverlight(\\.*)?$;\.desktop;\.silverlight;\.xaml;^service references(\\.*)?$;\.clientconfig;^web references(\\.*)?$" />
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
