@@ -1,2 +1,0 @@
-LuaRunner -- runs Lua scripts with CLR access
-Usage: luarunner <script.lua> [{<arg>}]

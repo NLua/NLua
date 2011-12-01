@@ -1,1 +1,0 @@
-﻿Note that this project should be considered deprecated. While I'm leaving it here for the moment, it will likely be removed from the repository in future.
