@@ -1,4 +1,4 @@
-namespace LuaInterface 
+namespace Mono.LuaInterface 
 {
 	using System;
 	using System.IO;
@@ -269,8 +269,9 @@ namespace LuaInterface
                         // Pushes the object again, this time as the base field
                         // of the table and with the luaNet_searchbase metatable
                         LuaLib.lua_pushstring(luaState, "base");
-                        int index = addObject(obj);
-                        pushNewObject(luaState, obj, index, "luaNet_searchbase");
+                        //int index = addObject(obj);
+                        //pushNewObject(luaState, obj, index, "luaNet_searchbase");
+						pushNewObject(luaState, obj, 0, "luaNet_searchbase");
                         LuaLib.lua_rawset(luaState, 1);
                     }
                     else
@@ -439,9 +440,10 @@ namespace LuaInterface
 
                 collectObject(o, index);            // Remove from both our tables and fall out to get a new ID
 			}
-            index = addObject(o);
-
-			pushNewObject(luaState,o,index,metatable);
+            //index = addObject(o);
+//Console.WriteLine("pushObject: {0}", index);
+			pushNewObject(luaState,o,0,metatable);
+			//pushNewObject(luaState,o,index,metatable);
 		}
 
 
@@ -489,7 +491,12 @@ namespace LuaInterface
 			// Stores the object index in the Lua list and pushes the
 			// index into the Lua stack
 			LuaLib.luaL_getmetatable(luaState,"luaNet_objects");
-			LuaLib.luanet_newudata(luaState,index);
+			//Console.WriteLine("luaState2:" + luaState);
+			nextObj++;
+			index = LuaLib.lua_newuserdata(luaState, nextObj).ToInt32();
+			addObject(o, index);
+			//LuaLib.luanet_newudata(luaState,index);
+			//Console.WriteLine("index:"+index);
 			LuaLib.lua_pushvalue(luaState,-3);
 			LuaLib.lua_remove(luaState,-4);
 			LuaLib.lua_setmetatable(luaState,-2);
@@ -552,7 +559,7 @@ namespace LuaInterface
             // New object: inserts it in the list
             int index = nextObj++;
 
-            // Debug.WriteLine("Adding " + obj.ToString() + " @ " + index);
+            //Console.WriteLine("Adding " + obj.ToString() + " @ " + index);
 
             objects[index] = obj;
             objectsBackMap[obj] = index;
@@ -560,7 +567,18 @@ namespace LuaInterface
             return index;
         }
 
+        int addObject(object obj, int index)
+        {
+            // New object: inserts it in the list
+            //int index = nextObj++;
 
+            //Console.WriteLine("Adding " + obj.ToString() + " @ " + index);
+
+            objects[index] = obj;
+            objectsBackMap[obj] = index;
+
+            return index;
+        }
 
 		/*
 		 * Gets an object from the Lua stack according to its Lua type.
@@ -568,6 +586,7 @@ namespace LuaInterface
 		internal object getObject(IntPtr luaState,int index) 
 		{
 			LuaType type=LuaLib.lua_type(luaState,index);
+
 			switch(type) 
 			{
 				case LuaType.Number:
@@ -593,6 +612,7 @@ namespace LuaInterface
 				case LuaType.UserData:
 				{
 					int udata=LuaLib.luanet_tonetobject(luaState,index);
+
 					if(udata!=-1)
 						return objects[udata];
 					else
@@ -739,6 +759,7 @@ namespace LuaInterface
 		 */
 		internal void push(IntPtr luaState, object o) 
 		{
+			Console.WriteLine("push: {0}, {1}", o, luaState);
 			if(o==null) 
 			{
 				LuaLib.lua_pushnil(luaState);

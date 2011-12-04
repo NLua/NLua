@@ -1,5 +1,5 @@
 
-namespace LuaInterface 
+namespace Mono.LuaInterface
 {
 
 	using System;
@@ -273,12 +273,14 @@ namespace LuaInterface
 					returnValue=getObject(remainingPath);
 				}
 				LuaLib.lua_settop(luaState,oldTop);
+				//Console.WriteLine("get: {0}", returnValue);
 				return returnValue;
 			}
 			set 
 			{
 				int oldTop=LuaLib.lua_gettop(luaState);
 				string[] path=fullPath.Split(new char[] { '.' });
+				//Console.WriteLine("set: {0}", path.Length);
 				if(path.Length==1) 
 				{
 					translator.push(luaState,value);

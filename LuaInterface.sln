@@ -3,24 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterface", "LuaInterface\LuaInterface.csproj", "{F55CABBB-4108-4A39-94E1-581FD46DC021}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaWrap", "LuaWrap\LuaWrap.csproj", "{76D7F266-456D-4A7C-916E-E35D057E5F98}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{76D7F266-456D-4A7C-916E-E35D057E5F98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76D7F266-456D-4A7C-916E-E35D057E5F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76D7F266-456D-4A7C-916E-E35D057E5F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76D7F266-456D-4A7C-916E-E35D057E5F98}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = LuaInterface.csproj
+		StartupItem = LuaInterface\LuaInterface.csproj
 	EndGlobalSection
 EndGlobal

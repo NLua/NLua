@@ -36,7 +36,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CheckType.cs" />
     <Compile Include="GenerateEventAssembly.cs" />
     <Compile Include="Lua.cs" />
@@ -45,9 +44,8 @@
     <Compile Include="MethodWrapper.cs" />
     <Compile Include="ObjectTranslator.cs" />
     <Compile Include="ProxyType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
+    <Compile Include="LuaLib\LuaLib.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -58,9 +56,10 @@
   </Target>
   -->
   <ItemGroup>
-    <ProjectReference Include="..\LuaWrap\LuaWrap.csproj">
-      <Project>{76D7F266-456D-4A7C-916E-E35D057E5F98}</Project>
-      <Name>LuaWrap</Name>
-    </ProjectReference>
+    <None Include="..\Dependencies\liblua5.1.so">
+      <Link>liblua5.1.so</Link>
+      <Gettext-ScanForTranslations>false</Gettext-ScanForTranslations>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

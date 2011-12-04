@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LuaInterface
+namespace Mono.LuaInterface
 {
     /// <summary>
     /// Add a specific type for Lua exceptions (kevinh)

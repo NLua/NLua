@@ -152,7 +152,7 @@ namespace LuaWrap
  
 	public static class LuaLib
 	{
-		private const string Lib = "lua51.dll";
+		private const string Lib = "liblua5.1.so";
 		private static int tag = 0;
  
 		#region Core Library
@@ -1126,7 +1126,7 @@ namespace LuaWrap
 		/// </returns>
 		public static extern bool luaL_getmetafield( IntPtr state, int index, string key );
  
-		[DllImport( Lib, CallingConvention = CallingConvention.Cdecl )]
+		//[DllImport( Lib, CallingConvention = CallingConvention.Cdecl )]
 		/// <summary>
 		/// Pushes onto the stack the metatable associated with name tname in the registry (see luaL_newmetatable).
 		/// </summary>
@@ -1136,7 +1136,11 @@ namespace LuaWrap
 		/// <param name="key">
 		/// A <see cref="System.String"/>
 		/// </param>
-		public static extern void luaL_getmetatable( IntPtr state, string key );
+		//public static extern void luaL_getmetatable( IntPtr state, string key );
+		public static void luaL_getmetatable( IntPtr luaState, string key )
+		{
+			lua_getfield(luaState, (int) PseudoIndex.Registry, key);
+		}
  
 		[DllImport( Lib, CallingConvention = CallingConvention.Cdecl )]
 		/// <summary>
@@ -1345,7 +1349,7 @@ namespace LuaWrap
 
 		public static bool luaL_checkmetatable(IntPtr luaState,int index)
 		{
-			bool retVal=false;
+			bool retVal = false;
 
 			if(lua_getmetatable(luaState,index)!=0) 
 			{
@@ -1424,9 +1428,8 @@ namespace LuaWrap
 
 		public static void luanet_newudata(IntPtr luaState,int val)
 		{
-			/*IntPtr pointer= *///lua_newuserdata(luaState, sizeof(int));
-			lua_newuserdata(luaState, val);
-			//pointer=(IntPtr)val;
+			IntPtr pointer = lua_newuserdata(luaState, sizeof(int));
+			pointer = (IntPtr)val;
 		}
 
 		public static int luanet_tonetobject(IntPtr luaState,int index)
@@ -1437,9 +1440,9 @@ namespace LuaWrap
 			{
 				if(luaL_checkmetatable(luaState, index)) 
 				{
-				udata=(IntPtr) lua_touserdata(luaState,index);
-				if(udata!=(IntPtr)0) 
-					return udata.ToInt32(); 
+					udata=(IntPtr) lua_touserdata(luaState,index);
+					if(udata!=(IntPtr)0) 
+						return udata.ToInt32(); 
 				}
 
 			udata=(IntPtr)checkudata_raw(luaState,index, "luaNet_class");

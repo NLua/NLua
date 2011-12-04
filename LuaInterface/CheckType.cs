@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using LuaWrap;
 
-namespace LuaInterface
+namespace Mono.LuaInterface
 {
 	/*
 	 * Type checking and conversion functions.
