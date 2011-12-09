@@ -759,7 +759,7 @@ namespace Mono.LuaInterface
 		 */
 		internal void push(IntPtr luaState, object o) 
 		{
-			Console.WriteLine("push: {0}, {1}", o, luaState);
+			//Console.WriteLine("push: {0}, {1}", o, luaState);
 			if(o==null) 
 			{
 				LuaLib.lua_pushnil(luaState);

@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LuaInterface</RootNamespace>
-    <AssemblyName>LuaInterface</AssemblyName>
+    <AssemblyName>Mono.LuaInterface</AssemblyName>
     <OldToolsVersion>2.0</OldToolsVersion>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
