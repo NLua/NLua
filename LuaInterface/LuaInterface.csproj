@@ -55,13 +55,6 @@
   </Target>
   -->
   <ItemGroup>
-    <None Include="..\Dependencies\liblua5.1.so">
-      <Link>liblua5.1.so</Link>
-      <Gettext-ScanForTranslations>false</Gettext-ScanForTranslations>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\KopiLua\KopiLua.csproj">
       <Project>{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}</Project>
       <Name>KopiLua</Name>
