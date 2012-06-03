@@ -2,14 +2,13 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace Mono.LuaInterface
+namespace LuaInterface
 {
 	/// <summary>
 	/// Summary description for ProxyType.
 	/// </summary>
 	public class ProxyType : IReflect
 	{
-
 		Type proxy;
 
 		public ProxyType(Type proxy) 
@@ -17,14 +16,14 @@ namespace Mono.LuaInterface
 			this.proxy = proxy;
 		}
 
-        /// <summary>
-        /// Provide human readable short hand for this proxy object
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return "ProxyType(" + UnderlyingSystemType + ")";
-        }
+		/// <summary>
+		/// Provide human readable short hand for this proxy object
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return "ProxyType(" + UnderlyingSystemType + ")";
+		}
 
 
 		public Type UnderlyingSystemType 

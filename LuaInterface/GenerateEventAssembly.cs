@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
 
-namespace Mono.LuaInterface
+namespace LuaInterface
 {
 	/*
 	 * Structure to store a type and the return types of
@@ -44,7 +44,7 @@ namespace Mono.LuaInterface
 			this.translator=translator;
 			this.delegateType=delegateType;
 		}
-		public object extractGenerated(IntPtr luaState,int stackPos)
+		public object extractGenerated(KopiLua.Lua.lua_State luaState,int stackPos)
 		{
 			return CodeGeneration.Instance.GetDelegate(delegateType,translator.getFunction(luaState,stackPos));
 		}
@@ -67,7 +67,7 @@ namespace Mono.LuaInterface
 			this.translator=translator;
 			this.klass=klass;
 		}
-		public object extractGenerated(IntPtr luaState,int stackPos)
+		public object extractGenerated(KopiLua.Lua.lua_State luaState,int stackPos)
 		{
 			return CodeGeneration.Instance.GetClassInstance(klass,translator.getTable(luaState,stackPos));
 		}
@@ -105,11 +105,10 @@ namespace Mono.LuaInterface
 		private CodeGeneration() 
 		{
 			// Create an assembly name
-			assemblyName=new AssemblyName( );
+			assemblyName=new AssemblyName();
 			assemblyName.Name="LuaInterface_generatedcode";
 			// Create a new assembly with one module.
-			newAssembly=Thread.GetDomain().DefineDynamicAssembly(
-				assemblyName, AssemblyBuilderAccess.Run);
+			newAssembly=Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
 			newModule=newAssembly.DefineDynamicModule("LuaInterface_generatedcode");
 		}
 
@@ -149,7 +148,7 @@ namespace Mono.LuaInterface
  
 			// Emits the IL for the method. It loads the arguments
 			// and calls the handleEvent method of the base class
-			ILGenerator generator=handleMethod.GetILGenerator( );
+			ILGenerator generator=handleMethod.GetILGenerator();
 			generator.Emit(OpCodes.Ldarg_0);
 			generator.Emit(OpCodes.Ldarg_1);
 			generator.Emit(OpCodes.Ldarg_2);
@@ -202,7 +201,7 @@ namespace Mono.LuaInterface
 				returnType,paramTypes);
 
 			// Generates the IL for the method
-			ILGenerator generator=delegateMethod.GetILGenerator( );
+			ILGenerator generator=delegateMethod.GetILGenerator();
  
 			generator.DeclareLocal(typeof(object[])); // original arguments
 			generator.DeclareLocal(typeof(object[])); // with out-only arguments removed
@@ -452,7 +451,7 @@ namespace Mono.LuaInterface
 			if(myType.BaseType.Equals(typeof(object)))
 				myType.DefineMethodOverride(methodImpl,method);
  
-			ILGenerator generator=methodImpl.GetILGenerator( );
+			ILGenerator generator=methodImpl.GetILGenerator();
  
 			generator.DeclareLocal(typeof(object[])); // original arguments
 			generator.DeclareLocal(typeof(object[])); // with out-only arguments removed

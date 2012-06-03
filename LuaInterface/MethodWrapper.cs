@@ -1,12 +1,12 @@
-namespace Mono.LuaInterface 
+namespace LuaInterface 
 {
 	using System;
 	using System.IO;
 	using System.Collections;
 	using System.Reflection;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using LuaWrap;
+	using System.Collections.Generic;
+	using System.Diagnostics;
+	using LuaWrap;
 
 	/*
 	 * Cached method
@@ -36,7 +36,7 @@ namespace Mono.LuaInterface
 	/*
 	 * Argument extraction with type-conversion function
 	 */
-	delegate object ExtractValue(IntPtr luaState, int stackPos);
+	delegate object ExtractValue(KopiLua.Lua.lua_State luaState, int stackPos);
 
 	/*
 	 * Wrapper class for methods/constructors accessed from Lua.
@@ -85,49 +85,49 @@ namespace Mono.LuaInterface
 		}
 
 
-                /// <summary>
-        /// Convert C# exceptions into Lua errors
-        /// </summary>
-        /// <returns>num of things on stack</returns>
-        /// <param name="e">null for no pending exception</param>
-        int SetPendingException(Exception e)
-        {
-            return translator.interpreter.SetPendingException(e);
-        }
+				/// <summary>
+		/// Convert C# exceptions into Lua errors
+		/// </summary>
+		/// <returns>num of things on stack</returns>
+		/// <param name="e">null for no pending exception</param>
+		int SetPendingException(Exception e)
+		{
+			return translator.interpreter.SetPendingException(e);
+		}
 
 
 		/*
 		 * Calls the method. Receives the arguments from the Lua stack
 		 * and returns values in it.
 		 */
-		public int call(IntPtr luaState) 
+		public int call(KopiLua.Lua.lua_State luaState) 
 		{
-            MethodBase methodToCall=method;
+			MethodBase methodToCall=method;
 			object targetObject=target;
 			bool failedCall=true;
 			int nReturnValues=0;
-			if(!LuaLib.lua_checkstack(luaState,5))
+			if(!KopiLua.Lua.lua_checkstack(luaState,5).ToBoolean())
 				throw new LuaException("Lua stack overflow");
 
-            bool isStatic = (bindingType & BindingFlags.Static) == BindingFlags.Static;
+			bool isStatic = (bindingType & BindingFlags.Static) == BindingFlags.Static;
 
-            SetPendingException(null);
+			SetPendingException(null);
 
 			if(methodToCall==null) // Method from name
 			{
-                if (isStatic) 
+				if (isStatic) 
 					targetObject=null;
 				else 
 					targetObject=extractTarget(luaState,1);
-				//LuaLib.lua_remove(luaState,1); // Pops the receiver
+				//KopiLua.Lua.lua_remove(luaState,1); // Pops the receiver
 				if(lastCalledMethod.cachedMethod!=null) // Cached?
 				{
-                    int numStackToSkip = isStatic ? 0 : 1; // If this is an instance invoe we will have an extra arg on the stack for the targetObject
-                    int numArgsPassed = LuaLib.lua_gettop(luaState) - numStackToSkip;   
+					int numStackToSkip = isStatic ? 0 : 1; // If this is an instance invoe we will have an extra arg on the stack for the targetObject
+					int numArgsPassed = KopiLua.Lua.lua_gettop(luaState) - numStackToSkip;   
 
 					if(numArgsPassed == lastCalledMethod.argTypes.Length) // No. of args match?
 					{
-						if(!LuaLib.lua_checkstack(luaState,lastCalledMethod.outList.Length+6))
+						if(!KopiLua.Lua.lua_checkstack(luaState,lastCalledMethod.outList.Length+6).ToBoolean())
 							throw new LuaException("Lua stack overflow");
 						try 
 						{
@@ -137,7 +137,7 @@ namespace Mono.LuaInterface
 									lastCalledMethod.argTypes[i].extractValue(luaState, i + 1 + numStackToSkip);
 
 								if(lastCalledMethod.args[lastCalledMethod.argTypes[i].index]==null &&
-                                    !LuaLib.lua_isnil(luaState, i + 1 + numStackToSkip)) 
+									!KopiLua.Lua.lua_isnil(luaState, i + 1 + numStackToSkip)) 
 								{
 									throw new LuaException("argument number "+(i+1)+" is invalid"); 
 								}
@@ -172,27 +172,27 @@ namespace Mono.LuaInterface
 				// Cache miss
 				if(failedCall) 
 				{
-                    // System.Diagnostics.Debug.WriteLine("cache miss on " + methodName);
+					// System.Diagnostics.Debug.WriteLine("cache miss on " + methodName);
 
 					// If we are running an instance variable, we can now pop the targetObject from the stack
-                    if (!isStatic)
-                    {
-                        if (targetObject == null)
-                        {
-                            translator.throwError(luaState, String.Format("instance method '{0}' requires a non null target object", methodName));
-                            LuaLib.lua_pushnil(luaState);
-                            return 1;
-                        }
+					if (!isStatic)
+					{
+						if (targetObject == null)
+						{
+							translator.throwError(luaState, String.Format("instance method '{0}' requires a non null target object", methodName));
+							KopiLua.Lua.lua_pushnil(luaState);
+							return 1;
+						}
 
-                        LuaLib.lua_remove(luaState, 1); // Pops the receiver
-                    }
+						KopiLua.Lua.lua_remove(luaState, 1); // Pops the receiver
+					}
 
 					bool hasMatch=false;
-                    string candidateName = null;
+					string candidateName = null;
 
 					foreach(MemberInfo member in members) 
 					{
-                        candidateName = member.ReflectedType.Name + "." + member.Name;
+						candidateName = member.ReflectedType.Name + "." + member.Name;
 
 						MethodBase m=(MethodInfo)member;
 
@@ -205,12 +205,12 @@ namespace Mono.LuaInterface
 					}
 					if(!hasMatch) 
 					{
-                        string msg = (candidateName == null) 
-                            ? "invalid arguments to method call"
-                            : ("invalid arguments to method: " + candidateName);
+						string msg = (candidateName == null) 
+							? "invalid arguments to method call"
+							: ("invalid arguments to method: " + candidateName);
 
 						translator.throwError(luaState, msg); 
-						LuaLib.lua_pushnil(luaState);
+						KopiLua.Lua.lua_pushnil(luaState);
 						return 1;
 					}
 				}
@@ -220,23 +220,23 @@ namespace Mono.LuaInterface
 				if(!methodToCall.IsStatic && !methodToCall.IsConstructor && targetObject==null) 
 				{
 					targetObject=extractTarget(luaState,1);
-					LuaLib.lua_remove(luaState,1); // Pops the receiver
+					KopiLua.Lua.lua_remove(luaState,1); // Pops the receiver
 				}
 				if(!translator.matchParameters(luaState,methodToCall,ref lastCalledMethod)) 
 				{
 					translator.throwError(luaState,"invalid arguments to method call"); 
-					LuaLib.lua_pushnil(luaState);
+					KopiLua.Lua.lua_pushnil(luaState);
 					return 1;
 				}
 			}
 
 			if(failedCall) 
 			{
-				if(!LuaLib.lua_checkstack(luaState,lastCalledMethod.outList.Length+6))
+				if(!KopiLua.Lua.lua_checkstack(luaState,lastCalledMethod.outList.Length+6).ToBoolean())
 					throw new LuaException("Lua stack overflow");
 				try 
 				{
-                    if (isStatic) 
+					if (isStatic) 
 					{
 						translator.push(luaState,lastCalledMethod.cachedMethod.Invoke(null,lastCalledMethod.args));
 					} 
@@ -254,7 +254,7 @@ namespace Mono.LuaInterface
 				}
 				catch(Exception e)
 				{
-                    return SetPendingException(e);
+					return SetPendingException(e);
 				}
 			}
 
@@ -272,37 +272,37 @@ namespace Mono.LuaInterface
 
 
 
-    /// <summary>
-    /// We keep track of what delegates we have auto attached to an event - to allow us to cleanly exit a LuaInterface session
-    /// </summary>
-    class EventHandlerContainer  : IDisposable
-    {
-        Dictionary<Delegate, RegisterEventHandler> dict = new Dictionary<Delegate, RegisterEventHandler>();
+	/// <summary>
+	/// We keep track of what delegates we have auto attached to an event - to allow us to cleanly exit a LuaInterface session
+	/// </summary>
+	class EventHandlerContainer  : IDisposable
+	{
+		Dictionary<Delegate, RegisterEventHandler> dict = new Dictionary<Delegate, RegisterEventHandler>();
 
-        public void Add(Delegate handler, RegisterEventHandler eventInfo)
-        {
-            dict.Add(handler, eventInfo);
-        }
+		public void Add(Delegate handler, RegisterEventHandler eventInfo)
+		{
+			dict.Add(handler, eventInfo);
+		}
 
-        public void Remove(Delegate handler)
-        {
-            bool found = dict.Remove(handler);
-            Debug.Assert(found);
-        }
+		public void Remove(Delegate handler)
+		{
+			bool found = dict.Remove(handler);
+			Debug.Assert(found);
+		}
 
-        /// <summary>
-        /// Remove any still registered handlers
-        /// </summary>
-        public void Dispose()
-        {
-            foreach (KeyValuePair<Delegate, RegisterEventHandler> pair in dict)
-            {
-                pair.Value.RemovePending(pair.Key);
-            }
+		/// <summary>
+		/// Remove any still registered handlers
+		/// </summary>
+		public void Dispose()
+		{
+			foreach (KeyValuePair<Delegate, RegisterEventHandler> pair in dict)
+			{
+				pair.Value.RemovePending(pair.Key);
+			}
 
-            dict.Clear();
-        }
-    }
+			dict.Clear();
+		}
+	}
 
 
 	/*
@@ -316,13 +316,13 @@ namespace Mono.LuaInterface
 	{
 		object target;
 		EventInfo eventInfo;
-        EventHandlerContainer pendingEvents;
+		EventHandlerContainer pendingEvents;
 
 		public RegisterEventHandler(EventHandlerContainer pendingEvents, object target, EventInfo eventInfo) 
 		{
 			this.target=target;
 			this.eventInfo=eventInfo;
-            this.pendingEvents = pendingEvents;
+			this.pendingEvents = pendingEvents;
 		}
 
 
@@ -337,7 +337,7 @@ namespace Mono.LuaInterface
 
 			Delegate handlerDelegate=Delegate.CreateDelegate(eventInfo.EventHandlerType,handler,"HandleEvent");
 			eventInfo.AddEventHandler(target,handlerDelegate);
-            pendingEvents.Add(handlerDelegate, this);
+			pendingEvents.Add(handlerDelegate, this);
 
 			return handlerDelegate;
 		}
@@ -348,16 +348,16 @@ namespace Mono.LuaInterface
 		public void Remove(Delegate handlerDelegate) 
 		{
 			RemovePending(handlerDelegate);
-            pendingEvents.Remove(handlerDelegate);
+			pendingEvents.Remove(handlerDelegate);
 		}
 
-        /*
-         * Removes an existing event handler (without updating the pending handlers list)
-         */
-        internal void RemovePending(Delegate handlerDelegate)
-        {
-            eventInfo.RemoveEventHandler(target, handlerDelegate);
-        }
+		/*
+		 * Removes an existing event handler (without updating the pending handlers list)
+		 */
+		internal void RemovePending(Delegate handlerDelegate)
+		{
+			eventInfo.RemoveEventHandler(target, handlerDelegate);
+		}
 	}
 
 	/*
@@ -441,7 +441,7 @@ namespace Mono.LuaInterface
 			object funcObj=luaTable.rawget(name);
 			if(funcObj is LuaFunction)
 				return (LuaFunction)funcObj;
-            else
+			else
 				return null;
 		}
 		/*
