@@ -618,6 +618,7 @@ namespace LuaInterface
 					if(udata!=-1)
 						return objects[udata];
 					else
+						//return null;
 						return getUserData(luaState,index);
 				}
 				default:
@@ -749,7 +750,6 @@ namespace LuaInterface
 			{
 				// Make sure we are _really_ ILuaGenerated
 				Type typ = o.GetType();
-
 				return (typ.GetInterface("ILuaGeneratedType") != null);
 			}
 			else

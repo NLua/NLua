@@ -107,7 +107,6 @@ namespace KopiLua
 		  }
 		  //return newlstr(L, str, l, h);  /* not found */
 		  TString res = newlstr(L, str, l, h);
-			Console.WriteLine(res);
 		  return res;
 		}
 

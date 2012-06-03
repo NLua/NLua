@@ -277,8 +277,6 @@ namespace KopiLua
 		public static int lua_rawequal (lua_State L, int index1, int index2) {
 		  StkId o1 = index2adr(L, index1);
 		  StkId o2 = index2adr(L, index2);
-			Console.WriteLine("lua_rawequal: {0}", (o1 == luaO_nilobject || o2 == luaO_nilobject));
-			Console.WriteLine("lua_rawequal2: {0}", luaO_rawequalObj(o1, o2));
 		  return (o1 == luaO_nilobject || o2 == luaO_nilobject) ? 0
 				 : luaO_rawequalObj(o1, o2);
 		}
@@ -392,11 +390,10 @@ namespace KopiLua
 
 		public static uint lua_touserdata2 (lua_State L, int idx) {
 		  StkId o = index2adr(L, idx);
-			Console.WriteLine("x0:{0}", o);
 		  switch (ttype(o)) {
-			case LUA_TUSERDATA: Console.WriteLine("x:{0}", rawuvalue(o).len); return (rawuvalue(o).len);
-			case LUA_TLIGHTUSERDATA: Console.WriteLine("x2:{0}", rawuvalue(o).len); return (rawuvalue(o).len);
-			default: Console.WriteLine("x3:{0}", 0); return 0;
+			case LUA_TUSERDATA: return (rawuvalue(o).len);
+			case LUA_TLIGHTUSERDATA: return (rawuvalue(o).len);
+			default: return 0;
 		  }
 		}
 
@@ -556,7 +553,6 @@ namespace KopiLua
 		}
 
 		public static void lua_getfield (lua_State L, int idx, CharPtr k) {
-			Console.WriteLine("lllll:{0}", k);
 		  StkId t;
 		  TValue key = new TValue();
 		  lua_lock(L);
@@ -624,7 +620,6 @@ namespace KopiLua
 			res = 1;
 		  }
 		  lua_unlock(L);
-			Console.WriteLine("nulllll: {0}", res);
 		  return res;
 		}
 
@@ -835,7 +830,6 @@ namespace KopiLua
 			api_checkvalidindex(L, o);
 			func = savestack(L, o);
 		  }
-			Console.WriteLine("func:{0}", func);
 		  c.func = L.top - (nargs+1);  /* function to be called */
 		  c.nresults = nresults;
 		  status = luaD_pcall(L, f_call, c, savestack(L, c.func), func);

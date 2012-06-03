@@ -237,11 +237,8 @@ namespace LuaInterface
 		public object[] DoFile(string fileName) 
 		{
 			int oldTop=KopiLua.Lua.lua_gettop(luaState);
-			//Console.WriteLine("aaa: {0}",oldTop);
 			if(KopiLua.Lua.luaL_loadfile(luaState,fileName)==0) 
 			{
-				//Console.WriteLine("aaa2: {0}",KopiLua.Lua.lua_pcall(luaState, 0, -1, 0));
-				//Console.WriteLine("zzzzzzzzzzzzzzzzzz");
 				if (KopiLua.Lua.lua_pcall(luaState, 0, -1, 0) == 0)
 					return translator.popValues(luaState, oldTop);
 				else
@@ -348,7 +345,8 @@ namespace LuaInterface
 		public LuaFunction GetFunction(string fullPath) 
 		{
 			object obj=this[fullPath];
-			return (obj is KopiLua.Lua.lua_CFunction ? new LuaFunction((KopiLua.Lua.lua_CFunction)obj,this) : (LuaFunction)obj);
+			//return (obj is KopiLua.Lua.lua_CFunction ? new LuaFunction((KopiLua.Lua.lua_CFunction)obj,this) : (LuaFunction)obj);
+			return (obj is KopiLua.Lua.lua_CFunction ? new LuaFunction((KopiLua.Lua.lua_CFunction)obj,this) : /*(LuaFunction)*/new LuaFunction(obj.GetHashCode(), this));
 		}
 		/*
 		 * Gets a function global variable as a delegate of
@@ -533,7 +531,7 @@ namespace LuaInterface
 		 * Registers an object's method as a Lua function (global or table field)
 		 * The method may have any signature
 		 */
-			public LuaFunction RegisterFunction(string path, object target,MethodInfo function) 
+		public LuaFunction RegisterFunction(string path, object target,MethodInfo function) 
 		{
 			// We leave nothing on the stack when we are done
 			int oldTop = KopiLua.Lua.lua_gettop(luaState);
@@ -545,7 +543,6 @@ namespace LuaInterface
 			LuaFunction f = GetFunction(path);
 
 			KopiLua.Lua.lua_settop(luaState, oldTop);
-
 			return f;
 		}
 

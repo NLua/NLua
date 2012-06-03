@@ -106,13 +106,15 @@ namespace LuaInterface
 			object targetObject=target;
 			bool failedCall=true;
 			int nReturnValues=0;
+			Console.WriteLine("asyyyyyyyyyyyyyy");
 			if(!KopiLua.Lua.lua_checkstack(luaState,5).ToBoolean())
 				throw new LuaException("Lua stack overflow");
-
+Console.WriteLine("asyyyyyyyyyyyyyy1");
 			bool isStatic = (bindingType & BindingFlags.Static) == BindingFlags.Static;
-
+Console.WriteLine("asyyyyyyyyyyyyyy2");
 			SetPendingException(null);
-
+Console.WriteLine("asyyyyyyyyyyyyyy3");
+			Console.WriteLine(methodToCall==null);
 			if(methodToCall==null) // Method from name
 			{
 				if (isStatic) 
@@ -120,6 +122,9 @@ namespace LuaInterface
 				else 
 					targetObject=extractTarget(luaState,1);
 				//KopiLua.Lua.lua_remove(luaState,1); // Pops the receiver
+				Console.WriteLine("asdxxxxxx");
+				Console.WriteLine(lastCalledMethod.cachedMethod);
+				Console.WriteLine(lastCalledMethod.cachedMethod!=null);
 				if(lastCalledMethod.cachedMethod!=null) // Cached?
 				{
 					int numStackToSkip = isStatic ? 0 : 1; // If this is an instance invoe we will have an extra arg on the stack for the targetObject
@@ -131,6 +136,8 @@ namespace LuaInterface
 							throw new LuaException("Lua stack overflow");
 						try 
 						{
+							Console.WriteLine("0");
+							Console.WriteLine(lastCalledMethod.argTypes.Length);
 							for(int i=0;i<lastCalledMethod.argTypes.Length;i++) 
 							{
 								lastCalledMethod.args[lastCalledMethod.argTypes[i].index]=
@@ -142,12 +149,14 @@ namespace LuaInterface
 									throw new LuaException("argument number "+(i+1)+" is invalid"); 
 								}
 							}
+							Console.WriteLine("asd");
 							if((bindingType & BindingFlags.Static)==BindingFlags.Static) 
 							{
 								translator.push(luaState,lastCalledMethod.cachedMethod.Invoke(null,lastCalledMethod.args));
 							} 
 							else 
 							{
+								Console.WriteLine("asd2");
 								if(lastCalledMethod.cachedMethod.IsConstructor)
 									translator.push(luaState,((ConstructorInfo)lastCalledMethod.cachedMethod).Invoke(lastCalledMethod.args));
 								else

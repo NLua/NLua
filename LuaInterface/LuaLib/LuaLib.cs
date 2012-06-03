@@ -270,7 +270,7 @@ namespace LuaWrap
 
 		public static int luanet_rawnetobj(Lua.lua_State luaState,int obj)
 		{
-			int udata= Convert.ToInt32(Lua.lua_touserdata2(luaState, obj));
+			int udata= (int)Lua.lua_touserdata2(luaState, obj);
 			if(udata!=0)
 				return udata;
 			return -1;
@@ -284,25 +284,19 @@ namespace LuaWrap
 		public static int checkudata_raw(Lua.lua_State luaState, int ud, string tname)
 		{
 			int p = (int)Lua.lua_touserdata2(luaState, ud);
-			Console.WriteLine("z:{0}", p);
 			if(p != 0) 
 			{
 				/* value is a userdata? */
-				Console.WriteLine("z0:{0}", p);
-				//Console.WriteLine("z2:{0}", Lua.lua_getmetatable(luaState, ud));
 				if(Lua.lua_getmetatable(luaState, ud)!=0) 
 				{
 					/* does it have a metatable? */
-					Console.WriteLine("z1:{0}", p);
 					Lua.lua_getfield(luaState, (int)PseudoIndex.Registry, tname);  /* get correct metatable */
-//Console.WriteLine("z3:{0}", p);
 					bool isEqual = Lua.lua_rawequal(luaState, -1, -2).ToBoolean();
-Console.WriteLine("z2:{0}", p);
-					Console.WriteLine("z2-1:{0}", isEqual);
+
 					// NASTY - we need our own version of the lua_pop macro
 					// lua_pop(L, 2);  /* remove both metatables */
 					Lua.lua_settop(luaState, -(2) - 1);
-Console.WriteLine("z3:{0}", p);
+
 					if(isEqual)   /* does it have the correct mt? */
 						return p;
 				 }
@@ -330,29 +324,23 @@ Console.WriteLine("z3:{0}", p);
 		{
 			int udata;
 
-			Console.WriteLine("asd:"+(Lua.lua_type(luaState, index).ToLuaType() == LuaType.UserData).ToString());
-			Console.WriteLine("asd:1"+Lua.lua_type(luaState, index));
 			if(Lua.lua_type(luaState, index).ToLuaType() == LuaType.UserData)
 			{
 				if(luaL_checkmetatable(luaState, index)) 
 				{
 					udata = (int)Lua.lua_touserdata2(luaState, index);
-					Console.WriteLine("asd0:{0}",udata);
 					if(udata != 0) 
 						return udata; 
 				}
 				udata = checkudata_raw(luaState, index, "luaNet_class");
-Console.WriteLine("asd2:{0}",udata);
 				if(udata != 0)
 					return udata;
 
 				udata = checkudata_raw(luaState, index, "luaNet_searchbase");
-Console.WriteLine("asd3:{0}",udata);
 				if(udata != 0)
 					return udata;
 
 				udata = checkudata_raw(luaState, index, "luaNet_function");
-Console.WriteLine("asd4:{0}",udata);
 				if(udata != 0)
 					return udata;
 			}

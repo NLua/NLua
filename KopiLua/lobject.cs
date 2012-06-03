@@ -758,7 +758,6 @@ namespace KopiLua
 
 
 		public static int luaO_rawequalObj (TValue t1, TValue t2) {
-			Console.WriteLine("luaO_rawequalObj: {0}", ttype(t1) != ttype(t2));
 		  if (ttype(t1) != ttype(t2)) return 0;
 		  else switch (ttype(t1)) {
 			case LUA_TNIL:
@@ -771,9 +770,6 @@ namespace KopiLua
 				return pvalue(t1) == pvalue(t2) ? 1 : 0;
 			default:
 			  lua_assert(iscollectable(t1));
-				Console.WriteLine("luaO_rawequalObj1-0: {0}", gcvalue(t1));
-				Console.WriteLine("luaO_rawequalObj1-1: {0}", gcvalue(t2));
-				Console.WriteLine("luaO_rawequalObj1: {0}", gcvalue(t1) == gcvalue(t2));
 			  return gcvalue(t1) == gcvalue(t2) ? 1 : 0;
 		  }
 		}
