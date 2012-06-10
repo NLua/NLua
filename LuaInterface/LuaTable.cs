@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Lua511;
 using System.Collections;
+using LuaWrap;
 
 namespace LuaInterface
 {
@@ -109,8 +109,8 @@ namespace LuaInterface
         {
             object obj = _Interpreter.rawGetObject(_Reference, field);
 
-            if (obj is LuaCSFunction)
-                return new LuaFunction((LuaCSFunction)obj, _Interpreter);
+            if (obj is KopiLua.Lua.lua_CFunction)
+                return new LuaFunction((KopiLua.Lua.lua_CFunction)obj, _Interpreter);
             else
                 return obj;
         }
@@ -118,9 +118,9 @@ namespace LuaInterface
         /*
          * Pushes this table into the Lua stack
          */
-        internal void push(IntPtr luaState)
+        internal void push(KopiLua.Lua.lua_State luaState)
         {
-            LuaDLL.lua_getref(luaState, _Reference);
+            LuaLib.lua_getref(luaState, _Reference);
         }
         public override string ToString()
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Lua511;
+using LuaWrap;
 
 namespace LuaInterface
 {
@@ -58,9 +58,9 @@ namespace LuaInterface
         /*
          * Pushes the userdata into the Lua stack
          */
-        internal void push(IntPtr luaState)
+        internal void push(KopiLua.Lua.lua_State luaState)
         {
-            LuaDLL.lua_getref(luaState, _Reference);
+            LuaLib.lua_getref(luaState, _Reference);
         }
         public override string ToString()
         {

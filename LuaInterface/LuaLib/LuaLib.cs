@@ -82,7 +82,7 @@ namespace LuaWrap
 		NoRef 	= -2
 	}
  
-	public enum LuaType : int
+	public enum LuaTypes : int
 	{
 		None 			= -1,
 		Nil 			= 0,
@@ -150,9 +150,9 @@ namespace LuaWrap
 	{
 		private static int tag = 0;
 
-		public static LuaType ToLuaType(this int type)
+		public static LuaTypes ToLuaTypes(this int type)
 		{
-			return (LuaType)type;
+			return (LuaTypes)type;
 		}
 
 		public static LuaEnum ToLuaEnum(this int lenum)
@@ -324,7 +324,7 @@ namespace LuaWrap
 		{
 			int udata;
 
-			if(Lua.lua_type(luaState, index).ToLuaType() == LuaType.UserData)
+			if(Lua.lua_type(luaState, index).ToLuaTypes() == LuaTypes.UserData)
 			{
 				if(luaL_checkmetatable(luaState, index)) 
 				{

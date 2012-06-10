@@ -6,8 +6,8 @@ namespace LuaInterface
     using System.Reflection;
     using System.Diagnostics;
     using System.Collections.Generic;
-    using Lua511;
     using System.Runtime.InteropServices;
+	using LuaWrap;
 
     /*
      * Functions used in the metatables of userdata representing
@@ -39,39 +39,39 @@ namespace LuaInterface
 
         private ObjectTranslator translator;
         private Hashtable memberCache = new Hashtable();
-        internal LuaCSFunction gcFunction, indexFunction, newindexFunction,
+        internal KopiLua.Lua.lua_CFunction gcFunction, indexFunction, newindexFunction,
             baseIndexFunction, classIndexFunction, classNewindexFunction,
             execDelegateFunction, callConstructorFunction, toStringFunction;
 
         public MetaFunctions(ObjectTranslator translator)
         {
             this.translator = translator;
-            gcFunction = new LuaCSFunction(this.collectObject);
-            toStringFunction = new LuaCSFunction(this.toString);
-            indexFunction = new LuaCSFunction(this.getMethod);
-            newindexFunction = new LuaCSFunction(this.setFieldOrProperty);
-            baseIndexFunction = new LuaCSFunction(this.getBaseMethod);
-            callConstructorFunction = new LuaCSFunction(this.callConstructor);
-            classIndexFunction = new LuaCSFunction(this.getClassMethod);
-            classNewindexFunction = new LuaCSFunction(this.setClassFieldOrProperty);
-            execDelegateFunction = new LuaCSFunction(this.runFunctionDelegate);
+            gcFunction = new KopiLua.Lua.lua_CFunction(this.collectObject);
+            toStringFunction = new KopiLua.Lua.lua_CFunction(this.toString);
+            indexFunction = new KopiLua.Lua.lua_CFunction(this.getMethod);
+            newindexFunction = new KopiLua.Lua.lua_CFunction(this.setFieldOrProperty);
+            baseIndexFunction = new KopiLua.Lua.lua_CFunction(this.getBaseMethod);
+            callConstructorFunction = new KopiLua.Lua.lua_CFunction(this.callConstructor);
+            classIndexFunction = new KopiLua.Lua.lua_CFunction(this.getClassMethod);
+            classNewindexFunction = new KopiLua.Lua.lua_CFunction(this.setClassFieldOrProperty);
+            execDelegateFunction = new KopiLua.Lua.lua_CFunction(this.runFunctionDelegate);
         }
 
         /*
          * __call metafunction of CLR delegates, retrieves and calls the delegate.
          */
-        private int runFunctionDelegate(IntPtr luaState)
+        private int runFunctionDelegate(KopiLua.Lua.lua_State luaState)
         {
-            LuaCSFunction func = (LuaCSFunction)translator.getRawNetObject(luaState, 1);
-            LuaDLL.lua_remove(luaState, 1);
+            KopiLua.Lua.lua_CFunction func = (KopiLua.Lua.lua_CFunction)translator.getRawNetObject(luaState, 1);
+            KopiLua.Lua.lua_remove(luaState, 1);
             return func(luaState);
         }
         /*
          * __gc metafunction of CLR objects.
          */
-        private int collectObject(IntPtr luaState)
+        private int collectObject(KopiLua.Lua.lua_State luaState)
         {
-            int udata = LuaDLL.luanet_rawnetobj(luaState, 1);
+            int udata = LuaLib.luanet_rawnetobj(luaState, 1);
             if (udata != -1)
             {
                 translator.collectObject(udata);
@@ -85,14 +85,14 @@ namespace LuaInterface
         /*
          * __tostring metafunction of CLR objects.
          */
-        private int toString(IntPtr luaState)
+        private int toString(KopiLua.Lua.lua_State luaState)
         {
             object obj = translator.getRawNetObject(luaState, 1);
             if (obj != null)
             {
                 translator.push(luaState, obj.ToString() + ": " + obj.GetHashCode());
             }
-            else LuaDLL.lua_pushnil(luaState);
+            else KopiLua.Lua.lua_pushnil(luaState);
             return 1;
         }
 
@@ -101,19 +101,19 @@ namespace LuaInterface
         /// Debug tool to dump the lua stack
         /// </summary>
         /// FIXME, move somewhere else
-        public static void dumpStack(ObjectTranslator translator, IntPtr luaState)
+        public static void dumpStack(ObjectTranslator translator, KopiLua.Lua.lua_State luaState)
         {
-            int depth = LuaDLL.lua_gettop(luaState);
+            int depth = KopiLua.Lua.lua_gettop(luaState);
 
             Debug.WriteLine("lua stack depth: " + depth);
             for (int i = 1; i <= depth; i++)
             {
-                LuaTypes type = LuaDLL.lua_type(luaState, i);
+                LuaTypes type = KopiLua.Lua.lua_type(luaState, i).ToLuaTypes();
                 // we dump stacks when deep in calls, calling typename while the stack is in flux can fail sometimes, so manually check for key types
-                string typestr = (type == LuaTypes.LUA_TTABLE) ? "table" : LuaDLL.lua_typename(luaState, type);
+                string typestr = (type == LuaTypes.Table) ? "table" : KopiLua.Lua.lua_typename(luaState, Convert.ToInt32(type)).ToString();
 
-                string strrep = LuaDLL.lua_tostring(luaState, i);
-                if (type == LuaTypes.LUA_TUSERDATA)
+                string strrep = KopiLua.Lua.lua_tostring(luaState, i).ToString();
+                if (type == LuaTypes.UserData)
                 {
                     object obj = translator.getRawNetObject(luaState, i);
                     strrep = obj.ToString();
@@ -131,13 +131,13 @@ namespace LuaInterface
          * either the value of the member or a delegate to call it.
          * If the member does not exist returns nil.
          */
-        private int getMethod(IntPtr luaState)
+        private int getMethod(KopiLua.Lua.lua_State luaState)
         {
             object obj = translator.getRawNetObject(luaState, 1);
             if (obj == null)
             {
                 translator.throwError(luaState, "trying to index an invalid object reference");
-                LuaDLL.lua_pushnil(luaState);
+                KopiLua.Lua.lua_pushnil(luaState);
                 return 1;
             }
 
@@ -204,7 +204,7 @@ namespace LuaInterface
                             {
                                 translator.throwError(luaState, "method not found (or no indexer): " + index);
 
-                                LuaDLL.lua_pushnil(luaState);
+                                KopiLua.Lua.lua_pushnil(luaState);
                             }
                             else
                             {
@@ -228,7 +228,7 @@ namespace LuaInterface
                                     else
                                         translator.throwError(luaState, "exception indexing '" + index + "' " + e.Message);
 
-                                    LuaDLL.lua_pushnil(luaState);
+                                    KopiLua.Lua.lua_pushnil(luaState);
                                 }
                             }
                         }
@@ -238,7 +238,7 @@ namespace LuaInterface
 
             }
 
-            LuaDLL.lua_pushboolean(luaState, false);
+            KopiLua.Lua.lua_pushboolean(luaState, 0);
             return 2;
         }
 
@@ -247,31 +247,31 @@ namespace LuaInterface
          * __index metafunction of base classes (the base field of Lua tables).
          * Adds a prefix to the method name to call the base version of the method.
          */
-        private int getBaseMethod(IntPtr luaState)
+        private int getBaseMethod(KopiLua.Lua.lua_State luaState)
         {
             object obj = translator.getRawNetObject(luaState, 1);
             if (obj == null)
             {
                 translator.throwError(luaState, "trying to index an invalid object reference");
-                LuaDLL.lua_pushnil(luaState);
-                LuaDLL.lua_pushboolean(luaState, false);
+                KopiLua.Lua.lua_pushnil(luaState);
+                KopiLua.Lua.lua_pushboolean(luaState, 0);
                 return 2;
             }
-            string methodName = LuaDLL.lua_tostring(luaState, 2);
+            string methodName = KopiLua.Lua.lua_tostring(luaState, 2).ToString();
             if (methodName == null)
             {
-                LuaDLL.lua_pushnil(luaState);
-                LuaDLL.lua_pushboolean(luaState, false);
+                KopiLua.Lua.lua_pushnil(luaState);
+                KopiLua.Lua.lua_pushboolean(luaState, 0);
                 return 2;
             }
             getMember(luaState, obj.GetType(), obj, "__luaInterface_base_" + methodName, BindingFlags.Instance | BindingFlags.IgnoreCase);
-            LuaDLL.lua_settop(luaState, -2);
-            if (LuaDLL.lua_type(luaState, -1) == LuaTypes.LUA_TNIL)
+            KopiLua.Lua.lua_settop(luaState, -2);
+            if (KopiLua.Lua.lua_type(luaState, -1).ToLuaTypes() == LuaTypes.Nil)
             {
-                LuaDLL.lua_settop(luaState, -2);
+                KopiLua.Lua.lua_settop(luaState, -2);
                 return getMember(luaState, obj.GetType(), obj, methodName, BindingFlags.Instance | BindingFlags.IgnoreCase);
             }
-            LuaDLL.lua_pushboolean(luaState, false);
+            KopiLua.Lua.lua_pushboolean(luaState, 0);
             return 2;
         }
 
@@ -300,15 +300,15 @@ namespace LuaInterface
          * Uses reflection to find members, and stores the reflected MemberInfo object in
          * a cache (indexed by the type of the object and the name of the member).
          */
-        private int getMember(IntPtr luaState, IReflect objType, object obj, string methodName, BindingFlags bindingType)
+        private int getMember(KopiLua.Lua.lua_State luaState, IReflect objType, object obj, string methodName, BindingFlags bindingType)
         {
             bool implicitStatic = false;
             MemberInfo member = null;
             object cachedMember = checkMemberCache(memberCache, objType, methodName);
             //object cachedMember=null;
-            if (cachedMember is LuaCSFunction)
+            if (cachedMember is KopiLua.Lua.lua_CFunction)
             {
-                translator.pushFunction(luaState, (LuaCSFunction)cachedMember);
+                translator.pushFunction(luaState, (KopiLua.Lua.lua_CFunction)cachedMember);
                 translator.push(luaState, true);
                 return 2;
             }
@@ -348,7 +348,7 @@ namespace LuaInterface
                     }
                     catch
                     {
-                        LuaDLL.lua_pushnil(luaState);
+                        KopiLua.Lua.lua_pushnil(luaState);
                     }
                 }
                 else if (member.MemberType == MemberTypes.Property)
@@ -369,12 +369,12 @@ namespace LuaInterface
                         if (objType is Type && !(((Type)objType) == typeof(object)))
                             return getMember(luaState, ((Type)objType).BaseType, obj, methodName, bindingType);
                         else
-                            LuaDLL.lua_pushnil(luaState);
+                            KopiLua.Lua.lua_pushnil(luaState);
                     }
                     catch (TargetInvocationException e)  // Convert this exception into a Lua error
                     {
                         ThrowError(luaState, e);
-                        LuaDLL.lua_pushnil(luaState);
+                        KopiLua.Lua.lua_pushnil(luaState);
                     }
                 }
                 else if (member.MemberType == MemberTypes.Event)
@@ -405,7 +405,7 @@ namespace LuaInterface
                     else
                     {
                         // Member type must be 'method'
-                        LuaCSFunction wrapper = new LuaCSFunction((new LuaMethodWrapper(translator, objType, methodName, bindingType)).call);
+                        KopiLua.Lua.lua_CFunction wrapper = new KopiLua.Lua.lua_CFunction((new LuaMethodWrapper(translator, objType, methodName, bindingType)).call);
 
                         if (cachedMember == null) setMemberCache(memberCache, objType, methodName, wrapper);
                         translator.pushFunction(luaState, wrapper);
@@ -418,7 +418,7 @@ namespace LuaInterface
                     // If we reach this point we found a static method, but can't use it in this context because the user passed in an instance
                     translator.throwError(luaState, "can't pass instance to static method " + methodName);
 
-                    LuaDLL.lua_pushnil(luaState);
+                    KopiLua.Lua.lua_pushnil(luaState);
                 }
             }
             else
@@ -429,7 +429,7 @@ namespace LuaInterface
 
                 translator.throwError(luaState, "unknown member name " + methodName);
 
-                LuaDLL.lua_pushnil(luaState);
+                KopiLua.Lua.lua_pushnil(luaState);
             }
 
             // push false because we are NOT returning a function (see luaIndexFunction)
@@ -465,7 +465,7 @@ namespace LuaInterface
          * the member name and the value to be stored as arguments. Throws
          * and error if the assignment is invalid.
          */
-        private int setFieldOrProperty(IntPtr luaState)
+        private int setFieldOrProperty(KopiLua.Lua.lua_State luaState)
         {
             object target = translator.getRawNetObject(luaState, 1);
             if (target == null)
@@ -485,9 +485,9 @@ namespace LuaInterface
             // We didn't find a property name, now see if we can use a [] style this accessor to set array contents
             try
             {
-                if (type.IsArray && LuaDLL.lua_isnumber(luaState, 2))
+                if (type.IsArray && KopiLua.Lua.lua_isnumber(luaState, 2).ToBoolean())
                 {
-                    int index = (int)LuaDLL.lua_tonumber(luaState, 2);
+                    int index = (int)KopiLua.Lua.lua_tonumber(luaState, 2);
 
                     Array arr = (Array)target;
                     object val = translator.getAsType(luaState, 3, arr.GetType().GetElementType());
@@ -542,7 +542,7 @@ namespace LuaInterface
         /// <param name="target"></param>
         /// <param name="bindingType"></param>
         /// <returns>false if unable to find the named member, true for success</returns>
-        private bool trySetMember(IntPtr luaState, IReflect targetType, object target, BindingFlags bindingType, out string detailMessage)
+        private bool trySetMember(KopiLua.Lua.lua_State luaState, IReflect targetType, object target, BindingFlags bindingType, out string detailMessage)
         {
             detailMessage = null;   // No error yet
 
@@ -550,14 +550,14 @@ namespace LuaInterface
             // changing the lua typecode to string
             // Note: We don't use isstring because the standard lua C isstring considers either strings or numbers to
             // be true for isstring.
-            if (LuaDLL.lua_type(luaState, 2) != LuaTypes.LUA_TSTRING)
+            if (KopiLua.Lua.lua_type(luaState, 2).ToLuaTypes() != LuaTypes.String)
             {
                 detailMessage = "property names must be strings";
                 return false;
             }
 
             // We only look up property names by string
-            string fieldName = LuaDLL.lua_tostring(luaState, 2);
+            string fieldName = KopiLua.Lua.lua_tostring(luaState, 2).ToString();
             if (fieldName == null || fieldName.Length < 1 || !(char.IsLetter(fieldName[0]) || fieldName[0] == '_'))
             {
                 detailMessage = "invalid property name";
@@ -622,7 +622,7 @@ namespace LuaInterface
          * Writes to fields or properties, either static or instance. Throws an error
          * if the operation is invalid.
          */
-        private int setMember(IntPtr luaState, IReflect targetType, object target, BindingFlags bindingType)
+        private int setMember(KopiLua.Lua.lua_State luaState, IReflect targetType, object target, BindingFlags bindingType)
         {
             string detail;
             bool success = trySetMember(luaState, targetType, target, bindingType, out detail);
@@ -638,7 +638,7 @@ namespace LuaInterface
         /// </summary>
         /// <param name="e"></param>
         /// We try to look into the exception to give the most meaningful description
-        void ThrowError(IntPtr luaState, Exception e)
+        void ThrowError(KopiLua.Lua.lua_State luaState, Exception e)
         {
             // If we got inside a reflection show what really happened
             TargetInvocationException te = e as TargetInvocationException;
@@ -652,29 +652,29 @@ namespace LuaInterface
         /*
          * __index metafunction of type references, works on static members.
          */
-        private int getClassMethod(IntPtr luaState)
+        private int getClassMethod(KopiLua.Lua.lua_State luaState)
         {
             IReflect klass;
             object obj = translator.getRawNetObject(luaState, 1);
             if (obj == null || !(obj is IReflect))
             {
                 translator.throwError(luaState, "trying to index an invalid type reference");
-                LuaDLL.lua_pushnil(luaState);
+                KopiLua.Lua.lua_pushnil(luaState);
                 return 1;
             }
             else klass = (IReflect)obj;
-            if (LuaDLL.lua_isnumber(luaState, 2))
+            if (KopiLua.Lua.lua_isnumber(luaState, 2).ToBoolean())
             {
-                int size = (int)LuaDLL.lua_tonumber(luaState, 2);
+                int size = (int)KopiLua.Lua.lua_tonumber(luaState, 2);
                 translator.push(luaState, Array.CreateInstance(klass.UnderlyingSystemType, size));
                 return 1;
             }
             else
             {
-                string methodName = LuaDLL.lua_tostring(luaState, 2);
+                string methodName = KopiLua.Lua.lua_tostring(luaState, 2).ToString();
                 if (methodName == null)
                 {
-                    LuaDLL.lua_pushnil(luaState);
+                    KopiLua.Lua.lua_pushnil(luaState);
                     return 1;
                 } //CP: Ignore case
                 else return getMember(luaState, klass, null, methodName, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.IgnoreCase);
@@ -683,7 +683,7 @@ namespace LuaInterface
         /*
          * __newindex function of type references, works on static members.
          */
-        private int setClassFieldOrProperty(IntPtr luaState)
+        private int setClassFieldOrProperty(KopiLua.Lua.lua_State luaState)
         {
             IReflect target;
             object obj = translator.getRawNetObject(luaState, 1);
@@ -701,7 +701,7 @@ namespace LuaInterface
          * found or if the arguments are invalid. Throws an error if the constructor
          * generates an exception.
          */
-        private int callConstructor(IntPtr luaState)
+        private int callConstructor(KopiLua.Lua.lua_State luaState)
         {
             MethodCache validConstructor = new MethodCache();
             IReflect klass;
@@ -709,11 +709,11 @@ namespace LuaInterface
             if (obj == null || !(obj is IReflect))
             {
                 translator.throwError(luaState, "trying to call constructor on an invalid type reference");
-                LuaDLL.lua_pushnil(luaState);
+                KopiLua.Lua.lua_pushnil(luaState);
                 return 1;
             }
             else klass = (IReflect)obj;
-            LuaDLL.lua_remove(luaState, 1);
+            KopiLua.Lua.lua_remove(luaState, 1);
             ConstructorInfo[] constructors = klass.UnderlyingSystemType.GetConstructors();
             foreach (ConstructorInfo constructor in constructors)
             {
@@ -727,11 +727,11 @@ namespace LuaInterface
                     catch (TargetInvocationException e)
                     {
                         ThrowError(luaState, e);
-                        LuaDLL.lua_pushnil(luaState);
+                        KopiLua.Lua.lua_pushnil(luaState);
                     }
                     catch
                     {
-                        LuaDLL.lua_pushnil(luaState);
+                        KopiLua.Lua.lua_pushnil(luaState);
                     }
                     return 1;
                 }
@@ -742,7 +742,7 @@ namespace LuaInterface
             translator.throwError(luaState, String.Format("{0} does not contain constructor({1}) argument match",
                 klass.UnderlyingSystemType,
                 constructorName));
-            LuaDLL.lua_pushnil(luaState);
+            KopiLua.Lua.lua_pushnil(luaState);
             return 1;
         }
         /*
@@ -750,13 +750,13 @@ namespace LuaInterface
          * if the match was succesful. It it was also returns the information
          * necessary to invoke the method.
          */
-        internal bool matchParameters(IntPtr luaState, MethodBase method, ref MethodCache methodCache)
+        internal bool matchParameters(KopiLua.Lua.lua_State luaState, MethodBase method, ref MethodCache methodCache)
         {
             ExtractValue extractValue;
             bool isMethod = true;
             ParameterInfo[] paramInfo = method.GetParameters();
             int currentLuaParam = 1;
-            int nLuaParams = LuaDLL.lua_gettop(luaState);
+            int nLuaParams = KopiLua.Lua.lua_gettop(luaState);
             ArrayList paramList = new ArrayList();
             List<int> outList = new List<int>();
             List<MethodArgs> argTypes = new List<MethodArgs>();
@@ -864,7 +864,7 @@ namespace LuaInterface
         /// <param name="currentNetParam"></param>
         /// <param name="extractValue"></param>
         /// <returns></returns>
-        private bool _IsTypeCorrect(IntPtr luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
+        private bool _IsTypeCorrect(KopiLua.Lua.lua_State luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
         {
             try
             {
@@ -878,7 +878,7 @@ namespace LuaInterface
             }
         }
 
-        private bool _IsParamsArray(IntPtr luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
+        private bool _IsParamsArray(KopiLua.Lua.lua_State luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
         {
             extractValue = null;
 
@@ -888,7 +888,7 @@ namespace LuaInterface
 
                 try
                 {
-                    luaType = LuaDLL.lua_type(luaState, currentLuaParam);
+                    luaType = KopiLua.Lua.lua_type(luaState, currentLuaParam).ToLuaTypes();
                 }
                 catch (Exception ex)
                 {
@@ -898,13 +898,13 @@ namespace LuaInterface
                     return false;
                 }
 
-                if (luaType == LuaTypes.LUA_TTABLE)
+                if (luaType == LuaTypes.Table)
                 {
                     try
                     {
                         extractValue = translator.typeChecker.getExtractor(typeof(LuaTable));
                     }
-                    catch (Exception ex)
+                    catch (Exception/* ex*/)
                     {
                         Debug.WriteLine("An error occurred during an attempt to retrieve a LuaTable extractor while checking for params array status.");
                     }
@@ -922,7 +922,7 @@ namespace LuaInterface
                     {
                         extractValue = translator.typeChecker.checkType(luaState, currentLuaParam, paramElementType);
                     }
-                    catch (Exception ex)
+                    catch (Exception/* ex*/)
                     {
                         Debug.WriteLine(string.Format("An error occurred during an attempt to retrieve an extractor ({0}) while checking for params array status.", paramElementType.FullName));
                     }

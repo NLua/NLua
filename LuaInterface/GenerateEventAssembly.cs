@@ -44,7 +44,7 @@ namespace LuaInterface
 			this.translator=translator;
 			this.delegateType=delegateType;
 		}
-		public object extractGenerated(IntPtr luaState,int stackPos)
+		public object extractGenerated(KopiLua.Lua.lua_State luaState,int stackPos)
 		{
 			return CodeGeneration.Instance.GetDelegate(delegateType,translator.getFunction(luaState,stackPos));
 		}
@@ -67,7 +67,7 @@ namespace LuaInterface
 			this.translator=translator;
 			this.klass=klass;
 		}
-		public object extractGenerated(IntPtr luaState,int stackPos)
+		public object extractGenerated(KopiLua.Lua.lua_State luaState,int stackPos)
 		{
 			return CodeGeneration.Instance.GetClassInstance(klass,translator.getTable(luaState,stackPos));
 		}

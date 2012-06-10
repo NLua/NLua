@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Lua511;
+using LuaWrap;
 
 namespace LuaInterface
 {
     public class LuaFunction : LuaBase
     {
         //private Lua interpreter;
-        internal LuaCSFunction function;
+        internal KopiLua.Lua.lua_CFunction function;
         //internal int reference;
 
         public LuaFunction(int reference, Lua interpreter)
@@ -18,7 +18,7 @@ namespace LuaInterface
             _Interpreter = interpreter;
         }
 
-        public LuaFunction(LuaCSFunction function, Lua interpreter)
+        public LuaFunction(KopiLua.Lua.lua_CFunction function, Lua interpreter)
         {
             _Reference = 0;
             this.function = function;
@@ -77,10 +77,10 @@ namespace LuaInterface
         /*
          * Pushes the function into the Lua stack
          */
-        internal void push(IntPtr luaState)
+        internal void push(KopiLua.Lua.lua_State luaState)
         {
             if (_Reference != 0)
-                LuaDLL.lua_getref(luaState, _Reference);
+                LuaLib.lua_getref(luaState, _Reference);
             else
                 _Interpreter.pushCSFunction(function);
         }
