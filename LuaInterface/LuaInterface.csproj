@@ -45,6 +45,14 @@
     <Compile Include="ProxyType.cs" />
     <Compile Include="LuaLib\LuaLib.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LuaBase.cs" />
+    <Compile Include="LuaFunction.cs" />
+    <Compile Include="LuaGlobalAttribute.cs" />
+    <Compile Include="LuaHideAttribute.cs" />
+    <Compile Include="LuaRegistrationHelper.cs" />
+    <Compile Include="LuaScriptException.cs" />
+    <Compile Include="LuaTable.cs" />
+    <Compile Include="LuaUserData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

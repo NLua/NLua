@@ -1,16 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.Serialization;
 
 namespace LuaInterface
 {
-	/// <summary>
-	/// Add a specific type for Lua exceptions (kevinh)
-	/// </summary>
-	public class LuaException : ApplicationException
-	{
-		public LuaException(string reason) : base(reason)
-		{
-		}
-	}
+    /// <summary>
+    /// Exceptions thrown by the Lua runtime
+    /// </summary>
+    [Serializable]
+    public class LuaException : Exception
+    {
+        public LuaException()
+        {}
+
+        public LuaException(string message) : base(message)
+        {}
+
+        public LuaException(string message, Exception innerException) : base(message, innerException)
+        {}
+
+        protected LuaException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {}
+    }
 }
