@@ -39,19 +39,19 @@ namespace LuaInterface.Event
 	{
 		public EventCodes eventCode;
 		[System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
-		public String name;
+		public string name;
 		[System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
-		public String namewhat;
+		public string namewhat;
 		[System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
-		public String what;
+		public string what;
 		[System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
-		public String source;
+		public string source;
 		public int currentline;
 		public int nups;
 		public int linedefined;
 		public int lastlinedefined;
 		[System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 60/*LUA_IDSIZE*/)]
-		public String shortsrc;
+		public string shortsrc;
 		public int i_ci;
 	}
 }

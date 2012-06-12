@@ -23,130 +23,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using LuaInterface.Extensions;
- 
+
 namespace LuaInterface
 {
-	/// <summary>
-	/// Enumeration of basic lua globals.
-	/// </summary>
-	public enum LuaEnum : int
-	{
-		/// <summary>
-		/// Option for multiple returns in `lua_pcall' and `lua_call'
-		/// </summary>
-		MultiRet		= -1,
- 
-		/// <summary>
-		/// Everything is OK.
-		/// </summary>
-		Ok				= 0,
- 
-		/// <summary>
-		/// Thread status, Ok or Yield
-		/// </summary>
-		Yield			= 1,
- 
-		/// <summary>
-		/// A Runtime error.
-		/// </summary>
-		ErrorRun		= 2,
- 
-		/// <summary>
-		/// A syntax error.
-		/// </summary>
-		ErrorSyntax		= 3,
- 
-		/// <summary>
-		/// A memory allocation error. For such errors, Lua does not call the error handler function. 
-		/// </summary>
-		ErrorMemory		= 4,
- 
-		/// <summary>
-		/// An error in the error handling function.
-		/// </summary>
-		ErrorError		= 5,
- 
-		/// <summary>
-		/// An extra error for file load errors when using luaL_loadfile.
-		/// </summary>
-		ErrorFile		= 6,
-	}
-	
-	public enum References : int
-	{
-		RefNil 	= -1,
-		NoRef 	= -2
-	}
- 
-	public enum LuaTypes : int
-	{
-		None 			= -1,
-		Nil 			= 0,
-		Boolean 		= 1,
-		LightUserdata 	= 2,
-		Number 			= 3,
-		String 			= 4,
-		Table 			= 5,
-		Function 		= 6,
-		UserData 		= 7,
-		Thread 			= 8
-	}
- 
-	public enum GCOption : int
-	{
-		/// <summary>
-		/// Stops the garbage collector.
-		/// </summary>
-		Stop 			= 0,
- 
-		/// <summary>
-		/// Restarts the garbage collector.
-		/// </summary>
-		Restart 		= 1,
- 
-		/// <summary>
-		/// Performs a full garbage-collection cycle. 
-		/// </summary>
-		Collect 		= 2,
- 
-		/// <summary>
-		/// Returns the current amount of memory (in Kbytes) in use by KopiLua.Lua. 
-		/// </summary>
-		Count 			= 3,
- 
-		/// <summary>
-		/// Returns the remainder of dividing the current amount of bytes of memory in use by Lua by 1024. 
-		/// </summary>
-		CountB 			= 4,
- 
-		/// <summary>
-		/// Performs an incremental step of garbage collection. The step "size" is controlled by data (larger values mean more steps) in a non-specified way. ifyou want to control the step size you must experimentally tune the value of data. The function returns 1 ifthe step finished a garbage-collection cycle. 
-		/// </summary>
-		Step 			= 5,
- 
-		/// <summary>
-		/// Sets data as the new value for the pause (Controls how long the collector waits before starting a new cycle) of the collector (see §2.10). The function returns the previous value of the pause.
-		/// </summary>
-		SetPause 		= 6,
- 
-		/// <summary>
-		/// Sets data as the new value for the step multiplier of the collector (Controls the relative speed of the collector relative to memory allocation.). The function returns the previous value of the step multiplier. 
-		/// </summary>
-		SetStepMul 		= 7
-	}
- 
-	public enum PseudoIndex : int
-	{
-		Registry 		= (-10000),
-		Environment 	= (-10001),
-		Globals 		= (-10002)
-	}
-
 	public static class LuaLib
 	{
 		private static int tag = 0;
@@ -172,9 +57,9 @@ namespace LuaInterface
 			return (LuaTypes)type;
 		}
 
-		public static LuaEnum ToLuaEnum(this int lenum)
+		public static LuaEnums ToLuaEnums(this int lenum)
 		{
-			return (LuaEnum)lenum;
+			return (LuaEnums)lenum;
 		}
 
 		public static bool ToBoolean(this int number)
@@ -213,7 +98,7 @@ namespace LuaInterface
 		/// </returns>
 		public static bool luaL_dofile(KopiLua.Lua.lua_State state, string filename)
 		{
-			return (KopiLua.Lua.luaL_loadfile(state, filename).ToLuaEnum() == LuaEnum.Ok) && (KopiLua.Lua.lua_pcall(state, 0, (int)LuaEnum.MultiRet, 0).ToLuaEnum() == LuaEnum.Ok);
+			return (KopiLua.Lua.luaL_loadfile(state, filename).ToLuaEnums() == LuaEnums.Ok) && (KopiLua.Lua.lua_pcall(state, 0, (int)LuaEnums.MultiRet, 0).ToLuaEnums() == LuaEnums.Ok);
 		}
 
 		/// <summary>
@@ -230,12 +115,12 @@ namespace LuaInterface
 		/// </returns>
 		public static bool luaL_dostring(KopiLua.Lua.lua_State state, string chunk)
 		{
-			return (KopiLua.Lua.luaL_loadstring(state, chunk).ToLuaEnum() == LuaEnum.Ok) && (KopiLua.Lua.lua_pcall(state, 0, (int)LuaEnum.MultiRet, 0).ToLuaEnum() == LuaEnum.Ok);
+			return (KopiLua.Lua.luaL_loadstring(state, chunk).ToLuaEnums() == LuaEnums.Ok) && (KopiLua.Lua.lua_pcall(state, 0, (int)LuaEnums.MultiRet, 0).ToLuaEnums() == LuaEnums.Ok);
 		}
 
-		public static LuaEnum luaL_loadbuffer(KopiLua.Lua.lua_State luaState, string buff, string name)
+		public static LuaEnums luaL_loadbuffer(KopiLua.Lua.lua_State luaState, string buff, string name)
 		{
-			var result = KopiLua.Lua.luaL_loadbuffer(luaState, buff, (uint)buff.Length, name).ToLuaEnum();
+			var result = KopiLua.Lua.luaL_loadbuffer(luaState, buff, (uint)buff.Length, name).ToLuaEnums();
 			return result;
 		}
 

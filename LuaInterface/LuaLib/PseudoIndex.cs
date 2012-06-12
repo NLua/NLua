@@ -2,6 +2,7 @@
  * This file is part of LuaInterface.
  * 
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
+ * Copyright (C) 2009 Joshua Simmons <simmons.44@gmail.com>
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -15,32 +16,22 @@
  * all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
 
 using System;
 
-namespace LuaInterface.Event
+namespace LuaInterface
 {
-	/// <summary>
-	/// Event masks for lua hook callback
-	/// </summary>
-	/// <remarks>
-	/// Do not change any of the values because they must match the lua values
-	/// </remarks>
-	/// <author>Reinhard Ostermeier</author>
-	[Flags]
-	public enum EventMasks
+	public enum PseudoIndex : int
 	{
-		LUA_MASKCALL  = (1 << EventCodes.LUA_HOOKCALL),
-		LUA_MASKRET   = (1 << EventCodes.LUA_HOOKRET),
-		LUA_MASKLINE  = (1 << EventCodes.LUA_HOOKLINE),
-		LUA_MASKCOUNT = (1 << EventCodes.LUA_HOOKCOUNT),
-		LUA_MASKALL   = Int32.MaxValue
+		Registry    = (-10000),
+		Environment = (-10001),
+		Globals     = (-10002)
 	}
 }

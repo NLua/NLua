@@ -63,6 +63,11 @@
     <Compile Include="Event\HookExceptionEventArgs.cs" />
     <Compile Include="Exceptions\LuaException.cs" />
     <Compile Include="Exceptions\LuaScriptException.cs" />
+    <Compile Include="LuaLib\LuaEnums.cs" />
+    <Compile Include="LuaLib\References.cs" />
+    <Compile Include="LuaLib\LuaTypes.cs" />
+    <Compile Include="LuaLib\GCOption.cs" />
+    <Compile Include="LuaLib\PseudoIndex.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -36,10 +36,10 @@ namespace LuaInterface.Event
 	/// <author>Reinhard Ostermeier</author>
 	public enum EventCodes
 	{
-		LUA_HOOKCALL = 0,
-		LUA_HOOKRET = 1,
-		LUA_HOOKLINE = 2,
-		LUA_HOOKCOUNT = 3,
-		LUA_HOOKTAILRET = 4,
+		LUA_HOOKCALL    = 0,
+		LUA_HOOKRET     = 1,
+		LUA_HOOKLINE    = 2,
+		LUA_HOOKCOUNT   = 3,
+		LUA_HOOKTAILRET = 4
 	}
 }
