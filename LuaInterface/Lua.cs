@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using LuaInterface.Event;
+using LuaInterface.Exceptions;
 
 namespace LuaInterface
 {

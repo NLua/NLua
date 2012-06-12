@@ -25,10 +25,11 @@
 
 using System;
 using System.IO;
-using System.Collections;
 using System.Reflection;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Collections;
+using System.Collections.Generic;
+using LuaInterface.Exceptions;
 
 namespace LuaInterface 
 {

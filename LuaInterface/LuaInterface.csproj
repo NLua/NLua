@@ -37,7 +37,6 @@
   <ItemGroup>
     <Compile Include="CheckType.cs" />
     <Compile Include="Lua.cs" />
-    <Compile Include="LuaException.cs" />
     <Compile Include="Metatables.cs" />
     <Compile Include="MethodWrapper.cs" />
     <Compile Include="ObjectTranslator.cs" />
@@ -49,7 +48,6 @@
     <Compile Include="LuaGlobalAttribute.cs" />
     <Compile Include="LuaHideAttribute.cs" />
     <Compile Include="LuaRegistrationHelper.cs" />
-    <Compile Include="LuaScriptException.cs" />
     <Compile Include="LuaTable.cs" />
     <Compile Include="LuaUserData.cs" />
     <Compile Include="Extensions\GeneralExtensions.cs" />
@@ -63,6 +61,8 @@
     <Compile Include="Event\LuaDebug.cs" />
     <Compile Include="Event\DebugHookEventArgs.cs" />
     <Compile Include="Event\HookExceptionEventArgs.cs" />
+    <Compile Include="Exceptions\LuaException.cs" />
+    <Compile Include="Exceptions\LuaScriptException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -82,5 +82,6 @@
     <Folder Include="Extensions\" />
     <Folder Include="GenerateEventAssembly\" />
     <Folder Include="Event\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 </Project>
