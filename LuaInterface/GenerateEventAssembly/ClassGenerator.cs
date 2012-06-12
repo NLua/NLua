@@ -15,10 +15,10 @@
  * all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
@@ -27,22 +27,27 @@ using System;
 
 namespace LuaInterface
 {
-    /// <summary>
-    /// Marks a method for global usage in Lua scripts
-    /// </summary>
-    /// <see cref="LuaRegistrationHelper.TaggedInstanceMethods"/>
-    /// <see cref="LuaRegistrationHelper.TaggedStaticMethods"/>
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class LuaGlobalAttribute : Attribute
-    {
-        /// <summary>
-        /// An alternative name to use for calling the function in Lua - leave empty for CLR name
-        /// </summary>
-        public string Name { get; set; }
+	/*
+	 * Class used for generating delegates that get a table from the Lua
+	 * stack as a an object of a specific type.
+	 * 
+	 * Author: Fabio Mascarenhas
+	 * Version: 1.0
+	 */
+	class ClassGenerator
+	{
+		private ObjectTranslator translator;
+		private Type klass;
 
-        /// <summary>
-        /// A description of the function
-        /// </summary>
-        public string Description { get; set; }
-    }
+		public ClassGenerator(ObjectTranslator translator, Type klass) 
+		{
+			this.translator = translator;
+			this.klass = klass;
+		}
+
+		public object extractGenerated(KopiLua.Lua.lua_State luaState, int stackPos)
+		{
+			return CodeGeneration.Instance.GetClassInstance(klass, translator.getTable(luaState, stackPos));
+		}
+	}
 }

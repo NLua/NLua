@@ -1,15 +1,39 @@
+/*
+ * This file is part of LuaInterface.
+ * 
+ * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
+ * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
-namespace LuaInterface 
-{    
-	using System;
-	using System.IO;
-	using System.Collections;
-    using System.Collections.Generic;
-	using System.Collections.Specialized;
-	using System.Reflection;
-    using System.Threading;
-	using LuaWrap;
+using System;
+using System.IO;
+using System.Threading;
+using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using LuaInterface.Event;
 
+namespace LuaInterface
+{
 	/*
 	 * Main class of LuaInterface
 	 * Object-oriented wrapper to Lua API
@@ -64,15 +88,15 @@ namespace LuaInterface
 			"-- Preload the mscorlib assembly							\n"+
 			"luanet.load_assembly(\"mscorlib\")							\n";
 
-		/*readonly */ KopiLua.Lua.lua_State luaState;
-		ObjectTranslator translator;
+		private /*readonly */ KopiLua.Lua.lua_State luaState;
+		private ObjectTranslator translator;
 
-        KopiLua.Lua.lua_CFunction panicCallback/*, lockCallback, unlockCallback*/;
+        private KopiLua.Lua.lua_CFunction panicCallback;
 
         /// <summary>
         /// Used to ensure multiple .net threads all get serialized by this single lock for access to the lua stack/objects
         /// </summary>
-        object luaLock = new object();
+        private object luaLock = new object();
 
 		public Lua() 
 		{
@@ -561,8 +585,8 @@ namespace LuaInterface
 		public LuaFunction GetFunction(string fullPath) 
 		{
             object obj=this[fullPath];
-			//return (obj is KopiLua.Lua.lua_CFunction ? new LuaFunction((KopiLua.Lua.lua_CFunction)obj,this) : (LuaFunction)obj);
-			return (obj is KopiLua.Lua.lua_CFunction ? new LuaFunction((KopiLua.Lua.lua_CFunction)obj,this) : /*(LuaFunction)*/new LuaFunction(obj.GetHashCode(), this));
+			return (obj is KopiLua.Lua.lua_CFunction ? new LuaFunction((KopiLua.Lua.lua_CFunction)obj,this) : (LuaFunction)obj);
+			//return (obj is KopiLua.Lua.lua_CFunction ? new LuaFunction((KopiLua.Lua.lua_CFunction)obj,this) : /*(LuaFunction)*/new LuaFunction(obj.GetHashCode(), this));
 		}
 		/*
 		 * Gets a function global variable as a delegate of
@@ -1040,99 +1064,5 @@ namespace LuaInterface
         }
 
         #endregion
-   }
-
-   /// <summary>
-   /// Event codes for lua hook function
-   /// </summary>
-   /// <remarks>
-   /// Do not change any of the values because they must match the lua values
-   /// </remarks>
-   /// <author>Reinhard Ostermeier</author>
-   public enum EventCodes
-   {
-      LUA_HOOKCALL = 0,
-      LUA_HOOKRET = 1,
-      LUA_HOOKLINE = 2,
-      LUA_HOOKCOUNT = 3,
-      LUA_HOOKTAILRET = 4,
-   }
-
-   /// <summary>
-   /// Event masks for lua hook callback
-   /// </summary>
-   /// <remarks>
-   /// Do not change any of the values because they must match the lua values
-   /// </remarks>
-   /// <author>Reinhard Ostermeier</author>
-   [Flags]
-   public enum EventMasks
-   {
-      LUA_MASKCALL = (1 << EventCodes.LUA_HOOKCALL),
-      LUA_MASKRET = (1 << EventCodes.LUA_HOOKRET),
-      LUA_MASKLINE = (1 << EventCodes.LUA_HOOKLINE),
-      LUA_MASKCOUNT = (1 << EventCodes.LUA_HOOKCOUNT),
-      LUA_MASKALL = Int32.MaxValue,
-   }
-
-   /// <summary>
-   /// Structure for lua debug information
-   /// </summary>
-   /// <remarks>
-   /// Do not change this struct because it must match the lua structure lua_debug
-   /// </remarks>
-   /// <author>Reinhard Ostermeier</author>
-   [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-   public struct LuaDebug
-   {
-      public EventCodes eventCode;
-      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
-      public String name;
-      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
-      public String namewhat;
-      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
-      public String what;
-      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPStr)]
-      public String source;
-      public int currentline;
-      public int nups;
-      public int linedefined;
-      public int lastlinedefined;
-      [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 60/*LUA_IDSIZE*/)]
-      public String shortsrc;
-      public int i_ci;
-   }
-
-   /// <summary>
-   /// Event args for hook callback event
-   /// </summary>
-   /// <author>Reinhard Ostermeier</author>
-   public class DebugHookEventArgs : EventArgs
-   {
-      private readonly LuaDebug luaDebug;
-
-      public DebugHookEventArgs(LuaDebug luaDebug)
-      {
-         this.luaDebug = luaDebug;
-      }
-
-      public LuaDebug LuaDebug
-      {
-         get { return luaDebug; }
-      }
-   }
-
-   public class HookExceptionEventArgs : EventArgs
-   {
-      private readonly Exception m_Exception;
-      public Exception Exception
-      {
-         get { return m_Exception; }
-      }
-
-      public HookExceptionEventArgs(Exception ex)
-      {
-         m_Exception = ex;
-      }
    }
 }

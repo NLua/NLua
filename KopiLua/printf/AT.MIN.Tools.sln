@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AT.MIN.Tools", "AT.MIN.Tools\AT.MIN.Tools.csproj", "{7D53822B-6176-4856-AED0-E53F34739C70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AT.MIN.Tools.Tests", "AT.MIN.Tools.Tests\AT.MIN.Tools.Tests.csproj", "{56CCEE95-B8C5-42B3-B008-F7CD58268683}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{50E69E84-2107-4EA9-B7D1-31C0E07B54CE}"
+	ProjectSection(SolutionItems) = preProject
+		AT.MIN.Tools.sln.config = AT.MIN.Tools.sln.config
+		AT.MIN.Tools.sln.nunit = AT.MIN.Tools.sln.nunit
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D53822B-6176-4856-AED0-E53F34739C70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D53822B-6176-4856-AED0-E53F34739C70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D53822B-6176-4856-AED0-E53F34739C70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D53822B-6176-4856-AED0-E53F34739C70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56CCEE95-B8C5-42B3-B008-F7CD58268683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56CCEE95-B8C5-42B3-B008-F7CD58268683}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56CCEE95-B8C5-42B3-B008-F7CD58268683}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56CCEE95-B8C5-42B3-B008-F7CD58268683}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

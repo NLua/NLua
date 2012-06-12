@@ -36,7 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckType.cs" />
-    <Compile Include="GenerateEventAssembly.cs" />
     <Compile Include="Lua.cs" />
     <Compile Include="LuaException.cs" />
     <Compile Include="Metatables.cs" />
@@ -53,6 +52,17 @@
     <Compile Include="LuaScriptException.cs" />
     <Compile Include="LuaTable.cs" />
     <Compile Include="LuaUserData.cs" />
+    <Compile Include="Extensions\GeneralExtensions.cs" />
+    <Compile Include="GenerateEventAssembly\LuaClassType.cs" />
+    <Compile Include="GenerateEventAssembly\ILuaGeneratedType.cs" />
+    <Compile Include="GenerateEventAssembly\DelegateGenerator.cs" />
+    <Compile Include="GenerateEventAssembly\ClassGenerator.cs" />
+    <Compile Include="GenerateEventAssembly\CodeGeneration.cs" />
+    <Compile Include="Event\EventCodes.cs" />
+    <Compile Include="Event\EventMasks.cs" />
+    <Compile Include="Event\LuaDebug.cs" />
+    <Compile Include="Event\DebugHookEventArgs.cs" />
+    <Compile Include="Event\HookExceptionEventArgs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -67,5 +77,10 @@
       <Project>{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}</Project>
       <Name>KopiLua</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="GenerateEventAssembly\" />
+    <Folder Include="Event\" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,12 @@
+﻿<NUnitProject>
+	<Settings activeconfig="Debug" />
+	
+	<Config name="Debug" configfile="AT.MIN.Tools.sln.config" binpathtype="Auto">
+		<assembly path="AT.MIN.Tools.Tests\bin\Debug\AT.MIN.Tools.Tests.dll" />
+	</Config>
+	
+	<Config name="Release" configfile="AT.MIN.Tools.sln.config" binpathtype="Auto">
+		<assembly path="AT.MIN.Tools.Tests\bin\Release\AT.MIN.Tools.Tests.dll" />
+	</Config>
+
+</NUnitProject>

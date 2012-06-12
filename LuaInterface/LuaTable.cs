@@ -1,8 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+ * This file is part of LuaInterface.
+ * 
+ * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
+ * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+using System;
 using System.Text;
 using System.Collections;
-using LuaWrap;
+using System.Collections.Generic;
 
 namespace LuaInterface
 {
@@ -14,43 +38,12 @@ namespace LuaInterface
 	 */
     public class LuaTable : LuaBase
     {
-        //internal int _Reference;
-        //private Lua _Interpreter;
         public LuaTable(int reference, Lua interpreter)
         {
             _Reference = reference;
             _Interpreter = interpreter;
         }
 
-        //bool disposed = false;
-        //~LuaTable()
-        //{
-        //    Dispose(false);
-        //}
-
-        //public void Dispose()
-        //{
-        //    Dispose(true);
-        //    GC.SuppressFinalize(this);
-        //}
-
-        //public virtual void Dispose(bool disposeManagedResources)
-        //{
-        //    if (!this.disposed)
-        //    {
-        //        if (disposeManagedResources)
-        //        {
-        //            if (_Reference != 0)
-        //                _Interpreter.dispose(_Reference);
-        //        }
-
-        //        disposed = true;
-        //    }
-        //}
-        //~LuaTable() 
-        //{
-        //    _Interpreter.dispose(_Reference);
-        //}
         /*
          * Indexer for string fields of the table
          */
@@ -126,18 +119,5 @@ namespace LuaInterface
         {
             return "table";
         }
-        //public override bool Equals(object o)
-        //{
-        //    if (o is LuaTable)
-        //    {
-        //        LuaTable l = (LuaTable)o;
-        //        return _Interpreter.compareRef(l._Reference, _Reference);
-        //    }
-        //    else return false;
-        //}
-        //public override int GetHashCode()
-        //{
-        //    return _Reference;
-        //}
     }
 }

@@ -1,7 +1,6 @@
 /*
  * This file is part of LuaInterface.
  * 
- * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,24 +24,23 @@
 
 using System;
 
-namespace LuaInterface
+namespace LuaInterface.Extensions
 {
-    /// <summary>
-    /// Marks a method for global usage in Lua scripts
-    /// </summary>
-    /// <see cref="LuaRegistrationHelper.TaggedInstanceMethods"/>
-    /// <see cref="LuaRegistrationHelper.TaggedStaticMethods"/>
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class LuaGlobalAttribute : Attribute
-    {
-        /// <summary>
-        /// An alternative name to use for calling the function in Lua - leave empty for CLR name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// A description of the function
-        /// </summary>
-        public string Description { get; set; }
-    }
+	/// <summary>
+	/// Some random extension stuff.
+	/// </summary>
+	static class GeneralExtensions
+	{
+		/// <summary>
+		/// Determines whether the specified obj is null.
+		/// </summary>
+		/// <param name="obj">The obj.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified obj is null; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsNull(this object obj)
+		{
+			return (obj == null);
+		}
+	}
 }

@@ -15,10 +15,10 @@
  * all copies or substantial portions of the Software.
  * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
@@ -27,22 +27,14 @@ using System;
 
 namespace LuaInterface
 {
-    /// <summary>
-    /// Marks a method for global usage in Lua scripts
-    /// </summary>
-    /// <see cref="LuaRegistrationHelper.TaggedInstanceMethods"/>
-    /// <see cref="LuaRegistrationHelper.TaggedStaticMethods"/>
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class LuaGlobalAttribute : Attribute
-    {
-        /// <summary>
-        /// An alternative name to use for calling the function in Lua - leave empty for CLR name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// A description of the function
-        /// </summary>
-        public string Description { get; set; }
-    }
+	/*
+	 * Structure to store a type and the return types of
+	 * its methods (the type of the returned value and out/ref
+	 * parameters).
+	 */
+	struct LuaClassType
+	{
+		public Type klass;
+		public Type[][] returnTypes;
+	}
 }
