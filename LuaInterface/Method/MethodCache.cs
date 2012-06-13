@@ -24,14 +24,40 @@
  */
 
 using System;
+using System.Reflection;
+using LuaInterface.Extensions;
 
-namespace LuaInterface
+namespace LuaInterface.Method
 {
-	/// <summary>
-	/// Marks a method, field or property to be hidden from Lua auto-completion
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property)]
-	public sealed class LuaHideAttribute : Attribute
+	/*
+	 * Cached method
+	 */
+	struct MethodCache
 	{
+		private MethodBase _cachedMethod;
+
+		public MethodBase cachedMethod
+		{
+			get
+			{
+				return _cachedMethod;
+			}
+			set
+			{
+				_cachedMethod = value;
+				var mi = value as MethodInfo;
+
+				if(!mi.IsNull())
+					IsReturnVoid = string.Compare(mi.ReturnType.Name, "System.Void", true) == 0;
+			}
+		}
+		
+		public bool IsReturnVoid;
+		// List or arguments
+		public object[] args;
+		// Positions of out parameters
+		public int[] outList;
+		// Types of parameters
+		public MethodArgs[] argTypes;
 	}
 }

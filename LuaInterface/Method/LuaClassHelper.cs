@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file is part of LuaInterface.
  * 
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
@@ -24,60 +24,61 @@
  */
 
 using System;
-using System.Text;
-using System.Collections.Generic;
 
-namespace LuaInterface
+namespace LuaInterface.Method
 {
-	/// <summary>
-	/// Base class to provide consistent disposal flow across lua objects. Uses code provided by Yves Duhoux and suggestions by Hans Schmeidenbacher and Qingrui Li 
-	/// </summary>
-	public abstract class LuaBase : IDisposable
+	/*
+	 * Static helper methods for Lua tables acting as CLR objects.
+	 * 
+	 * Author: Fabio Mascarenhas
+	 * Version: 1.0
+	 */
+	public class LuaClassHelper
 	{
-		private bool _Disposed;
-		protected int _Reference;
-		protected Lua _Interpreter;
-
-		~LuaBase()
+		/*
+		 *  Gets the function called name from the provided table,
+		 * returning null if it does not exist
+		 */
+		public static LuaFunction getTableFunction(LuaTable luaTable, string name)
 		{
-			Dispose(false);
+			object funcObj = luaTable.rawget(name);
+
+			if(funcObj is LuaFunction)
+				return (LuaFunction)funcObj;
+			else
+				return null;
 		}
 
-		public void Dispose()
+		/*
+		 * Calls the provided function with the provided parameters
+		 */
+		public static object callFunction(LuaFunction function, object[] args, Type[] returnTypes, object[] inArgs, int[] outArgs)
 		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
+			// args is the return array of arguments, inArgs is the actual array
+			// of arguments passed to the function (with in parameters only), outArgs
+			// has the positions of out parameters
+			object returnValue;
+			int iRefArgs;
+			object[] returnValues = function.call(inArgs, returnTypes);
 
-		public virtual void Dispose(bool disposeManagedResources)
-		{
-			if(!_Disposed)
+			if(returnTypes[0] == typeof(void))
 			{
-				if(disposeManagedResources)
-				{
-					if(_Reference != 0)
-						_Interpreter.dispose(_Reference);
-				}
-
-				_Interpreter = null;
-				_Disposed = true;
-			}
-		}
-
-		public override bool Equals(object o)
-		{
-			if(o is LuaBase)
-			{
-				var l = (LuaBase)o;
-				return _Interpreter.compareRef(l._Reference, _Reference);
+				returnValue = null;
+				iRefArgs = 0;
 			}
 			else
-				return false;
-		}
+			{
+				returnValue = returnValues[0];
+				iRefArgs = 1;
+			}
 
-		public override int GetHashCode()
-		{
-			return _Reference;
+			for(int i = 0; i < outArgs.Length; i++)
+			{
+				args[outArgs[i]] = returnValues[iRefArgs];
+				iRefArgs++;
+			}
+
+			return returnValue;
 		}
 	}
 }

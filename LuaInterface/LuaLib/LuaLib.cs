@@ -32,6 +32,8 @@ using LuaInterface.Extensions;
 
 namespace LuaInterface
 {
+	using LuaCore = KopiLua.Lua;
+
 	public static class LuaLib
 	{
 		private static int tag = 0;
@@ -77,9 +79,9 @@ namespace LuaInterface
 		/// <param name="fn">
 		/// A <see cref="CallbackFunction"/>
 		/// </param>
-		public static void lua_pushcfunction(KopiLua.Lua.lua_State state, KopiLua.Lua.lua_CFunction fn)
+		public static void lua_pushcfunction(LuaCore.lua_State state, LuaCore.lua_CFunction fn)
 		{
-			KopiLua.Lua.lua_pushcclosure(state, fn, 0);
+			LuaCore.lua_pushcclosure(state, fn, 0);
 		}
 		#endregion
 
@@ -96,9 +98,9 @@ namespace LuaInterface
 		/// <returns>
 		/// A <see cref="System.Boolean"/>
 		/// </returns>
-		public static bool luaL_dofile(KopiLua.Lua.lua_State state, string filename)
+		public static bool luaL_dofile(LuaCore.lua_State state, string filename)
 		{
-			return (KopiLua.Lua.luaL_loadfile(state, filename).ToLuaEnums() == LuaEnums.Ok) && (KopiLua.Lua.lua_pcall(state, 0, (int)LuaEnums.MultiRet, 0).ToLuaEnums() == LuaEnums.Ok);
+			return (LuaCore.luaL_loadfile(state, filename).ToLuaEnums() == LuaEnums.Ok) && (LuaCore.lua_pcall(state, 0, (int)LuaEnums.MultiRet, 0).ToLuaEnums() == LuaEnums.Ok);
 		}
 
 		/// <summary>
@@ -113,14 +115,14 @@ namespace LuaInterface
 		/// <returns>
 		/// A <see cref="System.Boolean"/>
 		/// </returns>
-		public static bool luaL_dostring(KopiLua.Lua.lua_State state, string chunk)
+		public static bool luaL_dostring(LuaCore.lua_State state, string chunk)
 		{
-			return (KopiLua.Lua.luaL_loadstring(state, chunk).ToLuaEnums() == LuaEnums.Ok) && (KopiLua.Lua.lua_pcall(state, 0, (int)LuaEnums.MultiRet, 0).ToLuaEnums() == LuaEnums.Ok);
+			return (LuaCore.luaL_loadstring(state, chunk).ToLuaEnums() == LuaEnums.Ok) && (LuaCore.lua_pcall(state, 0, (int)LuaEnums.MultiRet, 0).ToLuaEnums() == LuaEnums.Ok);
 		}
 
-		public static LuaEnums luaL_loadbuffer(KopiLua.Lua.lua_State luaState, string buff, string name)
+		public static LuaEnums luaL_loadbuffer(LuaCore.lua_State luaState, string buff, string name)
 		{
-			var result = KopiLua.Lua.luaL_loadbuffer(luaState, buff, (uint)buff.Length, name).ToLuaEnums();
+			var result = LuaCore.luaL_loadbuffer(luaState, buff, (uint)buff.Length, name).ToLuaEnums();
 			return result;
 		}
 
@@ -136,22 +138,22 @@ namespace LuaInterface
 		/// <param name="r">
 		/// A <see cref="System.Int32"/>
 		/// </param>
-		public static void luaL_getref(KopiLua.Lua.lua_State state, int t, int r)
+		public static void luaL_getref(LuaCore.lua_State state, int t, int r)
 		{
-			KopiLua.Lua.lua_rawgeti(state, t, r);	
+			LuaCore.lua_rawgeti(state, t, r);	
 		}
 
-		public static bool luaL_checkmetatable(KopiLua.Lua.lua_State luaState,int index)
+		public static bool luaL_checkmetatable(LuaCore.lua_State luaState,int index)
 		{
 			bool retVal = false;
 			Console.WriteLine("v: " + luaState.tt.ToString());
 
-			if(KopiLua.Lua.lua_getmetatable(luaState,index)!=0) 
+			if(LuaCore.lua_getmetatable(luaState,index)!=0) 
 			{
-				KopiLua.Lua.lua_pushlightuserdata(luaState, tag);
-				KopiLua.Lua.lua_rawget(luaState, -2);
-				retVal = !KopiLua.Lua.lua_isnil(luaState, -1);
-				KopiLua.Lua.lua_settop(luaState, -3);
+				LuaCore.lua_pushlightuserdata(luaState, tag);
+				LuaCore.lua_rawget(luaState, -2);
+				retVal = !LuaCore.lua_isnil(luaState, -1);
+				LuaCore.lua_settop(luaState, -3);
 			}
 
 			return retVal;
@@ -162,43 +164,43 @@ namespace LuaInterface
 			return tag;
 		}
 
-		public static void lua_getref(KopiLua.Lua.lua_State luaState, int reference)
+		public static void lua_getref(LuaCore.lua_State luaState, int reference)
 		{
-			KopiLua.Lua.lua_rawgeti(luaState, (int)PseudoIndex.Registry, reference);
+			LuaCore.lua_rawgeti(luaState, (int)PseudoIndex.Registry, reference);
 		}
 
-		public static void lua_unref(KopiLua.Lua.lua_State luaState, int reference) 
+		public static void lua_unref(LuaCore.lua_State luaState, int reference) 
 		{
-			KopiLua.Lua.luaL_unref(luaState, (int)PseudoIndex.Registry, reference);
+			LuaCore.luaL_unref(luaState, (int)PseudoIndex.Registry, reference);
 		}
 
-		public static int luanet_rawnetobj(KopiLua.Lua.lua_State luaState,int obj)
+		public static int luanet_rawnetobj(LuaCore.lua_State luaState,int obj)
 		{
-			int udata = (int)KopiLua.Lua.lua_touserdata2(luaState, obj);
+			int udata = (int)LuaCore.lua_touserdata2(luaState, obj);
 			return udata != 0 ? udata : -1;
 		}
 
-		public static void lua_pushstdcallcfunction(KopiLua.Lua.lua_State luaState,KopiLua.Lua.lua_CFunction function)
+		public static void lua_pushstdcallcfunction(LuaCore.lua_State luaState,LuaCore.lua_CFunction function)
 		{
 			lua_pushcfunction(luaState, function);
 		}
 
-		public static int checkudata_raw(KopiLua.Lua.lua_State luaState, int ud, string tname)
+		public static int checkudata_raw(LuaCore.lua_State luaState, int ud, string tname)
 		{
-			int p = (int)KopiLua.Lua.lua_touserdata2(luaState, ud);
-			//Console.WriteLine(BitConverter.ToInt32(ObjectToByteArray(KopiLua.Lua.lua_touserdata(luaState, ud)), 0));
+			int p = (int)LuaCore.lua_touserdata2(luaState, ud);
+			//Console.WriteLine(BitConverter.ToInt32(ObjectToByteArray(LuaCore.lua_touserdata(luaState, ud)), 0));
 			if(p != 0) 
 			{
 				/* value is a userdata? */
-				if(KopiLua.Lua.lua_getmetatable(luaState, ud)!=0) 
+				if(LuaCore.lua_getmetatable(luaState, ud)!=0) 
 				{
 					/* does it have a metatable? */
-					KopiLua.Lua.lua_getfield(luaState, (int)PseudoIndex.Registry, tname);  /* get correct metatable */
-					bool isEqual = KopiLua.Lua.lua_rawequal(luaState, -1, -2).ToBoolean();
+					LuaCore.lua_getfield(luaState, (int)PseudoIndex.Registry, tname);  /* get correct metatable */
+					bool isEqual = LuaCore.lua_rawequal(luaState, -1, -2).ToBoolean();
 
 					// NASTY - we need our own version of the lua_pop macro
 					// lua_pop(L, 2);  /* remove both metatables */
-					KopiLua.Lua.lua_settop(luaState, -(2) - 1);
+					LuaCore.lua_settop(luaState, -(2) - 1);
 
 					if(isEqual)   /* does it have the correct mt? */
 						return p;
@@ -208,27 +210,27 @@ namespace LuaInterface
 			return 0;
 		}
 
-		public static int luanet_checkudata(KopiLua.Lua.lua_State luaState, int ud, string tname)
+		public static int luanet_checkudata(LuaCore.lua_State luaState, int ud, string tname)
 		{
 			int udata = checkudata_raw(luaState, ud, tname);
 			return udata != 0 ? udata : -1;
 		}
 
-		public static void luanet_newudata(KopiLua.Lua.lua_State luaState, int val)
+		public static void luanet_newudata(LuaCore.lua_State luaState, int val)
 		{
-			KopiLua.Lua.lua_newuserdata(luaState, (uint)val);
+			LuaCore.lua_newuserdata(luaState, (uint)val);
 		}
 
-		public static int luanet_tonetobject(KopiLua.Lua.lua_State luaState, int index)
+		public static int luanet_tonetobject(LuaCore.lua_State luaState, int index)
 		{
 			int udata;
-			Console.WriteLine("x" + KopiLua.Lua.lua_type(luaState, index).ToString());
+			Console.WriteLine("x" + LuaCore.lua_type(luaState, index).ToString());
 
-			if(KopiLua.Lua.lua_type(luaState, index).ToLuaTypes() == LuaTypes.UserData)
+			if(LuaCore.lua_type(luaState, index).ToLuaTypes() == LuaTypes.UserData)
 			{
 				if(luaL_checkmetatable(luaState, index)) 
 				{
-					udata = (int)KopiLua.Lua.lua_touserdata2(luaState, index);
+					udata = (int)LuaCore.lua_touserdata2(luaState, index);
 					if(udata != 0) 
 						return udata; 
 				}
@@ -249,9 +251,9 @@ namespace LuaInterface
 			return -1;
 		}
 
-		public static int lua_ref(KopiLua.Lua.lua_State luaState, int lockRef)
+		public static int lua_ref(LuaCore.lua_State luaState, int lockRef)
 		{
-			return lockRef != 0 ? KopiLua.Lua.luaL_ref(luaState, (int)PseudoIndex.Registry) : 0;
+			return lockRef != 0 ? LuaCore.luaL_ref(luaState, (int)PseudoIndex.Registry) : 0;
 		}
 		#endregion
 	}

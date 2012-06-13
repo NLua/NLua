@@ -25,13 +25,29 @@
 
 using System;
 
-namespace LuaInterface
+namespace LuaInterface.Method
 {
-	/// <summary>
-	/// Marks a method, field or property to be hidden from Lua auto-completion
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property)]
-	public sealed class LuaHideAttribute : Attribute
+	/*
+	 * Base wrapper class for Lua function event handlers.
+	 * Subclasses that do actual event handling are created
+	 * at runtime.
+	 * 
+	 * Author: Fabio Mascarenhas
+	 * Version: 1.0
+	 */
+	public class LuaEventHandler
 	{
+		public LuaFunction handler = null;
+
+		// CP: Fix provided by Ben Bryant for delegates with one param
+		// link: http://luaforge.net/forum/message.php?msg_id=9318
+		public void handleEvent(object[] args)
+		{
+			handler.Call(args);
+		}
+		//public void handleEvent(object sender,object data) 
+		//{
+		//	handler.call(new object[] { sender,data },new Type[0]);
+		//}
 	}
 }

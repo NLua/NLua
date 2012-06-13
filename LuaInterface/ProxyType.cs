@@ -29,35 +29,32 @@ using System.Reflection;
 
 namespace LuaInterface
 {
+	using LuaCore = KopiLua.Lua;
+
 	/// <summary>
 	/// Summary description for ProxyType.
 	/// </summary>
 	public class ProxyType : IReflect
 	{
-
-		Type proxy;
+		private Type proxy;
 
 		public ProxyType(Type proxy) 
 		{
 			this.proxy = proxy;
 		}
 
-        /// <summary>
-        /// Provide human readable short hand for this proxy object
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return "ProxyType(" + UnderlyingSystemType + ")";
-        }
-
+		/// <summary>
+		/// Provide human readable short hand for this proxy object
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return "ProxyType(" + UnderlyingSystemType + ")";
+		}
 
 		public Type UnderlyingSystemType 
 		{
-			get 
-			{
-				return proxy;
-			}
+			get { return proxy; }
 		}
 
 		public FieldInfo GetField(string name, BindingFlags bindingAttr) 
@@ -114,6 +111,5 @@ namespace LuaInterface
 		{
 			return proxy.InvokeMember(name, invokeAttr, binder, target, args, modifiers, culture, namedParameters);
 		}
-
 	}
 }

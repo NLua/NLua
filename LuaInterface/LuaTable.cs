@@ -30,94 +30,97 @@ using System.Collections.Generic;
 
 namespace LuaInterface
 {
-    /*
+	using LuaCore = KopiLua.Lua;
+
+	/*
 	 * Wrapper class for Lua tables
 	 *
 	 * Author: Fabio Mascarenhas
 	 * Version: 1.0
 	 */
-    public class LuaTable : LuaBase
-    {
-        public LuaTable(int reference, Lua interpreter)
-        {
-            _Reference = reference;
-            _Interpreter = interpreter;
-        }
+	public class LuaTable : LuaBase
+	{
+		public LuaTable(int reference, Lua interpreter)
+		{
+			_Reference = reference;
+			_Interpreter = interpreter;
+		}
 
-        /*
-         * Indexer for string fields of the table
-         */
-        public object this[string field]
-        {
-            get
-            {
-                return _Interpreter.getObject(_Reference, field);
-            }
-            set
-            {
-                _Interpreter.setObject(_Reference, field, value);
-            }
-        }
-        /*
-         * Indexer for numeric fields of the table
-         */
-        public object this[object field]
-        {
-            get
-            {
-                return _Interpreter.getObject(_Reference, field);
-            }
-            set
-            {
-                _Interpreter.setObject(_Reference, field, value);
-            }
-        }
+		/*
+		 * Indexer for string fields of the table
+		 */
+		public object this[string field]
+		{
+			get
+			{
+				return _Interpreter.getObject(_Reference, field);
+			}
+			set
+			{
+				_Interpreter.setObject(_Reference, field, value);
+			}
+		}
 
+		/*
+		 * Indexer for numeric fields of the table
+		 */
+		public object this[object field]
+		{
+			get
+			{
+				return _Interpreter.getObject(_Reference, field);
+			}
+			set
+			{
+				_Interpreter.setObject(_Reference, field, value);
+			}
+		}
 
-        public System.Collections.IDictionaryEnumerator GetEnumerator()
-        {
-            return _Interpreter.GetTableDict(this).GetEnumerator();
-        }
+		public System.Collections.IDictionaryEnumerator GetEnumerator()
+		{
+			return _Interpreter.GetTableDict(this).GetEnumerator();
+		}
 
-        public ICollection Keys
-        {
-            get { return _Interpreter.GetTableDict(this).Keys; }
-        }
+		public ICollection Keys
+		{
+			get { return _Interpreter.GetTableDict(this).Keys; }
+		}
 
-        public ICollection Values
-        {
-            get { return _Interpreter.GetTableDict(this).Values; }
-        }
+		public ICollection Values
+		{
+			get { return _Interpreter.GetTableDict(this).Values; }
+		}
 
-        /*
-         * Gets an string fields of a table ignoring its metatable,
-         * if it exists
-         */
-        internal object rawget(string field)
-        {
-            return _Interpreter.rawGetObject(_Reference, field);
-        }
+		/*
+		 * Gets an string fields of a table ignoring its metatable,
+		 * if it exists
+		 */
+		internal object rawget(string field)
+		{
+			return _Interpreter.rawGetObject(_Reference, field);
+		}
 
-        internal object rawgetFunction(string field)
-        {
-            object obj = _Interpreter.rawGetObject(_Reference, field);
+		internal object rawgetFunction(string field)
+		{
+			object obj = _Interpreter.rawGetObject(_Reference, field);
 
-            if (obj is KopiLua.Lua.lua_CFunction)
-                return new LuaFunction((KopiLua.Lua.lua_CFunction)obj, _Interpreter);
-            else
-                return obj;
-        }
+			if(obj is LuaCore.lua_CFunction)
+				return new LuaFunction((LuaCore.lua_CFunction)obj, _Interpreter);
+			else
+				return obj;
+		}
 
-        /*
-         * Pushes this table into the Lua stack
-         */
-        internal void push(KopiLua.Lua.lua_State luaState)
-        {
-            LuaLib.lua_getref(luaState, _Reference);
-        }
-        public override string ToString()
-        {
-            return "table";
-        }
-    }
+		/*
+		 * Pushes this table into the Lua stack
+		 */
+		internal void push(LuaCore.lua_State luaState)
+		{
+			LuaLib.lua_getref(luaState, _Reference);
+		}
+
+		public override string ToString()
+		{
+			return "table";
+		}
+	}
 }

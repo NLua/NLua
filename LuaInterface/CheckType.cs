@@ -26,10 +26,13 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using LuaInterface.Method;
 using LuaInterface.Extensions;
 
 namespace LuaInterface
 {
+	using LuaCore = KopiLua.Lua;
+
 	/*
 	 * Type checking and conversion functions.
 	 * 
@@ -84,9 +87,9 @@ namespace LuaInterface
 			return extractValues.ContainsKey(runtimeHandleValue) ? extractValues[runtimeHandleValue] : extractNetObject;
 		}
 
-		internal ExtractValue checkType(KopiLua.Lua.lua_State luaState, int stackPos, Type paramType) 
+		internal ExtractValue checkType(LuaCore.lua_State luaState, int stackPos, Type paramType) 
 		{
-			var luatype = KopiLua.Lua.lua_type(luaState, stackPos).ToLuaTypes();
+			var luatype = LuaCore.lua_type(luaState, stackPos).ToLuaTypes();
 
 			if(paramType.IsByRef)
 				paramType = paramType.GetElementType();
@@ -120,17 +123,17 @@ namespace LuaInterface
 					//;//an unsupported type was encountered
 			}
 
-			if(KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			if(LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return extractValues[runtimeHandleValue];
 
 			if(paramType == typeof(bool))
 			{
-				if(KopiLua.Lua.lua_isboolean(luaState, stackPos))
+				if(LuaCore.lua_isboolean(luaState, stackPos))
 					return extractValues[runtimeHandleValue];
 			}
 			else if(paramType == typeof(string))
 			{
-				if(KopiLua.Lua.lua_isstring(luaState, stackPos).ToBoolean())
+				if(LuaCore.lua_isstring(luaState, stackPos).ToBoolean())
 					return extractValues[runtimeHandleValue];
 				else if(luatype == LuaTypes.Nil)
 					return extractNetObject; // kevinh - silently convert nil to a null string pointer
@@ -159,12 +162,12 @@ namespace LuaInterface
 				// kevinh - allow nil to be silently converted to null - extractNetObject will return null when the item ain't found
 				return extractNetObject;
 			}
-			else if(KopiLua.Lua.lua_type(luaState, stackPos).ToLuaTypes() == LuaTypes.Table)
+			else if(LuaCore.lua_type(luaState, stackPos).ToLuaTypes() == LuaTypes.Table)
 			{
-				if(KopiLua.Lua.luaL_getmetafield(luaState, stackPos, "__index").ToBoolean())
+				if(LuaCore.luaL_getmetafield(luaState, stackPos, "__index").ToBoolean())
 				{
 					object obj = translator.getNetObject(luaState, -1);
-					KopiLua.Lua.lua_settop(luaState, -2);
+					LuaCore.lua_settop(luaState, -2);
 					if(!obj.IsNull() && paramType.IsAssignableFrom(obj.GetType()))
 						return extractNetObject;
 				}
@@ -186,156 +189,156 @@ namespace LuaInterface
 		 * index stackPos as the desired type if it can, or null
 		 * otherwise.
 		 */
-		private object getAsSbyte(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsSbyte(LuaCore.lua_State luaState, int stackPos) 
 		{
-			sbyte retVal = (sbyte)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			sbyte retVal = (sbyte)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsByte(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsByte(LuaCore.lua_State luaState, int stackPos) 
 		{
-			byte retVal = (byte)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			byte retVal = (byte)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsShort(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsShort(LuaCore.lua_State luaState, int stackPos) 
 		{
-			short retVal = (short)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			short retVal = (short)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsUshort(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsUshort(LuaCore.lua_State luaState, int stackPos) 
 		{
-			ushort retVal = (ushort)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			ushort retVal = (ushort)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsInt(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsInt(LuaCore.lua_State luaState, int stackPos) 
 		{
-			int retVal = (int)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			int retVal = (int)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsUint(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsUint(LuaCore.lua_State luaState, int stackPos) 
 		{
-			uint retVal = (uint)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			uint retVal = (uint)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsLong(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsLong(LuaCore.lua_State luaState, int stackPos) 
 		{
-			long retVal = (long)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			long retVal = (long)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsUlong(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsUlong(LuaCore.lua_State luaState, int stackPos) 
 		{
-			ulong retVal = (ulong)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			ulong retVal = (ulong)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsDouble(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsDouble(LuaCore.lua_State luaState, int stackPos) 
 		{
-			double retVal = KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			double retVal = LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsChar(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsChar(LuaCore.lua_State luaState, int stackPos) 
 		{
-			char retVal = (char)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			char retVal = (char)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsFloat(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsFloat(LuaCore.lua_State luaState, int stackPos) 
 		{
-			float retVal = (float)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			float retVal = (float)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsDecimal(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsDecimal(LuaCore.lua_State luaState, int stackPos) 
 		{
-			decimal retVal = (decimal)KopiLua.Lua.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !KopiLua.Lua.lua_isnumber(luaState, stackPos).ToBoolean())
+			decimal retVal = (decimal)LuaCore.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsBoolean(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsBoolean(LuaCore.lua_State luaState, int stackPos) 
 		{
-			return KopiLua.Lua.lua_toboolean(luaState, stackPos);
+			return LuaCore.lua_toboolean(luaState, stackPos);
 		}
 
-		private object getAsString(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsString(LuaCore.lua_State luaState, int stackPos) 
 		{
-			string retVal = KopiLua.Lua.lua_tostring(luaState, stackPos).ToString();
-			if(retVal == string.Empty && !KopiLua.Lua.lua_isstring(luaState, stackPos).ToBoolean())
+			string retVal = LuaCore.lua_tostring(luaState, stackPos).ToString();
+			if(retVal == string.Empty && !LuaCore.lua_isstring(luaState, stackPos).ToBoolean())
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsTable(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsTable(LuaCore.lua_State luaState, int stackPos) 
 		{
 			return translator.getTable(luaState, stackPos);
 		}
 
-		private object getAsFunction(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsFunction(LuaCore.lua_State luaState, int stackPos) 
 		{
 			return translator.getFunction(luaState, stackPos);
 		}
 
-		private object getAsUserdata(KopiLua.Lua.lua_State luaState, int stackPos) 
+		private object getAsUserdata(LuaCore.lua_State luaState, int stackPos) 
 		{
 			return translator.getUserData(luaState, stackPos);
 		}
 
-		public object getAsObject(KopiLua.Lua.lua_State luaState, int stackPos) 
+		public object getAsObject(LuaCore.lua_State luaState, int stackPos) 
 		{
-			if(KopiLua.Lua.lua_type(luaState, stackPos).ToLuaTypes() == LuaTypes.Table) 
+			if(LuaCore.lua_type(luaState, stackPos).ToLuaTypes() == LuaTypes.Table) 
 			{
-				if(KopiLua.Lua.luaL_getmetafield(luaState, stackPos, "__index").ToBoolean()) 
+				if(LuaCore.luaL_getmetafield(luaState, stackPos, "__index").ToBoolean()) 
 				{
 					if(LuaLib.luaL_checkmetatable(luaState, -1)) 
 					{
-						KopiLua.Lua.lua_insert(luaState, stackPos);
-						KopiLua.Lua.lua_remove(luaState, stackPos+1);
+						LuaCore.lua_insert(luaState, stackPos);
+						LuaCore.lua_remove(luaState, stackPos+1);
 					} 
 					else
-						KopiLua.Lua.lua_settop(luaState, -2);
+						LuaCore.lua_settop(luaState, -2);
 				}
 			}
 
@@ -343,22 +346,22 @@ namespace LuaInterface
 			return obj;
 		}
 
-		public object getAsNetObject(KopiLua.Lua.lua_State luaState, int stackPos) 
+		public object getAsNetObject(LuaCore.lua_State luaState, int stackPos) 
 		{
 			object obj = translator.getNetObject(luaState, stackPos);
 
-			if(obj.IsNull() && KopiLua.Lua.lua_type(luaState, stackPos).ToLuaTypes() == LuaTypes.Table) 
+			if(obj.IsNull() && LuaCore.lua_type(luaState, stackPos).ToLuaTypes() == LuaTypes.Table) 
 			{
-				if(KopiLua.Lua.luaL_getmetafield(luaState, stackPos, "__index").ToBoolean()) 
+				if(LuaCore.luaL_getmetafield(luaState, stackPos, "__index").ToBoolean()) 
 				{
 					if(LuaLib.luaL_checkmetatable(luaState, -1)) 
 					{
-						KopiLua.Lua.lua_insert(luaState, stackPos);
-						KopiLua.Lua.lua_remove(luaState, stackPos+1);
+						LuaCore.lua_insert(luaState, stackPos);
+						LuaCore.lua_remove(luaState, stackPos+1);
 						obj = translator.getNetObject(luaState, stackPos);
 					} 
 					else 
-						KopiLua.Lua.lua_settop(luaState, -2);
+						LuaCore.lua_settop(luaState, -2);
 				}
 			}
 

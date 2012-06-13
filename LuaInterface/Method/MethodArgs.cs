@@ -25,13 +25,18 @@
 
 using System;
 
-namespace LuaInterface
+namespace LuaInterface.Method
 {
-	/// <summary>
-	/// Marks a method, field or property to be hidden from Lua auto-completion
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property)]
-	public sealed class LuaHideAttribute : Attribute
+	/*
+	 * Parameter information
+	 */
+	struct MethodArgs
 	{
+		// Position of parameter
+		public int index;
+		// Type-conversion function
+		public ExtractValue extractValue;
+		public bool isParamsArray;
+		public Type paramsArrayType;
 	}
 }

@@ -29,73 +29,78 @@ using System.Collections.Generic;
 
 namespace LuaInterface
 {
-    public class LuaFunction : LuaBase
-    {
-        internal KopiLua.Lua.lua_CFunction function;
+	using LuaCore = KopiLua.Lua;
 
-        public LuaFunction(int reference, Lua interpreter)
-        {
-            _Reference = reference;
-            this.function = null;
-            _Interpreter = interpreter;
-        }
+	public class LuaFunction : LuaBase
+	{
+		internal LuaCore.lua_CFunction function;
 
-        public LuaFunction(KopiLua.Lua.lua_CFunction function, Lua interpreter)
-        {
-            _Reference = 0;
-            this.function = function;
-            _Interpreter = interpreter;
-        }
+		public LuaFunction(int reference, Lua interpreter)
+		{
+			_Reference = reference;
+			this.function = null;
+			_Interpreter = interpreter;
+		}
 
-        /*
-         * Calls the function casting return values to the types
-         * in returnTypes
-         */
-        internal object[] call(object[] args, Type[] returnTypes)
-        {
-            return _Interpreter.callFunction(this, args, returnTypes);
-        }
-        /*
-         * Calls the function and returns its return values inside
-         * an array
-         */
-        public object[] Call(params object[] args)
-        {
-            return _Interpreter.callFunction(this, args);
-        }
-        /*
-         * Pushes the function into the Lua stack
-         */
-        internal void push(KopiLua.Lua.lua_State luaState)
-        {
-            if (_Reference != 0)
-                LuaLib.lua_getref(luaState, _Reference);
-            else
-                _Interpreter.pushCSFunction(function);
-        }
-        public override string ToString()
-        {
-            return "function";
-        }
-        public override bool Equals(object o)
-        {
-            if (o is LuaFunction)
-            {
-                LuaFunction l = (LuaFunction)o;
-                if (this._Reference != 0 && l._Reference != 0)
-                    return _Interpreter.compareRef(l._Reference, this._Reference);
-                else
-                    return this.function == l.function;
-            }
-            else return false;
-        }
-        public override int GetHashCode()
-        {
-            if (_Reference != 0)
-                return _Reference;
-            else
-                return function.GetHashCode();
-        }
-    }
+		public LuaFunction(LuaCore.lua_CFunction function, Lua interpreter)
+		{
+			_Reference = 0;
+			this.function = function;
+			_Interpreter = interpreter;
+		}
 
+		/*
+		 * Calls the function casting return values to the types
+		 * in returnTypes
+		 */
+		internal object[] call(object[] args, Type[] returnTypes)
+		{
+			return _Interpreter.callFunction(this, args, returnTypes);
+		}
+
+		/*
+		 * Calls the function and returns its return values inside
+		 * an array
+		 */
+		public object[] Call(params object[] args)
+		{
+			return _Interpreter.callFunction(this, args);
+		}
+
+		/*
+		 * Pushes the function into the Lua stack
+		 */
+		internal void push(LuaCore.lua_State luaState)
+		{
+			if(_Reference != 0)
+				LuaLib.lua_getref(luaState, _Reference);
+			else
+				_Interpreter.pushCSFunction(function);
+		}
+
+		public override string ToString()
+		{
+			return "function";
+		}
+
+		public override bool Equals(object o)
+		{
+			if(o is LuaFunction)
+			{
+				var l = (LuaFunction)o;
+
+				if(this._Reference != 0 && l._Reference != 0)
+					return _Interpreter.compareRef(l._Reference, this._Reference);
+				else
+					return this.function == l.function;
+			}
+			else
+				return false;
+		}
+
+		public override int GetHashCode()
+		{
+			return _Reference != 0 ? _Reference : function.GetHashCode();
+		}
+	}
 }

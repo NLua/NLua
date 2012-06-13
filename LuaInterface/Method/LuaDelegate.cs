@@ -25,13 +25,56 @@
 
 using System;
 
-namespace LuaInterface
+namespace LuaInterface.Method
 {
-	/// <summary>
-	/// Marks a method, field or property to be hidden from Lua auto-completion
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property)]
-	public sealed class LuaHideAttribute : Attribute
+	/*
+	 * Wrapper class for Lua functions as delegates
+	 * Subclasses with correct signatures are created
+	 * at runtime.
+	 * 
+	 * Author: Fabio Mascarenhas
+	 * Version: 1.0
+	 */
+	public class LuaDelegate
 	{
+		public LuaFunction function;
+		public Type[] returnTypes;
+
+		public LuaDelegate()
+		{
+			function = null;
+			returnTypes = null;
+		}
+
+		public object callFunction(object[] args, object[] inArgs, int[] outArgs)
+		{
+			// args is the return array of arguments, inArgs is the actual array
+			// of arguments passed to the function (with in parameters only), outArgs
+			// has the positions of out parameters
+			object returnValue;
+			int iRefArgs;
+			object[] returnValues = function.call(inArgs, returnTypes);
+
+			if(returnTypes[0] == typeof(void))
+			{
+				returnValue = null;
+				iRefArgs = 0;
+			}
+			else
+			{
+				returnValue = returnValues[0];
+				iRefArgs = 1;
+			}
+
+			// Sets the value of out and ref parameters (from
+			// the values returned by the Lua function).
+			for(int i = 0; i < outArgs.Length; i++)
+			{
+				args[outArgs[i]] = returnValues[iRefArgs];
+				iRefArgs++;
+			}
+
+			return returnValue;
+		}
 	}
 }

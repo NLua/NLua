@@ -38,7 +38,6 @@
     <Compile Include="CheckType.cs" />
     <Compile Include="Lua.cs" />
     <Compile Include="Metatables.cs" />
-    <Compile Include="MethodWrapper.cs" />
     <Compile Include="ObjectTranslator.cs" />
     <Compile Include="ProxyType.cs" />
     <Compile Include="LuaLib\LuaLib.cs" />
@@ -68,6 +67,14 @@
     <Compile Include="LuaLib\LuaTypes.cs" />
     <Compile Include="LuaLib\GCOption.cs" />
     <Compile Include="LuaLib\PseudoIndex.cs" />
+    <Compile Include="Method\MethodCache.cs" />
+    <Compile Include="Method\MethodArgs.cs" />
+    <Compile Include="Method\LuaMethodWrapper.cs" />
+    <Compile Include="Method\EventHandlerContainer.cs" />
+    <Compile Include="Method\RegisterEventHandler.cs" />
+    <Compile Include="Method\LuaEventHandler.cs" />
+    <Compile Include="Method\LuaDelegate.cs" />
+    <Compile Include="Method\LuaClassHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -88,5 +95,6 @@
     <Folder Include="GenerateEventAssembly\" />
     <Folder Include="Event\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="Method\" />
   </ItemGroup>
 </Project>
