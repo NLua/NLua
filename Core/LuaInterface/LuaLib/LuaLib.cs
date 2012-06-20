@@ -38,22 +38,6 @@ namespace LuaInterface
 	{
 		private static int tag = 0;
 
-		/// <summary>
-		/// Function to get byte array from a object
-		/// </summary>
-		/// <param name="_Object">object to get byte array</param>
-		/// <returns>Byte Array</returns>
-		public static byte[] ObjectToByteArray(object obj)
-		{
-			if(obj.IsNull())
-				return null;
-
-			var bf = new BinaryFormatter();
-			var ms = new MemoryStream();
-			bf.Serialize(ms, obj);
-			return ms.ToArray();
-		}
-
 		public static LuaTypes ToLuaTypes(this int type)
 		{
 			return (LuaTypes)type;
@@ -171,7 +155,7 @@ namespace LuaInterface
 		public static int checkudata_raw(LuaCore.lua_State luaState, int ud, string tname)
 		{
 			int p = (int)LuaCore.lua_touserdata2(luaState, ud);
-			//Console.WriteLine(BitConverter.ToInt32(ObjectToByteArray(LuaCore.lua_touserdata(luaState, ud)), 0));
+
 			if(p != 0) 
 			{
 				/* value is a userdata? */

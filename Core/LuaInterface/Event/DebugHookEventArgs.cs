@@ -27,20 +27,22 @@ using System;
 
 namespace LuaInterface.Event
 {
+	using LuaCore = KopiLua.Lua;
+
 	/// <summary>
 	/// Event args for hook callback event
 	/// </summary>
 	/// <author>Reinhard Ostermeier</author>
 	public class DebugHookEventArgs : EventArgs
 	{
-		private readonly LuaDebug luaDebug;
+		private readonly LuaCore.lua_Debug luaDebug;
 
-		public DebugHookEventArgs(LuaDebug luaDebug)
+		public DebugHookEventArgs(LuaCore.lua_Debug luaDebug)
 		{
 			this.luaDebug = luaDebug;
 		}
 
-		public LuaDebug LuaDebug
+		public LuaCore.lua_Debug LuaDebug
 		{
 			get { return luaDebug; }
 		}

@@ -758,10 +758,9 @@ namespace LuaInterface
 		}
 
 		/*
-			* Lets go of a previously allocated reference to a table, function
-			* or userdata
-			*/
-
+		 * Lets go of a previously allocated reference to a table, function
+		 * or userdata
+		 */
 		#region lua debug functions
 		/// <summary>
 		/// Activates the debug hook
@@ -770,15 +769,16 @@ namespace LuaInterface
 		/// <param name = "count">Count</param>
 		/// <returns>see lua docs. -1 if hook is already set</returns>
 		/// <author>Reinhard Ostermeier</author>
-		/*public int SetDebugHook(EventMasks mask, int count)
+		public int SetDebugHook(EventMasks mask, int count)
 		{
 			if(hookCallback.IsNull())
 			{
-			hookCallback = new LuaCore.lua_Hook(DebugHookCallback);
-			return LuaCore.lua_sethook(luaState, hookCallback, (int)mask, count);
+				hookCallback = new LuaCore.lua_Hook(DebugHookCallback);
+				return LuaCore.lua_sethook(luaState, hookCallback, (int)mask, count);
 			}
+
 			return -1;
-		}*/
+		}
 
 		/// <summary>
 		/// Removes the debug hook
@@ -818,19 +818,19 @@ namespace LuaInterface
 		/// <param name = "luaDebug">lua debug structure</param>
 		/// <returns>Returns true if level was allowed, false if level was invalid.</returns>
 		/// <author>Reinhard Ostermeier</author>
-		/*public bool GetStack(int level, out LuaDebug luaDebug)
+		/*public bool GetStack(int level, out LuaCore.lua_Debug luaDebug)
 		{
 			luaDebug = new LuaDebug();
 			LuaCore.lua_State ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
 			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
-			return LuaCore.lua_getstack(luaState, level, ld) != 0;
+				return LuaCore.lua_getstack(luaState, level, luaDebug) != 0;
 			}
 			finally
 			{
-			luaDebug = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(ld, typeof(LuaDebug));
-			System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
+				luaDebug = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(ld, typeof(LuaDebug));
+				System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
 			}
 		}*/
 
@@ -841,18 +841,18 @@ namespace LuaInterface
 		/// <param name = "luaDebug">lua debug structure</param>
 		/// <returns>see lua docs</returns>
 		/// <author>Reinhard Ostermeier</author>
-		/*public int GetInfo(String what, ref LuaDebug luaDebug)
+		/*public int GetInfo(String what, ref LuaCore.lua_Debug luaDebug)
 		{
 			LuaCore.lua_State ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
 			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
-			return LuaCore.lua_getinfo(luaState, what, ld);
+				return LuaCore.lua_getinfo(luaState, what, ld);
 			}
 			finally
 			{
-			luaDebug = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(ld, typeof(LuaDebug));
-			System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
+				luaDebug = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(ld, typeof(LuaDebug));
+				System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
 			}
 		}*/
 
@@ -863,19 +863,17 @@ namespace LuaInterface
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
 		/// <author>Reinhard Ostermeier</author>
-		/*public String GetLocal(LuaDebug luaDebug, int n)
+		public string GetLocal(LuaCore.lua_Debug luaDebug, int n)
 		{
-			LuaCore.lua_State ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
-			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
-			return LuaCore.lua_getlocal(luaState, ld, n);
+				return LuaCore.lua_getlocal(luaState, luaDebug, n).ToString();
 			}
 			finally
 			{
-			System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
+				//System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
 			}
-		}*/
+		}
 
 		/// <summary>
 		/// Sets local (see lua docs)
@@ -884,19 +882,17 @@ namespace LuaInterface
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
 		/// <author>Reinhard Ostermeier</author>
-		/*public String SetLocal(LuaDebug luaDebug, int n)
+		public string SetLocal(LuaCore.lua_Debug luaDebug, int n)
 		{
-			LuaCore.lua_State ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
-			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
-			return LuaCore.lua_setlocal(luaState, ld, n);
+				return LuaCore.lua_setlocal(luaState, luaDebug, n).ToString();
 			}
 			finally
 			{
-			System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
+				//System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
 			}
-		}*/
+		}
 
 		/// <summary>
 		/// Gets up value (see lua docs)
@@ -928,22 +924,20 @@ namespace LuaInterface
 		/// <param name = "luaState">lua state</param>
 		/// <param name = "luaDebug">Pointer to LuaDebug (lua_debug) structure</param>
 		/// <author>Reinhard Ostermeier</author>
-		/*private void DebugHookCallback(LuaCore.lua_State luaState, LuaCore.lua_Debug luaDebug)
+		private void DebugHookCallback(LuaCore.lua_State luaState, LuaCore.lua_Debug luaDebug)
 		{
 			try
 			{
-			LuaDebug ld = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(luaDebug, typeof(LuaDebug));
-			EventHandler<DebugHookEventArgs> temp = DebugHook;
-			if(temp != null)
+				var temp = DebugHook;
+
+				if(!temp.IsNull())
+					temp(this, new DebugHookEventArgs(luaDebug));
+			}
+			catch(Exception ex)
 			{
-					temp(this, new DebugHookEventArgs(ld));
+				OnHookException(new HookExceptionEventArgs(ex));
 			}
-			}
-			catch (Exception ex)
-			{
-			OnHookException(new HookExceptionEventArgs(ex));
-			}
-		}*/
+		}
 
 		private void OnHookException(HookExceptionEventArgs e)
 		{

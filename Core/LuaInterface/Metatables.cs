@@ -172,7 +172,7 @@ namespace LuaInterface
 			}
 
 			object index = translator.getObject(luaState, 2);
-			var indexType = index.GetType();
+			//var indexType = index.GetType();
 			string methodName = index as string;		// will be null if not a string arg
 			var objType = obj.GetType();
 

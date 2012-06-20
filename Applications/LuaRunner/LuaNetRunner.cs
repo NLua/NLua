@@ -1,6 +1,6 @@
 using System;
-using LuaInterface;
 using System.Threading;
+using LuaInterface;
 
 /*
  * Application to run Lua scripts that can use LuaInterface

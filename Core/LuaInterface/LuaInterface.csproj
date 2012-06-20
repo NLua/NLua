@@ -78,7 +78,6 @@
     <Compile Include="GenerateEventAssembly\CodeGeneration.cs" />
     <Compile Include="Event\EventCodes.cs" />
     <Compile Include="Event\EventMasks.cs" />
-    <Compile Include="Event\LuaDebug.cs" />
     <Compile Include="Event\DebugHookEventArgs.cs" />
     <Compile Include="Event\HookExceptionEventArgs.cs" />
     <Compile Include="Exceptions\LuaException.cs" />
