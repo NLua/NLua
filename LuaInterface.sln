@@ -1,26 +1,81 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterface", "LuaInterface\LuaInterface.csproj", "{F55CABBB-4108-4A39-94E1-581FD46DC021}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{0E28CF40-4DFA-46FE-95BB-E90648DFE6F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KopiLua", "KopiLua\KopiLua.csproj", "{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLuaInterface", "Test\TestLuaInterface\TestLuaInterface.csproj", "{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterface.Test", "Test\LuaInterface.Test\LuaInterface.Test.csproj", "{F97A7B76-AD92-49F9-B733-F347B7C8439F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{B13128D8-A4F3-4C53-A4C6-F2EA34F527BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaRunner", "Applications\LuaRunner\LuaRunner.csproj", "{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{B8664957-CB71-4F11-A4DB-59E7514BC5F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KopiLua", "Core\KopiLua\KopiLua.csproj", "{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterface", "Core\LuaInterface\LuaInterface.csproj", "{F55CABBB-4108-4A39-94E1-581FD46DC021}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5}.Debug|x64.ActiveCfg = Debug|x64
+		{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5}.Debug|x64.Build.0 = Debug|x64
+		{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5}.Debug|x86.ActiveCfg = Debug|x86
+		{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5}.Debug|x86.Build.0 = Debug|x86
+		{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5}.Release|x64.ActiveCfg = Release|x64
+		{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5}.Release|x64.Build.0 = Release|x64
+		{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5}.Release|x86.ActiveCfg = Release|x86
+		{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5}.Release|x86.Build.0 = Release|x86
+		{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E}.Debug|x64.ActiveCfg = Debug|x64
+		{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E}.Debug|x64.Build.0 = Debug|x64
+		{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E}.Debug|x86.ActiveCfg = Debug|x86
+		{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E}.Debug|x86.Build.0 = Debug|x86
+		{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E}.Release|x64.ActiveCfg = Release|x64
+		{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E}.Release|x64.Build.0 = Release|x64
+		{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E}.Release|x86.ActiveCfg = Release|x86
+		{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E}.Release|x86.Build.0 = Release|x86
+		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Debug|x64.ActiveCfg = Debug|x64
+		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Debug|x64.Build.0 = Debug|x64
+		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Debug|x86.ActiveCfg = Debug|x86
+		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Debug|x86.Build.0 = Debug|x86
+		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Release|x64.ActiveCfg = Release|x64
+		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Release|x64.Build.0 = Release|x64
+		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Release|x86.ActiveCfg = Release|x86
+		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}.Release|x86.Build.0 = Release|x86
+		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Debug|x64.ActiveCfg = Debug|x64
+		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Debug|x64.Build.0 = Debug|x64
+		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Debug|x86.ActiveCfg = Debug|x86
+		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Debug|x86.Build.0 = Debug|x86
+		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Release|x64.ActiveCfg = Release|x64
+		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Release|x64.Build.0 = Release|x64
+		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Release|x86.ActiveCfg = Release|x86
+		{F55CABBB-4108-4A39-94E1-581FD46DC021}.Release|x86.Build.0 = Release|x86
+		{F97A7B76-AD92-49F9-B733-F347B7C8439F}.Debug|x64.ActiveCfg = Debug|x64
+		{F97A7B76-AD92-49F9-B733-F347B7C8439F}.Debug|x64.Build.0 = Debug|x64
+		{F97A7B76-AD92-49F9-B733-F347B7C8439F}.Debug|x86.ActiveCfg = Debug|x86
+		{F97A7B76-AD92-49F9-B733-F347B7C8439F}.Debug|x86.Build.0 = Debug|x86
+		{F97A7B76-AD92-49F9-B733-F347B7C8439F}.Release|x64.ActiveCfg = Release|x64
+		{F97A7B76-AD92-49F9-B733-F347B7C8439F}.Release|x64.Build.0 = Release|x64
+		{F97A7B76-AD92-49F9-B733-F347B7C8439F}.Release|x86.ActiveCfg = Release|x86
+		{F97A7B76-AD92-49F9-B733-F347B7C8439F}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AEAB974E-4F69-4840-A2C4-7BC55F7C7C3E} = {0E28CF40-4DFA-46FE-95BB-E90648DFE6F5}
+		{F97A7B76-AD92-49F9-B733-F347B7C8439F} = {0E28CF40-4DFA-46FE-95BB-E90648DFE6F5}
+		{3CE4CCB6-3465-43E3-B5ED-5FB9B70D20E5} = {B13128D8-A4F3-4C53-A4C6-F2EA34F527BD}
+		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8} = {B8664957-CB71-4F11-A4DB-59E7514BC5F3}
+		{F55CABBB-4108-4A39-94E1-581FD46DC021} = {B8664957-CB71-4F11-A4DB-59E7514BC5F3}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = LuaInterface\LuaInterface.csproj
+		StartupItem = Core\LuaInterface\LuaInterface.csproj
+		description = LuaInterface
+		version = 2.x
 	EndGlobalSection
 EndGlobal
