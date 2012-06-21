@@ -89,7 +89,7 @@ namespace LuaInterface
 
 		internal ExtractValue checkType(LuaCore.lua_State luaState, int stackPos, Type paramType) 
 		{
-			var luatype = LuaCore.lua_type(luaState, stackPos).ToLuaTypes();
+			var luatype = LuaLib.lua_type(luaState, stackPos);
 
 			if(paramType.IsByRef)
 				paramType = paramType.GetElementType();
@@ -123,17 +123,17 @@ namespace LuaInterface
 					//;//an unsupported type was encountered
 			}
 
-			if(LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			if(LuaLib.lua_isnumber(luaState, stackPos))
 				return extractValues[runtimeHandleValue];
 
 			if(paramType == typeof(bool))
 			{
-				if(LuaCore.lua_isboolean(luaState, stackPos))
+				if(LuaLib.lua_isboolean(luaState, stackPos))
 					return extractValues[runtimeHandleValue];
 			}
 			else if(paramType == typeof(string))
 			{
-				if(LuaCore.lua_isstring(luaState, stackPos).ToBoolean())
+				if(LuaLib.lua_isstring(luaState, stackPos))
 					return extractValues[runtimeHandleValue];
 				else if(luatype == LuaTypes.Nil)
 					return extractNetObject; // kevinh - silently convert nil to a null string pointer
@@ -162,12 +162,12 @@ namespace LuaInterface
 				// kevinh - allow nil to be silently converted to null - extractNetObject will return null when the item ain't found
 				return extractNetObject;
 			}
-			else if(LuaCore.lua_type(luaState, stackPos).ToLuaTypes() == LuaTypes.Table)
+			else if(LuaLib.lua_type(luaState, stackPos) == LuaTypes.Table)
 			{
-				if(LuaCore.luaL_getmetafield(luaState, stackPos, "__index").ToBoolean())
+				if(LuaLib.luaL_getmetafield(luaState, stackPos, "__index"))
 				{
 					object obj = translator.getNetObject(luaState, -1);
-					LuaCore.lua_settop(luaState, -2);
+					LuaLib.lua_settop(luaState, -2);
 					if(!obj.IsNull() && paramType.IsAssignableFrom(obj.GetType()))
 						return extractNetObject;
 				}
@@ -191,8 +191,8 @@ namespace LuaInterface
 		 */
 		private object getAsSbyte(LuaCore.lua_State luaState, int stackPos) 
 		{
-			sbyte retVal = (sbyte)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			sbyte retVal = (sbyte)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -200,8 +200,8 @@ namespace LuaInterface
 
 		private object getAsByte(LuaCore.lua_State luaState, int stackPos) 
 		{
-			byte retVal = (byte)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			byte retVal = (byte)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -209,8 +209,8 @@ namespace LuaInterface
 
 		private object getAsShort(LuaCore.lua_State luaState, int stackPos) 
 		{
-			short retVal = (short)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			short retVal = (short)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -218,8 +218,8 @@ namespace LuaInterface
 
 		private object getAsUshort(LuaCore.lua_State luaState, int stackPos) 
 		{
-			ushort retVal = (ushort)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			ushort retVal = (ushort)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -227,8 +227,8 @@ namespace LuaInterface
 
 		private object getAsInt(LuaCore.lua_State luaState, int stackPos) 
 		{
-			int retVal = (int)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			int retVal = (int)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -236,8 +236,8 @@ namespace LuaInterface
 
 		private object getAsUint(LuaCore.lua_State luaState, int stackPos) 
 		{
-			uint retVal = (uint)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			uint retVal = (uint)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -245,8 +245,8 @@ namespace LuaInterface
 
 		private object getAsLong(LuaCore.lua_State luaState, int stackPos) 
 		{
-			long retVal = (long)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			long retVal = (long)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -254,8 +254,8 @@ namespace LuaInterface
 
 		private object getAsUlong(LuaCore.lua_State luaState, int stackPos) 
 		{
-			ulong retVal = (ulong)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			ulong retVal = (ulong)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -263,8 +263,8 @@ namespace LuaInterface
 
 		private object getAsDouble(LuaCore.lua_State luaState, int stackPos) 
 		{
-			double retVal = LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			double retVal = LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -272,8 +272,8 @@ namespace LuaInterface
 
 		private object getAsChar(LuaCore.lua_State luaState, int stackPos) 
 		{
-			char retVal = (char)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			char retVal = (char)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -281,8 +281,8 @@ namespace LuaInterface
 
 		private object getAsFloat(LuaCore.lua_State luaState, int stackPos) 
 		{
-			float retVal = (float)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			float retVal = (float)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -290,8 +290,8 @@ namespace LuaInterface
 
 		private object getAsDecimal(LuaCore.lua_State luaState, int stackPos) 
 		{
-			decimal retVal = (decimal)LuaCore.lua_tonumber(luaState, stackPos);
-			if(retVal == 0 && !LuaCore.lua_isnumber(luaState, stackPos).ToBoolean())
+			decimal retVal = (decimal)LuaLib.lua_tonumber(luaState, stackPos);
+			if(retVal == 0 && !LuaLib.lua_isnumber(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -299,13 +299,13 @@ namespace LuaInterface
 
 		private object getAsBoolean(LuaCore.lua_State luaState, int stackPos) 
 		{
-			return LuaCore.lua_toboolean(luaState, stackPos);
+			return LuaLib.lua_toboolean(luaState, stackPos);
 		}
 
 		private object getAsString(LuaCore.lua_State luaState, int stackPos) 
 		{
-			string retVal = LuaCore.lua_tostring(luaState, stackPos).ToString();
-			if(retVal == string.Empty && !LuaCore.lua_isstring(luaState, stackPos).ToBoolean())
+			string retVal = LuaLib.lua_tostring(luaState, stackPos).ToString();
+			if(retVal == string.Empty && !LuaLib.lua_isstring(luaState, stackPos))
 				return null;
 
 			return retVal;
@@ -328,17 +328,17 @@ namespace LuaInterface
 
 		public object getAsObject(LuaCore.lua_State luaState, int stackPos) 
 		{
-			if(LuaCore.lua_type(luaState, stackPos).ToLuaTypes() == LuaTypes.Table) 
+			if(LuaLib.lua_type(luaState, stackPos) == LuaTypes.Table) 
 			{
-				if(LuaCore.luaL_getmetafield(luaState, stackPos, "__index").ToBoolean()) 
+				if(LuaLib.luaL_getmetafield(luaState, stackPos, "__index")) 
 				{
 					if(LuaLib.luaL_checkmetatable(luaState, -1)) 
 					{
-						LuaCore.lua_insert(luaState, stackPos);
-						LuaCore.lua_remove(luaState, stackPos+1);
+						LuaLib.lua_insert(luaState, stackPos);
+						LuaLib.lua_remove(luaState, stackPos+1);
 					} 
 					else
-						LuaCore.lua_settop(luaState, -2);
+						LuaLib.lua_settop(luaState, -2);
 				}
 			}
 
@@ -350,18 +350,18 @@ namespace LuaInterface
 		{
 			object obj = translator.getNetObject(luaState, stackPos);
 
-			if(obj.IsNull() && LuaCore.lua_type(luaState, stackPos).ToLuaTypes() == LuaTypes.Table) 
+			if(obj.IsNull() && LuaLib.lua_type(luaState, stackPos) == LuaTypes.Table) 
 			{
-				if(LuaCore.luaL_getmetafield(luaState, stackPos, "__index").ToBoolean()) 
+				if(LuaLib.luaL_getmetafield(luaState, stackPos, "__index")) 
 				{
 					if(LuaLib.luaL_checkmetatable(luaState, -1)) 
 					{
-						LuaCore.lua_insert(luaState, stackPos);
-						LuaCore.lua_remove(luaState, stackPos+1);
+						LuaLib.lua_insert(luaState, stackPos);
+						LuaLib.lua_remove(luaState, stackPos+1);
 						obj = translator.getNetObject(luaState, stackPos);
 					} 
 					else 
-						LuaCore.lua_settop(luaState, -2);
+						LuaLib.lua_settop(luaState, -2);
 				}
 			}
 

@@ -786,24 +786,18 @@ namespace KopiLua
 
 
 		public static int luaO_rawequalObj (TValue t1, TValue t2) {
-			Console.WriteLine("luaO_rawequalObj:" + (ttype(t1) != ttype(t2)).ToString());
 		  if (ttype(t1) != ttype(t2)) return 0;
 		  else switch (ttype(t1)) {
 			case LUA_TNIL:
-				Console.WriteLine("luaO_rawequalObj1:" + (1).ToString());
 			  return 1;
 			case LUA_TNUMBER:
-				Console.WriteLine("luaO_rawequalObj2:" + (luai_numeq(nvalue(t1), nvalue(t2))).ToString());
 			  return luai_numeq(nvalue(t1), nvalue(t2)) ? 1 : 0;
 			case LUA_TBOOLEAN:
-				Console.WriteLine("luaO_rawequalObj3:" + (bvalue(t1) == bvalue(t2)).ToString());
 			  return bvalue(t1) == bvalue(t2) ? 1 : 0;  /* boolean true must be 1....but not in C# !! */
 			case LUA_TLIGHTUSERDATA:
-				Console.WriteLine("luaO_rawequalObj4:" + (pvalue(t1) == pvalue(t2)).ToString());
 				return pvalue(t1) == pvalue(t2) ? 1 : 0;
 			default:
 			  lua_assert(iscollectable(t1));
-				Console.WriteLine("luaO_rawequalObj5:" + (gcvalue(t1) == gcvalue(t2)).ToString());
 			  return gcvalue(t1) == gcvalue(t2) ? 1 : 0;
 		  }
 		}

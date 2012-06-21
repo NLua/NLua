@@ -169,7 +169,6 @@ namespace KopiLua
 #endif
 		  {
 			  f(L, ud);
-				Console.WriteLine(lj.status);
 		  }
 #if CATCH_EXCEPTIONS
 		  catch
@@ -308,10 +307,7 @@ namespace KopiLua
 		  StkId p;
 		  ptrdiff_t funcr = savestack(L, func);
 		  if (!ttisfunction(tm))
-			{
-				Console.WriteLine(false);
 			luaG_typeerror(L, func, "call");
-			}
 		  /* Open a hole inside the stack at `func' */
 		  for (p = L.top; p > func; StkId.dec(ref p)) setobjs2s(L, p, p - 1);
 		  incr_top(L);
@@ -334,16 +330,13 @@ namespace KopiLua
 		public static int luaD_precall (lua_State L, StkId func, int nresults) {
 		  LClosure cl;
 		  ptrdiff_t funcr;
-			Console.WriteLine(15);
 		  if (!ttisfunction(func)) /* `func' is not a function? */
 			func = tryfuncTM(L, func);  /* check the `function' tag method */
-			Console.WriteLine(16);
+
 		  funcr = savestack(L, func);
-			Console.WriteLine(20);
 		  cl = clvalue(func).l;
-			Console.WriteLine(30);
 		  L.ci.savedpc = InstructionPtr.Assign(L.savedpc);
-			Console.WriteLine(300);
+
 		  if (cl.isC==0) {  /* Lua function? prepare its call */
 			CallInfo ci;
 			StkId st, base_;
@@ -379,7 +372,6 @@ namespace KopiLua
 			return PCRLUA;
 		  }
 		  else {  /* if is a C function, call it */
-				Console.WriteLine(301);
 			CallInfo ci;
 			int n;
 			luaD_checkstack(L, LUA_MINSTACK);  /* ensure minimum stack size */
@@ -447,7 +439,6 @@ namespace KopiLua
 		** function position.
 		*/ 
 		private static void luaD_call (lua_State L, StkId func, int nResults) {
-			Console.WriteLine("asd");
 		  if (++L.nCcalls >= LUAI_MAXCCALLS) {
 			if (L.nCcalls == LUAI_MAXCCALLS)
 			  luaG_runerror(L, "C stack overflow");
@@ -456,15 +447,10 @@ namespace KopiLua
 		  }
 
 		  if (luaD_precall(L, func, nResults) == PCRLUA)  /* is a Lua function? */
-			{
-				Console.WriteLine("asd30");
 			luaV_execute(L, 1);  /* call it */
-			Console.WriteLine("asd3");
-			}
+
 		  L.nCcalls--;
-			Console.WriteLine("asd4");
 		  luaC_checkGC(L);
-			Console.WriteLine("asd5");
 		}
 
 
@@ -549,7 +535,6 @@ namespace KopiLua
 		  ptrdiff_t old_errfunc = L.errfunc;
 		  L.errfunc = ef;
 		  status = luaD_rawrunprotected(L, func, u);
-			Console.WriteLine("status: " + status.ToString());
 		  if (status != 0) {  /* an error occurred? */
 			StkId oldtop = restorestack(L, old_top);
 			luaF_close(L, oldtop);  /* close eventual pending closures */

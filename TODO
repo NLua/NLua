@@ -1,0 +1,2 @@
+Error:
+	- TestLua.exe -> TestThreading() ==Problem with threading!==

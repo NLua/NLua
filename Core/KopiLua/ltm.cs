@@ -99,9 +99,8 @@ namespace KopiLua
 			  mt = G(L).mt[ttype(o)];
 			  break;
 		  }
-			Console.WriteLine("mt: " + (mt!=null).ToString());
+
 		  return ((mt!=null) ? luaH_getstr(mt, G(L).tmname[(int)event_]) : luaO_nilobject);
 		}
-
 	}
 }

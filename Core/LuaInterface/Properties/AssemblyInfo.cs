@@ -27,21 +27,18 @@ using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using LuaInterface.Config;
 
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle("LuaInterface")]
-[assembly: AssemblyDescription("Bridge between the Lua runtime and the CLR")]
-#if DEBUG
-[assembly: AssemblyConfiguration("Debug")]
-#else
-[assembly: AssemblyConfiguration("Release")]
-#endif
-//[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LuaInterface")]
-[assembly: AssemblyCopyright("Copyright 2003-2008 Fabio Mascarenhas, Kevin Hesterm and 2012 Megax")]
-//[assembly: AssemblyTrademark("")]
+[assembly: AssemblyDescription(Consts.LuaInterfaceDescription)]
+[assembly: AssemblyConfiguration(Consts.LuaInterfaceConfiguration)]
+[assembly: AssemblyCompany(Consts.LuaInterfaceCompany)]
+[assembly: AssemblyProduct(Consts.LuaInterfaceProduct)]
+[assembly: AssemblyCopyright(Consts.LuaInterfaceCopyright)]
+[assembly: AssemblyTrademark(Consts.LuaInterfaceTrademark)]
 
 [assembly: CLSCompliant(true)]
 
@@ -60,5 +57,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.4")]
-[assembly: AssemblyFileVersion("2.0.4.0")]
+[assembly: AssemblyVersion(Consts.LuaInterfaceVersion)]
+[assembly: AssemblyFileVersion(Consts.LuaInterfaceFileVersion)]

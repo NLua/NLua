@@ -90,7 +90,7 @@ namespace LuaInterface
 		private int runFunctionDelegate(LuaCore.lua_State luaState)
 		{
 			LuaCore.lua_CFunction func = (LuaCore.lua_CFunction)translator.getRawNetObject(luaState, 1);
-			LuaCore.lua_remove(luaState, 1);
+			LuaLib.lua_remove(luaState, 1);
 			return func(luaState);
 		}
 
@@ -121,7 +121,7 @@ namespace LuaInterface
 			if(!obj.IsNull())
 				translator.push(luaState, obj.ToString() + ": " + obj.GetHashCode());
 			else
-				LuaCore.lua_pushnil(luaState);
+				LuaLib.lua_pushnil(luaState);
 
 			return 1;
 		}
@@ -133,15 +133,15 @@ namespace LuaInterface
 		/// FIXME, move somewhere else
 		public static void dumpStack(ObjectTranslator translator, LuaCore.lua_State luaState)
 		{
-			int depth = LuaCore.lua_gettop(luaState);
+			int depth = LuaLib.lua_gettop(luaState);
 			Debug.WriteLine("lua stack depth: " + depth);
 
 			for(int i = 1; i <= depth; i++)
 			{
-				var type = LuaCore.lua_type(luaState, i).ToLuaTypes();
+				var type = LuaLib.lua_type(luaState, i);
 				// we dump stacks when deep in calls, calling typename while the stack is in flux can fail sometimes, so manually check for key types
-				string typestr = (type == LuaTypes.Table) ? "table" : LuaCore.lua_typename(luaState, (int)type).ToString();
-				string strrep = LuaCore.lua_tostring(luaState, i).ToString();
+				string typestr = (type == LuaTypes.Table) ? "table" : LuaLib.lua_typename(luaState, type);
+				string strrep = LuaLib.lua_tostring(luaState, i).ToString();
 
 				if(type == LuaTypes.UserData)
 				{
@@ -167,7 +167,7 @@ namespace LuaInterface
 			if(obj.IsNull())
 			{
 				translator.throwError(luaState, "trying to index an invalid object reference");
-				LuaCore.lua_pushnil(luaState);
+				LuaLib.lua_pushnil(luaState);
 				return 1;
 			}
 
@@ -234,7 +234,7 @@ namespace LuaInterface
 							if(actualParms.IsNull() || actualParms.Length != 1)
 							{
 								translator.throwError(luaState, "method not found (or no indexer): " + index);
-								LuaCore.lua_pushnil(luaState);
+								LuaLib.lua_pushnil(luaState);
 							}
 							else
 							{
@@ -258,7 +258,7 @@ namespace LuaInterface
 									else
 										translator.throwError(luaState, "exception indexing '" + index + "' " + e.Message);
 
-									LuaCore.lua_pushnil(luaState);
+									LuaLib.lua_pushnil(luaState);
 								}
 							}
 						}
@@ -266,7 +266,7 @@ namespace LuaInterface
 				}
 			}
 
-			LuaCore.lua_pushboolean(luaState, 0);
+			LuaLib.lua_pushboolean(luaState, false);
 			return 2;
 		}
 
@@ -281,30 +281,30 @@ namespace LuaInterface
 			if(obj.IsNull())
 			{
 				translator.throwError(luaState, "trying to index an invalid object reference");
-				LuaCore.lua_pushnil(luaState);
-				LuaCore.lua_pushboolean(luaState, 0);
+				LuaLib.lua_pushnil(luaState);
+				LuaLib.lua_pushboolean(luaState, false);
 				return 2;
 			}
 
-			string methodName = LuaCore.lua_tostring(luaState, 2).ToString();
+			string methodName = LuaLib.lua_tostring(luaState, 2).ToString();
 
 			if(methodName.IsNull())
 			{
-				LuaCore.lua_pushnil(luaState);
-				LuaCore.lua_pushboolean(luaState, 0);
+				LuaLib.lua_pushnil(luaState);
+				LuaLib.lua_pushboolean(luaState, false);
 				return 2;
 			}
 
 			getMember(luaState, obj.GetType(), obj, "__luaInterface_base_" + methodName, BindingFlags.Instance | BindingFlags.IgnoreCase);
-			LuaCore.lua_settop(luaState, -2);
+			LuaLib.lua_settop(luaState, -2);
 
-			if(LuaCore.lua_type(luaState, -1).ToLuaTypes() == LuaTypes.Nil)
+			if(LuaLib.lua_type(luaState, -1) == LuaTypes.Nil)
 			{
-				LuaCore.lua_settop(luaState, -2);
+				LuaLib.lua_settop(luaState, -2);
 				return getMember(luaState, obj.GetType(), obj, methodName, BindingFlags.Instance | BindingFlags.IgnoreCase);
 			}
 
-			LuaCore.lua_pushboolean(luaState, 0);
+			LuaLib.lua_pushboolean(luaState, false);
 			return 2;
 		}
 
@@ -384,7 +384,7 @@ namespace LuaInterface
 					}
 					catch
 					{
-						LuaCore.lua_pushnil(luaState);
+						LuaLib.lua_pushnil(luaState);
 					}
 				}
 				else if(member.MemberType == MemberTypes.Property)
@@ -405,12 +405,12 @@ namespace LuaInterface
 						if(objType is Type && !(((Type)objType) == typeof(object)))
 							return getMember(luaState, ((Type)objType).BaseType, obj, methodName, bindingType);
 						else
-							LuaCore.lua_pushnil(luaState);
+							LuaLib.lua_pushnil(luaState);
 					}
 					catch(TargetInvocationException e)  // Convert this exception into a Lua error
 					{
 						ThrowError(luaState, e);
-						LuaCore.lua_pushnil(luaState);
+						LuaLib.lua_pushnil(luaState);
 					}
 				}
 				else if(member.MemberType == MemberTypes.Event)
@@ -456,7 +456,7 @@ namespace LuaInterface
 				{
 					// If we reach this point we found a static method, but can't use it in this context because the user passed in an instance
 					translator.throwError(luaState, "can't pass instance to static method " + methodName);
-					LuaCore.lua_pushnil(luaState);
+					LuaLib.lua_pushnil(luaState);
 				}
 			}
 			else
@@ -465,7 +465,7 @@ namespace LuaInterface
 				// is not sufficient.  valid data members may return nil and therefore there must be some
 				// way to know the member just doesn't exist.
 				translator.throwError(luaState, "unknown member name " + methodName);
-				LuaCore.lua_pushnil(luaState);
+				LuaLib.lua_pushnil(luaState);
 			}
 
 			// push false because we are NOT returning a function (see luaIndexFunction)
@@ -525,9 +525,9 @@ namespace LuaInterface
 			// We didn't find a property name, now see if we can use a [] style this accessor to set array contents
 			try
 			{
-				if(type.IsArray && LuaCore.lua_isnumber(luaState, 2).ToBoolean())
+				if(type.IsArray && LuaLib.lua_isnumber(luaState, 2))
 				{
-					int index = (int)LuaCore.lua_tonumber(luaState, 2);
+					int index = (int)LuaLib.lua_tonumber(luaState, 2);
 					var arr = (Array)target;
 					object val = translator.getAsType(luaState, 3, arr.GetType().GetElementType());
 					arr.SetValue(val, index);
@@ -586,14 +586,14 @@ namespace LuaInterface
 			// changing the lua typecode to string
 			// Note: We don't use isstring because the standard lua C isstring considers either strings or numbers to
 			// be true for isstring.
-			if(LuaCore.lua_type(luaState, 2).ToLuaTypes() != LuaTypes.String)
+			if(LuaLib.lua_type(luaState, 2) != LuaTypes.String)
 			{
 				detailMessage = "property names must be strings";
 				return false;
 			}
 
 			// We only look up property names by string
-			string fieldName = LuaCore.lua_tostring(luaState, 2).ToString();
+			string fieldName = LuaLib.lua_tostring(luaState, 2).ToString();
 			if(fieldName.IsNull() || fieldName.Length < 1 || !(char.IsLetter(fieldName[0]) || fieldName[0] == '_'))
 			{
 				detailMessage = "invalid property name";
@@ -700,25 +700,25 @@ namespace LuaInterface
 			if(obj.IsNull() || !(obj is IReflect))
 			{
 				translator.throwError(luaState, "trying to index an invalid type reference");
-				LuaCore.lua_pushnil(luaState);
+				LuaLib.lua_pushnil(luaState);
 				return 1;
 			}
 			else
 				klass = (IReflect)obj;
 
-			if(LuaCore.lua_isnumber(luaState, 2).ToBoolean())
+			if(LuaLib.lua_isnumber(luaState, 2))
 			{
-				int size = (int)LuaCore.lua_tonumber(luaState, 2);
+				int size = (int)LuaLib.lua_tonumber(luaState, 2);
 				translator.push(luaState, Array.CreateInstance(klass.UnderlyingSystemType, size));
 				return 1;
 			}
 			else
 			{
-				string methodName = LuaCore.lua_tostring(luaState, 2).ToString();
+				string methodName = LuaLib.lua_tostring(luaState, 2).ToString();
 
 				if(methodName.IsNull())
 				{
-					LuaCore.lua_pushnil(luaState);
+					LuaLib.lua_pushnil(luaState);
 					return 1;
 				} //CP: Ignore case
 				else
@@ -760,13 +760,13 @@ namespace LuaInterface
 			if(obj.IsNull() || !(obj is IReflect))
 			{
 				translator.throwError(luaState, "trying to call constructor on an invalid type reference");
-				LuaCore.lua_pushnil(luaState);
+				LuaLib.lua_pushnil(luaState);
 				return 1;
 			}
 			else
 				klass = (IReflect)obj;
 
-			LuaCore.lua_remove(luaState, 1);
+			LuaLib.lua_remove(luaState, 1);
 			var constructors = klass.UnderlyingSystemType.GetConstructors();
 
 			foreach(var constructor in constructors)
@@ -782,11 +782,11 @@ namespace LuaInterface
 					catch(TargetInvocationException e)
 					{
 						ThrowError(luaState, e);
-						LuaCore.lua_pushnil(luaState);
+						LuaLib.lua_pushnil(luaState);
 					}
 					catch
 					{
-						LuaCore.lua_pushnil(luaState);
+						LuaLib.lua_pushnil(luaState);
 					}
 
 					return 1;
@@ -796,7 +796,7 @@ namespace LuaInterface
 			string constructorName = (constructors.Length == 0) ? "unknown" : constructors[0].Name;
 			translator.throwError(luaState, String.Format("{0} does not contain constructor({1}) argument match",
 				klass.UnderlyingSystemType, constructorName));
-			LuaCore.lua_pushnil(luaState);
+			LuaLib.lua_pushnil(luaState);
 			return 1;
 		}
 
@@ -811,7 +811,7 @@ namespace LuaInterface
 			bool isMethod = true;
 			var paramInfo = method.GetParameters();
 			int currentLuaParam = 1;
-			int nLuaParams = LuaCore.lua_gettop(luaState);
+			int nLuaParams = LuaLib.lua_gettop(luaState);
 			var paramList = new ArrayList();
 			var outList = new List<int>();
 			var argTypes = new List<MethodArgs>();
@@ -933,7 +933,7 @@ namespace LuaInterface
 
 				try
 				{
-					luaType = LuaCore.lua_type(luaState, currentLuaParam).ToLuaTypes();
+					luaType = LuaLib.lua_type(luaState, currentLuaParam);
 				}
 				catch(Exception ex)
 				{

@@ -514,7 +514,6 @@ namespace KopiLua
 		public static void lua_pushlightuserdata (lua_State L, object p) {
 		  lua_lock(L);
 		  setpvalue(L.top, p);
-			Console.WriteLine(L.top.value.p.GetType());
 		  api_incr_top(L);
 		  lua_unlock(L);
 		}

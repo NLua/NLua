@@ -154,30 +154,30 @@ namespace LuaInterface
 
 		public Lua() 
 		{
-			luaState = LuaCore.luaL_newstate();	// steffenj: Lua 5.1.1 API change (lua_open is gone)
-			//LuaCore.luaopen_base(luaState);	// steffenj: luaopen_* no longer used
-			LuaCore.luaL_openlibs(luaState);		// steffenj: Lua 5.1.1 API change (luaopen_base is gone, just open all libs right here)
-			LuaCore.lua_pushstring(luaState, "LUAINTERFACE LOADED");
-			LuaCore.lua_pushboolean(luaState, 1);
-			LuaCore.lua_settable(luaState, (int)PseudoIndex.Registry);
-			LuaCore.lua_newtable(luaState);
-			LuaCore.lua_setglobal(luaState, "luanet");
-			LuaCore.lua_pushvalue(luaState, (int)PseudoIndex.Globals);
-			LuaCore.lua_getglobal(luaState, "luanet");
-			LuaCore.lua_pushstring(luaState, "getmetatable");
-			LuaCore.lua_getglobal(luaState, "getmetatable");
-			LuaCore.lua_settable(luaState, -3);
-			LuaCore.lua_replace(luaState, (int)PseudoIndex.Globals);
+			luaState = LuaLib.luaL_newstate();	// steffenj: Lua 5.1.1 API change (lua_open is gone)
+			//LuaLib.luaopen_base(luaState);	// steffenj: luaopen_* no longer used
+			LuaLib.luaL_openlibs(luaState);		// steffenj: Lua 5.1.1 API change (luaopen_base is gone, just open all libs right here)
+			LuaLib.lua_pushstring(luaState, "LUAINTERFACE LOADED");
+			LuaLib.lua_pushboolean(luaState, true);
+			LuaLib.lua_settable(luaState, (int)LuaIndexes.Registry);
+			LuaLib.lua_newtable(luaState);
+			LuaLib.lua_setglobal(luaState, "luanet");
+			LuaLib.lua_pushvalue(luaState, (int)LuaIndexes.Globals);
+			LuaLib.lua_getglobal(luaState, "luanet");
+			LuaLib.lua_pushstring(luaState, "getmetatable");
+			LuaLib.lua_getglobal(luaState, "getmetatable");
+			LuaLib.lua_settable(luaState, -3);
+			LuaLib.lua_replace(luaState, (int)LuaIndexes.Globals);
 			translator = new ObjectTranslator(this, luaState);
-			LuaCore.lua_replace(luaState, (int)PseudoIndex.Globals);
+			LuaLib.lua_replace(luaState, (int)LuaIndexes.Globals);
 			LuaLib.luaL_dostring(luaState, Lua.init_luanet);	// steffenj: lua_dostring renamed to luaL_dostring
 
 			// We need to keep this in a managed reference so the delegate doesn't get garbage collected
 			panicCallback = new LuaCore.lua_CFunction(PanicCallback);
-			LuaCore.lua_atpanic(luaState, panicCallback);
+			LuaLib.lua_atpanic(luaState, panicCallback);
 
-			//LuaCore.lua_atlock(luaState, lockCallback = new LuaCore.lua_CFunction(LockCallback));
-			//LuaCore.lua_atunlock(luaState, unlockCallback = new LuaCore.lua_CFunction(UnlockCallback));
+			//LuaLib.lua_atlock(luaState, lockCallback = new LuaCore.lua_CFunction(LockCallback));
+			//LuaLib.lua_atunlock(luaState, unlockCallback = new LuaCore.lua_CFunction(UnlockCallback));
 		}
 
 		/*
@@ -185,29 +185,29 @@ namespace LuaInterface
 			*/
 		public Lua(LuaCore.lua_State lState)
 		{
-			LuaCore.lua_pushstring(lState, "LUAINTERFACE LOADED");
-			LuaCore.lua_gettable(lState, (int)PseudoIndex.Registry);
+			LuaLib.lua_pushstring(lState, "LUAINTERFACE LOADED");
+			LuaLib.lua_gettable(lState, (int)LuaIndexes.Registry);
 			
-			if(LuaCore.lua_toboolean(lState, -1).ToBoolean()) 
+			if(LuaLib.lua_toboolean(lState, -1)) 
 			{
-				LuaCore.lua_settop(lState, -2);
+				LuaLib.lua_settop(lState, -2);
 				throw new LuaException("There is already a LuaInterface.Lua instance associated with this Lua state");
 			} 
 			else 
 			{
-				LuaCore.lua_settop(lState, -2);
-				LuaCore.lua_pushstring(lState, "LUAINTERFACE LOADED");
-				LuaCore.lua_pushboolean(lState, 1);
-				LuaCore.lua_settable(lState, (int)PseudoIndex.Registry);
+				LuaLib.lua_settop(lState, -2);
+				LuaLib.lua_pushstring(lState, "LUAINTERFACE LOADED");
+				LuaLib.lua_pushboolean(lState, true);
+				LuaLib.lua_settable(lState, (int)LuaIndexes.Registry);
 				luaState = lState;
-				LuaCore.lua_pushvalue(lState, (int)PseudoIndex.Globals);
-				LuaCore.lua_getglobal(lState, "luanet");
-				LuaCore.lua_pushstring(lState, "getmetatable");
-				LuaCore.lua_getglobal(lState, "getmetatable");
-				LuaCore.lua_settable(lState, -3);
-				LuaCore.lua_replace(lState, (int)PseudoIndex.Globals);
+				LuaLib.lua_pushvalue(lState, (int)LuaIndexes.Globals);
+				LuaLib.lua_getglobal(lState, "luanet");
+				LuaLib.lua_pushstring(lState, "getmetatable");
+				LuaLib.lua_getglobal(lState, "getmetatable");
+				LuaLib.lua_settable(lState, -3);
+				LuaLib.lua_replace(lState, (int)LuaIndexes.Globals);
 				translator = new ObjectTranslator(this, luaState);
-				LuaCore.lua_replace(lState, (int)PseudoIndex.Globals);
+				LuaLib.lua_replace(lState, (int)LuaIndexes.Globals);
 				LuaLib.luaL_dostring(lState, Lua.init_luanet);	// steffenj: lua_dostring renamed to luaL_dostring
 			}
 				
@@ -249,8 +249,8 @@ namespace LuaInterface
 
 		static int PanicCallback(LuaCore.lua_State luaState)
 		{
-			// string desc = LuaCore.lua_tostring(luaState, 1);
-			string reason = string.Format("unprotected error in call to Lua API ({0})", LuaCore.lua_tostring(luaState, -1));
+			// string desc = LuaLib.lua_tostring(luaState, 1);
+			string reason = string.Format("unprotected error in call to Lua API ({0})", LuaLib.lua_tostring(luaState, -1));
 			//		lua_tostring(L, -1);
 			throw new LuaException(reason);
 		}
@@ -262,7 +262,7 @@ namespace LuaInterface
 		private void ThrowExceptionFromError(int oldTop)
 		{
 			object err = translator.getObject(luaState, -1);
-			LuaCore.lua_settop(luaState, oldTop);
+			LuaLib.lua_settop(luaState, oldTop);
 
 			// A pre-wrapped exception - just rethrow it (stack trace of InnerException will be preserved)
 			var luaEx = err as LuaScriptException;
@@ -289,7 +289,7 @@ namespace LuaInterface
 			if(!caughtExcept.IsNull())
 			{
 				translator.throwError(luaState, caughtExcept);
-				LuaCore.lua_pushnil(luaState);
+				LuaLib.lua_pushnil(luaState);
 				return 1;
 			}
 			else
@@ -304,7 +304,7 @@ namespace LuaInterface
 		/// <returns></returns>
 		public LuaFunction LoadString(string chunk, string name)
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			executing = true;
 
 			try
@@ -329,9 +329,9 @@ namespace LuaInterface
 		/// <returns></returns>
 		public LuaFunction LoadFile(string fileName)
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 
-			if(LuaCore.luaL_loadfile(luaState, fileName) != 0)
+			if(LuaLib.luaL_loadfile(luaState, fileName) != 0)
 				ThrowExceptionFromError(oldTop);
 
 			var result = translator.getFunction(luaState, -1);
@@ -345,7 +345,7 @@ namespace LuaInterface
 			*/
 		public object[] DoString(string chunk) 
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 
 			if(LuaLib.luaL_loadbuffer(luaState, chunk, "chunk") == 0)
 			{
@@ -353,7 +353,7 @@ namespace LuaInterface
 
 				try
 				{
-					if(LuaCore.lua_pcall(luaState, 0, -1, 0) == 0)
+					if(LuaLib.lua_pcall(luaState, 0, -1, 0) == 0)
 						return translator.popValues(luaState, oldTop);
 					else
 						ThrowExceptionFromError(oldTop);
@@ -377,14 +377,14 @@ namespace LuaInterface
 		/// <returns></returns>
 		public object[] DoString(string chunk, string chunkName)
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			executing = true;
 
 			if(LuaLib.luaL_loadbuffer(luaState, chunk, chunkName) == 0)
 			{
 				try
 				{
-					if(LuaCore.lua_pcall(luaState, 0, -1, 0) == 0)
+					if(LuaLib.lua_pcall(luaState, 0, -1, 0) == 0)
 						return translator.popValues(luaState, oldTop);
 					else
 						ThrowExceptionFromError(oldTop);
@@ -406,15 +406,15 @@ namespace LuaInterface
 			*/
 		public object[] DoFile(string fileName) 
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 
-			if(LuaCore.luaL_loadfile(luaState, fileName) == 0) 
+			if(LuaLib.luaL_loadfile(luaState, fileName) == 0) 
 			{
 				executing = true;
 
 				try
 				{
-					if(LuaCore.lua_pcall(luaState, 0, -1, 0) == 0)
+					if(LuaLib.lua_pcall(luaState, 0, -1, 0) == 0)
 						return translator.popValues(luaState, oldTop);
 					else
 						ThrowExceptionFromError(oldTop);
@@ -440,9 +440,9 @@ namespace LuaInterface
 			get 
 			{
 				object returnValue = null;
-				int oldTop = LuaCore.lua_gettop(luaState);
+				int oldTop = LuaLib.lua_gettop(luaState);
 				string[] path = fullPath.Split(new char[] { '.' });
-				LuaCore.lua_getglobal(luaState, path[0]);
+				LuaLib.lua_getglobal(luaState, path[0]);
 				returnValue = translator.getObject(luaState, -1);
 
 				if(path.Length>1) 
@@ -452,28 +452,28 @@ namespace LuaInterface
 					returnValue = getObject(remainingPath);
 				}
 
-				LuaCore.lua_settop(luaState, oldTop);
+				LuaLib.lua_settop(luaState, oldTop);
 				return returnValue;
 			}
 			set 
 			{
-				int oldTop = LuaCore.lua_gettop(luaState);
+				int oldTop = LuaLib.lua_gettop(luaState);
 				string[] path = fullPath.Split(new char[] { '.' });
 
 				if(path.Length == 1) 
 				{
 					translator.push(luaState, value);
-					LuaCore.lua_setglobal(luaState, fullPath);
+					LuaLib.lua_setglobal(luaState, fullPath);
 				} 
 				else 
 				{
-					LuaCore.lua_getglobal(luaState, path[0]);
+					LuaLib.lua_getglobal(luaState, path[0]);
 					string[] remainingPath = new string[path.Length-1];
 					Array.Copy(path, 1, remainingPath, 0, path.Length-1);
 					setObject(remainingPath, value);
 				}
 
-				LuaCore.lua_settop(luaState, oldTop);
+				LuaLib.lua_settop(luaState, oldTop);
 
 				// Globals auto-complete
 				if(value.IsNull())
@@ -581,8 +581,8 @@ namespace LuaInterface
 
 			for(int i = 0; i < remainingPath.Length; i++) 
 			{
-				LuaCore.lua_pushstring(luaState, remainingPath[i]);
-				LuaCore.lua_gettable(luaState, -2);
+				LuaLib.lua_pushstring(luaState, remainingPath[i]);
+				LuaLib.lua_gettable(luaState, -2);
 				returnValue = translator.getObject(luaState, -1);
 
 				if(returnValue.IsNull())
@@ -632,7 +632,6 @@ namespace LuaInterface
 		{
 			object obj = this[fullPath];
 			return (obj is LuaCore.lua_CFunction ? new LuaFunction((LuaCore.lua_CFunction)obj, this) : (LuaFunction)obj);
-			//return (obj is LuaCore.lua_CFunction ? new LuaFunction((LuaCore.lua_CFunction)obj, this) : /*(LuaFunction)*/new LuaFunction(obj.GetHashCode(), this));
 		}
 
 		/*
@@ -661,9 +660,9 @@ namespace LuaInterface
 		internal object[] callFunction(object function, object[] args, Type[] returnTypes) 
 		{
 			int nArgs = 0;
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 
-			if(!LuaCore.lua_checkstack(luaState, args.Length+6).ToBoolean())
+			if(!LuaLib.lua_checkstack(luaState, args.Length+6))
 				throw new LuaException("Lua stack overflow");
 
 			translator.push(luaState, function);
@@ -680,7 +679,7 @@ namespace LuaInterface
 
 			try
 			{
-				int error = LuaCore.lua_pcall(luaState, nArgs, -1, 0);
+				int error = LuaLib.lua_pcall(luaState, nArgs, -1, 0);
 				if(error != 0)
 					ThrowExceptionFromError(oldTop);
 			}
@@ -699,13 +698,13 @@ namespace LuaInterface
 		{
 			for(int i = 0; i < remainingPath.Length-1; i++) 
 			{
-				LuaCore.lua_pushstring(luaState, remainingPath[i]);
-				LuaCore.lua_gettable(luaState, -2);
+				LuaLib.lua_pushstring(luaState, remainingPath[i]);
+				LuaLib.lua_gettable(luaState, -2);
 			}
 
-			LuaCore.lua_pushstring(luaState, remainingPath[remainingPath.Length-1]);
+			LuaLib.lua_pushstring(luaState, remainingPath[remainingPath.Length-1]);
 			translator.push(luaState, val);
-			LuaCore.lua_settable(luaState, -3);
+			LuaLib.lua_settable(luaState, -3);
 		}
 
 		/*
@@ -715,45 +714,45 @@ namespace LuaInterface
 		public void NewTable(string fullPath) 
 		{
 			string[] path = fullPath.Split(new char[] { '.' });
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 
 			if(path.Length == 1) 
 			{
-				LuaCore.lua_newtable(luaState);
-				LuaCore.lua_setglobal(luaState, fullPath);
+				LuaLib.lua_newtable(luaState);
+				LuaLib.lua_setglobal(luaState, fullPath);
 			} 
 			else 
 			{
-				LuaCore.lua_getglobal(luaState, path[0]);
+				LuaLib.lua_getglobal(luaState, path[0]);
 
 				for(int i = 1; i < path.Length-1; i++) 
 				{
-					LuaCore.lua_pushstring(luaState, path[i]);
-					LuaCore.lua_gettable(luaState, -2);
+					LuaLib.lua_pushstring(luaState, path[i]);
+					LuaLib.lua_gettable(luaState, -2);
 				}
 
-				LuaCore.lua_pushstring(luaState, path[path.Length-1]);
-				LuaCore.lua_newtable(luaState);
-				LuaCore.lua_settable(luaState, -3);
+				LuaLib.lua_pushstring(luaState, path[path.Length-1]);
+				LuaLib.lua_newtable(luaState);
+				LuaLib.lua_settable(luaState, -3);
 			}
 
-			LuaCore.lua_settop(luaState, oldTop);
+			LuaLib.lua_settop(luaState, oldTop);
 		}
 
 		public ListDictionary GetTableDict(LuaTable table)
 		{
 			var dict = new ListDictionary();
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			translator.push(luaState, table);
-			LuaCore.lua_pushnil(luaState);
+			LuaLib.lua_pushnil(luaState);
 
-			while(LuaCore.lua_next(luaState, -2) != 0) 
+			while(LuaLib.lua_next(luaState, -2) != 0) 
 			{
 				dict[translator.getObject(luaState, -2)] = translator.getObject(luaState, -1);
-				LuaCore.lua_settop(luaState, -2);
+				LuaLib.lua_settop(luaState, -2);
 			}
 
-			LuaCore.lua_settop(luaState, oldTop);
+			LuaLib.lua_settop(luaState, oldTop);
 			return dict;
 		}
 
@@ -825,7 +824,7 @@ namespace LuaInterface
 			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
-				return LuaCore.lua_getstack(luaState, level, luaDebug) != 0;
+				return LuaLib.lua_getstack(luaState, level, luaDebug) != 0;
 			}
 			finally
 			{
@@ -847,7 +846,7 @@ namespace LuaInterface
 			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
-				return LuaCore.lua_getinfo(luaState, what, ld);
+				return LuaLib.lua_getinfo(luaState, what, ld);
 			}
 			finally
 			{
@@ -953,7 +952,7 @@ namespace LuaInterface
 		/// <author>Reinhard Ostermeier</author>
 		public object Pop()
 		{
-			int top = LuaCore.lua_gettop(luaState);
+			int top = LuaLib.lua_gettop(luaState);
 			return translator.popValues(luaState, top - 1)[0];
 		}
 
@@ -970,7 +969,6 @@ namespace LuaInterface
 
 		internal void dispose(int reference) 
 		{
-			///////////// if(luaState != LuaCore.lua_State.Zero)
 			if(!luaState.IsNull()) //Fix submitted by Qingrui Li
 				LuaLib.lua_unref(luaState, reference);
 		}
@@ -981,12 +979,12 @@ namespace LuaInterface
 		 */
 		internal object rawGetObject(int reference, string field) 
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			LuaLib.lua_getref(luaState, reference);
-			LuaCore.lua_pushstring(luaState, field);
-			LuaCore.lua_rawget(luaState, -2);
+			LuaLib.lua_pushstring(luaState, field);
+			LuaLib.lua_rawget(luaState, -2);
 			object obj = translator.getObject(luaState, -1);
-			LuaCore.lua_settop(luaState, oldTop);
+			LuaLib.lua_settop(luaState, oldTop);
 			return obj;
 		}
 
@@ -995,10 +993,10 @@ namespace LuaInterface
 		 */
 		internal object getObject(int reference, string field) 
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			LuaLib.lua_getref(luaState, reference);
 			object returnValue = getObject(field.Split(new char[] {'.'}));
-			LuaCore.lua_settop(luaState, oldTop);
+			LuaLib.lua_settop(luaState, oldTop);
 			return returnValue;
 		}
 
@@ -1008,12 +1006,12 @@ namespace LuaInterface
 
 		internal object getObject(int reference, object field) 
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			LuaLib.lua_getref(luaState, reference);
 			translator.push(luaState, field);
-			LuaCore.lua_gettable(luaState, -2);
+			LuaLib.lua_gettable(luaState, -2);
 			object returnValue = translator.getObject(luaState, -1);
-			LuaCore.lua_settop(luaState, oldTop);
+			LuaLib.lua_settop(luaState, oldTop);
 			return returnValue;
 		}
 
@@ -1023,10 +1021,10 @@ namespace LuaInterface
 		 */
 		internal void setObject(int reference, string field, object val) 
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			LuaLib.lua_getref(luaState, reference);
 			setObject(field.Split(new char[] {'.'}), val);
-			LuaCore.lua_settop(luaState, oldTop);
+			LuaLib.lua_settop(luaState, oldTop);
 		}
 
 		/*
@@ -1035,12 +1033,12 @@ namespace LuaInterface
 		 */
 		internal void setObject(int reference, object field, object val) 
 		{
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			LuaLib.lua_getref(luaState, reference);
 			translator.push(luaState, field);
 			translator.push(luaState, val);
-			LuaCore.lua_settable(luaState, -3);
-			LuaCore.lua_settop(luaState, oldTop);
+			LuaLib.lua_settable(luaState, -3);
+			LuaLib.lua_settop(luaState, oldTop);
 		}
 
 		/*
@@ -1050,12 +1048,12 @@ namespace LuaInterface
 		public LuaFunction RegisterFunction(string path, object target, MethodBase function /*MethodInfo function*/)  //CP: Fix for struct constructor by Alexander Kappner (link: http://luaforge.net/forum/forum.php?thread_id = 2859&forum_id = 145)
 		{
 			// We leave nothing on the stack when we are done
-			int oldTop = LuaCore.lua_gettop(luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			var wrapper = new LuaMethodWrapper(translator, target, function.DeclaringType, function);
 			translator.push(luaState, new LuaCore.lua_CFunction(wrapper.call));
 			this[path] = translator.getObject(luaState, -1);
 			var f = GetFunction(path);
-			LuaCore.lua_settop(luaState, oldTop);
+			LuaLib.lua_settop(luaState, oldTop);
 			return f;
 		}
 
@@ -1064,11 +1062,11 @@ namespace LuaInterface
 		 */
 		internal bool compareRef(int ref1, int ref2) 
 		{
-			int top = LuaCore.lua_gettop(luaState);
+			int top = LuaLib.lua_gettop(luaState);
 			LuaLib.lua_getref(luaState, ref1);
 			LuaLib.lua_getref(luaState, ref2);
-			int equal = LuaCore.lua_equal(luaState, -1, -2);
-			LuaCore.lua_settop(luaState, top);
+			int equal = LuaLib.lua_equal(luaState, -1, -2);
+			LuaLib.lua_settop(luaState, top);
 			return (equal != 0);
 		}
 
