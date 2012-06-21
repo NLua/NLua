@@ -87,7 +87,7 @@ namespace LuaInterface
 		/// <summary>
 		/// Used to ensure multiple .net threads all get serialized by this single lock for access to the lua stack/objects
 		/// </summary>
-		private object luaLock = new object();
+		//private object luaLock = new object();
 		private bool _StatePassed;
 		private bool executing;
 

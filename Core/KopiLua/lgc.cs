@@ -110,6 +110,7 @@ namespace KopiLua
 		public static void luaC_objbarriert(lua_State L, Table t, object o)
 			{ if (iswhite(obj2gco(o)) && isblack(obj2gco(t))) luaC_barrierback(L,t); }
 
+		[CLSCompliantAttribute(false)]
 		public const uint GCSTEPSIZE	= 1024;
 		public const int GCSWEEPMAX		= 40;
 		public const int GCSWEEPCOST	= 10;
@@ -224,6 +225,7 @@ namespace KopiLua
 
 
 		/* move `dead' udata that need finalization to list `tmudata' */
+		[CLSCompliantAttribute(false)]
 		public static uint luaC_separateudata (lua_State L, int all) {
 		  global_State g = G(L);
 		  uint deadmem = 0;
@@ -286,7 +288,7 @@ namespace KopiLua
 			if (ttisnil(gval(n)))
 			  removeentry(n);  /* remove empty entries */
 			else {
-			  lua_assert(ttisnil(gkey(n)));
+			  lua_assert(!ttisnil(gkey(n)));
 			  if (weakkey==0) markvalue(g, gkey(n));
 			  if (weakvalue==0) markvalue(g, gval(n));
 			}
@@ -516,7 +518,7 @@ namespace KopiLua
 			if (curr.gch.tt == LUA_TTHREAD)  /* sweep open upvalues of each thread */
 			  sweepwholelist(L, new OpenValRef( gco2th(curr) ));
 			if (((curr.gch.marked ^ WHITEBITS) & deadmask) != 0) {  /* not dead? */
-			  lua_assert(isdead(g, curr) || testbit(curr.gch.marked, FIXEDBIT));
+			  lua_assert(!isdead(g, curr) || testbit(curr.gch.marked, FIXEDBIT));
 			  makewhite(g, curr);  /* make it white (for next cycle) */
 			  p = new NextRef(curr.gch);
 			}

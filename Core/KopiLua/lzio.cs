@@ -35,7 +35,9 @@ namespace KopiLua
 
 		public class Mbuffer {
 		  public CharPtr buffer = new CharPtr();
+          [CLSCompliantAttribute(false)]
 		  public uint n;
+          [CLSCompliantAttribute(false)]
 		  public uint buffsize;
 		};
 
@@ -45,7 +47,9 @@ namespace KopiLua
 		}
 
 		public static CharPtr luaZ_buffer(Mbuffer buff)	{return buff.buffer;}
+		[CLSCompliantAttribute(false)]
 		public static uint luaZ_sizebuffer(Mbuffer buff) { return buff.buffsize; }
+		[CLSCompliantAttribute(false)]
 		public static uint luaZ_bufflen(Mbuffer buff)	{return buff.n;}
 		public static void luaZ_resetbuffer(Mbuffer buff) {buff.n = 0;}
 
@@ -65,8 +69,10 @@ namespace KopiLua
 		/* --------- Private Part ------------------ */
 
 		public class Zio {
+			[CLSCompliantAttribute(false)]
 			public uint n;			/* bytes still unread */
 			public CharPtr p;			/* current position in buffer */
+			[CLSCompliantAttribute(false)]
 			public lua_Reader reader;
 			public object data;			/* additional data */
 			public lua_State L;			/* Lua state (for reader) */
@@ -101,7 +107,7 @@ namespace KopiLua
 		  return char2int(z.p[0]);
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static void luaZ_init(lua_State L, ZIO z, lua_Reader reader, object data)
 		{
 		  z.L = L;
@@ -113,6 +119,7 @@ namespace KopiLua
 
 
 		/* --------------------------------------------------------------- read --- */
+		[CLSCompliantAttribute(false)]
 		public static uint luaZ_read (ZIO z, CharPtr b, uint n) {
 		  b = new CharPtr(b);
 		  while (n != 0) {
@@ -130,6 +137,7 @@ namespace KopiLua
 		}
 
 		/* ------------------------------------------------------------------------ */
+		[CLSCompliantAttribute(false)]
 		public static CharPtr luaZ_openspace (lua_State L, Mbuffer buff, uint n) {
 		  if (n > buff.buffsize) {
 			if (n < LUA_MINBUFFER) n = LUA_MINBUFFER;

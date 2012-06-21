@@ -269,6 +269,8 @@ namespace KopiLua
 
 
 		public static CharPtr luaL_checklstring(lua_State L, int narg) {uint len; return luaL_checklstring(L, narg, out len);}
+
+		[CLSCompliantAttribute(false)]
 		public static CharPtr luaL_checklstring (lua_State L, int narg, out uint len) {
 		  CharPtr s = lua_tolstring(L, narg, out len);
 		  if (s==null) tag_error(L, narg, LUA_TSTRING);
@@ -278,6 +280,8 @@ namespace KopiLua
 
 		public static CharPtr luaL_optlstring (lua_State L, int narg, CharPtr def) {
 			uint len; return luaL_optlstring (L, narg, def, out len); }
+
+		[CLSCompliantAttribute(false)]
 		public static CharPtr luaL_optlstring (lua_State L, int narg, CharPtr def, out uint len) {
 		  if (lua_isnoneornil(L, narg)) {
 			len = (uint)((def != null) ? strlen(def) : 0);
@@ -546,7 +550,7 @@ namespace KopiLua
 			return new CharPtr(B.buffer, B.p);
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static void luaL_addlstring (luaL_Buffer B, CharPtr s, uint l) {
 			while (l-- != 0)
 			{
@@ -646,7 +650,7 @@ namespace KopiLua
 		  public CharPtr buff = new char[LUAL_BUFFERSIZE];
 		};
 
-
+		[CLSCompliantAttribute(false)]
 		public static CharPtr getF (lua_State L, object ud, out uint size) {
 		  size = 0;
 		  LoadF lf = (LoadF)ud;
@@ -714,6 +718,7 @@ namespace KopiLua
 
 		public class LoadS {
 		  public CharPtr s;
+          [CLSCompliantAttribute(false)]
 		  public uint size;
 		};
 
@@ -727,7 +732,7 @@ namespace KopiLua
 		  return ls.s;
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static int luaL_loadbuffer(lua_State L, CharPtr buff, uint size,
 										CharPtr name) {
 		  LoadS ls = new LoadS();

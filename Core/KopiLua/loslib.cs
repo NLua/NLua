@@ -203,7 +203,7 @@ namespace KopiLua
 			int day = getfield(L, "day", -1);
 			int month = getfield(L, "month", -1) - 1;
 			int year = getfield(L, "year", -1) - 1900;
-			int isdst = getboolfield(L, "isdst");	// todo: implement this - mjf
+			/*int isdst = */getboolfield(L, "isdst");	// todo: implement this - mjf
 			t = new DateTime(year, month, day, hour, min, sec);
 		  }
 		  lua_pushnumber(L, t.Ticks);

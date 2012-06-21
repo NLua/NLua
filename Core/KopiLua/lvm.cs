@@ -20,6 +20,7 @@ namespace KopiLua
 
 	public partial class Lua
 	{
+		[CLSCompliantAttribute(false)]
 		public static int tostring(lua_State L, StkId o) {
 			return ((ttype(o) == LUA_TSTRING) || (luaV_tostring(L, o) != 0)) ? 1 : 0;
 		}
@@ -372,6 +373,7 @@ namespace KopiLua
 
 		//#define Protect(x)	{ L.savedpc = pc; {x;}; base = L.base_; }
 
+		[CLSCompliantAttribute(false)]
 		public static void arith_op(lua_State L, op_delegate op, TMS tm, StkId base_, Instruction i, TValue[] k, StkId ra, InstructionPtr pc) {
 				TValue rb = RKB(L, base_, i, k);
 				TValue rc = RKC(L, base_, i, k);

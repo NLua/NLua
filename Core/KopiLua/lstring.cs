@@ -61,7 +61,7 @@ namespace KopiLua
 		  tb.hash = newhash;
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static TString newlstr (lua_State L, CharPtr str, uint l,
 											   uint h) {
 		  TString ts;
@@ -88,6 +88,7 @@ namespace KopiLua
 		  return ts;
 		}
 
+		[CLSCompliantAttribute(false)]
 		public static TString luaS_newlstr (lua_State L, CharPtr str, uint l) {
 		  GCObject o;
 		  uint h = (uint)l;  /* seed */
@@ -110,7 +111,7 @@ namespace KopiLua
 		  return res;
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static Udata luaS_newudata(lua_State L, uint s, Table e)
 		{
 			Udata u = new Udata();
@@ -120,6 +121,7 @@ namespace KopiLua
 			u.uv.metatable = null;
 			u.uv.env = e;
 			u.user_data = new byte[s];
+            AddTotalBytes(L, GetUnmanagedSize(typeof(Udata)) + sizeudata(u));
 			/* chain it on udata list (after main thread) */
 			u.uv.next = G(L).mainthread.next;
 			G(L).mainthread.next = obj2gco(u);
@@ -131,7 +133,7 @@ namespace KopiLua
 			Udata u = new Udata();
 			u.uv.marked = luaC_white(G(L));  /* is not finalized */
 			u.uv.tt = LUA_TUSERDATA;
-			u.uv.len = 0;
+			u.uv.len = 0; /* gfoot: not sizeof(t)? */
 			u.uv.metatable = null;
 			u.uv.env = e;
 			u.user_data = luaM_realloc_(L, t);

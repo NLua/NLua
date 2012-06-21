@@ -161,9 +161,13 @@ namespace KopiLua
 		  public GCObject weak;  /* list of weak tables (to be cleared) */
 		  public GCObject tmudata;  /* last element of list of userdata to be GC */
 		  public Mbuffer buff = new Mbuffer();  /* temporary buffer for string concatentation */
+          [CLSCompliantAttribute(false)]
 		  public lu_mem GCthreshold;
+          [CLSCompliantAttribute(false)]
 		  public lu_mem totalbytes;  /* number of bytes currently allocated */
+          [CLSCompliantAttribute(false)]
 		  public lu_mem estimate;  /* an estimate of number of bytes actually in use */
+          [CLSCompliantAttribute(false)]
 		  public lu_mem gcdept;  /* how much GC is `behind schedule' */
 		  public int gcpause;  /* size of pause between successive GCs */
 		  public int gcstepmul;  /* GC `granularity' */
@@ -193,7 +197,9 @@ namespace KopiLua
 		  public CallInfo[] base_ci;  /* array of CallInfo's */
 		  public int stacksize;
 		  public int size_ci;  /* size of array `base_ci' */
+          [CLSCompliantAttribute(false)]
 		  public ushort nCcalls;  /* number of nested C calls */
+          [CLSCompliantAttribute(false)]
 		  public ushort baseCcalls;  /* nested C calls when resuming coroutine */
 		  public lu_byte hookmask;
 		  public lu_byte allowhook;

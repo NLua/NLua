@@ -15,6 +15,7 @@ namespace KopiLua
 	using lua_Number = Double;
 	using lua_Integer = System.Int32;
 
+	[CLSCompliantAttribute(true)]
 	public partial class Lua
 	{
 
@@ -55,8 +56,9 @@ namespace KopiLua
 		/*
 		** functions that read/write blocks when loading/dumping Lua chunks
 		*/
+		[CLSCompliantAttribute(false)]
         public delegate CharPtr lua_Reader(lua_State L, object ud, out uint sz);
-
+		[CLSCompliantAttribute(false)]
 		public delegate int lua_Writer(lua_State L, CharPtr p, uint sz, object ud);
 
 
@@ -135,6 +137,7 @@ namespace KopiLua
             lua_pushcclosure(L, f, 0);
         }
 
+		[CLSCompliantAttribute(false)]
         public static uint lua_strlen(lua_State L, int i)
         {
             return lua_objlen(L, i);

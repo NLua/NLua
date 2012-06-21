@@ -125,6 +125,7 @@ namespace KopiLua
 				get { return this.values[this.index + offset]; }
 			}
 
+			[CLSCompliantAttribute(false)]
 			public lua_TValue this[uint offset]
 			{
 				get { return this.values[this.index + (int)offset]; }
@@ -220,8 +221,27 @@ namespace KopiLua
 
 		  public Value value = new Value();
 		  public int tt;
-		};
 
+          public override string ToString()
+          {
+              string typename = null;
+              string val = null;
+              switch (tt)
+              {
+                  case LUA_TNIL: typename = "LUA_TNIL"; val = string.Empty;  break;
+                  case LUA_TNUMBER: typename = "LUA_TNUMBER"; val = value.n.ToString(); break;
+                  case LUA_TSTRING: typename = "LUA_TSTRING"; val = value.gc.ts.ToString(); break;
+                  case LUA_TTABLE: typename = "LUA_TTABLE"; break;
+                  case LUA_TFUNCTION: typename = "LUA_TFUNCTION"; break;
+                  case LUA_TBOOLEAN: typename = "LUA_TBOOLEAN"; break;
+                  case LUA_TUSERDATA: typename = "LUA_TUSERDATA"; break;
+                  case LUA_TTHREAD: typename = "LUA_TTHREAD"; break;
+                  case LUA_TLIGHTUSERDATA: typename = "LUA_TLIGHTUSERDATA"; break;
+                  default: typename = "unknown"; break;
+              }
+              return string.Format("TValue<{0}>({1})", typename, val);
+          }
+        };
 
 		/* Macros to test type */
 		internal static bool ttisnil(TValue o) { return (ttype(o) == LUA_TNIL); }
@@ -397,7 +417,9 @@ namespace KopiLua
 		public class TString_tsv : GCObject
 		{
 			public lu_byte reserved;
+			[CLSCompliantAttribute(false)]
 			public uint hash;
+			[CLSCompliantAttribute(false)]
 			public uint len;
 		};
 		public class TString : TString_tsv {
@@ -421,6 +443,7 @@ namespace KopiLua
 		{
 			public Table metatable;
 			public Table env;
+			[CLSCompliantAttribute(false)]
 			public uint len;
 		};
 
@@ -451,6 +474,7 @@ namespace KopiLua
 		  public Proto this[int offset] {get { return this.protos[this.index + offset]; }}
 
 		  public TValue[] k;  /* constants used by the function */
+			[CLSCompliantAttribute(false)]
 		  public Instruction[] code;
 		  public new Proto[] p;  /* functions defined inside the function */
 		  public int[] lineinfo;  /* map from opcodes to source lines */
@@ -492,10 +516,10 @@ namespace KopiLua
 
 		public class UpVal : GCObject {
 		  public TValue v;  /* points to stack or to its own value */
-
+			[CLSCompliantAttribute(false)]
 			public class _u {
 				public TValue value = new TValue();  /* the value (when closed) */
-
+				[CLSCompliantAttribute(false)]
 				public class _l {  /* double linked list (when open) */
 				  public UpVal prev;
 				  public UpVal next;
@@ -503,6 +527,7 @@ namespace KopiLua
 
 				public _l l = new _l();
 		  }
+			[CLSCompliantAttribute(false)]
 			public new _u u = new _u();
 		};
 
@@ -635,6 +660,7 @@ namespace KopiLua
 			public TValue i_val;
 			public TKey i_key;
 
+			[CLSCompliantAttribute(false)]
 			public Node this[uint offset]
 			{
 				get { return this.values[this.index + (int)offset]; }
@@ -719,6 +745,7 @@ namespace KopiLua
 		** (eeeeexxx), where the real value is (1xxx) * 2^(eeeee - 1) if
 		** eeeee != 0 and (xxx) otherwise.
 		*/
+		[CLSCompliantAttribute(false)]
 		public static int luaO_int2fb (uint x) {
 		  int e = 0;  /* expoent */
 		  while (x >= 16) {
@@ -749,6 +776,7 @@ namespace KopiLua
 			8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
 		  };
 
+		[CLSCompliantAttribute(false)]
 		public static int luaO_log2 (uint x) {
 		  int l = -1;
 		  while (x >= 256) { l += 8; x >>= 8; }
@@ -871,7 +899,7 @@ namespace KopiLua
 			return luaO_pushvfstring(L, fmt, args);
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static void luaO_chunkid (CharPtr out_, CharPtr source, uint bufflen) {
 			//out_ = "";
 		  if (source[0] == '=') {

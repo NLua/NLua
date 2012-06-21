@@ -80,6 +80,7 @@ namespace KopiLua
 		public class lua_longjmp {
 		  public lua_longjmp previous;
 		  public luai_jmpbuf b;
+          [CLSCompliantAttribute(false)]
 		  public volatile int status;  /* error code */
 		};
 
@@ -526,7 +527,7 @@ namespace KopiLua
 		  return status;
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static int lua_yield (lua_State L, int nresults) {
 		  luai_userstateyield(L, nresults);
 		  lua_lock(L);

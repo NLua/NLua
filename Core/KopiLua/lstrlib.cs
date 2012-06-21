@@ -674,6 +674,7 @@ namespace KopiLua
 			  add_s(ms, b, s, e);
 			  return;
 			}
+			case LUA_TUSERDATA:
 			case LUA_TFUNCTION: {
 			  int n;
 			  lua_pushvalue(L, 3);
@@ -713,7 +714,8 @@ namespace KopiLua
 		  MatchState ms = new MatchState();
 		  luaL_Buffer b = new luaL_Buffer();
 		  luaL_argcheck(L, tr == LUA_TNUMBER || tr == LUA_TSTRING ||
-						   tr == LUA_TFUNCTION || tr == LUA_TTABLE, 3,
+						   tr == LUA_TFUNCTION || tr == LUA_TTABLE ||
+						   tr == LUA_TUSERDATA, 3,
 							  "string/function/table expected");
 		  luaL_buffinit(L, b);
 		  ms.L = L;

@@ -143,7 +143,8 @@ namespace LuaInterface
 
 		public static int luanet_rawnetobj(LuaCore.lua_State luaState, int obj)
 		{
-			int udata = (int)LuaCore.lua_touserdata2(luaState, obj);
+			//int udata = (int)LuaCore.lua_touserdata2(luaState, obj);
+			int udata = fourBytesToInt(LuaCore.lua_touserdata(luaState, obj) as byte[]);
 			return udata != 0 ? udata : -1;
 		}
 
@@ -154,7 +155,9 @@ namespace LuaInterface
 
 		public static int checkudata_raw(LuaCore.lua_State luaState, int ud, string tname)
 		{
-			int p = (int)LuaCore.lua_touserdata2(luaState, ud);
+			//int p = (int)LuaCore.lua_touserdata2(luaState, ud);
+			int p = fourBytesToInt(LuaCore.lua_touserdata(luaState, ud) as byte[]);
+			Console.WriteLine("asddddd:" + p.ToString());
 
 			if(p != 0) 
 			{
@@ -163,6 +166,12 @@ namespace LuaInterface
 				{
 					/* does it have a metatable? */
 					LuaCore.lua_getfield(luaState, (int)PseudoIndex.Registry, tname);  /* get correct metatable */
+					Console.Write("valami:");
+					Console.Write(LuaCore.lua_rawequal(luaState, -1, -2) != 0);
+					Console.Write("\n");
+					Console.Write("valami2:");
+					Console.Write(LuaCore.lua_rawequal(luaState, -1, -2).ToBoolean());
+					Console.Write("\n");
 					bool isEqual = LuaCore.lua_rawequal(luaState, -1, -2).ToBoolean();
 
 					// NASTY - we need our own version of the lua_pop macro
@@ -185,7 +194,9 @@ namespace LuaInterface
 
 		public static void luanet_newudata(LuaCore.lua_State luaState, int val)
 		{
-			LuaCore.lua_newuserdata(luaState, (uint)val);
+			//LuaCore.lua_newuserdata(luaState, (uint)val);
+			byte[] userdata = LuaCore.lua_newuserdata(luaState, sizeof(int)) as byte[];
+            intToFourBytes(val, userdata);
 		}
 
 		public static int luanet_tonetobject(LuaCore.lua_State luaState, int index)
@@ -197,7 +208,7 @@ namespace LuaInterface
 			{
 				if(luaL_checkmetatable(luaState, index)) 
 				{
-					udata = (int)LuaCore.lua_touserdata2(luaState, index);
+					udata = fourBytesToInt(LuaCore.lua_touserdata(luaState, index) as byte[]);
 					if(udata != 0) 
 						return udata; 
 				}
@@ -222,6 +233,21 @@ namespace LuaInterface
 		{
 			return lockRef != 0 ? LuaCore.luaL_ref(luaState, (int)PseudoIndex.Registry) : 0;
 		}
+
+        private static int fourBytesToInt(byte[] bytes)
+        {
+			Console.WriteLine("tömb:" + bytes.Length.ToString());
+            return bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24);
+        }
+
+        private static void intToFourBytes(int val, byte[] bytes)
+        {
+			// gfoot: is this really a good idea?
+            bytes[0] = (byte)val;
+            bytes[1] = (byte)(val >> 8);
+            bytes[2] = (byte)(val >> 16);
+            bytes[3] = (byte)(val >> 24);
+        }
 		#endregion
 	}
 }

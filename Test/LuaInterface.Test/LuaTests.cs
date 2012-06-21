@@ -55,7 +55,7 @@ namespace LuaInterface.Test
                     //failed
                     Assert.True(false);
                 }
-                catch (Exception e)
+                catch (Exception/* e*/)
                 {
                     //passed
                     Assert.True(true);
@@ -160,7 +160,7 @@ namespace LuaInterface.Test
             lua.DoString("function calcVP(a,b) return a+b end");
 
             LuaFunction lf = lua.GetFunction("calcVP");
-            Object[] ret = lf.Call(i, 20);
+            /*Object[] ret = */lf.Call(i, 20);
         }
 
         [Fact]
@@ -347,7 +347,7 @@ namespace LuaInterface.Test
                     //failed
                     Assert.True(false);
                 }
-                catch (LuaException e)
+                catch (LuaException/* e*/)
                 {
                     //passed
                     Assert.True(true);

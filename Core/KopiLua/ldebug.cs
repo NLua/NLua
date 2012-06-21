@@ -279,6 +279,7 @@ namespace KopiLua
 
 		public static int checkopenop(Proto pt, int pc) { return luaG_checkopenop(pt.code[pc + 1]); }
 
+		[CLSCompliantAttribute(false)]
 		public static int luaG_checkopenop (Instruction i) {
 		  switch (GET_OPCODE(i)) {
 			case OpCode.OP_CALL:

@@ -248,7 +248,7 @@ namespace LuaInterface.Method
 			{
 				if(methodToCall.ContainsGenericParameters)
 				{
-					bool isMethod = _Translator.matchParameters(luaState, methodToCall, ref _LastCalledMethod);
+					/*bool isMethod = */_Translator.matchParameters(luaState, methodToCall, ref _LastCalledMethod);
 
 					if(methodToCall.IsGenericMethodDefinition)
 					{

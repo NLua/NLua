@@ -65,9 +65,11 @@ namespace KopiLua
 		//public const int MAXARG_sBx			= System.Int32.MaxValue;
 		//#endif
 
-
+		[CLSCompliantAttribute(false)]
 		public const uint MAXARG_A        = (uint)((1 << (int)SIZE_A) -1);
+		[CLSCompliantAttribute(false)]
 		public const uint MAXARG_B		  = (uint)((1 << (int)SIZE_B) -1);
+		[CLSCompliantAttribute(false)]
 		public const uint MAXARG_C        = (uint)((1 << (int)SIZE_C) -1);
 
 
@@ -161,7 +163,7 @@ namespace KopiLua
 		internal static int CREATE_ABx(OpCode o, int a, int bc)
 		{
 			int result = (int)(((int)o << POS_OP) | (a << POS_A) | (bc << POS_Bx));
-			return (int)(((int)o << POS_OP) | (a << POS_A) | (bc << POS_Bx));
+			return result;
 		}
 
 

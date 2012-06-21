@@ -64,7 +64,7 @@ namespace KopiLua
 		** for some types, it is better to avoid modulus by power of 2, as
 		** they tend to have many 2 factors.
 		*/
-		public static Node hashmod(Table t, int n) { return gnode(t, (n % ((sizenode(t) - 1) | 1))); }
+		public static Node hashmod(Table t, int n) { return gnode(t, (int)((uint)n % ((sizenode(t) - 1) | 1))); }
 
 		public static Node hashpointer(Table t, object p) { return hashmod(t, p.GetHashCode()); }
 
@@ -537,7 +537,7 @@ namespace KopiLua
 		  }
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static int unbound_search (Table t, uint j) {
 		  uint i = j;  /* i is zero or a present index */
 		  j++;

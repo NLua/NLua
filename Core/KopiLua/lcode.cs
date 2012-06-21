@@ -17,10 +17,12 @@ namespace KopiLua
 
 	public class InstructionPtr
 	{
+		[CLSCompliantAttribute(false)]
 		public Instruction[] codes;
 		public int pc;
 
 		public InstructionPtr() { this.codes = null; ; this.pc = -1; }
+		[CLSCompliantAttribute(false)]
 		public InstructionPtr(Instruction[] codes, int pc) {
 			this.codes = codes; this.pc = pc; }
 		public static InstructionPtr Assign(InstructionPtr ptr)
@@ -28,6 +30,7 @@ namespace KopiLua
 			if (ptr == null) return null;
 			return new InstructionPtr(ptr.codes, ptr.pc);
 		}
+		[CLSCompliantAttribute(false)]
 		public Instruction this[int index]
 		{
 			get { return this.codes[pc + index]; }

@@ -1107,7 +1107,7 @@ namespace LuaInterface.Tests
             lua.DoString("function calcVP(a,b) return a+b end");
 
             LuaFunction lf = lua.GetFunction("calcVP");
-            Object[] ret = lf.Call(i, 20);
+            /*Object[] ret = */lf.Call(i, 20);
         }
 
         private void TestThreading()

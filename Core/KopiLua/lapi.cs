@@ -337,6 +337,7 @@ namespace KopiLua
 		  return (l_isfalse(o) == 0) ? 1 : 0;
 		}
 
+		[CLSCompliantAttribute(false)]
 		public static CharPtr lua_tolstring (lua_State L, int idx, out uint len) {
 		  StkId o = index2adr(L, idx);
 		  if (!ttisstring(o)) {
@@ -354,7 +355,7 @@ namespace KopiLua
 		  return svalue(o);
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static uint lua_objlen (lua_State L, int idx) {
 		  StkId o = index2adr(L, idx);
 		  switch (ttype(o)) {
@@ -387,16 +388,6 @@ namespace KopiLua
 			default: return null;
 		  }
 		}
-
-		public static uint lua_touserdata2 (lua_State L, int idx) {
-		  StkId o = index2adr(L, idx);
-		  switch (ttype(o)) {
-			case LUA_TUSERDATA: return (rawuvalue(o).len);
-			case LUA_TLIGHTUSERDATA: return (rawuvalue(o).len);
-			default: return 0;
-		  }
-		}
-
 
 		public static lua_State lua_tothread (lua_State L, int idx) {
 		  StkId o = index2adr(L, idx);
@@ -447,7 +438,7 @@ namespace KopiLua
 		  lua_unlock(L);
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static void lua_pushlstring (lua_State L, CharPtr s, uint len) {
 		  lua_lock(L);
 		  luaC_checkGC(L);
@@ -873,7 +864,7 @@ namespace KopiLua
 		  return status;
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static int lua_load (lua_State L, lua_Reader reader, object data,
 							  CharPtr chunkname) {
 		  ZIO z = new ZIO();
@@ -886,7 +877,7 @@ namespace KopiLua
 		  return status;
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static int lua_dump (lua_State L, lua_Writer writer, object data) {
 		  int status;
 		  TValue o;
@@ -1038,7 +1029,7 @@ namespace KopiLua
 		  lua_unlock(L);
 		}
 
-
+		[CLSCompliantAttribute(false)]
 		public static object lua_newuserdata(lua_State L, uint size)
 		{
 			Udata u;
