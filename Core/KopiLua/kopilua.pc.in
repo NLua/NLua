@@ -1,0 +1,6 @@
+Name: KopiLua
+Description: KopiLua
+Version: 2.x
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/KopiLua.dll

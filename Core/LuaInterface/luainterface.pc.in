@@ -1,0 +1,6 @@
+Name: LuaInterface
+Description: LuaInterface
+Version: 2.x
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/LuaInterface.dll
