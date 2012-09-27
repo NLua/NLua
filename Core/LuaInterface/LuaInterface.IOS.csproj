@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7064B157-DD57-4828-94C5-CA149B25CB40}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>LuaInterface.IOS</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>LuaInterface.IOS</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\KopiLua\KopiLua.IOS.csproj">
+      <Project>{23997AB1-C4A3-49BA-A7B5-4C14F97C236B}</Project>
+      <Name>KopiLua.IOS</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
+    <Folder Include="Event\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="GenerateEventAssembly\" />
+    <Folder Include="LuaLib\" />
+    <Folder Include="Method\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config\LuaInterfaceConfig.cs" />
+    <Compile Include="Event\DebugHookEventArgs.cs" />
+    <Compile Include="Event\EventCodes.cs" />
+    <Compile Include="Event\EventMasks.cs" />
+    <Compile Include="Event\HookExceptionEventArgs.cs" />
+    <Compile Include="Exceptions\LuaException.cs" />
+    <Compile Include="Exceptions\LuaScriptException.cs" />
+    <Compile Include="Extensions\GeneralExtensions.cs" />
+    <Compile Include="GenerateEventAssembly\ClassGenerator.cs" />
+    <Compile Include="GenerateEventAssembly\CodeGeneration.cs" />
+    <Compile Include="GenerateEventAssembly\DelegateGenerator.cs" />
+    <Compile Include="GenerateEventAssembly\ILuaGeneratedType.cs" />
+    <Compile Include="GenerateEventAssembly\LuaClassType.cs" />
+    <Compile Include="LuaLib\GCOptions.cs" />
+    <Compile Include="LuaLib\LuaEnums.cs" />
+    <Compile Include="LuaLib\LuaIndexes.cs" />
+    <Compile Include="LuaLib\LuaLib.cs" />
+    <Compile Include="LuaLib\LuaTypes.cs" />
+    <Compile Include="LuaLib\References.cs" />
+    <Compile Include="Method\EventHandlerContainer.cs" />
+    <Compile Include="Method\LuaClassHelper.cs" />
+    <Compile Include="Method\LuaDelegate.cs" />
+    <Compile Include="Method\LuaEventHandler.cs" />
+    <Compile Include="Method\LuaMethodWrapper.cs" />
+    <Compile Include="Method\MethodArgs.cs" />
+    <Compile Include="Method\MethodCache.cs" />
+    <Compile Include="Method\RegisterEventHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CheckType.cs" />
+    <Compile Include="Lua.cs" />
+    <Compile Include="LuaBase.cs" />
+    <Compile Include="LuaFunction.cs" />
+    <Compile Include="LuaGlobalAttribute.cs" />
+    <Compile Include="LuaHideAttribute.cs" />
+    <Compile Include="LuaRegistrationHelper.cs" />
+    <Compile Include="LuaTable.cs" />
+    <Compile Include="LuaUserData.cs" />
+    <Compile Include="Metatables.cs" />
+    <Compile Include="ObjectTranslator.cs" />
+    <Compile Include="ProxyType.cs" />
+  </ItemGroup>
+</Project>
