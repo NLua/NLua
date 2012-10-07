@@ -26,7 +26,9 @@
 using System;
 using System.Threading;
 using System.Reflection;
+#if !MONOTOUCH
 using System.Reflection.Emit;
+#endif
 using System.Collections;
 using System.Collections.Generic;
 using LuaInterface.Method;
@@ -51,8 +53,10 @@ namespace LuaInterface
 		private Type delegateParent = typeof(LuaDelegate);
 		private Type classHelper = typeof(LuaClassHelper);
 		private AssemblyName assemblyName;
+#if !MONOTOUCH
 		private AssemblyBuilder newAssembly;
 		private ModuleBuilder newModule;
+#endif
 		private int luaClassNumber = 1;
 
 		static CodeGeneration()
@@ -61,12 +65,16 @@ namespace LuaInterface
 
 		private CodeGeneration()
 		{
+#if MONOTOUCH
+			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#else
 			// Create an assembly name
 			assemblyName = new AssemblyName();
 			assemblyName.Name = "LuaInterface_generatedcode";
 			// Create a new assembly with one module.
 			newAssembly = Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
 			newModule = newAssembly.DefineDynamicModule("LuaInterface_generatedcode");
+#endif
 		}
 
 		/*
@@ -82,6 +90,9 @@ namespace LuaInterface
 		 */
 		private Type GenerateEvent(Type eventHandlerType)
 		{
+#if MONOTOUCH
+			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#else
 			string typeName;
 			lock(this) 
 			{
@@ -111,6 +122,7 @@ namespace LuaInterface
 			generator.Emit(OpCodes.Ret);
 			// creates the new type
 			return myType.CreateType();
+#endif
 		}
 
 		/*
@@ -119,6 +131,9 @@ namespace LuaInterface
 		 */
 		private Type GenerateDelegate(Type delegateType)
 		{
+#if MONOTOUCH
+			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#else
 			string typeName;
 			lock(this) 
 			{
@@ -288,6 +303,7 @@ namespace LuaInterface
 
 			generator.Emit(OpCodes.Ret);
 			return myType.CreateType(); // creates the new type
+#endif
 		}
 
 		/*
@@ -296,6 +312,9 @@ namespace LuaInterface
 		 */
 		public void GenerateClass(Type klass, out Type newType, out Type[][] returnTypes)
 		{
+#if MONOTOUCH
+			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#else
 			string typeName;
 			lock(this) 
 			{
@@ -364,7 +383,9 @@ namespace LuaInterface
 			generator.Emit(OpCodes.Ldfld, luaTableField);
 			generator.Emit(OpCodes.Ret);
 			newType = myType.CreateType(); // Creates the type
+#endif
 		}
+#if !MONOTOUCH
 
 		/*
 		 * Generates an overriden implementation of method inside myType that delegates
@@ -375,6 +396,7 @@ namespace LuaInterface
 		private void GenerateMethod(TypeBuilder myType, MethodInfo method, MethodAttributes attributes, int methodIndex,
 			FieldInfo luaTableField, FieldInfo returnTypesField, bool generateBase, out Type[] returnTypes)
 		{
+
 			var paramInfo = method.GetParameters();
 			var paramTypes = new Type[paramInfo.Length];
 			var returnTypesList = new List<Type>();
@@ -606,13 +628,16 @@ namespace LuaInterface
 
 			generator.Emit(OpCodes.Ret);
 		}
-
+#endif
 		/*
 		 * Gets an event handler for the event type that delegates to the eventHandler Lua function.
 		 * Caches the generated type.
 		 */
 		public LuaEventHandler GetEvent(Type eventHandlerType, LuaFunction eventHandler)
 		{
+#if MONOTOUCH
+			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#else
 			Type eventConsumerType;
 
 			if(eventHandlerCollection.ContainsKey(eventHandlerType)) 
@@ -626,6 +651,7 @@ namespace LuaInterface
 			var luaEventHandler = (LuaEventHandler)Activator.CreateInstance(eventConsumerType);
 			luaEventHandler.handler = eventHandler;
 			return luaEventHandler;
+#endif
 		}
 
 		/*
@@ -634,6 +660,9 @@ namespace LuaInterface
 		 */
 		public Delegate GetDelegate(Type delegateType, LuaFunction luaFunc)
 		{
+#if MONOTOUCH
+			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#else
 			var returnTypes = new List<Type>();
 			Type luaDelegateType;
 
@@ -658,6 +687,7 @@ namespace LuaInterface
 			luaDelegate.function = luaFunc;
 			luaDelegate.returnTypes = returnTypes.ToArray();
 			return Delegate.CreateDelegate(delegateType, luaDelegate, "CallFunction");
+#endif
 		}
 
 		/*
@@ -668,6 +698,9 @@ namespace LuaInterface
 		 */
 		public object GetClassInstance(Type klass, LuaTable luaTable)
 		{
+#if MONOTOUCH
+			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#else
 			LuaClassType luaClassType;
 
 			if(classCollection.ContainsKey(klass)) 
@@ -680,6 +713,7 @@ namespace LuaInterface
 			}
 
 			return Activator.CreateInstance(luaClassType.klass, new object[] {luaTable, luaClassType.returnTypes});
+#endif
 		}
 	}
 }
