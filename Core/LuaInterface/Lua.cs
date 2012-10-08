@@ -864,14 +864,7 @@ namespace LuaInterface
 		/// <author>Reinhard Ostermeier</author>
 		public string GetLocal(LuaCore.lua_Debug luaDebug, int n)
 		{
-			try
-			{
-				return LuaCore.lua_getlocal(luaState, luaDebug, n).ToString();
-			}
-			finally
-			{
-				//System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
-			}
+			return LuaCore.lua_getlocal(luaState, luaDebug, n).ToString();
 		}
 
 		/// <summary>
@@ -883,14 +876,7 @@ namespace LuaInterface
 		/// <author>Reinhard Ostermeier</author>
 		public string SetLocal(LuaCore.lua_Debug luaDebug, int n)
 		{
-			try
-			{
-				return LuaCore.lua_setlocal(luaState, luaDebug, n).ToString();
-			}
-			finally
-			{
-				//System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
-			}
+			return LuaCore.lua_setlocal(luaState, luaDebug, n).ToString();
 		}
 
 		/// <summary>

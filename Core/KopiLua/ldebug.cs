@@ -183,7 +183,6 @@ namespace KopiLua
 		  incr_top(L);
 		}
 
-
 		private static int auxgetinfo (lua_State L, CharPtr what, lua_Debug ar,
 							Closure f, CallInfo ci) {
 		  int status = 1;

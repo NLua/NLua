@@ -37,7 +37,7 @@ namespace LuaInterface
 		None 			= -1,
 		Nil 			= 0,
 		Boolean 		= 1,
-		LightUserdata 	= 2,
+		LightUserdata	= 2,
 		Number 			= 3,
 		String 			= 4,
 		Table 			= 5,
