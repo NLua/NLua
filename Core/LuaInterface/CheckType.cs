@@ -153,10 +153,12 @@ namespace LuaInterface
 				if(luatype == LuaTypes.Function)
 					return extractValues[runtimeHandleValue];
 			}
+#if !MONOTOUCH
 			else if(typeof(Delegate).IsAssignableFrom(paramType) && luatype == LuaTypes.Function)
 				return new ExtractValue(new DelegateGenerator(translator, paramType).extractGenerated);
 			else if(paramType.IsInterface && luatype == LuaTypes.Table)
 				return new ExtractValue(new ClassGenerator(translator, paramType).extractGenerated);
+#endif
 			else if((paramType.IsInterface || paramType.IsClass) && luatype == LuaTypes.Nil)
 			{
 				// kevinh - allow nil to be silently converted to null - extractNetObject will return null when the item ain't found

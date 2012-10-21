@@ -65,16 +65,18 @@ namespace LuaInterface
 
 		private CodeGeneration()
 		{
-#if MONOTOUCH
-			throw new NotImplementedException (" Emit not available on MonoTouch ");
-#else
+
+
+
 			// Create an assembly name
 			assemblyName = new AssemblyName();
 			assemblyName.Name = "LuaInterface_generatedcode";
 			// Create a new assembly with one module.
+#if !MONOTOUCH
 			newAssembly = Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
 			newModule = newAssembly.DefineDynamicModule("LuaInterface_generatedcode");
 #endif
+
 		}
 
 		/*
