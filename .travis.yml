@@ -1,0 +1,31 @@
+#
+# lua Travis-CI Hook
+#
+
+# Travis language: c(sharp) :-P
+language: c
+
+# We need CMake, Mono and NUnit
+install:
+  - sudo apt-get install cmake mono-devel mono-gmcs nunit >/dev/null 2>&1
+
+script:
+  - git submodule update --init
+  - ./run_all.linux.sh
+
+# Execute additional tests or commands
+#after_script:
+#  - [run additional test commans]
+
+# Only watch the master branch
+branches:
+  only:
+    - master_nlua
+
+# Notify if needed
+notifications:
+  recipients:
+    - codefoco@gmail.com
+  email:
+    on_success: change
+    on_failure: always

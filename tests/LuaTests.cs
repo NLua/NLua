@@ -433,7 +433,7 @@ namespace LuaInterface.Test
 			//See: http://code.google.com/p/luainterface/issues/detail?id=5
 
 			//number of iterations to test
-			int count = 10000;
+			int count = 1000;
 
 
 			using (Lua lua = new Lua ()) {
@@ -452,7 +452,7 @@ namespace LuaInterface.Test
 			//See: http://code.google.com/p/luainterface/issues/detail?id=5
 
 			//number of iterations to test
-			int count = 10000;
+			int count = 1000;
 
 
 			using (Lua lua = new Lua ()) {
