@@ -1,0 +1,3 @@
+[submodule "Core/KopiLua"]
+	path = Core/KopiLua
+	url = git@github.com:codefoco/KopiLua.git
