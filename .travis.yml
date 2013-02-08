@@ -10,7 +10,7 @@ install:
   - sudo apt-get install cmake mono-devel mono-gmcs nunit >/dev/null 2>&1
 
 script:
-  - git submodule update --init
+  - git submodule update --init --recursive
   - ./run_all.linux.sh
 
 # Execute additional tests or commands
