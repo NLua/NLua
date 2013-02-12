@@ -8,8 +8,8 @@
     <ProjectGuid>{D5FCADFA-5047-40C2-B392-256875862920}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LuaInterface.Test</RootNamespace>
-    <AssemblyName>LuaInterface.Test</AssemblyName>
+    <RootNamespace>LuaInterfaceTest</RootNamespace>
+    <AssemblyName>LuaInterfaceTest</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ReleaseVersion>2.x</ReleaseVersion>
   </PropertyGroup>

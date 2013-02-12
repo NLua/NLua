@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KopiLua", "Core\KopiLua\Kop
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterface", "Core\LuaInterface\LuaInterface.csproj", "{F55CABBB-4108-4A39-94E1-581FD46DC021}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterface.Test", "LuaInterface.Test\LuaInterface.Test.csproj", "{D5FCADFA-5047-40C2-B392-256875862920}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterfaceTest", "LuaInterfaceTest\LuaInterfaceTest.csproj", "{D5FCADFA-5047-40C2-B392-256875862920}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,7 +44,7 @@ Global
 		{F55CABBB-4108-4A39-94E1-581FD46DC021} = {B8664957-CB71-4F11-A4DB-59E7514BC5F3}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = LuaInterface.Test\LuaInterface.Test.csproj
+		StartupItem = LuaInterfaceTest\LuaInterfaceTest.csproj
 		description = LuaInterface
 		version = 2.x
 	EndGlobalSection

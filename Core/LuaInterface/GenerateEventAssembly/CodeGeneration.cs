@@ -134,7 +134,7 @@ namespace LuaInterface
 		private Type GenerateDelegate(Type delegateType)
 		{
 #if MONOTOUCH
-			throw new NotImplementedException (" Emit not available on MonoTouch ");
+			throw new NotImplementedException ("GenerateDelegate is not available on iOS, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
 #else
 			string typeName;
 			lock(this) 
@@ -656,15 +656,17 @@ namespace LuaInterface
 #endif
 		}
 
+		public void RegisterLuaDelegateType (Type delegateType, Type luaDelegateType)
+		{
+			delegateCollection[delegateType] = luaDelegateType;
+		}
+
 		/*
 		 * Gets a delegate with delegateType that calls the luaFunc Lua function
 		 * Caches the generated type.
 		 */
 		public Delegate GetDelegate(Type delegateType, LuaFunction luaFunc)
 		{
-#if MONOTOUCH
-			throw new NotImplementedException (" Emit not available on MonoTouch ");
-#else
 			var returnTypes = new List<Type>();
 			Type luaDelegateType;
 
@@ -688,8 +690,8 @@ namespace LuaInterface
 			var luaDelegate = (LuaDelegate)Activator.CreateInstance(luaDelegateType);
 			luaDelegate.function = luaFunc;
 			luaDelegate.returnTypes = returnTypes.ToArray();
+
 			return Delegate.CreateDelegate(delegateType, luaDelegate, "CallFunction");
-#endif
 		}
 
 		/*

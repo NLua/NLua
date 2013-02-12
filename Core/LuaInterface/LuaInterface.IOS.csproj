@@ -40,7 +40,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\KopiLua\KopiLua.IOS.csproj">
-      <Project>{23997AB1-C4A3-49BA-A7B5-4C14F97C236B}</Project>
+      <Project>{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}</Project>
       <Name>KopiLua.IOS</Name>
     </ProjectReference>
   </ItemGroup>
@@ -53,6 +53,7 @@
     <Folder Include="LuaLib\" />
     <Folder Include="Method\" />
     <Folder Include="Properties\" />
+    <Folder Include="GenerateEventAssembly\ios\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\LuaInterfaceConfig.cs" />

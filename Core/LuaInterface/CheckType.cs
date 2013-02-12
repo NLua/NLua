@@ -153,9 +153,9 @@ namespace LuaInterface
 				if(luatype == LuaTypes.Function)
 					return extractValues[runtimeHandleValue];
 			}
-#if !MONOTOUCH
 			else if(typeof(Delegate).IsAssignableFrom(paramType) && luatype == LuaTypes.Function)
 				return new ExtractValue(new DelegateGenerator(translator, paramType).extractGenerated);
+#if !MONOTOUCH
 			else if(paramType.IsInterface && luatype == LuaTypes.Table)
 				return new ExtractValue(new ClassGenerator(translator, paramType).extractGenerated);
 #endif

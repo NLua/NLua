@@ -635,6 +635,15 @@ namespace LuaInterface
 		}
 
 		/*
+			* Register a delegate type to be used to convert Lua funcitions to C# delegates (useful for iOS where there is no dynamic code generation)
+			* type delegateType
+			*/
+		public void RegisterLuaDelegateType (Type delegateType, Type luaDelegateType)
+		{
+			CodeGeneration.Instance.RegisterLuaDelegateType (delegateType, luaDelegateType);
+		}
+
+		/*
 			* Gets a function global variable as a delegate of
 			* type delegateType
 			*/

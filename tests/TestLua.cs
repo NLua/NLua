@@ -1,6 +1,6 @@
 ﻿//note: this should be cleaned up and replaced with moq mocks where possible
 
-namespace LuaInterface.Test.Mock
+namespace LuaInterfaceTest.Mock
 {
 
     using System;
@@ -16,9 +16,112 @@ namespace LuaInterface.Test.Mock
     public delegate int TestDelegate2(int a, out int b);
     public delegate void TestDelegate3(int a, ref int b);
     public delegate TestClass TestDelegate4(int a, int b);
-    public delegate int TestDelegate5(TestClass a, TestClass b);
+     public delegate int TestDelegate5(TestClass a, TestClass b);
     public delegate int TestDelegate6(int a, out TestClass b);
     public delegate void TestDelegate7(int a, ref TestClass b);
+
+	/* Delegate Lua-handlers */
+
+	class LuaTestDelegate1Handler : LuaInterface.Method.LuaDelegate
+	{
+		int CallFunction (int a, int b)
+		{
+			object [] args = new object [] { a, b };
+			object [] inArgs = new object [] { a, b };
+			int [] outArgs = new int [] { };
+			
+			object ret = base.callFunction (args, inArgs, outArgs);
+			
+			return (int) ret;
+		}
+	}
+
+	class LuaTestDelegate2Handler : LuaInterface.Method.LuaDelegate
+	{
+		int CallFunction (int a, out int b)
+		{
+			object [] args = new object [] { a, 0 };
+			object [] inArgs = new object [] { a };
+			int [] outArgs = new int [] { 1 };
+			
+			object ret = base.callFunction (args, inArgs, outArgs);
+
+			b = (int)args [1];
+			return (int) ret;
+		}
+	}
+
+	class LuaTestDelegate3Handler : LuaInterface.Method.LuaDelegate
+	{
+		void CallFunction (int a, ref int b)
+		{
+			object [] args = new object [] { a, b };
+			object [] inArgs = new object [] { a, b };
+			int [] outArgs = new int [] { 1 };
+			
+			base.callFunction (args, inArgs, outArgs);
+
+			b = (int)args [1];
+		}
+	}
+
+	class LuaTestDelegate4Handler : LuaInterface.Method.LuaDelegate
+	{
+		TestClass CallFunction (int a, int b)
+		{
+			object [] args = new object [] { a, b };
+			object [] inArgs = new object [] { a, b };
+			int [] outArgs = new int [] { };
+			
+			object ret = base.callFunction (args, inArgs, outArgs);
+
+			return (TestClass) ret;
+		}
+	}
+
+	class LuaTestDelegate5Handler : LuaInterface.Method.LuaDelegate
+	{	
+		int CallFunction (TestClass a, TestClass b)
+		{
+			object [] args = new object [] { a, b };
+			object [] inArgs = new object [] { a, b };
+			int [] outArgs = new int [] {  };
+			
+			object ret = base.callFunction (args, inArgs, outArgs);
+			
+			return (int) ret;
+		}
+	}
+
+	class LuaTestDelegate6Handler : LuaInterface.Method.LuaDelegate
+	{
+		int CallFunction (int a, ref TestClass b)
+		{
+			object [] args = new object [] { a, b };
+			object [] inArgs = new object [] { a };
+			int [] outArgs = new int [] { 1 };
+			
+			object ret = base.callFunction (args, inArgs, outArgs);
+			
+			b = (TestClass)args [1];
+			return (int) ret;
+		}
+	}
+
+	class LuaTestDelegate7Handler : LuaInterface.Method.LuaDelegate
+	{
+		void CallFunction (int a, ref TestClass b)
+		{
+			object [] args = new object [] { a, b };
+			object [] inArgs = new object [] { a , b};
+			int [] outArgs = new int [] { 1 };
+			
+			base.callFunction (args, inArgs, outArgs);
+			
+			b = (TestClass)args [1];
+		}
+	}
+
 
     /*
      * Interface used for testing Lua table -> interface translation
