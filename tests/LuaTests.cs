@@ -292,6 +292,17 @@ namespace LuaInterfaceTest
 			return val * val2;
 		}
 
+		class LuaEventArgsHandler : LuaInterface.Method.LuaDelegate
+		{
+			void CallFunction (object sender, EventArgs eventArgs)
+			{
+				object [] args = new object [] {sender, eventArgs };
+				object [] inArgs = new object [] { sender, eventArgs };
+				int [] outArgs = new int [] { };
+				
+				base.callFunction (args, inArgs, outArgs);
+			}
+		}
 
 		[Test]
 		public void TestEventException ()
@@ -300,6 +311,7 @@ namespace LuaInterfaceTest
 				//Register a C# function
 				MethodInfo testException = this.GetType ().GetMethod ("_TestException", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance, null, new Type [] { typeof (float), typeof (float) }, null);
 				lua.RegisterFunction ("Multiply", this, testException);
+				lua.RegisterLuaDelegateType (typeof (EventHandler<EventArgs>), typeof (LuaEventArgsHandler)); 
 
 				//create the lua event handler code for the entity
 				//includes the bad code!
