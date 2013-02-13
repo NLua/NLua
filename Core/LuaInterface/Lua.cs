@@ -643,6 +643,11 @@ namespace LuaInterface
 			CodeGeneration.Instance.RegisterLuaDelegateType (delegateType, luaDelegateType);
 		}
 
+		public void RegisterLuaClassType (Type klass, Type luaClass)
+		{
+			CodeGeneration.Instance.RegisterLuaClassType (klass, luaClass);
+		}
+
 		/*
 			* Gets a function global variable as a delegate of
 			* type delegateType

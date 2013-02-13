@@ -308,6 +308,30 @@ namespace LuaInterface
 #endif
 		}
 
+		void GetReturnTypesFromClass (Type klass, out Type[][] returnTypes)
+		{
+			var classMethods = klass.GetMethods();
+			returnTypes = new Type[classMethods.Length][];
+
+			int i = 0;
+
+			foreach(var method in classMethods) 
+			{
+				if(klass.IsInterface) 
+				{
+					GetReturnTypesFromMethod (method, out returnTypes[i]);
+					i++;
+				} 
+				else
+				{
+					if(!method.IsPrivate && !method.IsFinal && method.IsVirtual) {
+						GetReturnTypesFromMethod (method, out returnTypes[i]);
+						i++;
+					}
+				}
+			}
+		}
+
 		/*
 		 * Generates an implementation of klass, if it is an interface, or
 		 * a subclass of klass that delegates its virtual methods to a Lua table.
@@ -387,6 +411,37 @@ namespace LuaInterface
 			newType = myType.CreateType(); // Creates the type
 #endif
 		}
+
+		void GetReturnTypesFromMethod (MethodInfo method, out Type[] returnTypes)
+		{
+			var paramInfo = method.GetParameters();
+			var paramTypes = new Type[paramInfo.Length];
+			var returnTypesList = new List<Type>();
+			
+			// Counts out and ref parameters, for later use, 
+			// and creates the list of return types
+			int nOutParams = 0;
+			int nOutAndRefParams = 0;
+			var returnType = method.ReturnType;
+			returnTypesList.Add(returnType);
+			
+			for(int i = 0; i < paramTypes.Length; i++) 
+			{
+				paramTypes[i] = paramInfo[i].ParameterType;
+				if((!paramInfo[i].IsIn) && paramInfo[i].IsOut)
+					nOutParams++;
+				
+				if(paramTypes[i].IsByRef) 
+				{
+					returnTypesList.Add(paramTypes[i].GetElementType());
+					nOutAndRefParams++;
+				}
+			}
+			
+			int[] refArgs = new int[nOutAndRefParams];
+			returnTypes = returnTypesList.ToArray();
+		}
+
 #if !MONOTOUCH
 
 		/*
@@ -398,31 +453,30 @@ namespace LuaInterface
 		private void GenerateMethod(TypeBuilder myType, MethodInfo method, MethodAttributes attributes, int methodIndex,
 			FieldInfo luaTableField, FieldInfo returnTypesField, bool generateBase, out Type[] returnTypes)
 		{
-
 			var paramInfo = method.GetParameters();
 			var paramTypes = new Type[paramInfo.Length];
 			var returnTypesList = new List<Type>();
-
+			
 			// Counts out and ref parameters, for later use, 
 			// and creates the list of return types
 			int nOutParams = 0;
 			int nOutAndRefParams = 0;
 			var returnType = method.ReturnType;
 			returnTypesList.Add(returnType);
-
+			
 			for(int i = 0; i < paramTypes.Length; i++) 
 			{
 				paramTypes[i] = paramInfo[i].ParameterType;
 				if((!paramInfo[i].IsIn) && paramInfo[i].IsOut)
 					nOutParams++;
-
+				
 				if(paramTypes[i].IsByRef) 
 				{
 					returnTypesList.Add(paramTypes[i].GetElementType());
 					nOutAndRefParams++;
 				}
 			}
-
+			
 			int[] refArgs = new int[nOutAndRefParams];
 			returnTypes = returnTypesList.ToArray();
 
@@ -661,6 +715,13 @@ namespace LuaInterface
 			delegateCollection[delegateType] = luaDelegateType;
 		}
 
+		public void RegisterLuaClassType (Type klass, Type luaClass)
+		{
+			LuaClassType luaClassType = new LuaClassType();
+			luaClassType.klass = luaClass;
+			GetReturnTypesFromClass (klass, out luaClassType.returnTypes);
+			classCollection[klass] = luaClassType;
+		}
 		/*
 		 * Gets a delegate with delegateType that calls the luaFunc Lua function
 		 * Caches the generated type.
@@ -702,9 +763,6 @@ namespace LuaInterface
 		 */
 		public object GetClassInstance(Type klass, LuaTable luaTable)
 		{
-#if MONOTOUCH
-			throw new NotImplementedException (" Emit not available on MonoTouch ");
-#else
 			LuaClassType luaClassType;
 
 			if(classCollection.ContainsKey(klass)) 
@@ -717,7 +775,6 @@ namespace LuaInterface
 			}
 
 			return Activator.CreateInstance(luaClassType.klass, new object[] {luaTable, luaClassType.returnTypes});
-#endif
 		}
 	}
 }

@@ -1099,7 +1099,7 @@ namespace LuaInterfaceTest
 				//Console.WriteLine("new val(from array to Lua)="+val);
 			}
 		}
-		/*
+		/*G
 		 * Tests setting item of a CLR array
 		 */
 		[Test]
@@ -1266,14 +1266,17 @@ namespace LuaInterfaceTest
 				//Console.WriteLine("delegate returned: "+a);
 			}
 		}
+
+
 		/*
 		 * Tests passing a Lua table as an interface and
 		 * calling one of its methods with value-type params
 		 */
 		[Test]
-		public void LuaInterfaceValueTypes ()
+		public void LuaInterfaceAAValueTypes ()
 		{
 			using (Lua lua = new Lua ()) {
+				lua.RegisterLuaClassType (typeof(ITest), typeof (LuaGeneratedClassX));
 				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
 				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
@@ -1410,6 +1413,91 @@ namespace LuaInterfaceTest
 				//Console.WriteLine("interface returned: "+a);
 			}
 		}
+
+		/*** "Dynamic generated class X***/
+		class LuaGeneratedClassX : ILuaGeneratedType, ITest
+		{
+			public LuaTable __luaInterface_luaTable;
+			public Type[][] __luaInterface_returnTypes;
+
+			public LuaGeneratedClassX (LuaTable luaTable, Type [][] returnTypes)
+			{
+				__luaInterface_luaTable = luaTable;
+				__luaInterface_returnTypes = returnTypes;
+			}
+
+			public LuaTable __luaInterface_getLuaTable ()
+			{
+				return __luaInterface_luaTable;
+			}
+
+			public int intProp
+			{
+				get {
+					return 0;
+				}
+
+				set {
+				}
+			}
+			public TestClass refProp
+			{
+				get {
+					return null;
+				}
+				set	{
+				}
+
+			}
+
+			public int test1(int a, int b)
+			{
+				object [] args = new object [] { __luaInterface_luaTable, a, b };
+				object [] inArgs = new object [] { __luaInterface_luaTable, a, b };
+				int [] outArgs = new int [] { };
+				Type [] returnTypes = __luaInterface_returnTypes [4];
+
+				LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test1");
+				
+
+				object ret = LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				
+				return (int) ret;
+			}
+
+			public int test2(int a, out int b)
+			{
+				b = 0;
+				return 0;
+			}
+
+			public void test3(int a, ref int b) 
+			{
+			}
+
+			public TestClass test4(int a, int b)
+			{
+				return null;
+			}
+
+			public int test5(TestClass a, TestClass b)
+			{
+				return 0;
+			}
+
+			public int test6(int a, out TestClass b)
+			{
+				b = null;
+				return 0;
+			}
+
+			public void test7(int a, ref TestClass b)
+			{
+			}
+		}
+
+
+
 		/*
 		 * Tests passing a Lua table as an interface and
 		 * accessing one of its value-type properties
