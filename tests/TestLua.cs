@@ -167,7 +167,6 @@ namespace LuaInterfaceTest.Mock
     /// </summary>
     class DoWorkClass
     {
-        private object _Lock = new object();
 
         public void DoWork()
         {
