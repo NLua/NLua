@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 
 namespace LuaInterface.Event
@@ -37,13 +36,12 @@ namespace LuaInterface.Event
 	{
 		private readonly LuaCore.lua_Debug luaDebug;
 
-		public DebugHookEventArgs(LuaCore.lua_Debug luaDebug)
+		public DebugHookEventArgs (LuaCore.lua_Debug luaDebug)
 		{
 			this.luaDebug = luaDebug;
 		}
 
-		public LuaCore.lua_Debug LuaDebug
-		{
+		public LuaCore.lua_Debug LuaDebug {
 			get { return luaDebug; }
 		}
 	}

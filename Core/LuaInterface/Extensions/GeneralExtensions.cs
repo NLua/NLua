@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 
 namespace LuaInterface.Extensions
@@ -38,7 +37,7 @@ namespace LuaInterface.Extensions
 		/// <returns>
 		/// 	<c>true</c> if the specified obj is null; otherwise, <c>false</c>.
 		/// </returns>
-		public static bool IsNull(this object obj)
+		public static bool IsNull (this object obj)
 		{
 			return (obj == null);
 		}

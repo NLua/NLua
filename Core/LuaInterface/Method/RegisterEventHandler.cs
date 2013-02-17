@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 using System.Reflection;
 
@@ -41,7 +40,7 @@ namespace LuaInterface.Method
 		private EventInfo eventInfo;
 		private object target;
 
-		public RegisterEventHandler(EventHandlerContainer pendingEvents, object target, EventInfo eventInfo)
+		public RegisterEventHandler (EventHandlerContainer pendingEvents, object target, EventInfo eventInfo)
 		{
 			this.target = target;
 			this.eventInfo = eventInfo;
@@ -51,13 +50,13 @@ namespace LuaInterface.Method
 		/*
 		 * Adds a new event handler
 		 */
-		public Delegate Add(LuaFunction function)
+		public Delegate Add (LuaFunction function)
 		{
 			//CP: Fix by Ben Bryant for event handling with one parameter
 			//link: http://luaforge.net/forum/message.php?msg_id=9266
-			Delegate handlerDelegate = CodeGeneration.Instance.GetDelegate(eventInfo.EventHandlerType, function);
-			eventInfo.AddEventHandler(target, handlerDelegate);
-			pendingEvents.Add(handlerDelegate, this);
+			Delegate handlerDelegate = CodeGeneration.Instance.GetDelegate (eventInfo.EventHandlerType, function);
+			eventInfo.AddEventHandler (target, handlerDelegate);
+			pendingEvents.Add (handlerDelegate, this);
 
 			return handlerDelegate;
 			//MethodInfo mi = eventInfo.EventHandlerType.GetMethod("Invoke");
@@ -72,18 +71,18 @@ namespace LuaInterface.Method
 		/*
 		 * Removes an existing event handler
 		 */
-		public void Remove(Delegate handlerDelegate)
+		public void Remove (Delegate handlerDelegate)
 		{
-			RemovePending(handlerDelegate);
-			pendingEvents.Remove(handlerDelegate);
+			RemovePending (handlerDelegate);
+			pendingEvents.Remove (handlerDelegate);
 		}
 
 		/*
 		 * Removes an existing event handler (without updating the pending handlers list)
 		 */
-		internal void RemovePending(Delegate handlerDelegate)
+		internal void RemovePending (Delegate handlerDelegate)
 		{
-			eventInfo.RemoveEventHandler(target, handlerDelegate);
+			eventInfo.RemoveEventHandler (target, handlerDelegate);
 		}
 	}
 }

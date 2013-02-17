@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 using System.Text;
 using System.Collections.Generic;
@@ -36,29 +35,29 @@ namespace LuaInterface
 	{
 		private bool _Disposed;
 		[CLSCompliantAttribute(false)]
-		protected int _Reference;
+		protected int
+			_Reference;
 		[CLSCompliantAttribute(false)]
-		protected Lua _Interpreter;
+		protected Lua
+			_Interpreter;
 
-		~LuaBase()
+		~LuaBase ()
 		{
-			Dispose(false);
+			Dispose (false);
 		}
 
-		public void Dispose()
+		public void Dispose ()
 		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
+			Dispose (true);
+			GC.SuppressFinalize (this);
 		}
 
-		public virtual void Dispose(bool disposeManagedResources)
+		public virtual void Dispose (bool disposeManagedResources)
 		{
-			if(!_Disposed)
-			{
-				if(disposeManagedResources)
-				{
-					if(_Reference != 0)
-						_Interpreter.dispose(_Reference);
+			if (!_Disposed) {
+				if (disposeManagedResources) {
+					if (_Reference != 0)
+						_Interpreter.dispose (_Reference);
 				}
 
 				_Interpreter = null;
@@ -66,18 +65,16 @@ namespace LuaInterface
 			}
 		}
 
-		public override bool Equals(object o)
+		public override bool Equals (object o)
 		{
-			if(o is LuaBase)
-			{
+			if (o is LuaBase) {
 				var l = (LuaBase)o;
-				return _Interpreter.compareRef(l._Reference, _Reference);
-			}
-			else
+				return _Interpreter.compareRef (l._Reference, _Reference);
+			} else
 				return false;
 		}
 
-		public override int GetHashCode()
+		public override int GetHashCode ()
 		{
 			return _Reference;
 		}

@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 
 namespace LuaInterface.Event
@@ -31,12 +30,11 @@ namespace LuaInterface.Event
 	{
 		private readonly Exception m_Exception;
 
-		public Exception Exception
-		{
+		public Exception Exception {
 			get { return m_Exception; }
 		}
 
-		public HookExceptionEventArgs(Exception ex)
+		public HookExceptionEventArgs (Exception ex)
 		{
 			m_Exception = ex;
 		}

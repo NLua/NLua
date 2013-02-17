@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 
 namespace LuaInterface.Method
@@ -41,9 +40,9 @@ namespace LuaInterface.Method
 
 		// CP: Fix provided by Ben Bryant for delegates with one param
 		// link: http://luaforge.net/forum/message.php?msg_id=9318
-		public void handleEvent(object[] args)
+		public void handleEvent (object[] args)
 		{
-			handler.Call(args);
+			handler.Call (args);
 		}
 		//public void handleEvent(object sender,object data) 
 		//{

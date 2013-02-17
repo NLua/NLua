@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 
 namespace LuaInterface
@@ -33,6 +32,6 @@ namespace LuaInterface
 	 */
 	public interface ILuaGeneratedType
 	{
-		LuaTable __luaInterface_getLuaTable();
+		LuaTable __luaInterface_getLuaTable ();
 	}
 }

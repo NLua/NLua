@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
@@ -38,24 +37,22 @@ namespace LuaInterface
 		/// </summary>
 		/// <param name="lua">The Lua VM to add the methods to</param>
 		/// <param name="o">The object to get the methods from</param>
-		public static void TaggedInstanceMethods(Lua lua, object o)
+		public static void TaggedInstanceMethods (Lua lua, object o)
 		{
 			#region Sanity checks
-			if(lua.IsNull())
-				throw new ArgumentNullException("lua");
+			if (lua.IsNull ())
+				throw new ArgumentNullException ("lua");
 
-			if(o.IsNull())
-				throw new ArgumentNullException("o");
+			if (o.IsNull ())
+				throw new ArgumentNullException ("o");
 			#endregion
 
-			foreach(var method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
-			{
-				foreach(LuaGlobalAttribute attribute in method.GetCustomAttributes(typeof(LuaGlobalAttribute), true))
-				{
-					if(string.IsNullOrEmpty(attribute.Name))
-						lua.RegisterFunction(method.Name, o, method); // CLR name
+			foreach (var method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public)) {
+				foreach (LuaGlobalAttribute attribute in method.GetCustomAttributes(typeof(LuaGlobalAttribute), true)) {
+					if (string.IsNullOrEmpty (attribute.Name))
+						lua.RegisterFunction (method.Name, o, method); // CLR name
 					else
-						lua.RegisterFunction(attribute.Name, o, method); // Custom name
+						lua.RegisterFunction (attribute.Name, o, method); // Custom name
 				}
 			}
 		}
@@ -67,27 +64,25 @@ namespace LuaInterface
 		/// </summary>
 		/// <param name="lua">The Lua VM to add the methods to</param>
 		/// <param name="type">The class type to get the methods from</param>
-		public static void TaggedStaticMethods(Lua lua, Type type)
+		public static void TaggedStaticMethods (Lua lua, Type type)
 		{
 			#region Sanity checks
-			if(lua.IsNull())
-				throw new ArgumentNullException("lua");
+			if (lua.IsNull ())
+				throw new ArgumentNullException ("lua");
 
-			if(type.IsNull())
-				throw new ArgumentNullException("type");
+			if (type.IsNull ())
+				throw new ArgumentNullException ("type");
 
-			if(!type.IsClass)
-				throw new ArgumentException("The type must be a class!", "type");
+			if (!type.IsClass)
+				throw new ArgumentException ("The type must be a class!", "type");
 			#endregion
 
-			foreach(var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
-			{
-				foreach(LuaGlobalAttribute attribute in method.GetCustomAttributes(typeof(LuaGlobalAttribute), false))
-				{
-					if(string.IsNullOrEmpty(attribute.Name))
-						lua.RegisterFunction(method.Name, null, method); // CLR name
+			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)) {
+				foreach (LuaGlobalAttribute attribute in method.GetCustomAttributes(typeof(LuaGlobalAttribute), false)) {
+					if (string.IsNullOrEmpty (attribute.Name))
+						lua.RegisterFunction (method.Name, null, method); // CLR name
 					else
-						lua.RegisterFunction(attribute.Name, null, method); // Custom name
+						lua.RegisterFunction (attribute.Name, null, method); // Custom name
 				}
 			}
 		}
@@ -100,26 +95,25 @@ namespace LuaInterface
 		/// <typeparam name="T">The enum type to register</typeparam>
 		/// <param name="lua">The Lua VM to add the enum to</param>
 		[SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "The type parameter is used to select an enum type")]
-		public static void Enumeration<T>(Lua lua)
+		public static void Enumeration<T> (Lua lua)
 		{
 			#region Sanity checks
-			if(lua.IsNull())
-				throw new ArgumentNullException("lua");
+			if (lua.IsNull ())
+				throw new ArgumentNullException ("lua");
 			#endregion
 
 			var type = typeof(T);
 
-			if(!type.IsEnum)
-				throw new ArgumentException("The type must be an enumeration!");
+			if (!type.IsEnum)
+				throw new ArgumentException ("The type must be an enumeration!");
 
-			string[] names = Enum.GetNames(type);
-			var values = (T[])Enum.GetValues(type);
-			lua.NewTable(type.Name);
+			string[] names = Enum.GetNames (type);
+			var values = (T[])Enum.GetValues (type);
+			lua.NewTable (type.Name);
 
-			for(int i = 0; i < names.Length; i++)
-			{
-				string path = type.Name + "." + names[i];
-				lua[path] = values[i];
+			for (int i = 0; i < names.Length; i++) {
+				string path = type.Name + "." + names [i];
+				lua [path] = values [i];
 			}
 		}
 		#endregion

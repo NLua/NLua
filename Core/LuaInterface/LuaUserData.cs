@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 using System.Text;
 using System.Collections.Generic;
@@ -33,7 +32,7 @@ namespace LuaInterface
 
 	public class LuaUserData : LuaBase
 	{
-		public LuaUserData(int reference, Lua interpreter)
+		public LuaUserData (int reference, Lua interpreter)
 		{
 			_Reference = reference;
 			_Interpreter = interpreter;
@@ -42,30 +41,24 @@ namespace LuaInterface
 		/*
 		 * Indexer for string fields of the userdata
 		 */
-		public object this[string field]
-		{
-			get
-			{
-				return _Interpreter.getObject(_Reference, field);
+		public object this [string field] {
+			get {
+				return _Interpreter.getObject (_Reference, field);
 			}
-			set
-			{
-				_Interpreter.setObject(_Reference, field, value);
+			set {
+				_Interpreter.setObject (_Reference, field, value);
 			}
 		}
 
 		/*
 		 * Indexer for numeric fields of the userdata
 		 */
-		public object this[object field]
-		{
-			get
-			{
-				return _Interpreter.getObject(_Reference, field);
+		public object this [object field] {
+			get {
+				return _Interpreter.getObject (_Reference, field);
 			}
-			set
-			{
-				_Interpreter.setObject(_Reference, field, value);
+			set {
+				_Interpreter.setObject (_Reference, field, value);
 			}
 		}
 
@@ -73,20 +66,20 @@ namespace LuaInterface
 		 * Calls the userdata and returns its return values inside
 		 * an array
 		 */
-		public object[] Call(params object[] args)
+		public object[] Call (params object[] args)
 		{
-			return _Interpreter.callFunction(this, args);
+			return _Interpreter.callFunction (this, args);
 		}
 
 		/*
 		 * Pushes the userdata into the Lua stack
 		 */
-		internal void push(LuaCore.lua_State luaState)
+		internal void push (LuaCore.lua_State luaState)
 		{
-			LuaLib.lua_getref(luaState, _Reference);
+			LuaLib.lua_getref (luaState, _Reference);
 		}
 
-		public override string ToString()
+		public override string ToString ()
 		{
 			return "userdata";
 		}

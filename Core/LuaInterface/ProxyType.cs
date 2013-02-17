@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 using System.Globalization;
 using System.Reflection;
@@ -38,7 +37,7 @@ namespace LuaInterface
 	{
 		private Type proxy;
 
-		public ProxyType(Type proxy) 
+		public ProxyType (Type proxy)
 		{
 			this.proxy = proxy;
 		}
@@ -47,69 +46,68 @@ namespace LuaInterface
 		/// Provide human readable short hand for this proxy object
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()
+		public override string ToString ()
 		{
 			return "ProxyType(" + UnderlyingSystemType + ")";
 		}
 
-		public Type UnderlyingSystemType 
-		{
+		public Type UnderlyingSystemType {
 			get { return proxy; }
 		}
 
-		public FieldInfo GetField(string name, BindingFlags bindingAttr) 
+		public FieldInfo GetField (string name, BindingFlags bindingAttr)
 		{
-			return proxy.GetField(name, bindingAttr);
+			return proxy.GetField (name, bindingAttr);
 		}
 
-		public FieldInfo[] GetFields(BindingFlags bindingAttr) 
+		public FieldInfo[] GetFields (BindingFlags bindingAttr)
 		{
-			return proxy.GetFields(bindingAttr);
+			return proxy.GetFields (bindingAttr);
 		}
 
-		public MemberInfo[] GetMember(string name, BindingFlags bindingAttr) 
+		public MemberInfo[] GetMember (string name, BindingFlags bindingAttr)
 		{
-			return proxy.GetMember(name, bindingAttr);
+			return proxy.GetMember (name, bindingAttr);
 		}
 
-		public MemberInfo[] GetMembers(BindingFlags bindingAttr) 
+		public MemberInfo[] GetMembers (BindingFlags bindingAttr)
 		{
-			return proxy.GetMembers(bindingAttr);
+			return proxy.GetMembers (bindingAttr);
 		}
 
-		public MethodInfo GetMethod(string name, BindingFlags bindingAttr) 
+		public MethodInfo GetMethod (string name, BindingFlags bindingAttr)
 		{
-			return proxy.GetMethod(name, bindingAttr);
+			return proxy.GetMethod (name, bindingAttr);
 		}
 
-		public MethodInfo GetMethod(string name, BindingFlags bindingAttr, Binder binder, Type[] types, ParameterModifier[] modifiers) 
+		public MethodInfo GetMethod (string name, BindingFlags bindingAttr, Binder binder, Type[] types, ParameterModifier[] modifiers)
 		{
-			return proxy.GetMethod(name, bindingAttr, binder, types, modifiers);
+			return proxy.GetMethod (name, bindingAttr, binder, types, modifiers);
 		}
 
-		public MethodInfo[] GetMethods(BindingFlags bindingAttr) 
+		public MethodInfo[] GetMethods (BindingFlags bindingAttr)
 		{
-			return proxy.GetMethods(bindingAttr);
+			return proxy.GetMethods (bindingAttr);
 		}
 
-		public PropertyInfo GetProperty(string name, BindingFlags bindingAttr) 
+		public PropertyInfo GetProperty (string name, BindingFlags bindingAttr)
 		{
-			return proxy.GetProperty(name, bindingAttr);
+			return proxy.GetProperty (name, bindingAttr);
 		}
 
-		public PropertyInfo GetProperty(string name, BindingFlags bindingAttr, Binder binder, Type returnType, Type[] types, ParameterModifier[] modifiers) 
+		public PropertyInfo GetProperty (string name, BindingFlags bindingAttr, Binder binder, Type returnType, Type[] types, ParameterModifier[] modifiers)
 		{
-			return proxy.GetProperty(name, bindingAttr, binder, returnType, types, modifiers);
+			return proxy.GetProperty (name, bindingAttr, binder, returnType, types, modifiers);
 		}
 
-		public PropertyInfo[] GetProperties(BindingFlags bindingAttr) 
+		public PropertyInfo[] GetProperties (BindingFlags bindingAttr)
 		{
-			return proxy.GetProperties(bindingAttr);
+			return proxy.GetProperties (bindingAttr);
 		}
 
-		public object InvokeMember(string name,	BindingFlags invokeAttr, Binder binder,	object target, object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)
+		public object InvokeMember (string name, BindingFlags invokeAttr, Binder binder, object target, object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)
 		{
-			return proxy.InvokeMember(name, invokeAttr, binder, target, args, modifiers, culture, namedParameters);
+			return proxy.InvokeMember (name, invokeAttr, binder, target, args, modifiers, culture, namedParameters);
 		}
 	}
 }

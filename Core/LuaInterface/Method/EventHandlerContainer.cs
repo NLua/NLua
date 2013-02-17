@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -34,28 +33,28 @@ namespace LuaInterface.Method
 	/// </summary>
 	class EventHandlerContainer : IDisposable
 	{
-		private Dictionary<Delegate, RegisterEventHandler> dict = new Dictionary<Delegate, RegisterEventHandler>();
+		private Dictionary<Delegate, RegisterEventHandler> dict = new Dictionary<Delegate, RegisterEventHandler> ();
 
-		public void Add(Delegate handler, RegisterEventHandler eventInfo)
+		public void Add (Delegate handler, RegisterEventHandler eventInfo)
 		{
-			dict.Add(handler, eventInfo);
+			dict.Add (handler, eventInfo);
 		}
 
-		public void Remove(Delegate handler)
+		public void Remove (Delegate handler)
 		{
-			bool found = dict.Remove(handler);
-			Debug.Assert(found);
+			bool found = dict.Remove (handler);
+			Debug.Assert (found);
 		}
 
 		/// <summary>
 		/// Remove any still registered handlers
 		/// </summary>
-		public void Dispose()
+		public void Dispose ()
 		{
-			foreach(KeyValuePair<Delegate, RegisterEventHandler> pair in dict)
-				pair.Value.RemovePending(pair.Key);
+			foreach (KeyValuePair<Delegate, RegisterEventHandler> pair in dict)
+				pair.Value.RemovePending (pair.Key);
 
-			dict.Clear();
+			dict.Clear ();
 		}
 	}
 }

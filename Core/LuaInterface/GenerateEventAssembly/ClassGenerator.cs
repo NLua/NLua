@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 
 namespace LuaInterface
@@ -39,15 +38,15 @@ namespace LuaInterface
 		private ObjectTranslator translator;
 		private Type klass;
 
-		public ClassGenerator(ObjectTranslator translator, Type klass) 
+		public ClassGenerator (ObjectTranslator translator, Type klass)
 		{
 			this.translator = translator;
 			this.klass = klass;
 		}
 
-		public object extractGenerated(KopiLua.Lua.lua_State luaState, int stackPos)
+		public object extractGenerated (KopiLua.Lua.lua_State luaState, int stackPos)
 		{
-			return CodeGeneration.Instance.GetClassInstance(klass, translator.getTable(luaState, stackPos));
+			return CodeGeneration.Instance.GetClassInstance (klass, translator.getTable (luaState, stackPos));
 		}
 	}
 }

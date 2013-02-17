@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 using System;
 using System.Reflection;
 using LuaInterface.Extensions;
@@ -36,19 +35,16 @@ namespace LuaInterface.Method
 	{
 		private MethodBase _cachedMethod;
 
-		public MethodBase cachedMethod
-		{
-			get
-			{
+		public MethodBase cachedMethod {
+			get {
 				return _cachedMethod;
 			}
-			set
-			{
+			set {
 				_cachedMethod = value;
 				var mi = value as MethodInfo;
 
-				if(!mi.IsNull())
-					IsReturnVoid = string.Compare(mi.ReturnType.Name, "System.Void", true) == 0;
+				if (!mi.IsNull ())
+					IsReturnVoid = string.Compare (mi.ReturnType.Name, "System.Void", true) == 0;
 			}
 		}
 		
