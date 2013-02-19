@@ -33,9 +33,6 @@ namespace LuaInterface
 
 	public class LuaLib
 	{
-		// Not sure of the purpose of this, but I'm keeping it -kevinh
-		private static object tag = 0;
-
 		// steffenj: BEGIN additional Lua API functions new in Lua 5.1
 		public static int lua_gc (LuaCore.lua_State luaState, GCOptions what, int data)
 		{
@@ -283,6 +280,11 @@ namespace LuaInterface
 			LuaCore.lua_call (luaState, nArgs, nResults);
 		}
 
+		public static void lua_pushstdcallcfunction (LuaCore.lua_State luaState, LuaCore.lua_CFunction function)
+		{
+			LuaCore.lua_pushstdcallcfunction (luaState, function);
+		}
+
 		public static int lua_pcall (LuaCore.lua_State luaState, int nArgs, int nResults, int errfunc)
 		{
 			return LuaCore.lua_pcall (luaState, nArgs, nResults, errfunc);
@@ -336,10 +338,6 @@ namespace LuaInterface
 			LuaCore.lua_atpanic (luaState, (LuaCore.lua_CFunction)panicf);
 		}
 
-		public static void lua_pushstdcallcfunction (LuaCore.lua_State luaState, LuaCore.lua_CFunction function)
-		{
-			LuaCore.lua_pushcfunction (luaState, function);
-		}
 
 		public static void lua_pushnumber (LuaCore.lua_State luaState, double number)
 		{
@@ -392,6 +390,31 @@ namespace LuaInterface
 			return LuaCore.luaL_loadfile (luaState, filename);
 		}
 
+		public static bool luaL_checkmetatable (LuaCore.lua_State luaState, int index)
+		{
+			return LuaCore.luaL_checkmetatable (luaState, index);
+		}
+
+		public static int luanet_tonetobject (LuaCore.lua_State luaState, int index)
+		{
+			return LuaCore.luanet_tonetobject (luaState, index);
+		}
+
+		public static void luanet_newudata (LuaCore.lua_State luaState, int val)
+		{
+			LuaCore.luanet_newudata (luaState, val);
+		}
+
+		public static int luanet_rawnetobj (LuaCore.lua_State luaState, int obj)
+		{
+			return LuaCore.luanet_rawnetobj (luaState, obj);
+		}
+
+		public static int luanet_checkudata (LuaCore.lua_State luaState, int ud, string tname)
+		{
+			return LuaCore.luanet_checkudata (luaState, ud, tname);
+		}
+
 		public static void lua_error (LuaCore.lua_State luaState)
 		{
 			LuaCore.lua_error (luaState);
@@ -407,115 +430,15 @@ namespace LuaInterface
 			return LuaCore.lua_next (luaState, index);
 		}
 
-		public static void lua_pushlightuserdata (LuaCore.lua_State luaState, object udata)
+		public static void lua_pushlightuserdata (LuaCore.lua_State luaState, LuaCore.LuaTag udata)
 		{
 			LuaCore.lua_pushlightuserdata (luaState, udata);
 		}
 
-		public static int luanet_rawnetobj (LuaCore.lua_State luaState, int obj)
+		public static LuaCore.LuaTag luanet_gettag ()
 		{
-			byte[] bytes = lua_touserdata (luaState, obj) as byte[];
-			return fourBytesToInt (bytes);
+			return LuaCore.luanet_gettag ();
 		}
 
-		// Starting with 5.1 the auxlib version of checkudata throws an exception if the type isn't right
-		// Instead, we want to run our own version that checks the type and just returns null for failure
-		private static object checkudata_raw (LuaCore.lua_State L, int ud, string tname)
-		{
-			object p = LuaCore.lua_touserdata (L, ud);
-
-			if (p != null) {
-				/* value is a userdata? */
-				if (LuaCore.lua_getmetatable (L, ud) != 0) { 
-					bool isEqual;
-
-					/* does it have a metatable? */
-					LuaCore.lua_getfield (L, (int)LuaIndexes.Registry, tname);  /* get correct metatable */
-
-					isEqual = LuaCore.lua_rawequal (L, -1, -2) != 0;
-
-					// NASTY - we need our own version of the lua_pop macro
-					// lua_pop(L, 2);  /* remove both metatables */
-					LuaCore.lua_settop (L, -(2) - 1);
-
-					if (isEqual)	/* does it have the correct mt? */
-						return p;
-				}
-			}
-		  
-			return null;
-		}
-
-		public static int luanet_checkudata (LuaCore.lua_State luaState, int ud, string tname)
-		{
-			object udata = checkudata_raw (luaState, ud, tname);
-			return !udata.IsNull () ? fourBytesToInt (udata as byte[]) : -1;
-		}
-
-		public static bool luaL_checkmetatable (LuaCore.lua_State luaState, int index)
-		{
-			bool retVal = false;
-
-			if (lua_getmetatable (luaState, index) != 0) {
-				lua_pushlightuserdata (luaState, tag);
-				lua_rawget (luaState, -2);
-				retVal = !lua_isnil (luaState, -1);
-				lua_settop (luaState, -3);
-			}
-
-			return retVal;
-		}
-
-		public static object luanet_gettag ()
-		{
-			return tag;
-		}
-
-		public static void luanet_newudata (LuaCore.lua_State luaState, int val)
-		{
-			var userdata = lua_newuserdata (luaState, sizeof(int)) as byte[];
-			intToFourBytes (val, userdata);
-		}
-
-		public static int luanet_tonetobject (LuaCore.lua_State luaState, int index)
-		{
-			byte[] udata;
-
-			if (lua_type (luaState, index) == LuaTypes.UserData) {
-				if (luaL_checkmetatable (luaState, index)) {
-					udata = lua_touserdata (luaState, index) as byte[];
-					if (!udata.IsNull ())
-						return fourBytesToInt (udata);
-				}
-
-				udata = checkudata_raw (luaState, index, "luaNet_class") as byte[];
-				if (!udata.IsNull ())
-					return fourBytesToInt (udata);
-
-				udata = checkudata_raw (luaState, index, "luaNet_searchbase") as byte[];
-				if (!udata.IsNull ())
-					return fourBytesToInt (udata);
-
-				udata = checkudata_raw (luaState, index, "luaNet_function") as byte[];
-				if (!udata.IsNull ())
-					return fourBytesToInt (udata);
-			}
-
-			return -1;
-		}
-
-		private static int fourBytesToInt (byte[] bytes)
-		{
-			return bytes [0] + (bytes [1] << 8) + (bytes [2] << 16) + (bytes [3] << 24);
-		}
-
-		private static void intToFourBytes (int val, byte[] bytes)
-		{
-			// gfoot: is this really a good idea?
-			bytes [0] = (byte)val;
-			bytes [1] = (byte)(val >> 8);
-			bytes [2] = (byte)(val >> 16);
-			bytes [3] = (byte)(val >> 24);
-		}
 	}
 }
