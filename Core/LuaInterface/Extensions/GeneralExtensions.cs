@@ -41,5 +41,10 @@ namespace LuaInterface.Extensions
 		{
 			return (obj == null);
 		}
+
+		public static bool IsNull (this IntPtr ptr)
+		{
+			return (ptr == null || ptr.Equals (IntPtr.Zero));
+		}
 	}
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,7 +11,8 @@
     <RootNamespace>LuaInterface</RootNamespace>
     <AssemblyName>LuaInterface</AssemblyName>
     <ReleaseVersion>2.x</ReleaseVersion>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -88,17 +89,14 @@
   </Target>
   -->
   <ItemGroup>
+    <ProjectReference Include="..\KeraLua\KeraLua.csproj">
+      <Project>{47153754-10f5-44d8-b578-f5a32b69061a}</Project>
+      <Name>KeraLua</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KopiLua\KopiLua.csproj">
       <Project>{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}</Project>
       <Name>KopiLua</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-    <Folder Include="GenerateEventAssembly\" />
-    <Folder Include="Event\" />
-    <Folder Include="Exceptions\" />
-    <Folder Include="Method\" />
-    <Folder Include="Config\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

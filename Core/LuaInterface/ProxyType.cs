@@ -28,8 +28,6 @@ using System.Reflection;
 
 namespace LuaInterface
 {
-	using LuaCore = KopiLua.Lua;
-
 	/// <summary>
 	/// Summary description for ProxyType.
 	/// </summary>

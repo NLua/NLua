@@ -26,6 +26,7 @@ using System;
 
 namespace LuaInterface
 {
+	using LuaCore = KopiLua.Lua;
 	/*
 	 * Class used for generating delegates that get a function from the Lua
 	 * stack as a delegate of a specific type.
@@ -37,6 +38,7 @@ namespace LuaInterface
 	{
 		private ObjectTranslator translator;
 		private Type delegateType;
+		
 
 		public DelegateGenerator (ObjectTranslator translator, Type delegateType)
 		{
@@ -44,7 +46,7 @@ namespace LuaInterface
 			this.delegateType = delegateType;
 		}
 
-		public object extractGenerated (KopiLua.Lua.lua_State luaState, int stackPos)
+		public object extractGenerated (LuaCore.lua_State luaState, int stackPos)
 		{
 			return CodeGeneration.Instance.GetDelegate (delegateType, translator.getFunction (luaState, stackPos));
 		}

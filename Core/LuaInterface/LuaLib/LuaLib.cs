@@ -282,7 +282,7 @@ namespace LuaInterface
 
 		public static void lua_pushstdcallcfunction (LuaCore.lua_State luaState, LuaCore.lua_CFunction function)
 		{
-			LuaCore.lua_pushstdcallcfunction (luaState, function);
+			LuaCore.lua_pushcfunction (luaState, function);
 		}
 
 		public static int lua_pcall (LuaCore.lua_State luaState, int nArgs, int nResults, int errfunc)
@@ -432,7 +432,7 @@ namespace LuaInterface
 
 		public static void lua_pushlightuserdata (LuaCore.lua_State luaState, LuaCore.LuaTag udata)
 		{
-			LuaCore.lua_pushlightuserdata (luaState, udata);
+			LuaCore.lua_pushlightuserdata (luaState, udata.Tag);
 		}
 
 		public static LuaCore.LuaTag luanet_gettag ()

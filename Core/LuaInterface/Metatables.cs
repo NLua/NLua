@@ -445,7 +445,7 @@ namespace LuaInterface
 		 * and error if the assignment is invalid.
 		 */
 		private int setFieldOrProperty (LuaCore.lua_State luaState)
-		{
+ 		{
 			object target = translator.getRawNetObject (luaState, 1);
 
 			if (target.IsNull ()) {
