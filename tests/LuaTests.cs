@@ -298,7 +298,7 @@ namespace LuaInterfaceTest
 				//includes the bad code!
 				lua.DoString ("function OnClick(sender, eventArgs)\r\n" +
 					"--Multiply expects 2 floats, but instead receives 2 strings\r\n" +
-					"Multiply(asd, we)\r\n" +
+					"Multiply(asd, es)\r\n" +
 					"end");
 				//create the lua event handler code for the entity
 				//good code

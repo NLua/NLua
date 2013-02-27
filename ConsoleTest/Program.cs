@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LuaInterface;
 
 namespace ConsoleTest
 {
@@ -10,16 +11,23 @@ namespace ConsoleTest
 	{
 		static void Main (string [] args)
 		{
-			using (var lua = new LuaInterface.Lua ()) {
 
-				lua.RegisterFunction ("p", null, typeof (System.Console).GetMethod ("WriteLine", new Type [] { typeof (String) }));
-				/// Lua command that works (prints to console)
-				lua.DoString ("p('Foo')");
-				/// Yet this works...
-				lua.DoString ("string.gsub('some string', '(%w+)', function(s) p(s) end)");
-				/// This fails if you don't fix Lua5.1 lstrlib.c/add_value to treat LUA_TUSERDATA the same as LUA_FUNCTION
-				lua.DoString ("string.gsub('some string', '(%w+)', p)");
+			using (Lua lua = new Lua ()) {
+				lua.DoString ("luanet.load_assembly('mscorlib')");
+				lua.DoString ("luanet.load_assembly('ConsoleTest')");
+				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("test=TestClass()");
+
+				try {
+					lua.DoString ("test:exceptionMethod()");
+					//failed
+					//Assert.True (false);
+				} catch (Exception) {
+					//passed
+					//Assert.True (true);
+				}
 			}
+
 		}
 	}
 }

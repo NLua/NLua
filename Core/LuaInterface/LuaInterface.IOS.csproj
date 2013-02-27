@@ -36,14 +36,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="monotouch" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\KopiLua\KopiLua.IOS.csproj">
-      <Project>{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}</Project>
-      <Name>KopiLua.IOS</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
     <Folder Include="Event\" />
@@ -96,5 +91,11 @@
     <Compile Include="Metatables.cs" />
     <Compile Include="ObjectTranslator.cs" />
     <Compile Include="ProxyType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KeraLua\KeraLua.iOS.csproj">
+      <Project>{3F57C208-AA13-4B67-B3E7-ED41307F00A0}</Project>
+      <Name>KeraLua.iOS</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -233,7 +233,7 @@ namespace LuaInterface
 		 * if the assembly is not found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int loadAssembly (LuaCore.lua_State luaState)
@@ -276,7 +276,7 @@ namespace LuaInterface
 		 * type is not found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int importType (LuaCore.lua_State luaState)
@@ -298,7 +298,7 @@ namespace LuaInterface
 		 * type passed as second argument in the stack.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int registerTable (LuaCore.lua_State luaState)
@@ -344,7 +344,7 @@ namespace LuaInterface
 		 * base field, freeing the created object for garbage-collection
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int unregisterTable (LuaCore.lua_State luaState)
@@ -383,7 +383,7 @@ namespace LuaInterface
 		 * if no matching method is not found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getMethodSignature (LuaCore.lua_State luaState)
@@ -417,7 +417,7 @@ namespace LuaInterface
 				//CP: Added ignore case
 				var method = klass.GetMethod (methodName, BindingFlags.Public | BindingFlags.Static |
 					BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.IgnoreCase, null, signature, null);
-				pushFunction (luaState, new LuaCore.lua_CFunction ((new LuaMethodWrapper (this, target, klass, method)).call));
+				pushFunction (luaState, new LuaCore.lua_CFunction ((new LuaMethodWrapper (this, target, klass, method)).invokeFunction));
 			} catch (Exception e) {
 				throwError (luaState, e);
 				LuaLib.lua_pushnil (luaState);
@@ -431,7 +431,7 @@ namespace LuaInterface
 		 * if no matching constructor is found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getConstructorSignature (LuaCore.lua_State luaState)
@@ -452,7 +452,7 @@ namespace LuaInterface
 
 			try {
 				ConstructorInfo constructor = klass.UnderlyingSystemType.GetConstructor (signature);
-				pushFunction (luaState, new LuaCore.lua_CFunction ((new LuaMethodWrapper (this, null, klass, constructor)).call));
+				pushFunction (luaState, new LuaCore.lua_CFunction ((new LuaMethodWrapper (this, null, klass, constructor)).invokeFunction));
 			} catch (Exception e) {
 				throwError (luaState, e);
 				LuaLib.lua_pushnil (luaState);

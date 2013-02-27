@@ -87,7 +87,7 @@ namespace LuaInterface
 		 * __call metafunction of CLR delegates, retrieves and calls the delegate.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int runFunctionDelegate (LuaCore.lua_State luaState)
@@ -101,7 +101,7 @@ namespace LuaInterface
 		 * __gc metafunction of CLR objects.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int collectObject (LuaCore.lua_State luaState)
@@ -121,7 +121,7 @@ namespace LuaInterface
 		 * __tostring metafunction of CLR objects.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int toString (LuaCore.lua_State luaState)
@@ -169,7 +169,7 @@ namespace LuaInterface
 		 * If the member does not exist returns nil.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getMethod (LuaCore.lua_State luaState)
@@ -264,7 +264,7 @@ namespace LuaInterface
 		 * Adds a prefix to the method name to call the base version of the method.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getBaseMethod (LuaCore.lua_State luaState)
@@ -408,7 +408,7 @@ namespace LuaInterface
 						translator.pushType (luaState, nestedType);
 					} else {
 						// Member type must be 'method'
-						var wrapper = new LuaCore.lua_CFunction ((new LuaMethodWrapper (translator, objType, methodName, bindingType)).call);
+						var wrapper = new LuaCore.lua_CFunction ((new LuaMethodWrapper (translator, objType, methodName, bindingType)).invokeFunction);
 
 						if (cachedMember.IsNull ())
 							setMemberCache (memberCache, objType, methodName, wrapper);
@@ -465,7 +465,7 @@ namespace LuaInterface
 		 * and error if the assignment is invalid.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int setFieldOrProperty (LuaCore.lua_State luaState)
@@ -632,7 +632,7 @@ namespace LuaInterface
 		 * __index metafunction of type references, works on static members.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getClassMethod (LuaCore.lua_State luaState)
@@ -667,7 +667,7 @@ namespace LuaInterface
 		 * __newindex function of type references, works on static members.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int setClassFieldOrProperty (LuaCore.lua_State luaState)
@@ -691,7 +691,7 @@ namespace LuaInterface
 		 * generates an exception.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int callConstructor (LuaCore.lua_State luaState)

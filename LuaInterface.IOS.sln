@@ -5,7 +5,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterface.IOS", "Core\Lu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KopiLua.IOS", "Core\KopiLua\KopiLua.IOS.csproj", "{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterfaceTest", "ios\LuaInterfaceTest\LuaInterfaceTest.csproj", "{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeraLua.iOS", "Core\KeraLua\KeraLua.iOS.csproj", "{3F57C208-AA13-4B67-B3E7-ED41307F00A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaInterfaceTest", "ios\LuaInterfaceTestsiOS\LuaInterfaceTest.csproj", "{2DC0E43A-21B8-41FF-8793-60AB50350977}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,38 @@ Global
 		AppStore|iPhone = AppStore|iPhone
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.AppStore|iPhone.Build.0 = AppStore|iPhone
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Debug|iPhone.Build.0 = Debug|iPhone
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Release|iPhone.ActiveCfg = Release|iPhone
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Release|iPhone.Build.0 = Release|iPhone
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{2DC0E43A-21B8-41FF-8793-60AB50350977}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Release|iPhone.Build.0 = Release|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{3F57C208-AA13-4B67-B3E7-ED41307F00A0}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
 		{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
 		{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
@@ -35,22 +69,6 @@ Global
 		{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}.Release|iPhone.Build.0 = Release|Any CPU
 		{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.AppStore|iPhone.Build.0 = AppStore|iPhone
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Debug|iPhone.ActiveCfg = Debug|iPhone
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Debug|iPhone.Build.0 = Debug|iPhone
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Release|iPhone.ActiveCfg = Release|iPhone
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Release|iPhone.Build.0 = Release|iPhone
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
-		{60D0D65D-F831-4AC4-A4F5-6C143299B0F3}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 		{7064B157-DD57-4828-94C5-CA149B25CB40}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
 		{7064B157-DD57-4828-94C5-CA149B25CB40}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
 		{7064B157-DD57-4828-94C5-CA149B25CB40}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
@@ -69,6 +87,6 @@ Global
 		{7064B157-DD57-4828-94C5-CA149B25CB40}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = ios\LuaInterfaceTest\LuaInterfaceTest.csproj
+		StartupItem = ios\LuaInterfaceTestsiOS\LuaInterfaceTest.csproj
 	EndGlobalSection
 EndGlobal

@@ -45,6 +45,7 @@ namespace LuaInterface.Method
 	 */
 	class LuaMethodWrapper
 	{
+		internal LuaCore.lua_CFunction invokeFunction;
 		private ObjectTranslator _Translator;
 		private MethodBase _Method;
 		private MethodCache _LastCalledMethod = new MethodCache ();
@@ -59,6 +60,7 @@ namespace LuaInterface.Method
 		 */
 		public LuaMethodWrapper (ObjectTranslator translator, object target, IReflect targetType, MethodBase method)
 		{
+			invokeFunction = new LuaCore.lua_CFunction (this.call);
 			_Translator = translator;
 			_Target = target;
 
@@ -79,6 +81,8 @@ namespace LuaInterface.Method
 		 */
 		public LuaMethodWrapper (ObjectTranslator translator, IReflect targetType, string methodName, BindingFlags bindingType)
 		{
+			invokeFunction = new LuaCore.lua_CFunction (this.call);
+
 			_Translator = translator;
 			_MethodName = methodName;
 
@@ -105,10 +109,10 @@ namespace LuaInterface.Method
 		 * and returns values in it.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		public int call (LuaCore.lua_State luaState)
+		int call (LuaCore.lua_State luaState)
 		{
 			var methodToCall = _Method;
 			object targetObject = _Target;

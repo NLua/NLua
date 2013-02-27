@@ -241,7 +241,7 @@ namespace LuaInterface
 		}
 
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		static int PanicCallback (LuaCore.lua_State luaState)
@@ -872,7 +872,7 @@ namespace LuaInterface
 		/// <author>Reinhard Ostermeier</author>
 		/// 
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_Hook))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_Hook))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private void DebugHookCallback (LuaCore.lua_State luaState, LuaCore.lua_Debug luaDebug)
@@ -999,7 +999,7 @@ namespace LuaInterface
 			// We leave nothing on the stack when we are done
 			int oldTop = LuaLib.lua_gettop (luaState);
 			var wrapper = new LuaMethodWrapper (translator, target, function.DeclaringType, function);
-			translator.push (luaState, new LuaCore.lua_CFunction (wrapper.call));
+			translator.push (luaState, new LuaCore.lua_CFunction (wrapper.invokeFunction));
 			this [path] = translator.getObject (luaState, -1);
 			var f = GetFunction (path);
 			LuaLib.lua_settop (luaState, oldTop);
