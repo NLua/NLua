@@ -30,7 +30,7 @@ using LuaInterface.Extensions;
 
 namespace LuaInterface
 {
-	using LuaCore = KopiLua.Lua;
+	using LuaCore = KeraLua.Lua;
 
 	/*
 	 * Type checking and conversion functions.

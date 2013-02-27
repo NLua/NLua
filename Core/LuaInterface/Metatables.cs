@@ -34,7 +34,7 @@ using LuaInterface.Extensions;
 
 namespace LuaInterface
 {
-	using LuaCore = KopiLua.Lua;
+	using LuaCore = KeraLua.Lua;
 
 	/*
 	 * Functions used in the metatables of userdata representing
@@ -86,6 +86,10 @@ namespace LuaInterface
 		/*
 		 * __call metafunction of CLR delegates, retrieves and calls the delegate.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int runFunctionDelegate (LuaCore.lua_State luaState)
 		{
 			LuaCore.lua_CFunction func = (LuaCore.lua_CFunction)translator.getRawNetObject (luaState, 1);
@@ -96,6 +100,10 @@ namespace LuaInterface
 		/*
 		 * __gc metafunction of CLR objects.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int collectObject (LuaCore.lua_State luaState)
 		{
 			int udata = LuaLib.luanet_rawnetobj (luaState, 1);
@@ -112,6 +120,10 @@ namespace LuaInterface
 		/*
 		 * __tostring metafunction of CLR objects.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int toString (LuaCore.lua_State luaState)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
@@ -156,6 +168,10 @@ namespace LuaInterface
 		 * either the value of the member or a delegate to call it.
 		 * If the member does not exist returns nil.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getMethod (LuaCore.lua_State luaState)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
@@ -247,6 +263,10 @@ namespace LuaInterface
 		 * __index metafunction of base classes (the base field of Lua tables).
 		 * Adds a prefix to the method name to call the base version of the method.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getBaseMethod (LuaCore.lua_State luaState)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
@@ -444,6 +464,10 @@ namespace LuaInterface
 		 * the member name and the value to be stored as arguments. Throws
 		 * and error if the assignment is invalid.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int setFieldOrProperty (LuaCore.lua_State luaState)
  		{
 			object target = translator.getRawNetObject (luaState, 1);
@@ -607,6 +631,10 @@ namespace LuaInterface
 		/*
 		 * __index metafunction of type references, works on static members.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getClassMethod (LuaCore.lua_State luaState)
 		{
 			IReflect klass;
@@ -638,6 +666,10 @@ namespace LuaInterface
 		/*
 		 * __newindex function of type references, works on static members.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int setClassFieldOrProperty (LuaCore.lua_State luaState)
 		{
 			IReflect target;
@@ -658,6 +690,10 @@ namespace LuaInterface
 		 * found or if the arguments are invalid. Throws an error if the constructor
 		 * generates an exception.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int callConstructor (LuaCore.lua_State luaState)
 		{
 			var validConstructor = new MethodCache ();

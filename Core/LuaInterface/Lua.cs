@@ -36,7 +36,7 @@ using LuaInterface.Extensions;
 
 namespace LuaInterface
 {
-	using LuaCore = KopiLua.Lua;
+	using LuaCore = KeraLua.Lua;
 
 	/*
 	 * Main class of LuaInterface
@@ -240,6 +240,10 @@ namespace LuaInterface
 			//luaState = LuaCore.lua_State.Zero; <- suggested by Christopher Cebulski http://luaforge.net/forum/forum.php?thread_id = 44593&forum_id = 146
 		}
 
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		static int PanicCallback (LuaCore.lua_State luaState)
 		{
 			// string desc = LuaLib.lua_tostring(luaState, 1);
@@ -866,6 +870,11 @@ namespace LuaInterface
 		/// <param name = "luaState">lua state</param>
 		/// <param name = "luaDebug">Pointer to LuaDebug (lua_debug) structure</param>
 		/// <author>Reinhard Ostermeier</author>
+		/// 
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_Hook))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private void DebugHookCallback (LuaCore.lua_State luaState, LuaCore.lua_Debug luaDebug)
 		{
 			try {

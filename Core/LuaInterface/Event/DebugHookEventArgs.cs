@@ -26,7 +26,7 @@ using System;
 
 namespace LuaInterface.Event
 {
-	using LuaCore = KopiLua.Lua;
+	using LuaCore = KeraLua.Lua;
 
 	/// <summary>
 	/// Event args for hook callback event

@@ -34,7 +34,7 @@ using LuaInterface.Extensions;
 
 namespace LuaInterface
 {
-	using LuaCore = KopiLua.Lua;
+	using LuaCore = KeraLua.Lua;
 
 	/*
 	 * Passes objects from the CLR to Lua and vice-versa
@@ -232,6 +232,10 @@ namespace LuaInterface
 		 * Implementation of load_assembly. Throws an error
 		 * if the assembly is not found.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int loadAssembly (LuaCore.lua_State luaState)
 		{			
 			try {
@@ -271,6 +275,10 @@ namespace LuaInterface
 		 * Implementation of import_type. Returns nil if the
 		 * type is not found.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int importType (LuaCore.lua_State luaState)
 		{
 			string className = LuaLib.lua_tostring (luaState, 1).ToString ();
@@ -289,6 +297,10 @@ namespace LuaInterface
 		 * argument in the stack) as an object subclassing the
 		 * type passed as second argument in the stack.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int registerTable (LuaCore.lua_State luaState)
 		{
 			if (LuaLib.lua_type (luaState, 1) == LuaTypes.Table) {
@@ -331,6 +343,10 @@ namespace LuaInterface
 		 * Implementation of free_object. Clears the metatable and the
 		 * base field, freeing the created object for garbage-collection
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int unregisterTable (LuaCore.lua_State luaState)
 		{
 			try {
@@ -366,6 +382,10 @@ namespace LuaInterface
 		 * Implementation of get_method_bysig. Returns nil
 		 * if no matching method is not found.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getMethodSignature (LuaCore.lua_State luaState)
 		{
 			IReflect klass;
@@ -410,6 +430,10 @@ namespace LuaInterface
 		 * Implementation of get_constructor_bysig. Returns nil
 		 * if no matching constructor is found.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private int getConstructorSignature (LuaCore.lua_State luaState)
 		{
 			IReflect klass = null;

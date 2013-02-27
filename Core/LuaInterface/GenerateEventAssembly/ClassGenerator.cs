@@ -26,7 +26,7 @@ using System;
 
 namespace LuaInterface
 {
-	using LuaCore = KopiLua.Lua;
+	using LuaCore = KeraLua.Lua;
 	/*
 	 * Class used for generating delegates that get a table from the Lua
 	 * stack as a an object of a specific type.

@@ -30,7 +30,7 @@ using LuaInterface.Extensions;
 
 namespace LuaInterface.Method
 {
-	using LuaCore = KopiLua.Lua;
+	using LuaCore = KeraLua.Lua;
 
 	/*
 	 * Argument extraction with type-conversion function
@@ -104,6 +104,10 @@ namespace LuaInterface.Method
 		 * Calls the method. Receives the arguments from the Lua stack
 		 * and returns values in it.
 		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (Lua.lua_CFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		public int call (LuaCore.lua_State luaState)
 		{
 			var methodToCall = _Method;
