@@ -29,7 +29,11 @@ using System.Collections.Generic;
 
 namespace LuaInterface
 {
+	#if USE_KOPILUA
+	using LuaCore = KopiLua.Lua;
+	#else
 	using LuaCore = KeraLua.Lua;
+	#endif
 
 	/*
 	 * Wrapper class for Lua tables

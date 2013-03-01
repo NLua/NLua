@@ -34,7 +34,11 @@ using LuaInterface.Extensions;
 
 namespace LuaInterface
 {
+	#if USE_KOPILUA
+	using LuaCore = KopiLua.Lua;
+	#else
 	using LuaCore = KeraLua.Lua;
+	#endif
 
 	/*
 	 * Passes objects from the CLR to Lua and vice-versa
@@ -60,6 +64,18 @@ namespace LuaInterface
 		/// </summary>
 		private int nextObj = 0;
 
+		public MetaFunctions MetaFunctionsInstance {
+			get {
+				return metaFunctions;
+			}
+		}
+
+		public Lua Interpreter {
+			get {
+				return interpreter;
+			}
+		}
+
 		public ObjectTranslator (Lua interpreter, LuaCore.lua_State luaState)
 		{
 			this.interpreter = interpreter;
@@ -67,12 +83,12 @@ namespace LuaInterface
 			metaFunctions = new MetaFunctions (this);
 			assemblies = new List<Assembly> ();
 
-			importTypeFunction = new LuaCore.lua_CFunction (this.importType);
-			loadAssemblyFunction = new LuaCore.lua_CFunction (this.loadAssembly);
-			registerTableFunction = new LuaCore.lua_CFunction (this.registerTable);
-			unregisterTableFunction = new LuaCore.lua_CFunction (this.unregisterTable);
-			getMethodSigFunction = new LuaCore.lua_CFunction (this.getMethodSignature);
-			getConstructorSigFunction = new LuaCore.lua_CFunction (this.getConstructorSignature);
+			importTypeFunction = new LuaCore.lua_CFunction (ObjectTranslator.importType);
+			loadAssemblyFunction = new LuaCore.lua_CFunction (ObjectTranslator.loadAssembly);
+			registerTableFunction = new LuaCore.lua_CFunction (ObjectTranslator.registerTable);
+			unregisterTableFunction = new LuaCore.lua_CFunction (ObjectTranslator.unregisterTable);
+			getMethodSigFunction = new LuaCore.lua_CFunction (ObjectTranslator.getMethodSignature);
+			getConstructorSigFunction = new LuaCore.lua_CFunction (ObjectTranslator.getConstructorSignature);
 
 			createLuaObjectList (luaState);
 			createIndexingMetaFunction (luaState);
@@ -236,7 +252,13 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int loadAssembly (LuaCore.lua_State luaState)
+		private static int loadAssembly (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return translator.loadAssemblyInternal (luaState);
+		}
+
+		private int loadAssemblyInternal (LuaCore.lua_State luaState)
 		{			
 			try {
 				string assemblyName = LuaLib.lua_tostring (luaState, 1).ToString ();
@@ -279,7 +301,13 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int importType (LuaCore.lua_State luaState)
+		private static int importType (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return translator.importTypeInternal (luaState);
+		}
+
+		private int importTypeInternal (LuaCore.lua_State luaState)
 		{
 			string className = LuaLib.lua_tostring (luaState, 1).ToString ();
 			var klass = FindType (className);
@@ -301,7 +329,13 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int registerTable (LuaCore.lua_State luaState)
+		private static int registerTable (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return translator.registerTableInternal (luaState);
+		}
+
+		private int registerTableInternal (LuaCore.lua_State luaState)
 		{
 			if (LuaLib.lua_type (luaState, 1) == LuaTypes.Table) {
 				var luaTable = getTable (luaState, 1);
@@ -347,7 +381,13 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int unregisterTable (LuaCore.lua_State luaState)
+		private static int unregisterTable (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return translator.unregisterTableInternal (luaState);
+		}
+
+		private int unregisterTableInternal (LuaCore.lua_State luaState)
 		{
 			try {
 				if (LuaLib.lua_getmetatable (luaState, 1) != 0) {
@@ -386,7 +426,13 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int getMethodSignature (LuaCore.lua_State luaState)
+		private static int getMethodSignature (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return translator.getMethodSignatureInternal (luaState);
+		}
+
+		private int getMethodSignatureInternal (LuaCore.lua_State luaState)
 		{
 			IReflect klass;
 			object target;
@@ -434,7 +480,13 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int getConstructorSignature (LuaCore.lua_State luaState)
+		private static int getConstructorSignature (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return translator.getConstructorSignatureInternal (luaState);
+		}
+
+		private int getConstructorSignatureInternal (LuaCore.lua_State luaState)
 		{
 			IReflect klass = null;
 			int udata = LuaLib.luanet_checkudata (luaState, 1, "luaNet_class");

@@ -28,7 +28,11 @@ using System.Collections.Generic;
 
 namespace LuaInterface
 {
+	#if USE_KOPILUA
+	using LuaCore = KopiLua.Lua;
+	#else
 	using LuaCore = KeraLua.Lua;
+	#endif
 
 	public class LuaFunction : LuaBase
 	{

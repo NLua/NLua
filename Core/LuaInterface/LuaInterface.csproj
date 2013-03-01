@@ -12,7 +12,6 @@
     <AssemblyName>LuaInterface</AssemblyName>
     <ReleaseVersion>2.x</ReleaseVersion>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -79,6 +78,7 @@
     <Compile Include="LuaLib\GCOptions.cs" />
     <Compile Include="LuaLib\LuaLib.cs" />
     <Compile Include="Config\LuaInterfaceConfig.cs" />
+    <Compile Include="ObjectTranslatorPool.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -90,7 +90,7 @@
   -->
   <ItemGroup>
     <ProjectReference Include="..\KeraLua\KeraLua.csproj">
-      <Project>{47153754-10f5-44d8-b578-f5a32b69061a}</Project>
+      <Project>{47153754-10F5-44D8-B578-F5A32B69061A}</Project>
       <Name>KeraLua</Name>
     </ProjectReference>
     <ProjectReference Include="..\KopiLua\KopiLua.csproj">

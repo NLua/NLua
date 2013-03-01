@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH</DefineConstants>
+    <DefineConstants>DEBUG;MONOTOUCH;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -29,7 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
-    <DefineConstants>MONOTOUCH</DefineConstants>
+    <DefineConstants>MONOTOUCH;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -91,6 +91,7 @@
     <Compile Include="Metatables.cs" />
     <Compile Include="ObjectTranslator.cs" />
     <Compile Include="ProxyType.cs" />
+    <Compile Include="ObjectTranslatorPool.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KeraLua\KeraLua.iOS.csproj">

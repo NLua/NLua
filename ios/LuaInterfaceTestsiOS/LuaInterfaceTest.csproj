@@ -64,7 +64,9 @@
     <IpaPackageName />
     <MtouchI18n />
     <MtouchArch>ARMv7</MtouchArch>
-    <MtouchLink>Full</MtouchLink>
+    <MtouchLink>None</MtouchLink>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchUseThumb>true</MtouchUseThumb>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>

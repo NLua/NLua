@@ -348,6 +348,16 @@ namespace LuaInterfaceTest
 			//lua.RegisterFunction("regularMethod", genericClass, typeof(TestClassGeneric<>).GetMethod("RegularMethod"));
 			using (Lua lua = new Lua ()) {
 				TestClassWithGenericMethod classWithGenericMethod = new TestClassWithGenericMethod ();
+
+				////////////////////////////////////////////////////////////////////////////
+				/// ////////////////////////////////////////////////////////////////////////
+				///  IMPORTANT: Use generic method with the type you will call or generic methods will fail with iOS
+				/// ////////////////////////////////////////////////////////////////////////
+				classWithGenericMethod.GenericMethod<double>(99.0);
+				classWithGenericMethod.GenericMethod<TestClass>(new TestClass (99));
+				////////////////////////////////////////////////////////////////////////////
+				/// ////////////////////////////////////////////////////////////////////////
+
 				lua.RegisterFunction ("genericMethod2", classWithGenericMethod, typeof(TestClassWithGenericMethod).GetMethod ("GenericMethod"));
 
 				try {

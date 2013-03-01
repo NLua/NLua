@@ -26,7 +26,11 @@ using System;
 
 namespace LuaInterface.Event
 {
+#if USE_KOPILUA
+	using LuaCore = KopiLua.Lua;
+#else
 	using LuaCore = KeraLua.Lua;
+#endif
 
 	/// <summary>
 	/// Event args for hook callback event

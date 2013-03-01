@@ -26,7 +26,11 @@ using System;
 
 namespace LuaInterface
 {
+	#if USE_KOPILUA
+	using LuaCore = KopiLua.Lua;
+	#else
 	using LuaCore = KeraLua.Lua;
+	#endif
 	/*
 	 * Class used for generating delegates that get a function from the Lua
 	 * stack as a delegate of a specific type.

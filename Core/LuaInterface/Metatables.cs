@@ -34,7 +34,11 @@ using LuaInterface.Extensions;
 
 namespace LuaInterface
 {
+	#if USE_KOPILUA
+	using LuaCore = KopiLua.Lua;
+	#else
 	using LuaCore = KeraLua.Lua;
+	#endif
 
 	/*
 	 * Functions used in the metatables of userdata representing
@@ -43,7 +47,7 @@ namespace LuaInterface
 	 * Author: Fabio Mascarenhas
 	 * Version: 1.0
 	 */
-	class MetaFunctions
+	public class MetaFunctions
 	{
 		internal LuaCore.lua_CFunction gcFunction, indexFunction, newindexFunction, baseIndexFunction,
 			classIndexFunction, classNewindexFunction, execDelegateFunction, callConstructorFunction, toStringFunction;
@@ -72,15 +76,15 @@ namespace LuaInterface
 		public MetaFunctions (ObjectTranslator translator)
 		{
 			this.translator = translator;
-			gcFunction = new LuaCore.lua_CFunction (this.collectObject);
-			toStringFunction = new LuaCore.lua_CFunction (this.toString);
-			indexFunction = new LuaCore.lua_CFunction (this.getMethod);
-			newindexFunction = new LuaCore.lua_CFunction (this.setFieldOrProperty);
-			baseIndexFunction = new LuaCore.lua_CFunction (this.getBaseMethod);
-			callConstructorFunction = new LuaCore.lua_CFunction (this.callConstructor);
-			classIndexFunction = new LuaCore.lua_CFunction (this.getClassMethod);
-			classNewindexFunction = new LuaCore.lua_CFunction (this.setClassFieldOrProperty);
-			execDelegateFunction = new LuaCore.lua_CFunction (this.runFunctionDelegate);
+			gcFunction = new LuaCore.lua_CFunction (MetaFunctions.collectObject);
+			toStringFunction = new LuaCore.lua_CFunction (MetaFunctions.toString);
+			indexFunction = new LuaCore.lua_CFunction (MetaFunctions.getMethod);
+			newindexFunction = new LuaCore.lua_CFunction (MetaFunctions.setFieldOrProperty);
+			baseIndexFunction = new LuaCore.lua_CFunction (MetaFunctions.getBaseMethod);
+			callConstructorFunction = new LuaCore.lua_CFunction (MetaFunctions.callConstructor);
+			classIndexFunction = new LuaCore.lua_CFunction (MetaFunctions.getClassMethod);
+			classNewindexFunction = new LuaCore.lua_CFunction (MetaFunctions.setClassFieldOrProperty);
+			execDelegateFunction = new LuaCore.lua_CFunction (MetaFunctions.runFunctionDelegate);
 		}
 
 		/*
@@ -90,7 +94,13 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int runFunctionDelegate (LuaCore.lua_State luaState)
+		private static int runFunctionDelegate (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return runFunctionDelegate (luaState, translator);
+		}
+
+		private static int runFunctionDelegate (LuaCore.lua_State luaState, ObjectTranslator translator)
 		{
 			LuaCore.lua_CFunction func = (LuaCore.lua_CFunction)translator.getRawNetObject (luaState, 1);
 			LuaLib.lua_remove (luaState, 1);
@@ -104,15 +114,18 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int collectObject (LuaCore.lua_State luaState)
+		private static int collectObject (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return collectObject (luaState, translator);
+		}
+
+		private static int collectObject (LuaCore.lua_State luaState, ObjectTranslator translator)
 		{
 			int udata = LuaLib.luanet_rawnetobj (luaState, 1);
 
 			if (udata != -1)
 				translator.collectObject (udata);
-			else {
-				// Debug.WriteLine("not found: " + udata);
-			}
 
 			return 0;
 		}
@@ -124,7 +137,13 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int toString (LuaCore.lua_State luaState)
+		private static int toString (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return toString (luaState, translator);
+		}
+
+		private static int toString (LuaCore.lua_State luaState, ObjectTranslator translator)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
 
@@ -172,7 +191,14 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int getMethod (LuaCore.lua_State luaState)
+		private static int getMethod (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			var instance = translator.MetaFunctionsInstance;
+			return instance.getMethodInternal (luaState);
+		}
+
+		private int getMethodInternal (LuaCore.lua_State luaState)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
 
@@ -267,7 +293,14 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int getBaseMethod (LuaCore.lua_State luaState)
+		private static int getBaseMethod (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			var instance = translator.MetaFunctionsInstance;
+			return instance.getBaseMethodInternal (luaState);
+		}
+
+		private int getBaseMethodInternal (LuaCore.lua_State luaState)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
 
@@ -468,7 +501,14 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int setFieldOrProperty (LuaCore.lua_State luaState)
+		private static int setFieldOrProperty (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			var instance = translator.MetaFunctionsInstance;
+			return instance.setFieldOrPropertyInternal (luaState);
+		}
+
+		private int setFieldOrPropertyInternal (LuaCore.lua_State luaState)
  		{
 			object target = translator.getRawNetObject (luaState, 1);
 
@@ -635,7 +675,14 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int getClassMethod (LuaCore.lua_State luaState)
+		private static int getClassMethod (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			var instance = translator.MetaFunctionsInstance;
+			return instance.getClassMethodInternal (luaState);
+		}
+
+		private int getClassMethodInternal (LuaCore.lua_State luaState)
 		{
 			IReflect klass;
 			object obj = translator.getRawNetObject (luaState, 1);
@@ -670,7 +717,14 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int setClassFieldOrProperty (LuaCore.lua_State luaState)
+		private static int setClassFieldOrProperty (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			var instance = translator.MetaFunctionsInstance;
+			return instance.setClassFieldOrPropertyInternal (luaState);
+		}
+
+		private int setClassFieldOrPropertyInternal (LuaCore.lua_State luaState)
 		{
 			IReflect target;
 			object obj = translator.getRawNetObject (luaState, 1);
@@ -694,7 +748,14 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private int callConstructor (LuaCore.lua_State luaState)
+		private static int callConstructor (LuaCore.lua_State luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			var instance = translator.MetaFunctionsInstance;
+			return instance.callConstructorInternal (luaState);
+		}
+
+		private int callConstructorInternal (LuaCore.lua_State luaState)
 		{
 			var validConstructor = new MethodCache ();
 			IReflect klass;

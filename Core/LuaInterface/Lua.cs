@@ -36,7 +36,11 @@ using LuaInterface.Extensions;
 
 namespace LuaInterface
 {
+	#if USE_KOPILUA
+	using LuaCore = KopiLua.Lua;
+	#else
 	using LuaCore = KeraLua.Lua;
+	#endif
 
 	/*
 	 * Main class of LuaInterface
@@ -165,6 +169,7 @@ namespace LuaInterface
 			LuaLib.lua_settable (luaState, -3);
 			LuaLib.lua_replace (luaState, (int)LuaIndexes.Globals);
 			translator = new ObjectTranslator (this, luaState);
+			ObjectTranslatorPool.Instance.Add (luaState, translator);
 			LuaLib.lua_replace (luaState, (int)LuaIndexes.Globals);
 			LuaLib.luaL_dostring (luaState, Lua.init_luanet);	// steffenj: lua_dostring renamed to luaL_dostring
 
@@ -200,6 +205,7 @@ namespace LuaInterface
 				LuaLib.lua_settable (lState, -3);
 				LuaLib.lua_replace (lState, (int)LuaIndexes.Globals);
 				translator = new ObjectTranslator (this, luaState);
+				ObjectTranslatorPool.Instance.Add (luaState, translator);
 				LuaLib.lua_replace (lState, (int)LuaIndexes.Globals);
 				LuaLib.luaL_dostring (lState, Lua.init_luanet);	// steffenj: lua_dostring renamed to luaL_dostring
 			}
@@ -235,8 +241,10 @@ namespace LuaInterface
 				return;
 
 			//////   if(luaState != LuaCore.lua_State.Zero)
-			if (!luaState.IsNull ())
+			if (!luaState.IsNull ()) {
 				LuaCore.lua_close (luaState);
+				ObjectTranslatorPool.Instance.Remove (luaState);
+			}
 			//luaState = LuaCore.lua_State.Zero; <- suggested by Christopher Cebulski http://luaforge.net/forum/forum.php?thread_id = 44593&forum_id = 146
 		}
 
@@ -733,7 +741,7 @@ namespace LuaInterface
 		public int SetDebugHook (EventMasks mask, int count)
 		{
 			if (hookCallback.IsNull ()) {
-				hookCallback = new LuaCore.lua_Hook (DebugHookCallback);
+				hookCallback = new LuaCore.lua_Hook (Lua.DebugHookCallback);
 				return LuaCore.lua_sethook (luaState, hookCallback, (int)mask, count);
 			}
 
@@ -875,7 +883,15 @@ namespace LuaInterface
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_Hook))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private void DebugHookCallback (LuaCore.lua_State luaState, LuaCore.lua_Debug luaDebug)
+		private static void DebugHookCallback (LuaCore.lua_State luaState, LuaCore.lua_Debug luaDebug)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			var lua = translator.Interpreter;
+
+			lua.DebugHookCallbackInternal (luaState, luaDebug);
+		}
+
+		private void DebugHookCallbackInternal (LuaCore.lua_State luaState, LuaCore.lua_Debug luaDebug)
 		{
 			try {
 				var temp = DebugHook;
