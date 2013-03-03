@@ -1,0 +1,30 @@
+PROJECT=LuaInterface.iOS.sln
+MDTOOL=/Applications/MonoDevelop.app/Contents/MacOS/mdtool
+MTOUCH=/Developer/MonoTouch/usr/bin/mtouch
+TOUCH_SERVER=./Touch.Server/bin/Debug/Touch.Server.exe
+
+all: build-simulator build-device
+
+run run-test: run-simulator run-device
+
+$(TOUCH_SERVER):
+	cd Touch.Server && xbuild
+
+build-simulator:
+	$(MDTOOL) -v build -t:Build "-c:Release|iPhoneSimulator" $(PROJECT)
+
+run-simulator: build-simulator Touch.Server
+	rm -f sim-results.log
+	mono --debug $(TOUCH_SERVER) --launchsim ios/LuaInterfaceTestsiOS/bin/iPhoneSimulator/Release/LuaInterfaceTest.app -autoexit -logfile=sim-results.log
+	cat sim-results.log
+
+build-device:
+	$(MDTOOL) -v build -t:Build "-c:Release|iPhone" $(PROJECT)
+
+run-device: build-device
+	$(MTOUCH) --installdev ios/LuaInterfaceTestsiOS/bin/iPhone/Release/LuaInterfaceTest.app
+	# kill an existing instance (based on the bundle id)
+	$(MTOUCH) --killdev com.xamarin.touch-unit
+	rm -f dev-results.log
+	mono --debug $(TOUCH_SERVER) --launchdev com.codefoco.luainterfacetest -autoexit -logfile=dev-results.log
+	cat dev-results.log

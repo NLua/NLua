@@ -66,7 +66,7 @@
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchUseThumb>true</MtouchUseThumb>
+    <BuildIpa>true</BuildIpa>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>
@@ -78,6 +78,9 @@
     <ConsolePause>False</ConsolePause>
     <CodesignProvision>Automatic:AdHoc</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
+    <IpaPackageName />
+    <MtouchI18n />
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>none</DebugType>
