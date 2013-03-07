@@ -7,10 +7,16 @@ using System.Reflection;
 using System.Threading;
 using LuaInterface;
 using LuaInterface.Exceptions;
+#if MONOTOUCH
+using MonoTouch.Foundation;
+#endif
 
 namespace LuaInterfaceTest
 {
 	[TestFixture]
+	#if MONOTOUCH
+	[Preserve (AllMembers = true)]
+	#endif
 	public class LuaTests
 	{
 		/*

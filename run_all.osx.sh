@@ -6,4 +6,4 @@ cd ../../
 cp Core/KeraLua/external/lua/osx/lib/liblua51.dylib tests/liblua51.dylib
 xbuild LuaInterface.sln /p:Configuration=Release
 cd tests/
-nunit-console LuaInterfaceTest.dll
+nunit-console LuaInterfaceTest.dll /xml=$1

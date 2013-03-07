@@ -5,7 +5,7 @@ TOUCH_SERVER=./Touch.Server/bin/Debug/Touch.Server.exe
 
 all: build-simulator build-device
 
-run run-test: run-device
+run run-test: run-simulator run-device
 
 touch-server:
 	cd Touch.Server && xbuild
