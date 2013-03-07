@@ -5,6 +5,8 @@ Linux: [![Build Status](https://travis-ci.org/codefoco/LuaInterface.png?branch=m
 
 OSX : [![Build Status](http://codefoco.zapto.org:8080/job/NLua/badge/icon)](http://codefoco.zapto.org:8080/job/NLua/)
 
+iOS: [![Build Status](http://codefoco.zapto.org:8080/job/NLua%20(iOS)/badge/icon)](http://codefoco.zapto.org:8080/job/NLua%20(iOS)/)
+
 Copyright � 2003-2006 Fabio Mascarenhas de Queiroz
 
 Maintainer: Craig Presti, craig@vastpark.com
