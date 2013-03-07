@@ -1,5 +1,9 @@
-LuaInterface 2.0.4  [![Build Status](https://travis-ci.org/codefoco/LuaInterface.png?branch=master_nlua)](https://travis-ci.org/codefoco/LuaInterface)
+LuaInterface 2.0.4  
 ------------------
+
+Linux: [![Build Status](https://travis-ci.org/codefoco/LuaInterface.png?branch=master_nlua)](https://travis-ci.org/codefoco/LuaInterface)
+
+OSX : [![Build Status](http://codefoco.zapto.org:8080/job/NLua/badge/icon)](http://codefoco.zapto.org:8080/job/NLua/)
 
 Copyright � 2003-2006 Fabio Mascarenhas de Queiroz
 
