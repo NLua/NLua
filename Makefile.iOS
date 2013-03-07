@@ -5,7 +5,7 @@ TOUCH_SERVER=./Touch.Server/bin/Debug/Touch.Server.exe
 
 all: build-simulator build-device
 
-run run-test: run-simulator run-device
+run run-test: run-device
 
 touch-server:
 	cd Touch.Server && xbuild
@@ -21,7 +21,7 @@ run-simulator: build-simulator touch-server
 build-device:
 	$(MDTOOL) -v build -t:Build "-c:Release|iPhone" $(PROJECT)
 
-run-device: build-device
+run-device: build-device touch-server
 	$(MTOUCH) --installdev ios/LuaInterfaceTestsiOS/bin/iPhone/Release/LuaInterfaceTest.app
 	# kill an existing instance (based on the bundle id)
 	$(MTOUCH) --killdev org.nlua.nluatest
