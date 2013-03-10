@@ -20,12 +20,12 @@ script:
 # Only watch the master branch
 branches:
   only:
-    - master_nlua
+    - master
 
 # Notify if needed
 notifications:
   recipients:
-    - codefoco@gmail.com
+    - viniciusjarina@gmail.com
   email:
     on_success: change
     on_failure: always

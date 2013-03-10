@@ -1,11 +1,30 @@
-LuaInterface 2.0.4  
-------------------
+NLua
+====
+[![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
+
+NLua is a fork of project LuaInterface (from Fábio Mascarenhas/Craig Presti).
+
+NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Phone 7 and Windows Phone 8.
 
 Linux: [![Build Status](https://travis-ci.org/codefoco/LuaInterface.png?branch=master_nlua)](https://travis-ci.org/codefoco/LuaInterface)
 
-OSX : [![Build Status](http://codefoco.zapto.org:8080/job/NLua/badge/icon)](http://codefoco.zapto.org:8080/job/NLua/)
+OSX : [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua/)
 
-iOS: [![Build Status](http://codefoco.zapto.org:8080/job/NLua%20(iOS)/badge/icon)](http://codefoco.zapto.org:8080/job/NLua%20(iOS)/)
+iOS: [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/)
+
+
+
+		 ```csharp
+		using (Lua lua = new Lua ()) {
+						object[] res = lua.DoString ("a=2\nreturn a,3");
+						//Console.WriteLine("a="+res[0]+", b="+res[1]);
+						Assert.AreEqual (res [0], 2d);
+						Assert.AreEqual (res [1], 3d);
+					}
+
+
+LuaInterface 2.0.4  
+------------------
 
 Copyright � 2003-2006 Fabio Mascarenhas de Queiroz
 
