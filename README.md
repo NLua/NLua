@@ -35,7 +35,7 @@ iOS: [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/icon
 LuaInterface 2.0.4  
 ------------------
 
-Copyright � 2003-2006 Fabio Mascarenhas de Queiroz
+Copyright (c) 2003-2006 Fabio Mascarenhas de Queiroz
 
 Maintainer: Craig Presti, craig@vastpark.com
 
