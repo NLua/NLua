@@ -7,7 +7,7 @@ NLua is a fork of project LuaInterface (from Fábio Mascarenhas/Craig Presti).
 
 NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Phone 7 and Windows Phone 8.
 
-Linux: [![Build Status](https://travis-ci.org/NLua/NLua.png?branch=master_nlua)](https://travis-ci.org/NLua/NLua)
+Linux: [![Build Status](https://travis-ci.org/NLua/NLua.png?branch=master)](https://travis-ci.org/NLua/NLua)
 
 OSX : [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua/)
 
@@ -15,21 +15,29 @@ iOS: [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/icon
 
 
 ```csharp
-		using (Lua lua = new Lua ()) {
-			object[] res = lua.DoString ("a=2\nreturn a,3");
-			Console.WriteLine ("a="+res[0]+", b="+res[1]);
-		}
+			
+			string url = @"http://raw.github.com/NLua/NLua/master/README.md";
+
+			string script = @"
+				
+				luanet.load_assembly ('System.dll')
+				WebClient = luanet.import_type ('System.Net.WebClient')
+				local client = WebClient ()
+
+				local ret = client:DownloadString (url);
+
+				return ret;
+				";
+
+			using (Lua lua = new Lua ()) {
+
+				lua ["url"] = url;
+
+				var returns = lua.DoString (script);
+
+				Console.WriteLine (returns);
+			}
 ```
-
-
-```csharp
-		using (Lua lua = new Lua ()) {
-			object[] res = lua.DoString ("a=2\nreturn a,3");
-			Console.WriteLine ("a=" + res [0]+ ", b=" + res [1]);
-		}
-```
-
-
 
 
 LuaInterface 2.0.4  
