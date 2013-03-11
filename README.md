@@ -7,7 +7,7 @@ NLua is a fork of project LuaInterface (from Fábio Mascarenhas/Craig Presti).
 
 NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Phone 7 and Windows Phone 8.
 
-Linux: [![Build Status](https://travis-ci.org/codefoco/LuaInterface.png?branch=master_nlua)](https://travis-ci.org/codefoco/LuaInterface)
+Linux: [![Build Status](https://travis-ci.org/NLua/NLua.png?branch=master_nlua)](https://travis-ci.org/NLua/NLua)
 
 OSX : [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua/)
 
