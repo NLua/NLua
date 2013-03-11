@@ -1,5 +1,6 @@
 NLua
 ====
+
 [![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
 
 NLua is a fork of project LuaInterface (from Fábio Mascarenhas/Craig Presti).
@@ -13,14 +14,22 @@ OSX : [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua/badge/icon)](
 iOS: [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/)
 
 
-
-		 ```csharp
+```csharp
 		using (Lua lua = new Lua ()) {
-						object[] res = lua.DoString ("a=2\nreturn a,3");
-						//Console.WriteLine("a="+res[0]+", b="+res[1]);
-						Assert.AreEqual (res [0], 2d);
-						Assert.AreEqual (res [1], 3d);
-					}
+			object[] res = lua.DoString ("a=2\nreturn a,3");
+			Console.WriteLine ("a="+res[0]+", b="+res[1]);
+		}
+```
+
+
+```csharp
+		using (Lua lua = new Lua ()) {
+			object[] res = lua.DoString ("a=2\nreturn a,3");
+			Console.WriteLine ("a=" + res [0]+ ", b=" + res [1]);
+		}
+```
+
+
 
 
 LuaInterface 2.0.4  
