@@ -1,6 +1,6 @@
 ---
 --- This lua module provides auto importing of .net classes into a named package.
---- Makes for super easy use of LuaInterface glue
+--- Makes for super easy use of NLua glue
 ---
 --- example: 
 ---   Threading = CLRPackage("System", "System.Threading")

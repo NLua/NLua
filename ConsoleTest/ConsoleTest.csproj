@@ -52,9 +52,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\LuaInterface\LuaInterface.csproj">
+    <ProjectReference Include="..\Core\NLua\NLua.csproj">
       <Project>{f55cabbb-4108-4a39-94e1-581fd46dc021}</Project>
-      <Name>LuaInterface</Name>
+      <Name>NLua</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

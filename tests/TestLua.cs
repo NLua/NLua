@@ -1,9 +1,9 @@
 ﻿//note: this should be cleaned up and replaced with moq mocks where possible
 
-namespace LuaInterfaceTest.Mock
+namespace NLuaTest.Mock
 {
     using System;
-	using LuaInterface;
+	using NLua;
 	using System.Threading;
 	using System.Diagnostics;
 	using System.Reflection;
@@ -27,7 +27,7 @@ namespace LuaInterfaceTest.Mock
 
 	/* Delegate Lua-handlers */
 
-	class LuaTestDelegate1Handler : LuaInterface.Method.LuaDelegate
+	class LuaTestDelegate1Handler : NLua.Method.LuaDelegate
 	{
 		int CallFunction (int a, int b)
 		{
@@ -41,7 +41,7 @@ namespace LuaInterfaceTest.Mock
 		}
 	}
 
-	class LuaTestDelegate2Handler : LuaInterface.Method.LuaDelegate
+	class LuaTestDelegate2Handler : NLua.Method.LuaDelegate
 	{
 		int CallFunction (int a, out int b)
 		{
@@ -56,7 +56,7 @@ namespace LuaInterfaceTest.Mock
 		}
 	}
 
-	class LuaTestDelegate3Handler : LuaInterface.Method.LuaDelegate
+	class LuaTestDelegate3Handler : NLua.Method.LuaDelegate
 	{
 		void CallFunction (int a, ref int b)
 		{
@@ -70,7 +70,7 @@ namespace LuaInterfaceTest.Mock
 		}
 	}
 
-	class LuaTestDelegate4Handler : LuaInterface.Method.LuaDelegate
+	class LuaTestDelegate4Handler : NLua.Method.LuaDelegate
 	{
 		TestClass CallFunction (int a, int b)
 		{
@@ -84,7 +84,7 @@ namespace LuaInterfaceTest.Mock
 		}
 	}
 
-	class LuaTestDelegate5Handler : LuaInterface.Method.LuaDelegate
+	class LuaTestDelegate5Handler : NLua.Method.LuaDelegate
 	{	
 		int CallFunction (TestClass a, TestClass b)
 		{
@@ -98,7 +98,7 @@ namespace LuaInterfaceTest.Mock
 		}
 	}
 
-	class LuaTestDelegate6Handler : LuaInterface.Method.LuaDelegate
+	class LuaTestDelegate6Handler : NLua.Method.LuaDelegate
 	{
 		int CallFunction (int a, ref TestClass b)
 		{
@@ -113,7 +113,7 @@ namespace LuaInterfaceTest.Mock
 		}
 	}
 
-	class LuaTestDelegate7Handler : LuaInterface.Method.LuaDelegate
+	class LuaTestDelegate7Handler : NLua.Method.LuaDelegate
 	{
 		void CallFunction (int a, ref TestClass b)
 		{

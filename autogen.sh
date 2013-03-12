@@ -1,6 +1,6 @@
 #! /bin/sh
 
-PROJECT=LuaInterface
+PROJECT=NLua
 FILE=
 CONFIGURE=configure.ac
 

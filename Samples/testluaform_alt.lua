@@ -2,7 +2,7 @@
 
 Forms=luanet.System.Windows.Forms
 Drawing=luanet.System.Drawing
-LuaInterface=luanet.LuaInterface
+NLua=luanet.NLua
 IO=luanet.System.IO
 
 Form=Forms.Form
@@ -12,7 +12,7 @@ ListBox=Forms.ListBox
 Button=Forms.Button
 Point=Drawing.Point
 Size=Drawing.Size
-Lua=LuaInterface.Lua
+Lua=NLua.Lua
 OpenFileDialog=Forms.OpenFileDialog
 File=IO.File
 StreamReader=IO.StreamReader

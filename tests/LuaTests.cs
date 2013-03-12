@@ -2,16 +2,16 @@
 using System.Text;
 using System.Collections.Generic;
 using NUnit.Framework;
-using LuaInterfaceTest.Mock;
+using NLuaTest.Mock;
 using System.Reflection;
 using System.Threading;
-using LuaInterface;
-using LuaInterface.Exceptions;
+using NLua;
+using NLua.Exceptions;
 #if MONOTOUCH
 using MonoTouch.Foundation;
 #endif
 
-namespace LuaInterfaceTest
+namespace NLuaTest
 {
 	[TestFixture]
 	#if MONOTOUCH
@@ -27,8 +27,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("err,errMsg=pcall(test.exceptionMethod,test)");
 				bool err = (bool)lua ["err"];
@@ -47,8 +47,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 
 				try {
@@ -71,8 +71,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("val=test.NullableBool");
 				Assert.Null ((object)lua ["val"]);
@@ -90,10 +90,10 @@ namespace LuaInterfaceTest
 		public void TestStructs ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
-				lua.DoString ("TestStruct=luanet.import_type('LuaInterfaceTest.Mock.TestStruct')");
+				lua.DoString ("TestStruct=luanet.import_type('NLuaTest.Mock.TestStruct')");
 				lua.DoString ("struct=TestStruct(2)");
 				lua.DoString ("test.Struct = struct");
 				lua.DoString ("val=test.Struct.val");
@@ -106,8 +106,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("test:MethodOverload()");
 				lua.DoString ("test:MethodOverload(test)");
@@ -188,8 +188,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 
 				try {
@@ -211,7 +211,7 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
 				lua.RegisterFunction ("p", null, typeof(System.Console).GetMethod ("WriteLine", new Type [] { typeof(String) }));
 				/// Lua command that works (prints to console)
 				lua.DoString ("p('Foo')");
@@ -231,11 +231,11 @@ namespace LuaInterfaceTest
 		public void LuaTableOverridedMethod ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test={}");
 				lua.DoString ("function test:overridableMethod(x,y) return x*y; end");
-				lua.DoString ("luanet.make_object(test,'LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.make_object(test,'NLuaTest.Mock.TestClass')");
 				lua.DoString ("a=TestClass.callOverridable(test,2,3)");
 				int a = (int)lua.GetNumber ("a");
 				lua.DoString ("luanet.free_object(test)");
@@ -252,11 +252,11 @@ namespace LuaInterfaceTest
 		public void LuaTableInheritedMethod ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test={}");
 				lua.DoString ("function test:overridableMethod(x,y) return x*y; end");
-				lua.DoString ("luanet.make_object(test,'LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.make_object(test,'NLuaTest.Mock.TestClass')");
 				lua.DoString ("test:setVal(3)");
 				lua.DoString ("a=test.testval");
 				int a = (int)lua.GetNumber ("a");
@@ -278,7 +278,7 @@ namespace LuaInterfaceTest
 			return val * val2;
 		}
 
-		class LuaEventArgsHandler : LuaInterface.Method.LuaDelegate
+		class LuaEventArgsHandler : NLua.Method.LuaDelegate
 		{
 			void CallFunction (object sender, EventArgs eventArgs)
 			{
@@ -375,8 +375,8 @@ namespace LuaInterfaceTest
 				Assert.True (classWithGenericMethod.Validate<double> (100)); //note the gotcha: numbers are all being passed to generic methods as doubles
 
 				try {
-					lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-					lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+					lua.DoString ("luanet.load_assembly('NLuaTest')");
+					lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 					lua.DoString ("test=TestClass(56)");
 					lua.DoString ("genericMethod2(test)");
 				} catch {
@@ -423,7 +423,7 @@ namespace LuaInterfaceTest
 		public void TestLoadStringLeak ()
 		{
 			//Test to prevent stack overflow
-			//See: http://code.google.com/p/luainterface/issues/detail?id=5
+			//See: http://code.google.com/p/nlua/issues/detail?id=5
 			//number of iterations to test
 			int count = 1000;
 			using (Lua lua = new Lua ()) {
@@ -438,7 +438,7 @@ namespace LuaInterfaceTest
 		public void TestLoadFileLeak ()
 		{
 			//Test to prevent stack overflow
-			//See: http://code.google.com/p/luainterface/issues/detail?id=5
+			//See: http://code.google.com/p/nlua/issues/detail?id=5
 			//number of iterations to test
 			int count = 1000;
 			using (Lua lua = new Lua ()) {
@@ -997,7 +997,7 @@ namespace LuaInterfaceTest
 				TestClass t1 = new TestClass ();
 				lua ["netobj"] = t1;
 				lua.DoString ("a=netobj:foo()");
-				lua.DoString ("b=netobj['LuaInterfaceTest.Mock.IFoo1.foo']");
+				lua.DoString ("b=netobj['NLuaTest.Mock.IFoo1.foo']");
 				int a = (int)lua.GetNumber ("a");
 				int b = (int)lua.GetNumber ("b");
 				Assert.AreEqual (5, a);
@@ -1012,8 +1012,8 @@ namespace LuaInterfaceTest
 		public void CreateNetObjectNoArgsCons ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly(\"LuaInterfaceTest\")");
-				lua.DoString ("TestClass=luanet.import_type(\"LuaInterfaceTest.Mock.TestClass\")");
+				lua.DoString ("luanet.load_assembly(\"NLuaTest\")");
+				lua.DoString ("TestClass=luanet.import_type(\"NLuaTest.Mock.TestClass\")");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("test:setVal(3)");
 				object[] res = lua.DoString ("return test");
@@ -1029,8 +1029,8 @@ namespace LuaInterfaceTest
 		public void CreateNetObjectOneArgCons ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly(\"LuaInterfaceTest\")");
-				lua.DoString ("TestClass=luanet.import_type(\"LuaInterfaceTest.Mock.TestClass\")");
+				lua.DoString ("luanet.load_assembly(\"NLuaTest\")");
+				lua.DoString ("TestClass=luanet.import_type(\"NLuaTest.Mock.TestClass\")");
 				lua.DoString ("test=TestClass(3)");
 				object[] res = lua.DoString ("return test");
 				TestClass test = (TestClass)res [0];
@@ -1045,8 +1045,8 @@ namespace LuaInterfaceTest
 		public void CreateNetObjectOverloadedCons ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly(\"LuaInterfaceTest\")");
-				lua.DoString ("TestClass=luanet.import_type(\"LuaInterfaceTest.Mock.TestClass\")");
+				lua.DoString ("luanet.load_assembly(\"NLuaTest\")");
+				lua.DoString ("TestClass=luanet.import_type(\"NLuaTest.Mock.TestClass\")");
 				lua.DoString ("test=TestClass('str')");
 				object[] res = lua.DoString ("return test");
 				TestClass test = (TestClass)res [0];
@@ -1090,8 +1090,8 @@ namespace LuaInterfaceTest
 		public void CreateArray ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly(\"LuaInterfaceTest\")");
-				lua.DoString ("TestClass=luanet.import_type(\"LuaInterfaceTest.Mock.TestClass\")");
+				lua.DoString ("luanet.load_assembly(\"NLuaTest\")");
+				lua.DoString ("TestClass=luanet.import_type(\"NLuaTest.Mock.TestClass\")");
 				lua.DoString ("arr=TestClass[3]");
 				lua.DoString ("for i=0,2 do arr[i]=TestClass(i+1) end");
 				TestClass[] arr = (TestClass[])lua ["arr"];
@@ -1107,8 +1107,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.RegisterLuaDelegateType (typeof(TestDelegate1), typeof(LuaTestDelegate1Handler));
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("function func(x,y) return x+y; end");
 				lua.DoString ("test=TestClass()");
@@ -1127,8 +1127,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.RegisterLuaDelegateType (typeof(TestDelegate2), typeof(LuaTestDelegate2Handler));
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("function func(x) return x,x*2; end");
 				lua.DoString ("test=TestClass()");
@@ -1147,8 +1147,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.RegisterLuaDelegateType (typeof(TestDelegate3), typeof(LuaTestDelegate3Handler));
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("function func(x,y) return x+y; end");
 				lua.DoString ("test=TestClass()");
@@ -1167,8 +1167,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.RegisterLuaDelegateType (typeof(TestDelegate4), typeof(LuaTestDelegate4Handler));
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("function func(x,y) return TestClass(x+y); end");
 				lua.DoString ("test=TestClass()");
@@ -1187,8 +1187,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.RegisterLuaDelegateType (typeof(TestDelegate5), typeof(LuaTestDelegate5Handler));
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("function func(x,y) return x.testval+y.testval; end");
 				lua.DoString ("a=test:callDelegate5(func)");
@@ -1206,8 +1206,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.RegisterLuaDelegateType (typeof(TestDelegate6), typeof(LuaTestDelegate6Handler));
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("function func(x) return x,TestClass(x*2); end");
 				lua.DoString ("test=TestClass()");
@@ -1226,8 +1226,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.RegisterLuaDelegateType (typeof(TestDelegate7), typeof(LuaTestDelegate7Handler));
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("function func(x,y) return TestClass(x+y.testval); end");
 				lua.DoString ("a=test:callDelegate7(func)");
@@ -1243,12 +1243,12 @@ namespace LuaInterfaceTest
         * calling one of its methods with value-type params
         */
 		[Test]
-		public void LuaInterfaceAAValueTypes ()
+		public void NLuaAAValueTypes ()
 		{
 			using (Lua lua = new Lua ()) {
 				lua.RegisterLuaClassType (typeof(ITest), typeof(LuaITestClassHandler));
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("itest={}");
 				lua.DoString ("function itest:test1(x,y) return x+y; end");
@@ -1265,11 +1265,11 @@ namespace LuaInterfaceTest
         * and an out param
         */
 		[Test]
-		public void LuaInterfaceValueTypesOutParam ()
+		public void NLuaValueTypesOutParam ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("itest={}");
 				lua.DoString ("function itest:test2(x) return x,x*2; end");
@@ -1286,11 +1286,11 @@ namespace LuaInterfaceTest
         * and a ref param
         */
 		[Test]
-		public void LuaInterfaceValueTypesByRefParam ()
+		public void NLuaValueTypesByRefParam ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("itest={}");
 				lua.DoString ("function itest:test3(x,y) return x+y; end");
@@ -1307,11 +1307,11 @@ namespace LuaInterfaceTest
         * returning a reference type param
         */
 		[Test]
-		public void LuaInterfaceValueTypesReturnReferenceType ()
+		public void NLuaValueTypesReturnReferenceType ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("itest={}");
 				lua.DoString ("function itest:test4(x,y) return TestClass(x+y); end");
@@ -1327,11 +1327,11 @@ namespace LuaInterfaceTest
         * calling one of its methods with reference type params
         */
 		[Test]
-		public void LuaInterfaceReferenceTypes ()
+		public void NLuaReferenceTypes ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("itest={}");
 				lua.DoString ("function itest:test5(x,y) return x.testval+y.testval; end");
@@ -1348,11 +1348,11 @@ namespace LuaInterfaceTest
         * and an out param
         */
 		[Test]
-		public void LuaInterfaceReferenceTypesOutParam ()
+		public void NLuaReferenceTypesOutParam ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("itest={}");
 				lua.DoString ("function itest:test6(x) return x,TestClass(x*2); end");
@@ -1369,11 +1369,11 @@ namespace LuaInterfaceTest
         * and a ref param
         */
 		[Test]
-		public void LuaInterfaceReferenceTypesByRefParam ()
+		public void NLuaReferenceTypesByRefParam ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("itest={}");
 				lua.DoString ("function itest:test7(x,y) return TestClass(x+y.testval); end");
@@ -1419,8 +1419,8 @@ namespace LuaInterfaceTest
                                 };
 				int [] outArgs = new int [] { };
 				Type [] returnTypes = __luaInterface_returnTypes [0];
-				LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "overridableMethod");
-				object ret = LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "overridableMethod");
+				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				return (int)ret;
 			}
 		}
@@ -1447,8 +1447,8 @@ namespace LuaInterfaceTest
 					object [] inArgs = new object [] { __luaInterface_luaTable };
 					int [] outArgs = new int [] { };
 					Type [] returnTypes = __luaInterface_returnTypes [0];
-					LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "get_intProp");
-					object ret = LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+					LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "get_intProp");
+					object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 					return (int)ret;
 				}
 				set {
@@ -1463,8 +1463,8 @@ namespace LuaInterfaceTest
 					};
 					int [] outArgs = new int [] { };
 					Type [] returnTypes = __luaInterface_returnTypes [1];
-					LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "set_intProp");
-					LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+					LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "set_intProp");
+					NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				}
 			}
 
@@ -1474,8 +1474,8 @@ namespace LuaInterfaceTest
 					object [] inArgs = new object [] { __luaInterface_luaTable };
 					int [] outArgs = new int [] { };
 					Type [] returnTypes = __luaInterface_returnTypes [2];
-					LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "get_refProp");
-					object ret = LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+					LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "get_refProp");
+					object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 					return (TestClass)ret;
 				}
 				set {
@@ -1490,8 +1490,8 @@ namespace LuaInterfaceTest
 					};
 					int [] outArgs = new int [] { };
 					Type [] returnTypes = __luaInterface_returnTypes [3];
-					LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "set_refProp");
-					LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+					LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "set_refProp");
+					NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				}
 			}
 
@@ -1509,8 +1509,8 @@ namespace LuaInterfaceTest
                         };
 				int [] outArgs = new int [] { };
 				Type [] returnTypes = __luaInterface_returnTypes [4];
-				LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test1");
-				object ret = LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test1");
+				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				return (int)ret;
 			}
 
@@ -1527,8 +1527,8 @@ namespace LuaInterfaceTest
                                 };
 				int [] outArgs = new int [] { 1 };
 				Type [] returnTypes = __luaInterface_returnTypes [5];
-				LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test2");
-				object ret = LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test2");
+				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				b = (int)args [1];
 				return (int)ret;
 			}
@@ -1547,8 +1547,8 @@ namespace LuaInterfaceTest
                                 };
 				int [] outArgs = new int [] { 1 };
 				Type [] returnTypes = __luaInterface_returnTypes [6];
-				LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test3");
-				LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test3");
+				NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				b = (int)args [1];
 			}
 
@@ -1566,8 +1566,8 @@ namespace LuaInterfaceTest
                                 };
 				int [] outArgs = new int [] { };
 				Type [] returnTypes = __luaInterface_returnTypes [7];
-				LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test4");
-				object ret = LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test4");
+				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				return (TestClass)ret;
 			}
 
@@ -1585,8 +1585,8 @@ namespace LuaInterfaceTest
                                 };
 				int [] outArgs = new int [] { };
 				Type [] returnTypes = __luaInterface_returnTypes [8];
-				LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test5");
-				object ret = LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test5");
+				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				return (int)ret;
 			}
 
@@ -1603,8 +1603,8 @@ namespace LuaInterfaceTest
                                 };
 				int [] outArgs = new int [] { 1};
 				Type [] returnTypes = __luaInterface_returnTypes [9];
-				LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test6");
-				object ret = LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test6");
+				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				b = (TestClass)args [1];
 
 				return (int)ret;
@@ -1624,8 +1624,8 @@ namespace LuaInterfaceTest
                                 };
 				int [] outArgs = new int [] { 1 };
 				Type [] returnTypes = __luaInterface_returnTypes [10];
-				LuaFunction function = LuaInterface.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test7");
-				LuaInterface.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test7");
+				NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
 				b = (TestClass)args [1];
 			}
 		}
@@ -1636,11 +1636,11 @@ namespace LuaInterfaceTest
         * accessing one of its value-type properties
         */
 		[Test]
-		public void LuaInterfaceValueProperty ()
+		public void NLuaValueProperty ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("itest={}");
 				lua.DoString ("function itest:get_intProp() return itest.int_prop; end");
@@ -1656,11 +1656,11 @@ namespace LuaInterfaceTest
         * accessing one of its reference type properties
         */
 		[Test]
-		public void LuaInterfaceReferenceProperty ()
+		public void NLuaReferenceProperty ()
 		{
 			using (Lua lua = new Lua ()) {
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("itest={}");
 				lua.DoString ("function itest:get_refProp() return TestClass(itest.int_prop); end");
@@ -1682,20 +1682,20 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.RegisterLuaClassType (typeof(TestClass), typeof(LuaTestClassHandler));
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test={}");
 				lua.DoString ("function test:overridableMethod(x,y) print(self[base]); return 6 end");
-				lua.DoString ("luanet.make_object(test,'LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.make_object(test,'NLuaTest.Mock.TestClass')");
 				lua.DoString ("a=TestClass.callOverridable(test,2,3)");
 				int a = (int)lua.GetNumber ("a");
 				lua.DoString ("luanet.free_object(test)");
 				Assert.AreEqual (6, a);
-				//                 lua.DoString("luanet.load_assembly('LuaInterfaceTest')");
-				//                 lua.DoString("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				//                 lua.DoString("luanet.load_assembly('NLuaTest')");
+				//                 lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				//                 lua.DoString("test={}");
 				//
-				//                 lua.DoString("luanet.make_object(test,'LuaInterfaceTest.Mock.TestClass')");
+				//                 lua.DoString("luanet.make_object(test,'NLuaTest.Mock.TestClass')");
 				//                              lua.DoString ("function test.overridableMethod(test,x,y) return 2*test.base.overridableMethod(test,x,y); end");
 				//                 lua.DoString("a=TestClass.callOverridable(test,2,3)");
 				//                 int a = (int)lua.GetNumber("a");
@@ -1713,8 +1713,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("setMethod=luanet.get_method_bysig(test,'setVal','System.String')");
 				lua.DoString ("setMethod('test')");
@@ -1732,8 +1732,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("setMethod=luanet.get_method_bysig(TestClass,'setVal','System.String')");
 				lua.DoString ("setMethod(test,'test')");
@@ -1750,8 +1750,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("make_method=luanet.get_method_bysig(TestClass,'makeFromString','System.String')");
 				lua.DoString ("test=make_method('test')");
 				TestClass test = (TestClass)lua ["test"];
@@ -1767,8 +1767,8 @@ namespace LuaInterfaceTest
 		{
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
-				lua.DoString ("luanet.load_assembly('LuaInterfaceTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test_cons=luanet.get_constructor_bysig(TestClass,'System.String')");
 				lua.DoString ("test=test_cons('test')");
 				TestClass test = (TestClass)lua ["test"];

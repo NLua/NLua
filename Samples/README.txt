@@ -1,4 +1,4 @@
-Some example scripts, showing what LuaInterface can do.
+Some example scripts, showing what NLua can do.
 
 form		A simple form, basic event handling
 socket		Fetches the content of a web site and prints to the

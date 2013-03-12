@@ -9,12 +9,12 @@ ASSEMBLY = ../../Run/Debug/LuaRunner.exe
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = exe
 PROJECT_REFERENCES =  \
-	../../Run/Debug/LuaInterface.dll
+	../../Run/Debug/NLua.dll
 BUILD_DIR = ../../Run/Debug
 
 LUARUNNER_EXE_MDB_SOURCE=../../Run/Debug/LuaRunner.exe.mdb
 LUARUNNER_EXE_MDB=$(BUILD_DIR)/LuaRunner.exe.mdb
-LUAINTERFACE_DLL_SOURCE=../../Run/Debug/LuaInterface.dll
+LUAINTERFACE_DLL_SOURCE=../../Run/Debug/NLua.dll
 KOPILUA_DLL_SOURCE=../../Run/Debug/KopiLua.dll
 
 endif
@@ -26,11 +26,11 @@ ASSEMBLY = ../../Run/Release/LuaRunner.exe
 ASSEMBLY_MDB = 
 COMPILE_TARGET = exe
 PROJECT_REFERENCES =  \
-	../../Run/Release/LuaInterface.dll
+	../../Run/Release/NLua.dll
 BUILD_DIR = ../../Run/Release
 
 LUARUNNER_EXE_MDB=
-LUAINTERFACE_DLL_SOURCE=../../Run/Release/LuaInterface.dll
+LUAINTERFACE_DLL_SOURCE=../../Run/Release/NLua.dll
 KOPILUA_DLL_SOURCE=../../Run/Release/KopiLua.dll
 
 endif
@@ -42,12 +42,12 @@ ASSEMBLY = ../../Run/Debug_x64/LuaRunner.exe
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = exe
 PROJECT_REFERENCES =  \
-	../../Run/Debug_x64/LuaInterface.dll
+	../../Run/Debug_x64/NLua.dll
 BUILD_DIR = ../../Run/Debug_x64
 
 LUARUNNER_EXE_MDB_SOURCE=../../Run/Debug_x64/LuaRunner.exe.mdb
 LUARUNNER_EXE_MDB=$(BUILD_DIR)/LuaRunner.exe.mdb
-LUAINTERFACE_DLL_SOURCE=../../Run/Debug_x64/LuaInterface.dll
+LUAINTERFACE_DLL_SOURCE=../../Run/Debug_x64/NLua.dll
 KOPILUA_DLL_SOURCE=../../Run/Debug_x64/KopiLua.dll
 
 endif
@@ -59,11 +59,11 @@ ASSEMBLY = ../../Run/Release_x64/LuaRunner.exe
 ASSEMBLY_MDB = 
 COMPILE_TARGET = exe
 PROJECT_REFERENCES =  \
-	../../Run/Release_x64/LuaInterface.dll
+	../../Run/Release_x64/NLua.dll
 BUILD_DIR = ../../Run/Release_x64
 
 LUARUNNER_EXE_MDB=
-LUAINTERFACE_DLL_SOURCE=../../Run/Release_x64/LuaInterface.dll
+LUAINTERFACE_DLL_SOURCE=../../Run/Release_x64/NLua.dll
 KOPILUA_DLL_SOURCE=../../Run/Release_x64/KopiLua.dll
 
 endif
@@ -106,7 +106,7 @@ CLEANFILES = $(PROGRAMFILES) $(BINARIES)
 
 include $(top_srcdir)/Makefile.include
 
-LUAINTERFACE_DLL = $(BUILD_DIR)/LuaInterface.dll
+LUAINTERFACE_DLL = $(BUILD_DIR)/NLua.dll
 KOPILUA_DLL = $(BUILD_DIR)/KopiLua.dll
 LUARUNNER = $(BUILD_DIR)/luarunner
 

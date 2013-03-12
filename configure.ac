@@ -1,7 +1,7 @@
 dnl Warning: This is an automatically generated file, do not edit!
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.54])
-AC_INIT([LuaInterface], [2.x])
+AC_INIT([NLua], [2.x])
 AM_INIT_AUTOMAKE([foreign])
 AM_MAINTAINER_MODE
 
@@ -69,11 +69,11 @@ dnl package checks, per config
 AC_CONFIG_FILES([
 Core/KopiLua/kopilua.pc
 Core/KopiLua/Makefile
-Core/LuaInterface/luainterface.pc
-Core/LuaInterface/Makefile
+Core/NLua/nlua.pc
+Core/NLua/Makefile
 Core/Makefile
-Test/TestLuaInterface/testluainterface
-Test/TestLuaInterface/Makefile
+Test/TestNLua/testnlua
+Test/TestNLua/Makefile
 Applications/LuaRunner/luarunner
 Applications/LuaRunner/Makefile
 Makefile

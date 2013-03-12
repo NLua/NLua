@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LuaInterface;
+using NLua;
 
 namespace ConsoleTest
 {
@@ -15,7 +15,7 @@ namespace ConsoleTest
 			using (Lua lua = new Lua ()) {
 				lua.DoString ("luanet.load_assembly('mscorlib')");
 				lua.DoString ("luanet.load_assembly('ConsoleTest')");
-				lua.DoString ("TestClass=luanet.import_type('LuaInterfaceTest.Mock.TestClass')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 
 				try {

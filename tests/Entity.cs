@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LuaInterfaceTest.Mock
+namespace NLuaTest.Mock
 {
 	public class Entity
 	{

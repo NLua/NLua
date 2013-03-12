@@ -10,7 +10,7 @@ cd Core/KeraLua/
 make -f Makefile.Linux
 xbuild KeraLua.sln /p:Configuration=Release
 cd ../../
-xbuild LuaInterface.sln /p:Configuration=Release
+xbuild NLua.sln /p:Configuration=Release
 export LD_LIBRARY_PATH=$PWD/Core/KeraLua/external/lua/linux/lib64
 cd tests/
-nunit-console LuaInterfaceTest.dll
+nunit-console NLuaTest.dll

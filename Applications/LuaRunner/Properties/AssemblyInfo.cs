@@ -1,5 +1,5 @@
 ﻿/*
- * This file is part of LuaInterface.
+ * This file is part of NLua.
  * 
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
@@ -27,18 +27,18 @@ using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using LuaInterface.Config;
+using NLua.Config;
 
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle("LuaRunner")]
-[assembly: AssemblyDescription(Consts.LuaInterfaceDescription)]
-[assembly: AssemblyConfiguration(Consts.LuaInterfaceConfiguration)]
-[assembly: AssemblyCompany(Consts.LuaInterfaceCompany)]
-[assembly: AssemblyProduct(Consts.LuaInterfaceProduct)]
-[assembly: AssemblyCopyright(Consts.LuaInterfaceCopyright)]
-[assembly: AssemblyTrademark(Consts.LuaInterfaceTrademark)]
+[assembly: AssemblyDescription(Consts.NLuaDescription)]
+[assembly: AssemblyConfiguration(Consts.NLuaConfiguration)]
+[assembly: AssemblyCompany(Consts.NLuaCompany)]
+[assembly: AssemblyProduct(Consts.NLuaProduct)]
+[assembly: AssemblyCopyright(Consts.NLuaCopyright)]
+[assembly: AssemblyTrademark(Consts.NLuaTrademark)]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

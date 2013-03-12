@@ -1,5 +1,5 @@
 /*
- * This file is part of LuaInterface.
+ * This file is part of NLua.
  * 
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
@@ -25,10 +25,10 @@
 
 using System;
 using System.Threading;
-using LuaInterface;
+using NLua;
 
 /*
- * Application to run Lua scripts that can use LuaInterface
+ * Application to run Lua scripts that can use NLua
  * from the console
  * 
  * Author: Fabio Mascarenhas

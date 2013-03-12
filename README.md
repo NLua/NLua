@@ -1,9 +1,9 @@
 NLua
-====
+========
 
 [![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
 
-NLua is a fork of project LuaInterface (from Fábio Mascarenhas/Craig Presti).
+NLua is a fork of project NLua (from Fábio Mascarenhas/Craig Presti).
 
 NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Phone 7 and Windows Phone 8.
 
@@ -39,27 +39,34 @@ iOS: [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/icon
 			}
 ```
 
+Copyright (c) 2013 Vinicius Jarina
 
-LuaInterface 2.0.4  
-------------------
+
+NLua 1.0.0
+----------
+* Forked from LuaInterface 2.0.4
+* Added iOS support using KeraLua (C# PInvoke Lua)
+
+
+LuaInterface  
+--------------
 
 Copyright (c) 2003-2006 Fabio Mascarenhas de Queiroz
 
 Maintainer: Craig Presti, craig@vastpark.com
 
-lua51.dll and lua51.exe are Copyright � 2005 Tecgraf, PUC-Rio
+lua51.dll and lua51.exe are Copyright (c) 2005 Tecgraf, PUC-Rio
 
 
-Getting started with LuaInterface:
----------
-* Use LuaRunner.exe to run samples/testluaform.lua
-* Run TestLua.exe to see some more test cases
-* Look at src/TestLuaInterface/TestLua to see example usage from C# 
-(optionally run this from inside of the LuaInterface solution in 
+Getting started with NLua:
+-------------------------
+
+* Look at src/TestNLua/TestLua to see example usage from C# 
+(optionally run this from inside of the NLua solution in 
 the debugger).  Also provides a good example of how to override .net 
-methods from Lua and use LuaInterface from within your .net application.
+methods from Lua and use NLua from within your .NET application.
 * Look at samples/testluaform.lua to see examples of how to use 
-.net from inside Lua
+.NET from inside Lua
 * More instructions for installing and using in the doc/guide.pdf file.
 
 What's new in LuaInterface 2.0.3
@@ -165,7 +172,7 @@ interface.
 Add CLRPackage.lua to the samples directory.  This class makes it much easier to automatically 
 load referenced assemblies.  In the next release this loading will be automatic.
 
-To see an quick demonstration of LuaInterface, cd into luainterface/samples and then 
+To see an quick demonstration of LuaInterface, cd into nlua/samples and then 
 type: ..\..\Built\debug\LuaRunner.exe testluaform.lua
 
 Various other minor fixes that I've forgotten.  I'll keep better track next time.
@@ -181,7 +188,7 @@ What's New in LuaInterface 1.3
 
 LuaInterface now works with LuaBinaries Release 2 (http://luabinaries.luaforge.net)
 and Compat-5.1 Release 3 (http://luaforge.net/projects/compat). The loader DLL is now 
-called luanet.dll, and does not need a luainterface.lua file anymore
+called luanet.dll, and does not need a nlua.lua file anymore
 (just put LuaInterface.dll in the GAC, luanet.dll in your package.cpath, and
 do require"luanet").
 
@@ -210,8 +217,8 @@ What's New in LuaInterface 1.2
 
 LuaInterface now can be loaded as a module, so you can use the lua standalone
 interpreter to run scripts. Thanks to Paul Winwood for this idea and sample code
-showing how to load the CLR from a C++ program. The module is "luainterface". Make
-sure Lua can find luainterface.lua, and LuaInterfaceLoader.dll is either in the
+showing how to load the CLR from a C++ program. The module is "nlua". Make
+sure Lua can find nlua.lua, and LuaInterfaceLoader.dll is either in the
 current directory or the GAC. The samples now load LuaInterface as a module, in
 its own namespace.
 

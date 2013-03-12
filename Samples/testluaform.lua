@@ -2,7 +2,7 @@ require("CLRPackage")
 
 Forms = CLRPackage("System.Windows.Forms", "System.Windows.Forms")
 Drawing = CLRPackage("System.Drawing", "System.Drawing")
-LuaInterface = CLRPackage("LuaInterface", "LuaInterface")
+NLua = CLRPackage("NLua", "NLua")
 IO = CLRPackage("System.IO", "System.IO")
 System = CLRPackage("System", "System")
 
@@ -13,7 +13,7 @@ ListBox=Forms.ListBox
 Button=Forms.Button
 Point=Drawing.Point
 Size=Drawing.Size
-Lua=LuaInterface.Lua
+Lua=NLua.Lua
 OpenFileDialog=Forms.OpenFileDialog
 File=IO.File
 StreamReader=IO.StreamReader

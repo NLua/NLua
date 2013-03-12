@@ -66,9 +66,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\LuaInterface\LuaInterface.csproj">
+    <ProjectReference Include="..\..\Core\NLua\NLua.csproj">
       <Project>{F55CABBB-4108-4A39-94E1-581FD46DC021}</Project>
-      <Name>LuaInterface</Name>
+      <Name>NLua</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
