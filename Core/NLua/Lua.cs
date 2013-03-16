@@ -1006,6 +1006,11 @@ namespace NLua
 			LuaLib.lua_settop (luaState, oldTop);
 		}
 
+		public LuaFunction RegisterFunction (string path,MethodBase function /*MethodInfo function*/)
+		{
+			return RegisterFunction (path, null, function);
+		}
+
 		/*
 		 * Registers an object's method as a Lua function (global or table field)
 		 * The method may have any signature

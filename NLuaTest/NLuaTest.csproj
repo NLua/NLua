@@ -50,6 +50,9 @@
     <Compile Include="..\tests\TestLua.cs">
       <Link>TestLua.cs</Link>
     </Compile>
+    <Compile Include="..\tests\Core.cs">
+      <Link>Core.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

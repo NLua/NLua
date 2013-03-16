@@ -1,5 +1,5 @@
 cd Core\KeraLua
-Makefile.Win32.bat
+call Makefile.Win32.bat
 msbuild KeraLua.sln /p:Configuration=Release
 cd ..\..
 xcopy Core\KeraLua\external\lua\win32\bin\*.dll tests\*.dll
