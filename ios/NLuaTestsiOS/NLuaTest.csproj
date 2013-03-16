@@ -106,6 +106,7 @@
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="Icons\" />
+    <Folder Include="LuaTests\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -122,7 +123,9 @@
     <Compile Include="..\..\tests\TestLua.cs">
       <Link>TestLua.cs</Link>
     </Compile>
-    <Compile Include="Core.cs" />
+    <Compile Include="..\..\tests\Core.cs">
+      <Link>Core.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -143,5 +146,41 @@
     <BundleResource Include="Icons\Icon-Small%402x.png" />
     <BundleResource Include="Icons\Icon.png" />
     <BundleResource Include="Icons\Icon%402x.png" />
+    <BundleResource Include="..\..\tests\LuaTests\core\bisect.lua">
+      <Link>LuaTests\core\bisect.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\cf.lua">
+      <Link>LuaTests\core\cf.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\env.lua">
+      <Link>LuaTests\core\env.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\factorial.lua">
+      <Link>LuaTests\core\factorial.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\fib.lua">
+      <Link>LuaTests\core\fib.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\fibfor.lua">
+      <Link>LuaTests\core\fibfor.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\life.lua">
+      <Link>LuaTests\core\life.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\printf.lua">
+      <Link>LuaTests\core\printf.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\readonly.lua">
+      <Link>LuaTests\core\readonly.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\sieve.lua">
+      <Link>LuaTests\core\sieve.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\sort.lua">
+      <Link>LuaTests\core\sort.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\tests\LuaTests\core\trace-globals.lua">
+      <Link>LuaTests\core\trace-globals.lua</Link>
+    </BundleResource>
   </ItemGroup>
 </Project>
