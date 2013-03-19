@@ -1400,7 +1400,7 @@ namespace NLuaTest
 				__luaInterface_returnTypes = returnTypes;
 			}
                         
-			public LuaTable __luaInterface_getLuaTable ()
+			public LuaTable LuaInterfaceGetLuaTable ()
 			{
 				return __luaInterface_luaTable;
 			}
@@ -1436,7 +1436,7 @@ namespace NLuaTest
 				__luaInterface_returnTypes = returnTypes;
 			}
 
-			public LuaTable __luaInterface_getLuaTable ()
+			public LuaTable LuaInterfaceGetLuaTable ()
 			{
 				return __luaInterface_luaTable;
 			}

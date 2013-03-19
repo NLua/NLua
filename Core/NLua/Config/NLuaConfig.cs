@@ -1,6 +1,7 @@
 /*
  * This file is part of NLua.
  * 
+ * Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,7 +36,7 @@ namespace NLua.Config
 #endif
 		public const string NLuaCompany = "NLua Productions";
 		public const string NLuaProduct = "NLua";
-		public const string NLuaCopyright = "Copyright 2003-2008 Fabio Mascarenhas, Kevin Hesterm and 2012 Megax";
+		public const string NLuaCopyright = "Copyright 2003-2008 Fabio Mascarenhas, Kevin Hesterm ,Megax and Vinicius Jarina";
 		public const string NLuaTrademark = "MIT license";
 		public const string NLuaVersion = "2.0.4";
 		public const string NLuaFileVersion = "2.0.4.0";

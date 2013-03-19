@@ -1,6 +1,7 @@
 /*
  * This file is part of NLua.
  * 
+ * Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
@@ -32,6 +33,6 @@ namespace NLua
 	 */
 	public interface ILuaGeneratedType
 	{
-		LuaTable __luaInterface_getLuaTable ();
+		LuaTable LuaInterfaceGetLuaTable ();
 	}
 }

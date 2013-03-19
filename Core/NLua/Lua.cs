@@ -1,6 +1,7 @@
 /*
  * This file is part of NLua.
  * 
+ * Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
@@ -155,7 +156,6 @@ namespace NLua
 		public Lua ()
 		{
 			luaState = LuaLib.luaL_newstate ();	// steffenj: Lua 5.1.1 API change (lua_open is gone)
-			//LuaLib.luaopen_base(luaState);	// steffenj: luaopen_* no longer used
 			LuaLib.luaL_openlibs (luaState);		// steffenj: Lua 5.1.1 API change (luaopen_base is gone, just open all libs right here)
 			LuaLib.lua_pushstring (luaState, "LUAINTERFACE LOADED");
 			LuaLib.lua_pushboolean (luaState, true);
@@ -176,9 +176,6 @@ namespace NLua
 			// We need to keep this in a managed reference so the delegate doesn't get garbage collected
 			panicCallback = new LuaCore.lua_CFunction (PanicCallback);
 			LuaLib.lua_atpanic (luaState, panicCallback);
-
-			//LuaLib.lua_atlock(luaState, lockCallback = new LuaCore.lua_CFunction(LockCallback));
-			//LuaLib.lua_atunlock(luaState, unlockCallback = new LuaCore.lua_CFunction(UnlockCallback));
 		}
 
 		/*
@@ -213,34 +210,11 @@ namespace NLua
 			_StatePassed = true;
 		}
 
-		/// <summary>
-		/// Called for each lua_lock call 
-		/// </summary>
-		/// <param name = "luaState"></param>
-		/// Not yet used
-		/*int LockCallback(LuaCore.lua_State luaState)
-		{
-			// Monitor.Enter(luaLock);
-			return 0;
-		}*/
-
-		/// <summary>
-		/// Called for each lua_unlock call 
-		/// </summary>
-		/// <param name = "luaState"></param>
-		/// Not yet used
-		/*int UnlockCallback(LuaCore.lua_State luaState)
-		{
-			// Monitor.Exit(luaLock);
-			return 0;
-		}*/
-
 		public void Close ()
 		{
 			if (_StatePassed)
 				return;
 
-			//////   if(luaState != LuaCore.lua_State.Zero)
 			if (!luaState.IsNull ()) {
 				LuaCore.lua_close (luaState);
 				ObjectTranslatorPool.Instance.Remove (luaState);
@@ -254,9 +228,7 @@ namespace NLua
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		static int PanicCallback (LuaCore.lua_State luaState)
 		{
-			// string desc = LuaLib.lua_tostring(luaState, 1);
 			string reason = string.Format ("unprotected error in call to Lua API ({0})", LuaLib.lua_tostring (luaState, -1));
-			//		lua_tostring(L, -1);
 			throw new LuaException (reason);
 		}
 
@@ -601,7 +573,7 @@ namespace NLua
 		}
 
 		/*
-			* Register a delegate type to be used to convert Lua funcitions to C# delegates (useful for iOS where there is no dynamic code generation)
+			* Register a delegate type to be used to convert Lua functions to C# delegates (useful for iOS where there is no dynamic code generation)
 			* type delegateType
 			*/
 		public void RegisterLuaDelegateType (Type delegateType, Type luaDelegateType)

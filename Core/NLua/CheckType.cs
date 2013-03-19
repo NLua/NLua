@@ -1,6 +1,7 @@
 /*
  * This file is part of NLua.
  * 
+ * Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
@@ -121,8 +122,6 @@ namespace NLua
 					return extractValues [typeof(LuaFunction).TypeHandle.Value.ToInt64 ()];
 				else if (luatype == LuaTypes.Number)
 					return extractValues [typeof(double).TypeHandle.Value.ToInt64 ()];
-				//else
-				//;//an unsupported type was encountered
 			}
 
 			if (LuaLib.lua_isnumber (luaState, stackPos))

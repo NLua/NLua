@@ -242,7 +242,6 @@ namespace NLua
 				}
 			} else {
 				// Try to use get_Item to index into this .net object
-				//MethodInfo getter = objType.GetMethod("get_Item");
 				var methods = objType.GetMethods ();
 
 				foreach (var mInfo in methods) {

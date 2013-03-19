@@ -1,6 +1,7 @@
 /*
  * This file is part of NLua.
  * 
+ * Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
@@ -121,7 +122,6 @@ namespace NLua
 		{
 			LuaLib.lua_pushstring (luaState, "luaNet_indexfunction");
 			LuaLib.luaL_dostring (luaState, MetaFunctions.luaIndexFunction);	// steffenj: lua_dostring renamed to luaL_dostring
-			//LuaLib.lua_pushstdcallcfunction(luaState, indexFunction);
 			LuaLib.lua_rawset (luaState, (int)LuaIndexes.Registry);
 		}
 
@@ -661,7 +661,6 @@ namespace NLua
 		{
 			// New object: inserts it in the list
 			int index = nextObj++;
-			// Debug.WriteLine("Adding " + obj.ToString() + " @ " + index);
 			objects [index] = obj;
 			objectsBackMap [obj] = index;
 			return index;
@@ -743,7 +742,7 @@ namespace NLua
 		}
 
 		/*
-		 * Gets the CLR object in the index positon of the Lua stack. Returns
+		 * Gets the CLR object in the index position of the Lua stack. Returns
 		 * delegates as is.
 		 */
 		internal object getRawNetObject (LuaCore.lua_State luaState, int index)
@@ -851,7 +850,7 @@ namespace NLua
 				bool b = (bool)o;
 				LuaLib.lua_pushboolean (luaState, b);
 			} else if (IsILua (o))
-				(((ILuaGeneratedType)o).__luaInterface_getLuaTable ()).push (luaState);
+				(((ILuaGeneratedType)o).LuaInterfaceGetLuaTable ()).push (luaState);
 			else if (o is LuaTable)
 				((LuaTable)o).push (luaState);
 			else if (o is LuaCore.lua_CFunction)

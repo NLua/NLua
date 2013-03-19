@@ -1,6 +1,7 @@
 /*
  * This file is part of NLua.
  * 
+ * Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
@@ -373,10 +374,10 @@ namespace NLua
 				}
 			}
 
-			// Generates an implementation of the __luaInterface_getLuaTable method
-			var returnTableMethod = myType.DefineMethod ("__luaInterface_getLuaTable", 
+			// Generates an implementation of the luaInterfaceGetLuaTable method
+			var returnTableMethod = myType.DefineMethod ("LuaInterfaceGetLuaTable", 
 				MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual, typeof(LuaTable), new Type[0]);
-			myType.DefineMethodOverride (returnTableMethod, typeof(ILuaGeneratedType).GetMethod ("__luaInterface_getLuaTable"));
+			myType.DefineMethodOverride (returnTableMethod, typeof(ILuaGeneratedType).GetMethod ("LuaInterfaceGetLuaTable"));
 			generator = returnTableMethod.GetILGenerator ();
 			generator.Emit (OpCodes.Ldfld, luaTableField);
 			generator.Emit (OpCodes.Ret);

@@ -1,6 +1,7 @@
 /*
  * This file is part of NLua.
  * 
+ * Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
