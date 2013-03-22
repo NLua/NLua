@@ -1,8 +1,16 @@
+# Autosave files
+*~
+
+*.pc
 *.obj
 *.pidb
 *.mdb
 */bin/*
 Run/
+
+# build stuff
+Applications/LuaRunner/luarunner
+ConsoleTest/consoletest
 
 #ignore thumbnails created by windows
 Thumbs.db
@@ -35,3 +43,19 @@ _ReSharper*/
 UpgradeLog.XML
 *.ReSharper
 *.userprefs
+
+# http://www.gnu.org/software/automake
+
+Makefile
+Makefile.in
+
+# http://www.gnu.org/software/autoconf
+
+/autom4te.cache
+/aclocal.m4
+/compile
+/configure
+/depcomp
+/install-sh
+/missing
+/config.status
