@@ -11,6 +11,11 @@ Run/
 # build stuff
 Applications/LuaRunner/luarunner
 ConsoleTest/consoletest
+tests/KeraLua.dll
+tests/KopiLua.dll
+tests/NLua.dll
+tests/NLuaTest.dll
+tests/nunit.framework.dll
 
 #ignore thumbnails created by windows
 Thumbs.db
