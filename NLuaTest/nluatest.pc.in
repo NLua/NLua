@@ -1,0 +1,6 @@
+Name: NLuaTest
+Description: NLuaTest
+Version: 2.x
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/NLuaTest.dll
