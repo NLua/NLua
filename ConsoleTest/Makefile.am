@@ -1,59 +1,60 @@
 
+EXTRA_DIST =  
 
 # Warning: This is an automatically generated file, do not edit!
 
 if ENABLE_DEBUG
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
-ASSEMBLY = ../../Run/Debug/LuaRunner.exe
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG;TRACE"
+ASSEMBLY = bin/Debug/ConsoleTest.exe
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = exe
 PROJECT_REFERENCES =  \
-	../../Run/Debug/NLua.dll
-BUILD_DIR = ../../Run/Debug
+	../Run/Debug/NLua.dll
+BUILD_DIR = bin/Debug/
 
-LUARUNNER_EXE_MDB_SOURCE=../../Run/Debug/LuaRunner.exe.mdb
-LUARUNNER_EXE_MDB=$(BUILD_DIR)/LuaRunner.exe.mdb
-LUARUNNER_EXE_CONFIG_SOURCE=app.config
-NLUA_DLL_SOURCE=../../Run/Debug/NLua.dll
-NLUA_DLL_MDB_SOURCE=../../Run/Debug/NLua.dll.mdb
+CONSOLETEST_EXE_MDB_SOURCE=bin/Debug/ConsoleTest.exe.mdb
+CONSOLETEST_EXE_MDB=$(BUILD_DIR)/ConsoleTest.exe.mdb
+CONSOLETEST_EXE_CONFIG_SOURCE=App.config
+NLUA_DLL_SOURCE=../Run/Debug/NLua.dll
+NLUA_DLL_MDB_SOURCE=../Run/Debug/NLua.dll.mdb
 NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
-KERALUA_DLL_SOURCE=../../Core/KeraLua/bin/Debug/KeraLua.dll
-KERALUA_DLL_MDB_SOURCE=../../Core/KeraLua/bin/Debug/KeraLua.dll.mdb
+KERALUA_DLL_SOURCE=../Core/KeraLua/bin/Debug/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../Core/KeraLua/bin/Debug/KeraLua.dll.mdb
 KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
-KOPILUA_DLL_SOURCE=../../Core/KopiLua/bin/Debug/KopiLua.dll
-KOPILUA_DLL_MDB_SOURCE=../../Core/KopiLua/bin/Debug/KopiLua.dll.mdb
+KOPILUA_DLL_SOURCE=../Core/KopiLua/bin/Debug/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../Core/KopiLua/bin/Debug/KopiLua.dll.mdb
 KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
 
 endif
 
 if ENABLE_RELEASE
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:RELEASE"
-ASSEMBLY = ../../Run/Release/LuaRunner.exe
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:TRACE"
+ASSEMBLY = bin/Release/ConsoleTest.exe
 ASSEMBLY_MDB = 
 COMPILE_TARGET = exe
 PROJECT_REFERENCES =  \
-	../../Run/Release/NLua.dll
-BUILD_DIR = ../../Run/Release
+	../Run/Release/NLua.dll
+BUILD_DIR = bin/Release/
 
-LUARUNNER_EXE_MDB=
-LUARUNNER_EXE_CONFIG_SOURCE=app.config
-NLUA_DLL_SOURCE=../../Run/Release/NLua.dll
+CONSOLETEST_EXE_MDB=
+CONSOLETEST_EXE_CONFIG_SOURCE=App.config
+NLUA_DLL_SOURCE=../Run/Release/NLua.dll
 NLUA_DLL_MDB=
-KERALUA_DLL_SOURCE=../../Core/KeraLua/bin/Release/KeraLua.dll
+KERALUA_DLL_SOURCE=../Core/KeraLua/bin/Release/KeraLua.dll
 KERALUA_DLL_MDB=
-KOPILUA_DLL_SOURCE=../../Core/KopiLua/bin/Release/KopiLua.dll
+KOPILUA_DLL_SOURCE=../Core/KopiLua/bin/Release/KopiLua.dll
 KOPILUA_DLL_MDB=
 
 endif
 
-AL=al2
+AL=al
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
 
 PROGRAMFILES = \
-	$(LUARUNNER_EXE_MDB) \
-	$(LUARUNNER_EXE_CONFIG) \
+	$(CONSOLETEST_EXE_MDB) \
+	$(CONSOLETEST_EXE_CONFIG) \
 	$(NLUA_DLL) \
 	$(NLUA_DLL_MDB) \
 	$(KERALUA_DLL) \
@@ -62,7 +63,7 @@ PROGRAMFILES = \
 	$(KOPILUA_DLL_MDB)  
 
 BINARIES = \
-	$(LUARUNNER)  
+	$(CONSOLETEST)  
 
 
 RESGEN=resgen2
@@ -70,7 +71,9 @@ RESGEN=resgen2
 all: $(ASSEMBLY) $(PROGRAMFILES) $(BINARIES) 
 
 FILES = \
-	LuaNetRunner.cs \
+	../tests/Entity.cs \
+	../tests/TestLua.cs \
+	Program.cs \
 	Properties/AssemblyInfo.cs 
 
 DATA_FILES = 
@@ -78,11 +81,13 @@ DATA_FILES =
 RESOURCES = 
 
 EXTRAS = \
-	app.config \
-	luarunner.in 
+	App.config \
+	consoletest.in 
 
 REFERENCES =  \
 	System \
+	System.Core \
+	System.Xml.Linq \
 	System.Data \
 	System.Xml
 
@@ -92,18 +97,20 @@ CLEANFILES = $(PROGRAMFILES) $(BINARIES)
 
 include $(top_srcdir)/Makefile.include
 
-LUARUNNER_EXE_CONFIG = $(BUILD_DIR)/LuaRunner.exe.config
+CONSOLETEST_EXE_CONFIG = $(BUILD_DIR)/ConsoleTest.exe.config
 NLUA_DLL = $(BUILD_DIR)/NLua.dll
 KERALUA_DLL = $(BUILD_DIR)/KeraLua.dll
 KOPILUA_DLL = $(BUILD_DIR)/KopiLua.dll
-LUARUNNER = $(BUILD_DIR)/luarunner
+CONSOLETEST = $(BUILD_DIR)/consoletest
 
-$(eval $(call emit-deploy-target,LUARUNNER_EXE_CONFIG))
+$(eval $(call emit-deploy-target,CONSOLETEST_EXE_CONFIG))
+$(eval $(call emit-deploy-target,NLUA_DLL))
+$(eval $(call emit-deploy-target,NLUA_DLL_MDB))
 $(eval $(call emit-deploy-target,KERALUA_DLL))
 $(eval $(call emit-deploy-target,KERALUA_DLL_MDB))
 $(eval $(call emit-deploy-target,KOPILUA_DLL))
 $(eval $(call emit-deploy-target,KOPILUA_DLL_MDB))
-$(eval $(call emit-deploy-wrapper,LUARUNNER,luarunner,x))
+$(eval $(call emit-deploy-wrapper,CONSOLETEST,consoletest,x))
 
 
 $(eval $(call emit_resgen_targets))

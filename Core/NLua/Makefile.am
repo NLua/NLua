@@ -3,77 +3,59 @@ EXTRA_DIST =
 
 # Warning: This is an automatically generated file, do not edit!
 
-if ENABLE_DEBUG_X86
-ASSEMBLY_COMPILER_COMMAND = dmcs
+if ENABLE_DEBUG
+ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
 ASSEMBLY = ../../Run/Debug/NLua.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../../Run/Debug/KopiLua.dll
+	../KeraLua/bin/Debug/KeraLua.dll \
+	../KopiLua/bin/Debug/KopiLua.dll
 BUILD_DIR = ../../Run/Debug
 
-LUAINTERFACE_DLL_MDB_SOURCE=../../Run/Debug/NLua.dll.mdb
-LUAINTERFACE_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
-KOPILUA_DLL_SOURCE=../../Run/Debug/KopiLua.dll
+NLUA_DLL_MDB_SOURCE=../../Run/Debug/NLua.dll.mdb
+NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
+KERALUA_DLL_SOURCE=../KeraLua/bin/Debug/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../KeraLua/bin/Debug/KeraLua.dll.mdb
+KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
+KOPILUA_DLL_SOURCE=../KopiLua/bin/Debug/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../KopiLua/bin/Debug/KopiLua.dll.mdb
+KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
 
 endif
 
-if ENABLE_RELEASE_X86
-ASSEMBLY_COMPILER_COMMAND = dmcs
+if ENABLE_RELEASE
+ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:RELEASE"
 ASSEMBLY = ../../Run/Release/NLua.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../../Run/Release/KopiLua.dll
+	../KeraLua/bin/Release/KeraLua.dll \
+	../KopiLua/bin/Release/KopiLua.dll
 BUILD_DIR = ../../Run/Release
 
-LUAINTERFACE_DLL_MDB=
-KOPILUA_DLL_SOURCE=../../Run/Release/KopiLua.dll
+NLUA_DLL_MDB=
+KERALUA_DLL_SOURCE=../KeraLua/bin/Release/KeraLua.dll
+KERALUA_DLL_MDB=
+KOPILUA_DLL_SOURCE=../KopiLua/bin/Release/KopiLua.dll
+KOPILUA_DLL_MDB=
 
 endif
 
-if ENABLE_DEBUG_X64
-ASSEMBLY_COMPILER_COMMAND = dmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
-ASSEMBLY = ../../Run/Debug_x64/NLua.dll
-ASSEMBLY_MDB = $(ASSEMBLY).mdb
-COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../Run/Debug_x64/KopiLua.dll
-BUILD_DIR = ../../Run/Debug_x64
-
-LUAINTERFACE_DLL_MDB_SOURCE=../../Run/Debug_x64/NLua.dll.mdb
-LUAINTERFACE_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
-KOPILUA_DLL_SOURCE=../../Run/Debug_x64/KopiLua.dll
-
-endif
-
-if ENABLE_RELEASE_X64
-ASSEMBLY_COMPILER_COMMAND = dmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:RELEASE"
-ASSEMBLY = ../../Run/Release_x64/NLua.dll
-ASSEMBLY_MDB = 
-COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../Run/Release_x64/KopiLua.dll
-BUILD_DIR = ../../Run/Release_x64
-
-LUAINTERFACE_DLL_MDB=
-KOPILUA_DLL_SOURCE=../../Run/Release_x64/KopiLua.dll
-
-endif
-
-AL=al
+AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
 
 PROGRAMFILES = \
-	$(LUAINTERFACE_DLL_MDB) \
-	$(KOPILUA_DLL)  
+	$(NLUA_DLL_MDB) \
+	$(KERALUA_DLL) \
+	$(KERALUA_DLL_MDB) \
+	$(KOPILUA_DLL) \
+	$(KOPILUA_DLL_MDB)  
 
 LINUX_PKGCONFIG = \
-	$(LUAINTERFACE_PC)  
+	$(NLUA_PC)  
 
 
 RESGEN=resgen2
@@ -120,25 +102,21 @@ FILES = \
 	LuaLib/LuaIndexes.cs \
 	LuaLib/GCOptions.cs \
 	LuaLib/LuaLib.cs \
-	Config/NLuaConfig.cs 
+	Config/NLuaConfig.cs \
+	ObjectTranslatorPool.cs 
 
 DATA_FILES = 
 
 RESOURCES = 
 
 EXTRAS = \
-	Extensions \
-	GenerateEventAssembly \
-	Event \
-	Exceptions \
-	Method \
-	Config \
 	nlua.pc.in 
 
 REFERENCES =  \
 	System \
 	System.Data \
-	System.Xml
+	System.Xml \
+	System.Core
 
 DLL_REFERENCES = 
 
@@ -146,10 +124,15 @@ CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 
 include $(top_srcdir)/Makefile.include
 
+KERALUA_DLL = $(BUILD_DIR)/KeraLua.dll
 KOPILUA_DLL = $(BUILD_DIR)/KopiLua.dll
-LUAINTERFACE_PC = $(BUILD_DIR)/nlua.pc
+NLUA_PC = $(BUILD_DIR)/nlua.pc
 
-$(eval $(call emit-deploy-wrapper,LUAINTERFACE_PC,nlua.pc))
+$(eval $(call emit-deploy-target,KERALUA_DLL))
+$(eval $(call emit-deploy-target,KERALUA_DLL_MDB))
+$(eval $(call emit-deploy-target,KOPILUA_DLL))
+$(eval $(call emit-deploy-target,KOPILUA_DLL_MDB))
+$(eval $(call emit-deploy-wrapper,NLUA_PC,nlua.pc))
 
 
 $(eval $(call emit_resgen_targets))
