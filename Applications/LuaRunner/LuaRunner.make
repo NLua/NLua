@@ -2,8 +2,8 @@
 
 # Warning: This is an automatically generated file, do not edit!
 
-if ENABLE_DEBUG_X86
-ASSEMBLY_COMPILER_COMMAND = dmcs
+if ENABLE_DEBUG
+ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
 ASSEMBLY = ../../Run/Debug/LuaRunner.exe
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
@@ -14,13 +14,21 @@ BUILD_DIR = ../../Run/Debug
 
 LUARUNNER_EXE_MDB_SOURCE=../../Run/Debug/LuaRunner.exe.mdb
 LUARUNNER_EXE_MDB=$(BUILD_DIR)/LuaRunner.exe.mdb
-LUAINTERFACE_DLL_SOURCE=../../Run/Debug/NLua.dll
-KOPILUA_DLL_SOURCE=../../Run/Debug/KopiLua.dll
+LUARUNNER_EXE_CONFIG_SOURCE=app.config
+NLUA_DLL_SOURCE=../../Run/Debug/NLua.dll
+NLUA_DLL_MDB_SOURCE=../../Run/Debug/NLua.dll.mdb
+NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
+KERALUA_DLL_SOURCE=../../Core/KeraLua/bin/Debug/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../../Core/KeraLua/bin/Debug/KeraLua.dll.mdb
+KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
+KOPILUA_DLL_SOURCE=../../Core/KopiLua/bin/Debug/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../../Core/KopiLua/bin/Debug/KopiLua.dll.mdb
+KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
 
 endif
 
-if ENABLE_RELEASE_X86
-ASSEMBLY_COMPILER_COMMAND = dmcs
+if ENABLE_RELEASE
+ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:RELEASE"
 ASSEMBLY = ../../Run/Release/LuaRunner.exe
 ASSEMBLY_MDB = 
@@ -30,51 +38,28 @@ PROJECT_REFERENCES =  \
 BUILD_DIR = ../../Run/Release
 
 LUARUNNER_EXE_MDB=
-LUAINTERFACE_DLL_SOURCE=../../Run/Release/NLua.dll
-KOPILUA_DLL_SOURCE=../../Run/Release/KopiLua.dll
+LUARUNNER_EXE_CONFIG_SOURCE=app.config
+NLUA_DLL_SOURCE=../../Run/Release/NLua.dll
+NLUA_DLL_MDB=
+KERALUA_DLL_SOURCE=../../Core/KeraLua/bin/Release/KeraLua.dll
+KERALUA_DLL_MDB=
+KOPILUA_DLL_SOURCE=../../Core/KopiLua/bin/Release/KopiLua.dll
+KOPILUA_DLL_MDB=
 
 endif
 
-if ENABLE_DEBUG_X64
-ASSEMBLY_COMPILER_COMMAND = dmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
-ASSEMBLY = ../../Run/Debug_x64/LuaRunner.exe
-ASSEMBLY_MDB = $(ASSEMBLY).mdb
-COMPILE_TARGET = exe
-PROJECT_REFERENCES =  \
-	../../Run/Debug_x64/NLua.dll
-BUILD_DIR = ../../Run/Debug_x64
-
-LUARUNNER_EXE_MDB_SOURCE=../../Run/Debug_x64/LuaRunner.exe.mdb
-LUARUNNER_EXE_MDB=$(BUILD_DIR)/LuaRunner.exe.mdb
-LUAINTERFACE_DLL_SOURCE=../../Run/Debug_x64/NLua.dll
-KOPILUA_DLL_SOURCE=../../Run/Debug_x64/KopiLua.dll
-
-endif
-
-if ENABLE_RELEASE_X64
-ASSEMBLY_COMPILER_COMMAND = dmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:RELEASE"
-ASSEMBLY = ../../Run/Release_x64/LuaRunner.exe
-ASSEMBLY_MDB = 
-COMPILE_TARGET = exe
-PROJECT_REFERENCES =  \
-	../../Run/Release_x64/NLua.dll
-BUILD_DIR = ../../Run/Release_x64
-
-LUARUNNER_EXE_MDB=
-LUAINTERFACE_DLL_SOURCE=../../Run/Release_x64/NLua.dll
-KOPILUA_DLL_SOURCE=../../Run/Release_x64/KopiLua.dll
-
-endif
-
-AL=al
+AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
 
 PROGRAMFILES = \
 	$(LUARUNNER_EXE_MDB) \
-	$(LUAINTERFACE_DLL) \
-	$(KOPILUA_DLL)  
+	$(LUARUNNER_EXE_CONFIG) \
+	$(NLUA_DLL) \
+	$(NLUA_DLL_MDB) \
+	$(KERALUA_DLL) \
+	$(KERALUA_DLL_MDB) \
+	$(KOPILUA_DLL) \
+	$(KOPILUA_DLL_MDB)  
 
 BINARIES = \
 	$(LUARUNNER)  
@@ -93,6 +78,7 @@ DATA_FILES =
 RESOURCES = 
 
 EXTRAS = \
+	app.config \
 	luarunner.in 
 
 REFERENCES =  \
@@ -106,10 +92,17 @@ CLEANFILES = $(PROGRAMFILES) $(BINARIES)
 
 include $(top_srcdir)/Makefile.include
 
-LUAINTERFACE_DLL = $(BUILD_DIR)/NLua.dll
+LUARUNNER_EXE_CONFIG = $(BUILD_DIR)/LuaRunner.exe.config
+NLUA_DLL = $(BUILD_DIR)/NLua.dll
+KERALUA_DLL = $(BUILD_DIR)/KeraLua.dll
 KOPILUA_DLL = $(BUILD_DIR)/KopiLua.dll
 LUARUNNER = $(BUILD_DIR)/luarunner
 
+$(eval $(call emit-deploy-target,LUARUNNER_EXE_CONFIG))
+$(eval $(call emit-deploy-target,KERALUA_DLL))
+$(eval $(call emit-deploy-target,KERALUA_DLL_MDB))
+$(eval $(call emit-deploy-target,KOPILUA_DLL))
+$(eval $(call emit-deploy-target,KOPILUA_DLL_MDB))
 $(eval $(call emit-deploy-wrapper,LUARUNNER,luarunner,x))
 
 
