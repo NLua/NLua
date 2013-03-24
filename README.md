@@ -9,10 +9,17 @@ NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Ph
 
 Linux: [![Build Status](https://travis-ci.org/NLua/NLua.png?branch=master)](https://travis-ci.org/NLua/NLua)
 
-OSX : [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua/)
+OSX: [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua/) 
+**Download** [![dwn_osx][2]][1]
 
-iOS: [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/)
+  [1]: http://jenkins-nlua.sytes.net:8080/job/NLua/lastSuccessfulBuild/artifact/NLua.OSX.zip
+  [2]: http://nvlabs.github.com/cub/download-icon.png (Download for OSX)
 
+iOS :  [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/)
+**Download** [![dwn_ios][2]][1]
+
+  [1]: http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
+  [2]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
 
 ```csharp
 			
