@@ -35,10 +35,7 @@ namespace NLua
 
 	internal class ObjectTranslatorPool
 	{
-		private static volatile ObjectTranslatorPool instance = new ObjectTranslatorPool ();
-		
-		private static object syncRoot = new object ();
-		
+		private static volatile ObjectTranslatorPool instance = new ObjectTranslatorPool ();		
 		private Dictionary<LuaCore.lua_State, ObjectTranslator> translators = new Dictionary<LuaCore.lua_State, ObjectTranslator>();
 		
 		public static ObjectTranslatorPool Instance
@@ -51,7 +48,6 @@ namespace NLua
 		
 		public ObjectTranslatorPool ()
 		{
-			syncRoot = new Dictionary<LuaCore.lua_State, ObjectTranslator> ();
 		}
 		
 		public void Add (LuaCore.lua_State luaState, ObjectTranslator translator)

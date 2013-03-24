@@ -30,16 +30,22 @@
 	<string>1.0</string>
 	<key>CFBundleIconFiles</key>
 	<array>
+		<string>Icons/Icon-Small@2x</string>
 		<string>Icons/Icon</string>
 		<string>Icons/Icon@2x</string>
 		<string>Icons/Icon-72</string>
 		<string>Icons/Icon-72@2x</string>
 		<string>Icons/Icon-Small</string>
-		<string>Icons/Icon-Small@2x</string>
 		<string>Icons/Icon-Small-50</string>
 		<string>Icons/Icon-Small-50@2x</string>
 	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>
+	<key>NSMainNibFile</key>
+	<string></string>
+	<key>NSMainNibFile~ipad</key>
+	<string></string>
+	<key>MKDirectionsApplicationSupportedModes</key>
+	<array/>
 </dict>
 </plist>

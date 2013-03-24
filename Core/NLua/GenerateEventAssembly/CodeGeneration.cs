@@ -47,18 +47,19 @@ namespace NLua
 	class CodeGeneration
 	{
 		private Dictionary<Type, LuaClassType> classCollection = new Dictionary<Type, LuaClassType> ();
-		private Dictionary<Type, Type> eventHandlerCollection = new Dictionary<Type, Type> ();
 		private Dictionary<Type, Type> delegateCollection = new Dictionary<Type, Type> ();
 		private static readonly CodeGeneration instance = new CodeGeneration ();
+		private AssemblyName assemblyName;
+
+#if !MONOTOUCH
+		private Dictionary<Type, Type> eventHandlerCollection = new Dictionary<Type, Type> ();
 		private Type eventHandlerParent = typeof(LuaEventHandler);
 		private Type delegateParent = typeof(LuaDelegate);
 		private Type classHelper = typeof(LuaClassHelper);
-		private AssemblyName assemblyName;
-#if !MONOTOUCH
 		private AssemblyBuilder newAssembly;
 		private ModuleBuilder newModule;
-#endif
 		private int luaClassNumber = 1;
+#endif
 
 		static CodeGeneration ()
 		{
@@ -408,8 +409,7 @@ namespace NLua
 					nOutAndRefParams++;
 				}
 			}
-			
-			int[] refArgs = new int[nOutAndRefParams];
+
 			returnTypes = returnTypesList.ToArray ();
 		}
 
