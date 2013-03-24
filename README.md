@@ -16,10 +16,10 @@ OSX: [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua/badge/icon)](h
   [2]: http://nvlabs.github.com/cub/download-icon.png (Download for OSX)
 
 iOS :  [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/)
-**Download** [![dwn_ios][2]][1]
+**Download** [![dwn_ios][4]][3]
 
-  [1]: http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
-  [2]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
+  [3]: http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
+  [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
 
 ```csharp
 			
