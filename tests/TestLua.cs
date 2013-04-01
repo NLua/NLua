@@ -345,6 +345,15 @@ namespace NLuaTest.Mock
 			}
 		}
 
+		public string teststrval {
+			get {
+				return this.strVal;
+			}
+			set {
+				this.strVal = value;
+			}
+		}
+
 		public int this [int index] {
 			get { return 1; }
 			set { }

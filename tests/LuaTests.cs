@@ -900,6 +900,23 @@ namespace NLuaTest
 				//Console.WriteLine("new val (from Lua)="+t1.testval);
 			}
 		}
+
+		[Test]
+		public void AccessObjectStringProperty ()
+		{
+			using (Lua lua = new Lua ()) {
+				TestClass t1 = new TestClass ();
+				t1.teststrval = "This is a string test";
+				lua ["netobj"] = t1;
+				lua.DoString ("var=netobj.teststrval");
+				string var = (string)lua ["var"];
+
+				Assert.AreEqual ("This is a string test", var);
+				lua.DoString ("netobj.teststrval='Another String'");
+				Assert.AreEqual ("Another String", t1.teststrval);
+				//Console.WriteLine("new val (from Lua)="+t1.testval);
+			}
+		}
 		/*
         * Tests calling of an object's method with no overloads
         */

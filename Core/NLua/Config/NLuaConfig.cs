@@ -34,11 +34,11 @@ namespace NLua.Config
 #else
 		public const string NLuaConfiguration = "Release";
 #endif
-		public const string NLuaCompany = "NLua Productions";
+		public const string NLuaCompany = "NLua.org";
 		public const string NLuaProduct = "NLua";
-		public const string NLuaCopyright = "Copyright 2003-2008 Fabio Mascarenhas, Kevin Hesterm ,Megax and Vinicius Jarina";
+		public const string NLuaCopyright = "Copyright 2003-2013 Vinicius Jarina , Fabio Mascarenhas, Kevin Hesterm and Megax";
 		public const string NLuaTrademark = "MIT license";
-		public const string NLuaVersion = "2.0.4";
-		public const string NLuaFileVersion = "2.0.4.0";
+		public const string NLuaVersion = "1.0.0";
+		public const string NLuaFileVersion = "1.0.0.0";
 	}
 }

@@ -344,7 +344,7 @@ namespace NLua
 				return true;
 
 			//CP: Removed NonPublic binding search
-			var members = objType.GetMember (methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase/* | BindingFlags.NonPublic*/);
+			var members = objType.GetMember (methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
 			return (members.Length > 0);
 		}
 
