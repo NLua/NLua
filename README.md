@@ -46,13 +46,13 @@ iOS :  [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/ic
 			}
 ```
 
-Copyright (c) 2013 Vinicius Jarina
+Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
 
 
 NLua 1.0.0
 ----------
 * Forked from LuaInterface 2.0.4
-* Added iOS support using KeraLua (C# PInvoke Lua)
+* Added iOS support using KeraLua (C# P/Invoke Lua)
 
 
 LuaInterface  
