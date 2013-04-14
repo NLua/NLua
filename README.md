@@ -22,23 +22,34 @@ iOS :  [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/ic
   [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
 
 ```csharp
-			
-			string url = @"http://raw.github.com/NLua/NLua/master/README.md";
 
 			string script = @"
 				
-				luanet.load_assembly ('System.dll')
-				WebClient = luanet.import_type ('System.Net.WebClient')
-				local client = WebClient ()
-
-				local ret = client:DownloadString (url);
-
-				return ret;
-				";
+			local s = Scriptable (""My String Parameter"")
+			s:DoSomething ()
+			
+			print (s.Param1)
+			
+			local ret = s:SumOfLengths (""Name"", 10);
+			
+			print (tostring(ret))
+			
+			Scriptable.Print(""Hello NLua"")
+			
+			s.Param3 = 0.5;
+			
+			local p2 = tostring(s.Param3)
+			
+			print (p2)
+			";
 
 			using (Lua lua = new Lua ()) {
 
-				lua ["url"] = url;
+				lua.LoadCLRPackage ();
+
+				lua.DoString (@" import ('NLuaSample') ");
+				
+				lua ["gValue"] = "This is a global value"; // You can set a global value.
 
 				var returns = lua.DoString (script);
 
