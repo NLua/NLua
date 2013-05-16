@@ -405,6 +405,29 @@ end
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name = "chunk"></param>
+		/// <param name = "name"></param>
+		/// <returns></returns>
+		public LuaFunction LoadString (byte[] chunk, string name)
+		{
+			int oldTop = LuaLib.lua_gettop (luaState);
+			executing = true;
+			
+			try {
+				if (LuaLib.luaL_loadbuffer (luaState, chunk, name) != 0)
+					ThrowExceptionFromError (oldTop);
+			} finally {
+				executing = false;
+			}
+			
+			var result = translator.getFunction (luaState, -1);
+			translator.popValues (luaState, oldTop);
+			return result;
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <param name = "fileName"></param>
 		/// <returns></returns>
 		public LuaFunction LoadFile (string fileName)
