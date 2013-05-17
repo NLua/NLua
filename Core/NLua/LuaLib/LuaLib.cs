@@ -83,6 +83,11 @@ namespace NLua
 			return LuaCore.luaL_loadstring (luaState, chunk);
 		}
 
+		public static int luaL_loadstring (LuaCore.lua_State luaState, byte[] chunk)
+		{
+			return LuaCore.luaL_loadstring (luaState, chunk);
+		}
+
 		public static int luaL_dostring (LuaCore.lua_State luaState, string chunk)
 		{
 			int result = luaL_loadstring (luaState, chunk);
@@ -92,6 +97,15 @@ namespace NLua
 			return lua_pcall (luaState, 0, -1, 0);
 		}
 
+		public static int luaL_dostring (LuaCore.lua_State luaState, byte[] chunk)
+		{
+			int result = luaL_loadstring (luaState, chunk);
+			if (result != 0)
+				return result;
+			
+			return lua_pcall (luaState, 0, -1, 0);
+		}
+		
 		/// <summary>DEPRECATED - use luaL_dostring(LuaCore.lua_State luaState, string chunk) instead!</summary>
 		public static int lua_dostring (LuaCore.lua_State luaState, string chunk)
 		{
