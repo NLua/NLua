@@ -334,7 +334,13 @@ namespace NLua
 				return string.Format ("{0}", lua_tonumber (luaState, index));
 			else if (t == LuaTypes.String) {
 				uint strlen;
-				return LuaCore.lua_tolstring (luaState, index, out strlen).ToString ();
+				// Changed 2013-05-18 by Dirk Weltz
+				// Changed because binary chunks, which are also transfered as strings
+				// get corrupted by conversion to strings because of the encoding.
+				// So we use the ToString method with string length, so it could be checked,
+				// if string is a binary chunk and if, could transfered to string without
+				// encoding.
+				return LuaCore.lua_tolstring (luaState, index, out strlen).ToString ((int)strlen);
 			} else if (t == LuaTypes.Nil)
 				return null;			// treat lua nulls to as C# nulls
 			else
