@@ -403,6 +403,11 @@ namespace NLua
 		{
 			return LuaCore.luaL_loadbuffer (luaState, buff, (uint)buff.Length, name);
 		}
+		
+		public static int luaL_loadbuffer (LuaCore.lua_State luaState, byte[] buff, string name)
+		{
+			return LuaCore.luaL_loadbuffer (luaState, buff, (uint)buff.Length, name);
+		}
 
 		public static int luaL_loadfile (LuaCore.lua_State luaState, string filename)
 		{
