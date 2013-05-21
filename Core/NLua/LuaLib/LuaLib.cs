@@ -83,6 +83,11 @@ namespace NLua
 			return LuaCore.luaL_loadstring (luaState, chunk);
 		}
 
+		public static int luaL_loadstring (LuaCore.lua_State luaState, byte[] chunk)
+		{
+			return LuaCore.luaL_loadstring (luaState, chunk);
+		}
+
 		public static int luaL_dostring (LuaCore.lua_State luaState, string chunk)
 		{
 			int result = luaL_loadstring (luaState, chunk);
@@ -92,6 +97,15 @@ namespace NLua
 			return lua_pcall (luaState, 0, -1, 0);
 		}
 
+		public static int luaL_dostring (LuaCore.lua_State luaState, byte[] chunk)
+		{
+			int result = luaL_loadstring (luaState, chunk);
+			if (result != 0)
+				return result;
+			
+			return lua_pcall (luaState, 0, -1, 0);
+		}
+		
 		/// <summary>DEPRECATED - use luaL_dostring(LuaCore.lua_State luaState, string chunk) instead!</summary>
 		public static int lua_dostring (LuaCore.lua_State luaState, string chunk)
 		{
@@ -320,7 +334,13 @@ namespace NLua
 				return string.Format ("{0}", lua_tonumber (luaState, index));
 			else if (t == LuaTypes.String) {
 				uint strlen;
-				return LuaCore.lua_tolstring (luaState, index, out strlen).ToString ();
+				// Changed 2013-05-18 by Dirk Weltz
+				// Changed because binary chunks, which are also transfered as strings
+				// get corrupted by conversion to strings because of the encoding.
+				// So we use the ToString method with string length, so it could be checked,
+				// if string is a binary chunk and if, could transfered to string without
+				// encoding.
+				return LuaCore.lua_tolstring (luaState, index, out strlen).ToString ((int)strlen);
 			} else if (t == LuaTypes.Nil)
 				return null;			// treat lua nulls to as C# nulls
 			else
@@ -386,6 +406,11 @@ namespace NLua
 		}
 
 		public static int luaL_loadbuffer (LuaCore.lua_State luaState, string buff, string name)
+		{
+			return LuaCore.luaL_loadbuffer (luaState, buff, (uint)buff.Length, name);
+		}
+
+		public static int luaL_loadbuffer (LuaCore.lua_State luaState, byte [] buff, string name)
 		{
 			return LuaCore.luaL_loadbuffer (luaState, buff, (uint)buff.Length, name);
 		}

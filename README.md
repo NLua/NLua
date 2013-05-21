@@ -1,6 +1,22 @@
 NLua
 ========
 
+>###Help NLua###
+> If you are using NLua consider to help with some easy todo items.
+>
+>### TODO: ###
+> * Windows CI server.
+> * Port to other platforms (using a csproj/sln for each platform like RestSharp/MonoGame/Cocos2d-XNA)
+>	 	* Android (port means create the project files + make files, no code change needed)
+> 		* iOS (done)
+>		* Windows/Linux/Mac (done)
+>		* Windows Phone 8 (bind using C++/CX instead p/Inoke like SharpDX)
+>		* Windows Phone 7 (using KopiLua)
+
+> * Fix warnings/Gendarme/FxCop issues.
+
+
+
 [![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
 
 NLua is a fork of project NLua (from Fábio Mascarenhas/Craig Presti).
