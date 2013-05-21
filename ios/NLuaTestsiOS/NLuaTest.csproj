@@ -132,9 +132,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\NLua\NLua.IOS.csproj">
+    <ProjectReference Include="..\..\Core\NLua\NLua.iOS.csproj">
       <Project>{7064B157-DD57-4828-94C5-CA149B25CB40}</Project>
-      <Name>NLua.IOS</Name>
+      <Name>NLua.iOS</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
