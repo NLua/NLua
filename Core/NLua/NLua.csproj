@@ -90,11 +90,11 @@
   </Target>
   -->
   <ItemGroup>
-    <ProjectReference Include="..\KeraLua\KeraLua.csproj">
+    <ProjectReference Include="..\KeraLua\src\KeraLua.csproj">
       <Project>{47153754-10F5-44D8-B578-F5A32B69061A}</Project>
       <Name>KeraLua</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KopiLua\KopiLua.csproj">
+    <ProjectReference Include="..\KopiLua\KopiLua\KopiLua.csproj">
       <Project>{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}</Project>
       <Name>KopiLua</Name>
     </ProjectReference>
