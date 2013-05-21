@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.IOS", "Core\NLua\NLua.IOS.csproj", "{7064B157-DD57-4828-94C5-CA149B25CB40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KopiLua.IOS", "Core\KopiLua\KopiLua.IOS.csproj", "{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KopiLua.IOS", "Core\KopiLua\KopiLua\KopiLua.iOS.csproj", "{44DA9778-C0B0-4C6F-8617-79BA2E0F1361}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeraLua.iOS", "Core\KeraLua\KeraLua.iOS.csproj", "{3F57C208-AA13-4B67-B3E7-ED41307F00A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeraLua.iOS", "Core\KeraLua\src\KeraLua.iOS.csproj", "{3F57C208-AA13-4B67-B3E7-ED41307F00A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest", "ios\NLuaTestsiOS\NLuaTest.csproj", "{2DC0E43A-21B8-41FF-8793-60AB50350977}"
 EndProject
