@@ -6,4 +6,4 @@
 	url = git://github.com/NLua/KopiLua.git
 [submodule "Core/KeraLua"]
 	path = Core/KeraLua
-	url = git://github.com/NLua/KopiLua.git
+	url = git://github.com/NLua/KeraLua.git
