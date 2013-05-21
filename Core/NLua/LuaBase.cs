@@ -56,8 +56,10 @@ namespace NLua
 		public virtual void Dispose (bool disposeManagedResources)
 		{
 			if (!_Disposed) {
-				if (_Reference != 0)
-					_Interpreter.dispose (_Reference);
+				if (disposeManagedResources) {
+					if (_Reference != 0)
+						_Interpreter.dispose (_Reference);
+				}
 
 				_Interpreter = null;
 				_Disposed = true;
