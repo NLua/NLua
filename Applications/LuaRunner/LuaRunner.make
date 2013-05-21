@@ -18,11 +18,11 @@ LUARUNNER_EXE_CONFIG_SOURCE=app.config
 NLUA_DLL_SOURCE=../../Run/Debug/NLua.dll
 NLUA_DLL_MDB_SOURCE=../../Run/Debug/NLua.dll.mdb
 NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
-KERALUA_DLL_SOURCE=../../Core/KeraLua/bin/Debug/KeraLua.dll
-KERALUA_DLL_MDB_SOURCE=../../Core/KeraLua/bin/Debug/KeraLua.dll.mdb
+KERALUA_DLL_SOURCE=../../Core/KeraLua/src/bin/Debug/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../../Core/KeraLua/src/bin/Debug/KeraLua.dll.mdb
 KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
-KOPILUA_DLL_SOURCE=../../Core/KopiLua/bin/Debug/KopiLua.dll
-KOPILUA_DLL_MDB_SOURCE=../../Core/KopiLua/bin/Debug/KopiLua.dll.mdb
+KOPILUA_DLL_SOURCE=../../Core/KopiLua/Bin/Debug/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../../Core/KopiLua/Bin/Debug/KopiLua.dll.mdb
 KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
 
 endif
@@ -41,9 +41,9 @@ LUARUNNER_EXE_MDB=
 LUARUNNER_EXE_CONFIG_SOURCE=app.config
 NLUA_DLL_SOURCE=../../Run/Release/NLua.dll
 NLUA_DLL_MDB=
-KERALUA_DLL_SOURCE=../../Core/KeraLua/bin/Release/KeraLua.dll
+KERALUA_DLL_SOURCE=../../Core/KeraLua/src/bin/Release/KeraLua.dll
 KERALUA_DLL_MDB=
-KOPILUA_DLL_SOURCE=../../Core/KopiLua/bin/Release/KopiLua.dll
+KOPILUA_DLL_SOURCE=../../Core/KopiLua/Bin/Release/KopiLua.dll
 KOPILUA_DLL_MDB=
 
 endif

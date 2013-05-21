@@ -55,10 +55,10 @@ dnl package checks, per config
 
 
 AC_CONFIG_FILES([
-Core/KopiLua/kopilua.pc
-Core/KopiLua/Makefile
-Core/KeraLua/keralua.pc
-Core/KeraLua/Makefile
+Core/KopiLua/KopiLua/kopilua.pc
+Core/KopiLua/KopiLua/Makefile
+Core/KeraLua/src/keralua.pc
+Core/KeraLua/src/Makefile
 Core/NLua/nlua.pc
 Core/NLua/Makefile
 Core/Makefile
