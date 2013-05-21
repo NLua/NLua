@@ -10,19 +10,19 @@ ASSEMBLY = ../tests/NLuaTest.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../Core/KeraLua/bin/Debug/KeraLua.dll \
-	../Core/KopiLua/bin/Debug/KopiLua.dll \
+	../Core/KeraLua/src/bin/Debug/KeraLua.dll \
+	../Core/KopiLua/Bin/Debug/KopiLua.dll \
 	../Run/Debug/NLua.dll
 BUILD_DIR = ../tests/
 
 NLUATEST_DLL_MDB_SOURCE=../tests/NLuaTest.dll.mdb
 NLUATEST_DLL_MDB=$(BUILD_DIR)/NLuaTest.dll.mdb
 NUNIT_FRAMEWORK_DLL_SOURCE=../lib/nunit/nunit.framework.dll
-KERALUA_DLL_SOURCE=../Core/KeraLua/bin/Debug/KeraLua.dll
-KERALUA_DLL_MDB_SOURCE=../Core/KeraLua/bin/Debug/KeraLua.dll.mdb
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/Debug/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../Core/KeraLua/src/bin/Debug/KeraLua.dll.mdb
 KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
-KOPILUA_DLL_SOURCE=../Core/KopiLua/bin/Debug/KopiLua.dll
-KOPILUA_DLL_MDB_SOURCE=../Core/KopiLua/bin/Debug/KopiLua.dll.mdb
+KOPILUA_DLL_SOURCE=../Core/KopiLua/Bin/Debug/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../Core/KopiLua/Bin/Debug/KopiLua.dll.mdb
 KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
 NLUA_DLL_SOURCE=../Run/Debug/NLua.dll
 NLUA_DLL_MDB_SOURCE=../Run/Debug/NLua.dll.mdb
@@ -37,16 +37,16 @@ ASSEMBLY = ../tests/NLuaTest.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../Core/KeraLua/bin/Release/KeraLua.dll \
-	../Core/KopiLua/bin/Release/KopiLua.dll \
+	../Core/KeraLua/src/bin/Release/KeraLua.dll \
+	../Core/KopiLua/Bin/Release/KopiLua.dll \
 	../Run/Release/NLua.dll
 BUILD_DIR = ../tests/
 
 NLUATEST_DLL_MDB=
 NUNIT_FRAMEWORK_DLL_SOURCE=../lib/nunit/nunit.framework.dll
-KERALUA_DLL_SOURCE=../Core/KeraLua/bin/Release/KeraLua.dll
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/Release/KeraLua.dll
 KERALUA_DLL_MDB=
-KOPILUA_DLL_SOURCE=../Core/KopiLua/bin/Release/KopiLua.dll
+KOPILUA_DLL_SOURCE=../Core/KopiLua/Bin/Release/KopiLua.dll
 KOPILUA_DLL_MDB=
 NLUA_DLL_SOURCE=../Run/Release/NLua.dll
 NLUA_DLL_MDB=

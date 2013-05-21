@@ -10,17 +10,17 @@ ASSEMBLY = ../../Run/Debug/NLua.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../KeraLua/bin/Debug/KeraLua.dll \
-	../KopiLua/bin/Debug/KopiLua.dll
+	../KeraLua/src/bin/Debug/KeraLua.dll \
+	../KopiLua/Bin/Debug/KopiLua.dll
 BUILD_DIR = ../../Run/Debug
 
 NLUA_DLL_MDB_SOURCE=../../Run/Debug/NLua.dll.mdb
 NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
-KERALUA_DLL_SOURCE=../KeraLua/bin/Debug/KeraLua.dll
-KERALUA_DLL_MDB_SOURCE=../KeraLua/bin/Debug/KeraLua.dll.mdb
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/Debug/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../KeraLua/src/bin/Debug/KeraLua.dll.mdb
 KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
-KOPILUA_DLL_SOURCE=../KopiLua/bin/Debug/KopiLua.dll
-KOPILUA_DLL_MDB_SOURCE=../KopiLua/bin/Debug/KopiLua.dll.mdb
+KOPILUA_DLL_SOURCE=../KopiLua/Bin/Debug/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../KopiLua/Bin/Debug/KopiLua.dll.mdb
 KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
 
 endif
@@ -32,14 +32,14 @@ ASSEMBLY = ../../Run/Release/NLua.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../KeraLua/bin/Release/KeraLua.dll \
-	../KopiLua/bin/Release/KopiLua.dll
+	../KeraLua/src/bin/Release/KeraLua.dll \
+	../KopiLua/Bin/Release/KopiLua.dll
 BUILD_DIR = ../../Run/Release
 
 NLUA_DLL_MDB=
-KERALUA_DLL_SOURCE=../KeraLua/bin/Release/KeraLua.dll
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/Release/KeraLua.dll
 KERALUA_DLL_MDB=
-KOPILUA_DLL_SOURCE=../KopiLua/bin/Release/KopiLua.dll
+KOPILUA_DLL_SOURCE=../KopiLua/Bin/Release/KopiLua.dll
 KOPILUA_DLL_MDB=
 
 endif

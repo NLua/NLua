@@ -94,7 +94,7 @@
     <Compile Include="ObjectTranslatorPool.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KeraLua\KeraLua.iOS.csproj">
+    <ProjectReference Include="..\KeraLua\src\KeraLua.iOS.csproj">
       <Project>{3F57C208-AA13-4B67-B3E7-ED41307F00A0}</Project>
       <Name>KeraLua.iOS</Name>
     </ProjectReference>
