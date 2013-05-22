@@ -407,8 +407,10 @@ namespace NLua
 			
 			for (int i = 0; i < paramTypes.Length; i++) {
 				paramTypes [i] = paramInfo [i].ParameterType;
-				if ((!paramInfo [i].IsIn) && paramInfo [i].IsOut)
-					nOutParams++;
+#if !SILVERLIGHT
+                if ((!paramInfo[i].IsIn) && paramInfo[i].IsOut)
+                    nOutParams++; 
+#endif
 				
 				if (paramTypes [i].IsByRef) {
 					returnTypesList.Add (paramTypes [i].GetElementType ());

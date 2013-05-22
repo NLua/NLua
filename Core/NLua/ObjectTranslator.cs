@@ -270,8 +270,10 @@ namespace NLua
 					// The assemblyName was invalid.  It is most likely a path.
 				}
 
-				if (assembly.IsNull ())
-					assembly = Assembly.Load (AssemblyName.GetAssemblyName (assemblyName));
+#if !SILVERLIGHT
+                if (assembly.IsNull())
+                    assembly = Assembly.Load(AssemblyName.GetAssemblyName(assemblyName)); 
+#endif
 
 				if (!assembly.IsNull () && !assemblies.Contains (assembly))
 					assemblies.Add (assembly);
@@ -777,7 +779,7 @@ namespace NLua
 			if (oldTop == newTop)
 				return null;
 			else {
-				var returnValues = new ArrayList ();
+				var returnValues = new List<object> ();
 				for (int i = oldTop+1; i <= newTop; i++)
 					returnValues.Add (getObject (luaState, i));
 
@@ -799,7 +801,7 @@ namespace NLua
 				return null;
 			else {
 				int iTypes;
-				var returnValues = new ArrayList ();
+				var returnValues = new List<object> ();
 
 				if (popTypes [0] == typeof(void))
 					iTypes = 1;

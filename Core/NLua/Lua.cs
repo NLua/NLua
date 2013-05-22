@@ -817,9 +817,9 @@ end
 			LuaLib.lua_settop (luaState, oldTop);
 		}
 
-		public ListDictionary GetTableDict (LuaTable table)
+		public Dictionary<object, object> GetTableDict (LuaTable table)
 		{
-			var dict = new ListDictionary ();
+			var dict = new Dictionary<object, object>();
 			int oldTop = LuaLib.lua_gettop (luaState);
 			translator.push (luaState, table);
 			LuaLib.lua_pushnil (luaState);

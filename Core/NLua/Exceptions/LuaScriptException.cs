@@ -42,7 +42,11 @@ namespace NLua.Exceptions
 		/// <summary>
 		/// The position in the script where the exception was triggered.
 		/// </summary>
-		public override string Source { get { return source; } }
+#if SILVERLIGHT
+        public string Source { get { return source; } }
+#else
+        public override string Source { get { return source; } } 
+#endif
 
 		/// <summary>
 		/// Creates a new Lua-only exception.

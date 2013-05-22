@@ -27,6 +27,9 @@ using System;
 using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
 using NLua.Extensions;
+#if SILVERLIGHT
+using System.Linq;
+#endif
 
 namespace NLua
 {
@@ -108,8 +111,13 @@ namespace NLua
 			if (!type.IsEnum)
 				throw new ArgumentException ("The type must be an enumeration!");
 
-			string[] names = Enum.GetNames (type);
-			var values = (T[])Enum.GetValues (type);
+#if SILVERLIGHT
+            string[] names = type.GetFields().Where(x => x.IsLiteral).Select(field => field.Name).ToArray();
+            var values = type.GetFields().Where(x => x.IsLiteral).Select(field => (T)field.GetValue(null)).ToArray();
+#else
+            string[] names = Enum.GetNames(type);
+            var values = (T[])Enum.GetValues(type); 
+#endif
 			lua.NewTable (type.Name);
 
 			for (int i = 0; i < names.Length; i++) {
