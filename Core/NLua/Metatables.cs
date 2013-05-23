@@ -51,7 +51,7 @@ namespace NLua
 	{
 		internal LuaCore.lua_CFunction gcFunction, indexFunction, newindexFunction, baseIndexFunction,
 			classIndexFunction, classNewindexFunction, execDelegateFunction, callConstructorFunction, toStringFunction;
-		private Hashtable memberCache = new Hashtable ();
+		private Dictionary<object, object> memberCache = new Dictionary<object, object> ();
 		private ObjectTranslator translator;
 
 		/*
@@ -176,7 +176,9 @@ namespace NLua
 					strrep = obj.ToString ();
 				}
 
-				Debug.Print ("{0}: ({1}) {2}", i, typestr, strrep);
+#if !SILVERLIGHT
+                Debug.Print("{0}: ({1}) {2}", i, typestr, strrep); 
+#endif
 			}
 		}
 
@@ -470,21 +472,21 @@ namespace NLua
 		/*
 		 * Checks if a MemberInfo object is cached, returning it or null.
 		 */
-		private object checkMemberCache (Hashtable memberCache, IReflect objType, string memberName)
+		private object checkMemberCache (Dictionary<object, object> memberCache, IReflect objType, string memberName)
 		{
-			var members = (Hashtable)memberCache [objType];
+            var members = (Dictionary<object, object>)memberCache[objType];
 			return !members.IsNull () ? members [memberName] : null;
 		}
 
 		/*
 		 * Stores a MemberInfo object in the member cache.
 		 */
-		private void setMemberCache (Hashtable memberCache, IReflect objType, string memberName, object member)
+        private void setMemberCache(Dictionary<object, object> memberCache, IReflect objType, string memberName, object member)
 		{
-			var members = (Hashtable)memberCache [objType];
+            var members = (Dictionary<object, object>)memberCache[objType];
 
 			if (members.IsNull ()) {
-				members = new Hashtable ();
+                members = new Dictionary<object, object>();
 				memberCache [objType] = members;
 			}
 
@@ -553,9 +555,11 @@ namespace NLua
 					} else
 						translator.throwError (luaState, detailMessage); // Pass the original message from trySetMember because it is probably best
 				}
+#if !SILVERLIGHT
 			} catch (SEHException) {
 				// If we are seeing a C++ exception - this must actually be for Lua's private use.  Let it handle it
 				throw;
+#endif
 			} catch (Exception e) {
 				ThrowError (luaState, e);
 			}
@@ -806,67 +810,92 @@ namespace NLua
 			var paramInfo = method.GetParameters ();
 			int currentLuaParam = 1;
 			int nLuaParams = LuaLib.lua_gettop (luaState);
-			var paramList = new ArrayList ();
+			var paramList = new List<object> ();
 			var outList = new List<int> ();
 			var argTypes = new List<MethodArgs> ();
 
 			foreach (var currentNetParam in paramInfo) {
-				if (!currentNetParam.IsIn && currentNetParam.IsOut)  // Skips out params
-					outList.Add (paramList.Add (null));
-				else if (currentLuaParam > nLuaParams) { // Adds optional parameters
-					if (currentNetParam.IsOptional)
-						paramList.Add (currentNetParam.DefaultValue);
-					else {
-						isMethod = false;
-						break;
-					}
-				} else if (_IsTypeCorrect (luaState, currentLuaParam, currentNetParam, out extractValue)) {  // Type checking
-					int index = paramList.Add (extractValue (luaState, currentLuaParam));
-					var methodArg = new MethodArgs ();
-					methodArg.index = index;
-					methodArg.extractValue = extractValue;
-					argTypes.Add (methodArg);
+// Because Silverlight does not provide ParameterInfo.IsIn, we can't determine which params to skip.
+#if !SILVERLIGHT
+                if (!currentNetParam.IsIn && currentNetParam.IsOut) // Skips out params  
+                { 
+                    paramList.Add(null);
+                    outList.Add(paramList.LastIndexOf(null));
+                }
+                else 
+#endif
+                if (currentLuaParam > nLuaParams)
+                { // Adds optional parameters
+                    if (currentNetParam.IsOptional)
+                        paramList.Add(currentNetParam.DefaultValue);
+                    else
+                    {
+                        isMethod = false;
+                        break;
+                    }
+                }
+                else if (_IsTypeCorrect(luaState, currentLuaParam, currentNetParam, out extractValue))
+                {  // Type checking
+                    object valueToAdd = extractValue(luaState, currentLuaParam);
+                    paramList.Add(valueToAdd);
+                    int index = paramList.LastIndexOf(valueToAdd);
+                    var methodArg = new MethodArgs();
+                    methodArg.index = index;
+                    methodArg.extractValue = extractValue;
+                    argTypes.Add(methodArg);
 
-					if (currentNetParam.ParameterType.IsByRef)
-						outList.Add (index);
+                    if (currentNetParam.ParameterType.IsByRef)
+                        outList.Add(index);
 
-					currentLuaParam++;
-				}  // Type does not match, ignore if the parameter is optional
-				else if (_IsParamsArray (luaState, currentLuaParam, currentNetParam, out extractValue)) {
-					object luaParamValue = extractValue (luaState, currentLuaParam);
-					var paramArrayType = currentNetParam.ParameterType.GetElementType ();
-					Array paramArray;
+                    currentLuaParam++;
+                }  // Type does not match, ignore if the parameter is optional
+                else if (_IsParamsArray(luaState, currentLuaParam, currentNetParam, out extractValue))
+                {
+                    object luaParamValue = extractValue(luaState, currentLuaParam);
+                    var paramArrayType = currentNetParam.ParameterType.GetElementType();
+                    Array paramArray;
 
-					if (luaParamValue is LuaTable) {
-						var table = (LuaTable)luaParamValue;
-						var tableEnumerator = table.GetEnumerator ();
-						paramArray = Array.CreateInstance (paramArrayType, table.Values.Count);
-						tableEnumerator.Reset ();
-						int paramArrayIndex = 0;
+                    if (luaParamValue is LuaTable)
+                    {
+                        var table = (LuaTable)luaParamValue;
+                        var tableEnumerator = table.GetEnumerator();
+                        paramArray = Array.CreateInstance(paramArrayType, table.Values.Count);
+                        tableEnumerator.Reset();
+                        int paramArrayIndex = 0;
 
-						while (tableEnumerator.MoveNext()) {
-							paramArray.SetValue (Convert.ChangeType (tableEnumerator.Value, currentNetParam.ParameterType.GetElementType ()), paramArrayIndex);
-							paramArrayIndex++;
-						}
-					} else {
-						paramArray = Array.CreateInstance (paramArrayType, 1);
-						paramArray.SetValue (luaParamValue, 0);
-					}
+                        while (tableEnumerator.MoveNext())
+                        {
+#if SILVERLIGHT
+                            paramArray.SetValue(Convert.ChangeType(tableEnumerator.Value, currentNetParam.ParameterType.GetElementType(), System.Globalization.CultureInfo.InvariantCulture), paramArrayIndex); 
+#else
+                            paramArray.SetValue(Convert.ChangeType(tableEnumerator.Value, currentNetParam.ParameterType.GetElementType()), paramArrayIndex); 
+#endif
+                            paramArrayIndex++;
+                        }
+                    }
+                    else
+                    {
+                        paramArray = Array.CreateInstance(paramArrayType, 1);
+                        paramArray.SetValue(luaParamValue, 0);
+                    }
 
-					int index = paramList.Add (paramArray);
-					var methodArg = new MethodArgs ();
-					methodArg.index = index;
-					methodArg.extractValue = extractValue;
-					methodArg.isParamsArray = true;
-					methodArg.paramsArrayType = paramArrayType;
-					argTypes.Add (methodArg);
-					currentLuaParam++;
-				} else if (currentNetParam.IsOptional)
-					paramList.Add (currentNetParam.DefaultValue);
-				else {  // No match
-					isMethod = false;
-					break;
-				}
+                    paramList.Add(paramArray);
+                    int index = paramList.LastIndexOf(paramArray);
+                    var methodArg = new MethodArgs();
+                    methodArg.index = index;
+                    methodArg.extractValue = extractValue;
+                    methodArg.isParamsArray = true;
+                    methodArg.paramsArrayType = paramArrayType;
+                    argTypes.Add(methodArg);
+                    currentLuaParam++;
+                }
+                else if (currentNetParam.IsOptional)
+                    paramList.Add(currentNetParam.DefaultValue);
+                else
+                {  // No match
+                    isMethod = false;
+                    break;
+                }
 			}
 
 			if (currentLuaParam != nLuaParams + 1) // Number of parameters does not match

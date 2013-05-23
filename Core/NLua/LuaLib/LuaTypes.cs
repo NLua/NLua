@@ -27,7 +27,9 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+#if !SILVERLIGHT
 using System.Runtime.Serialization.Formatters.Binary;
+#endif
 using NLua.Extensions;
 
 namespace NLua

@@ -11,7 +11,7 @@ NLua
 > 		* iOS (done)
 >		* Windows/Linux/Mac (done)
 >		* Windows Phone 8 (bind using C++/CX instead p/Inoke like SharpDX)
->		* Windows Phone 7 (using KopiLua)
+>		* Windows Phone 7 (done using KopiLua)
 
 > * Fix warnings/Gendarme/FxCop issues.
 

@@ -44,7 +44,11 @@ namespace NLua.Method
 				var mi = value as MethodInfo;
 
 				if (!mi.IsNull ())
-					IsReturnVoid = string.Compare (mi.ReturnType.Name, "System.Void", true) == 0;
+#if SILVERLIGHT
+                    IsReturnVoid = string.Compare(mi.ReturnType.Name, "System.Void", StringComparison.InvariantCultureIgnoreCase) == 0; 
+#else
+                    IsReturnVoid = string.Compare(mi.ReturnType.Name, "System.Void", true) == 0; 
+#endif
 			}
 		}
 		
