@@ -14,6 +14,12 @@ NLua
 >		* Windows Phone 7 (using KopiLua)
 
 > * Fix warnings/Gendarme/FxCop issues.
+>* Contributing
+>  --------------
+> * NLua is using the Mono Code-Style http://www.mono-project.com/Coding_Guidelines .
+> * Please, do not change the line-end or re-indent the code.
+> * Run the tests before push.
+> * Avoid to push unneeded style changes (unless is really needed) renaming, move code.
 
 
 
