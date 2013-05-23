@@ -85,7 +85,20 @@ namespace NLua
 
 		public static int luaL_loadstring (LuaCore.lua_State luaState, byte[] chunk)
 		{
-			return LuaCore.luaL_loadstring (luaState, chunk);
+#if SILVERLIGHT
+            // Performs an encoding-less byte array to string conversion.
+            
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(chunk.Length);
+
+            foreach (byte b in chunk)
+            {
+                sb.Append((char)b);
+            }
+
+            return LuaCore.luaL_loadstring(luaState, sb.ToString());
+#else
+            return LuaCore.luaL_loadstring(luaState, chunk); 
+#endif
 		}
 
 		public static int luaL_dostring (LuaCore.lua_State luaState, string chunk)
@@ -412,7 +425,18 @@ namespace NLua
 
 		public static int luaL_loadbuffer (LuaCore.lua_State luaState, byte [] buff, string name)
 		{
-			return LuaCore.luaL_loadbuffer (luaState, buff, (uint)buff.Length, name);
+#if SILVERLIGHT
+            // Performs a byte to string encoding-less conversion.
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(buff.Length);
+            foreach (byte b in buff)
+            {
+                sb.Append((char)b);
+            }
+
+            return LuaCore.luaL_loadbuffer(luaState, sb.ToString(), (uint)buff.Length, name);
+#else
+            return LuaCore.luaL_loadbuffer(luaState, buff, (uint)buff.Length, name); 
+#endif
 		}
 
 		public static int luaL_loadfile (LuaCore.lua_State luaState, string filename)

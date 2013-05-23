@@ -825,7 +825,11 @@ namespace NLua
 			if (o is ILuaGeneratedType) {
 				// Make sure we are _really_ ILuaGenerated
 				var typ = o.GetType ();
-				return (!typ.GetInterface ("ILuaGeneratedType").IsNull ());
+#if SILVERLIGHT
+                return (!typ.GetInterface("IILuaGeneratedType", false).IsNull());
+#else
+                return (!typ.GetInterface("ILuaGeneratedType").IsNull());
+#endif
 			} else
 				return false;
 		}
