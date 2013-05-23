@@ -43,6 +43,8 @@ iOS :  [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/ic
   [3]: http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
   [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
 
+Windows: We don't have a CI Server for Windows. 
+	 You can build NLua , you will need (msysgit, CMake, NUnit) http://screencast.com/t/rYuDtCdFG7
 ```csharp
 
 			string script = @"
