@@ -51,7 +51,7 @@ namespace NLua
 	{
 		internal LuaCore.lua_CFunction gcFunction, indexFunction, newindexFunction, baseIndexFunction,
 			classIndexFunction, classNewindexFunction, execDelegateFunction, callConstructorFunction, toStringFunction;
-		private Hashtable memberCache = new Hashtable ();
+		private Dictionary<object, object> memberCache = new Dictionary<object, object> ();
 		private ObjectTranslator translator;
 
 		/*
@@ -176,7 +176,11 @@ namespace NLua
 					strrep = obj.ToString ();
 				}
 
+#if WINDOWS_PHONE
+                Debug.WriteLine("{0}: ({1}) {2}", i, typestr, strrep);
+#elif !SILVERLIGHT
 				Debug.Print ("{0}: ({1}) {2}", i, typestr, strrep);
+#endif
 			}
 		}
 
@@ -470,21 +474,21 @@ namespace NLua
 		/*
 		 * Checks if a MemberInfo object is cached, returning it or null.
 		 */
-		private object checkMemberCache (Hashtable memberCache, IReflect objType, string memberName)
+		private object checkMemberCache (Dictionary<object, object> memberCache, IReflect objType, string memberName)
 		{
-			var members = (Hashtable)memberCache [objType];
+			var members = (Dictionary<object, object>)memberCache [objType];
 			return !members.IsNull () ? members [memberName] : null;
 		}
 
 		/*
 		 * Stores a MemberInfo object in the member cache.
 		 */
-		private void setMemberCache (Hashtable memberCache, IReflect objType, string memberName, object member)
+		private void setMemberCache (Dictionary<object, object> memberCache, IReflect objType, string memberName, object member)
 		{
-			var members = (Hashtable)memberCache [objType];
+			var members = (Dictionary<object, object>)memberCache[objType];
 
 			if (members.IsNull ()) {
-				members = new Hashtable ();
+				members = new Dictionary<object, object>();
 				memberCache [objType] = members;
 			}
 
@@ -553,9 +557,11 @@ namespace NLua
 					} else
 						translator.throwError (luaState, detailMessage); // Pass the original message from trySetMember because it is probably best
 				}
+#if !SILVERLIGHT
 			} catch (SEHException) {
 				// If we are seeing a C++ exception - this must actually be for Lua's private use.  Let it handle it
 				throw;
+#endif
 			} catch (Exception e) {
 				ThrowError (luaState, e);
 			}

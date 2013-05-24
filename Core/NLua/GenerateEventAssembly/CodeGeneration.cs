@@ -51,7 +51,7 @@ namespace NLua
 		private static readonly CodeGeneration instance = new CodeGeneration ();
 		private AssemblyName assemblyName;
 
-#if !MONOTOUCH
+#if !MONOTOUCH && !SILVERLIGHT
 		private Dictionary<Type, Type> eventHandlerCollection = new Dictionary<Type, Type> ();
 		private Type eventHandlerParent = typeof(LuaEventHandler);
 		private Type delegateParent = typeof(LuaDelegate);
@@ -314,6 +314,8 @@ namespace NLua
 		{
 #if MONOTOUCH
 			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#elif SILVERLIGHT
+			throw new NotImplementedException (" Emit not available on Silverlight ");
 #else
 			string typeName;
 			lock (this) {
@@ -413,7 +415,7 @@ namespace NLua
 			returnTypes = returnTypesList.ToArray ();
 		}
 
-#if !MONOTOUCH
+#if !MONOTOUCH && !SILVERLIGHT
 
 		/*
 		 * Generates an overriden implementation of method inside myType that delegates
