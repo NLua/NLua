@@ -152,7 +152,11 @@ namespace NLua.Method
 										paramArray = Array.CreateInstance (paramArrayType, table.Values.Count);
 
 										for (int x = 1; x <= table.Values.Count; x++)
+#if SILVERLIGHT
+											paramArray.SetValue(Convert.ChangeType(table[x], paramArrayType, System.Globalization.CultureInfo.InvariantCulture), x - 1);
+#else
 											paramArray.SetValue (Convert.ChangeType (table [x], paramArrayType), x - 1);
+#endif
 									} else {
 										paramArray = Array.CreateInstance (paramArrayType, 1);
 										paramArray.SetValue (luaParamValue, 0);
