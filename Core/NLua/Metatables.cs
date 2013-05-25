@@ -812,14 +812,20 @@ namespace NLua
 			var paramInfo = method.GetParameters ();
 			int currentLuaParam = 1;
 			int nLuaParams = LuaLib.lua_gettop (luaState);
-			var paramList = new ArrayList ();
+			var paramList = new List<object> ();
 			var outList = new List<int> ();
 			var argTypes = new List<MethodArgs> ();
 
 			foreach (var currentNetParam in paramInfo) {
-				if (!currentNetParam.IsIn && currentNetParam.IsOut)  // Skips out params
-					outList.Add (paramList.Add (null));
-				else if (currentLuaParam > nLuaParams) { // Adds optional parameters
+#if !SILVERLIGHT
+				if (!currentNetParam.IsIn && currentNetParam.IsOut)  // Skips out params 
+#else
+				if (currentNetParam.IsOut)  // Skips out params
+#endif
+				{					
+					paramList.Add (null);
+					outList.Add (paramList.LastIndexOf (null));
+				} else if (currentLuaParam > nLuaParams) { // Adds optional parameters
 					if (currentNetParam.IsOptional)
 						paramList.Add (currentNetParam.DefaultValue);
 					else {
@@ -827,7 +833,9 @@ namespace NLua
 						break;
 					}
 				} else if (_IsTypeCorrect (luaState, currentLuaParam, currentNetParam, out extractValue)) {  // Type checking
-					int index = paramList.Add (extractValue (luaState, currentLuaParam));
+					var value = extractValue (luaState, currentLuaParam);
+					paramList.Add (value);
+					int index = paramList.LastIndexOf (value);
 					var methodArg = new MethodArgs ();
 					methodArg.index = index;
 					methodArg.extractValue = extractValue;
@@ -851,7 +859,11 @@ namespace NLua
 						int paramArrayIndex = 0;
 
 						while (tableEnumerator.MoveNext()) {
+#if SILVERLIGHT
+							paramArray.SetValue (Convert.ChangeType (tableEnumerator.Value, currentNetParam.ParameterType.GetElementType (), System.Globalization.CultureInfo.InvariantCulture), paramArrayIndex);
+#else
 							paramArray.SetValue (Convert.ChangeType (tableEnumerator.Value, currentNetParam.ParameterType.GetElementType ()), paramArrayIndex);
+#endif
 							paramArrayIndex++;
 						}
 					} else {
@@ -859,7 +871,8 @@ namespace NLua
 						paramArray.SetValue (luaParamValue, 0);
 					}
 
-					int index = paramList.Add (paramArray);
+					paramList.Add (paramArray);
+					int index = paramList.LastIndexOf (paramArray);
 					var methodArg = new MethodArgs ();
 					methodArg.index = index;
 					methodArg.extractValue = extractValue;
