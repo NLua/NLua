@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NLua.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>NLua.iOS</AssemblyName>
+    <AssemblyName>NLuaiOS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -40,14 +40,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Config\" />
-    <Folder Include="Event\" />
-    <Folder Include="Exceptions\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="GenerateEventAssembly\" />
-    <Folder Include="LuaLib\" />
-    <Folder Include="Method\" />
-    <Folder Include="Properties\" />
     <Folder Include="GenerateEventAssembly\ios\" />
   </ItemGroup>
   <ItemGroup>
@@ -94,7 +86,7 @@
     <Compile Include="ObjectTranslatorPool.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KeraLua\KeraLua.iOS.csproj">
+    <ProjectReference Include="..\KeraLua\src\KeraLua.iOS.csproj">
       <Project>{3F57C208-AA13-4B67-B3E7-ED41307F00A0}</Project>
       <Name>KeraLua.iOS</Name>
     </ProjectReference>
