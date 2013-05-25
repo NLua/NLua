@@ -56,11 +56,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\KeraLua\KeraLua.csproj">
+    <ProjectReference Include="..\Core\KeraLua\src\KeraLua.csproj">
       <Project>{47153754-10f5-44d8-b578-f5a32b69061a}</Project>
       <Name>KeraLua</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\KopiLua\KopiLua.csproj">
+    <ProjectReference Include="..\Core\KopiLua\KopiLua\KopiLua.csproj">
       <Project>{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}</Project>
       <Name>KopiLua</Name>
     </ProjectReference>

@@ -58,20 +58,21 @@ namespace NLua
 		 * __index metafunction for CLR objects. Implemented in Lua.
 		 */
 		internal static string luaIndexFunction =
-			"local function index(obj,name)						\n" +
-				"  local meta=getmetatable(obj)						\n" +
-				"  local cached=meta.cache[name]					\n" +
-				"  if cached~=nil  then								\n" +
-				"	return cached									\n" +
-				"  else												\n" +
-				"	local value,isFunc=get_object_member(obj,name)	\n" +
-				"	if isFunc then									\n" +
-				"	  meta.cache[name]=value						\n" +
-				"	end												\n" +
-				"	return value									\n" +
-				"  end												\n" +
-				"end												\n" +
-				"return index										";
+			@"local function index(obj,name)
+			    local meta=getmetatable(obj)
+			    local cached=meta.cache[name]
+			    if cached then
+			       return cached
+			    else
+			       local value,isFunc = get_object_member(obj,name)
+			       if not value then error(isFunc,2) end
+			       if isFunc then
+					meta.cache[name]=value
+			       end
+			       return value
+			     end
+		    end
+		    return index";
 
 		public MetaFunctions (ObjectTranslator translator)
 		{
