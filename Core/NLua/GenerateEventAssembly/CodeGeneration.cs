@@ -51,7 +51,7 @@ namespace NLua
 		private static readonly CodeGeneration instance = new CodeGeneration ();
 		private AssemblyName assemblyName;
 
-#if !MONOTOUCH
+#if !MONOTOUCH && !SILVERLIGHT
 		private Dictionary<Type, Type> eventHandlerCollection = new Dictionary<Type, Type> ();
 		private Type eventHandlerParent = typeof(LuaEventHandler);
 		private Type delegateParent = typeof(LuaDelegate);
@@ -74,7 +74,7 @@ namespace NLua
 			assemblyName = new AssemblyName ();
 			assemblyName.Name = "NLua_generatedcode";
 			// Create a new assembly with one module.
-#if !MONOTOUCH
+#if !MONOTOUCH && !SILVERLIGHT
 			newAssembly = Thread.GetDomain ().DefineDynamicAssembly (assemblyName, AssemblyBuilderAccess.Run);
 			newModule = newAssembly.DefineDynamicModule ("NLua_generatedcode");
 #endif
@@ -95,6 +95,8 @@ namespace NLua
 		{
 #if MONOTOUCH
 			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#elif SILVERLIGHT
+			throw new NotImplementedException(" Emit not available on Silverlight ");
 #else
 			string typeName;
 			lock (this) {
@@ -135,6 +137,8 @@ namespace NLua
 		{
 #if MONOTOUCH
 			throw new NotImplementedException ("GenerateDelegate is not available on iOS, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
+#elif SILVERLIGHT
+			throw new NotImplementedException("GenerateDelegate is not available on Silverlight, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
 #else
 			string typeName;
 			lock (this) {
@@ -314,6 +318,8 @@ namespace NLua
 		{
 #if MONOTOUCH
 			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#elif SILVERLIGHT
+			throw new NotImplementedException (" Emit not available on Silverlight ");
 #else
 			string typeName;
 			lock (this) {
@@ -401,8 +407,13 @@ namespace NLua
 			
 			for (int i = 0; i < paramTypes.Length; i++) {
 				paramTypes [i] = paramInfo [i].ParameterType;
-				if ((!paramInfo [i].IsIn) && paramInfo [i].IsOut)
+#if SILVERLIGHT
+				if (paramInfo[i].IsOut) {
+#else
+				if ((!paramInfo [i].IsIn) && paramInfo [i].IsOut) {
+#endif
 					nOutParams++;
+				}
 				
 				if (paramTypes [i].IsByRef) {
 					returnTypesList.Add (paramTypes [i].GetElementType ());
@@ -413,7 +424,7 @@ namespace NLua
 			returnTypes = returnTypesList.ToArray ();
 		}
 
-#if !MONOTOUCH
+#if !MONOTOUCH && !SILVERLIGHT
 
 		/*
 		 * Generates an overriden implementation of method inside myType that delegates
@@ -638,6 +649,8 @@ namespace NLua
 		{
 #if MONOTOUCH
 			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#elif SILVERLIGHT
+			throw new NotImplementedException (" Emit not available on Silverlight ");
 #else
 			Type eventConsumerType;
 
