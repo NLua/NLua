@@ -442,53 +442,64 @@ end
 			return result;
 		}
 
-		/*
-			* Excutes a Lua chunk and returns all the chunk's return
-			* values in an array
-			*/
-		public object[] DoString (string chunk)
+		/// <summary>
+		/// Executes a Lua chunk and returns all the chunk's return values in an array.
+		/// </summary>
+		/// <param name = "chunk">Chunk to execute</param>
+		/// <param name = "chunkName">Name to associate with the chunk. Defaults to "chunk".</param>
+		/// <returns></returns>
+		public object[] DoString(byte[] chunk, string chunkName = "chunk")
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
+			executing = true;
 
-			if (LuaLib.luaL_loadbuffer (luaState, chunk, "chunk") == 0) {
-				executing = true;
-
-				try {
-					if (LuaLib.lua_pcall (luaState, 0, -1, 0) == 0)
-						return translator.popValues (luaState, oldTop);
+			if (LuaLib.luaL_loadbuffer(luaState, chunk, chunkName) == 0)
+			{
+				try
+				{
+					if (LuaLib.lua_pcall(luaState, 0, -1, 0) == 0)
+						return translator.popValues(luaState, oldTop);
 					else
-						ThrowExceptionFromError (oldTop);
-				} finally {
+						ThrowExceptionFromError(oldTop);
+				}
+				finally
+				{
 					executing = false;
 				}
-			} else
-				ThrowExceptionFromError (oldTop);
+			}
+			else
+				ThrowExceptionFromError(oldTop);
 
 			return null;			// Never reached - keeps compiler happy
 		}
 
 		/// <summary>
-		/// Executes a Lua chnk and returns all the chunk's return values in an array.
+		/// Executes a Lua chunk and returns all the chunk's return values in an array.
 		/// </summary>
 		/// <param name = "chunk">Chunk to execute</param>
-		/// <param name = "chunkName">Name to associate with the chunk</param>
+		/// <param name = "chunkName">Name to associate with the chunk. Defaults to "chunk".</param>
 		/// <returns></returns>
-		public object[] DoString (string chunk, string chunkName)
+		public object[] DoString(string chunk, string chunkName = "chunk")
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
+			int oldTop = LuaLib.lua_gettop(luaState);
 			executing = true;
 
-			if (LuaLib.luaL_loadbuffer (luaState, chunk, chunkName) == 0) {
-				try {
-					if (LuaLib.lua_pcall (luaState, 0, -1, 0) == 0)
-						return translator.popValues (luaState, oldTop);
+			if (LuaLib.luaL_loadbuffer(luaState, chunk, chunkName) == 0)
+			{
+				try
+				{
+					if (LuaLib.lua_pcall(luaState, 0, -1, 0) == 0)
+						return translator.popValues(luaState, oldTop);
 					else
-						ThrowExceptionFromError (oldTop);
-				} finally {
+						ThrowExceptionFromError(oldTop);
+				}
+				finally
+				{
 					executing = false;
 				}
-			} else
-				ThrowExceptionFromError (oldTop);
+			}
+			else
+				ThrowExceptionFromError(oldTop);
 
 			return null;			// Never reached - keeps compiler happy
 		}
