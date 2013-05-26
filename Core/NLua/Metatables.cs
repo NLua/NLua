@@ -476,8 +476,21 @@ namespace NLua
 		 */
 		private object checkMemberCache (Dictionary<object, object> memberCache, IReflect objType, string memberName)
 		{
-			var members = (Dictionary<object, object>)memberCache [objType];
-			return !members.IsNull () ? members [memberName] : null;
+			object members = null;
+
+			if (memberCache.TryGetValue(objType, out members))
+			{
+				var membersDict = members as Dictionary<object, object>;
+
+				object memberValue = null;
+
+				if (!members.IsNull() && membersDict.TryGetValue(memberName, out memberValue))
+				{
+					return memberValue;
+				}
+			}
+
+			return null;
 		}
 
 		/*
@@ -485,14 +498,15 @@ namespace NLua
 		 */
 		private void setMemberCache (Dictionary<object, object> memberCache, IReflect objType, string memberName, object member)
 		{
-			var members = (Dictionary<object, object>)memberCache[objType];
+			Dictionary<object, object> members = null;
+			object memberCacheValue = null;
 
-			if (members.IsNull ()) {
+			if (memberCache.TryGetValue(objType, out memberCacheValue)) {
+				members = (Dictionary<object, object>)memberCacheValue;
+			} else {
 				members = new Dictionary<object, object>();
-				memberCache [objType] = members;
+				memberCache[objType] = members;
 			}
-
-			members [memberName] = member;
 		}
 
 		/*
