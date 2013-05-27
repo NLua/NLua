@@ -874,6 +874,10 @@ namespace NLua
 		internal bool matchParameters (LuaCore.lua_State luaState, MethodBase method, ref MethodCache methodCache)
 		{
 			return metaFunctions.matchParameters (luaState, method, ref methodCache);
+        }
+		
+		internal Array tableToArray(object luaParamValue, Type paramArrayType) {
+			return metaFunctions.TableToArray(luaParamValue,paramArrayType);
 		}
 	}
 }

@@ -61,11 +61,11 @@ namespace NLua
 			@"local function index(obj,name)
 			    local meta=getmetatable(obj)
 			    local cached=meta.cache[name]
-			    if cached then
+			    if cached ~= nil then
 			       return cached
 			    else
 			       local value,isFunc = get_object_member(obj,name)
-			       if not value then error(isFunc,2) end
+			       
 			       if isFunc then
 					meta.cache[name]=value
 			       end
@@ -814,7 +814,47 @@ namespace NLua
 			LuaLib.lua_pushnil (luaState);
 			return 1;
 		}
+		private static bool IsInteger(double x) {
+			return Math.Ceiling(x) == x;	
+		}
 
+
+		internal Array TableToArray (object luaParamValue, Type paramArrayType)
+		{
+			Array paramArray;
+
+			if (luaParamValue is LuaTable) {
+				LuaTable table = (LuaTable)luaParamValue;
+				IDictionaryEnumerator tableEnumerator = table.GetEnumerator ();
+				tableEnumerator.Reset ();
+				paramArray = Array.CreateInstance (paramArrayType, table.Values.Count);
+
+				int paramArrayIndex = 0;
+
+				while (tableEnumerator.MoveNext ()) {
+
+					object value = tableEnumerator.Value;
+
+					if (paramArrayType == typeof (object)) {
+						if (value != null && value.GetType () == typeof (double) && IsInteger ((double)value))
+							value = Convert.ToInt32 ((double)value);
+					}
+#if SILVERLIGHT
+					paramArray.SetValue (Convert.ChangeType (value, paramArrayType, System.Globalization.CultureInfo.InvariantCulture), paramArrayIndex);
+#else
+					paramArray.SetValue (Convert.ChangeType (value, paramArrayType), paramArrayIndex);
+#endif
+					paramArrayIndex++;
+				}
+			} else {
+				paramArray = Array.CreateInstance (paramArrayType, 1);
+				paramArray.SetValue (luaParamValue, 0);
+			}
+
+			return paramArray;
+
+		}
+		
 		/*
 		 * Matches a method against its arguments in the Lua stack. Returns
 		 * if the match was succesful. It it was also returns the information
@@ -862,29 +902,10 @@ namespace NLua
 					currentLuaParam++;
 				}  // Type does not match, ignore if the parameter is optional
 				else if (_IsParamsArray (luaState, currentLuaParam, currentNetParam, out extractValue)) {
+
 					object luaParamValue = extractValue (luaState, currentLuaParam);
 					var paramArrayType = currentNetParam.ParameterType.GetElementType ();
-					Array paramArray;
-
-					if (luaParamValue is LuaTable) {
-						var table = (LuaTable)luaParamValue;
-						var tableEnumerator = table.GetEnumerator ();
-						paramArray = Array.CreateInstance (paramArrayType, table.Values.Count);
-						tableEnumerator.Reset ();
-						int paramArrayIndex = 0;
-
-						while (tableEnumerator.MoveNext()) {
-#if SILVERLIGHT
-							paramArray.SetValue (Convert.ChangeType (tableEnumerator.Value, currentNetParam.ParameterType.GetElementType (), System.Globalization.CultureInfo.InvariantCulture), paramArrayIndex);
-#else
-							paramArray.SetValue (Convert.ChangeType (tableEnumerator.Value, currentNetParam.ParameterType.GetElementType ()), paramArrayIndex);
-#endif
-							paramArrayIndex++;
-						}
-					} else {
-						paramArray = Array.CreateInstance (paramArrayType, 1);
-						paramArray.SetValue (luaParamValue, 0);
-					}
+					Array paramArray = TableToArray (luaParamValue, paramArrayType);
 
 					paramList.Add (paramArray);
 					int index = paramList.LastIndexOf (paramArray);

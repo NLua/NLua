@@ -43,12 +43,9 @@ namespace NLua.Method
 				_cachedMethod = value;
 				var mi = value as MethodInfo;
 
-				if (!mi.IsNull ())
-#if SILVERLIGHT
-					IsReturnVoid = string.Compare(mi.ReturnType.Name, "System.Void", StringComparison.InvariantCulture) == 0;
-#else
-					IsReturnVoid = string.Compare (mi.ReturnType.Name, "System.Void", true) == 0;
-#endif
+				if (!mi.IsNull ()) {
+					IsReturnVoid = mi.ReturnType == typeof (void);
+				}
 			}
 		}
 		
