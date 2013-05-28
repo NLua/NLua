@@ -53,6 +53,7 @@
     <Compile Include="..\tests\Core.cs">
       <Link>Core.cs</Link>
     </Compile>
+    <Compile Include="LoadFileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
