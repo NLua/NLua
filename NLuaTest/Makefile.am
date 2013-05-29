@@ -79,6 +79,7 @@ FILES = \
 	../tests/LuaTests.cs \
 	../tests/TestLua.cs \
 	../tests/Core.cs \
+	LoadFileTests.cs \
 	Properties/AssemblyInfo.cs 
 
 DATA_FILES = 
