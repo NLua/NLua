@@ -265,22 +265,7 @@ end
 		{
 			luaState = LuaLib.luaL_newstate ();	// steffenj: Lua 5.1.1 API change (lua_open is gone)
 			LuaLib.luaL_openlibs (luaState);		// steffenj: Lua 5.1.1 API change (luaopen_base is gone, just open all libs right here)
-			LuaLib.lua_pushstring (luaState, "LUAINTERFACE LOADED");
-			LuaLib.lua_pushboolean (luaState, true);
-			LuaLib.lua_settable (luaState, (int)LuaIndexes.Registry);
-			LuaLib.lua_newtable (luaState);
-			LuaLib.lua_setglobal (luaState, "luanet");
-			LuaLib.lua_pushvalue (luaState, (int)LuaIndexes.Globals);
-			LuaLib.lua_getglobal (luaState, "luanet");
-			LuaLib.lua_pushstring (luaState, "getmetatable");
-			LuaLib.lua_getglobal (luaState, "getmetatable");
-			LuaLib.lua_settable (luaState, -3);
-			LuaLib.lua_replace (luaState, (int)LuaIndexes.Globals);
-			translator = new ObjectTranslator (this, luaState);
-			ObjectTranslatorPool.Instance.Add (luaState, translator);
-			LuaLib.lua_replace (luaState, (int)LuaIndexes.Globals);
-			LuaLib.luaL_dostring (luaState, Lua.init_luanet);	// steffenj: lua_dostring renamed to luaL_dostring
-
+			Init (luaState);
 			// We need to keep this in a managed reference so the delegate doesn't get garbage collected
 			panicCallback = new LuaCore.lua_CFunction (PanicCallback);
 			LuaLib.lua_atpanic (luaState, panicCallback);
@@ -293,29 +278,37 @@ end
 		{
 			LuaLib.lua_pushstring (lState, "LUAINTERFACE LOADED");
 			LuaLib.lua_gettable (lState, (int)LuaIndexes.Registry);
-			
+
 			if (LuaLib.lua_toboolean (lState, -1)) {
 				LuaLib.lua_settop (lState, -2);
 				throw new LuaException ("There is already a NLua.Lua instance associated with this Lua state");
 			} else {
-				LuaLib.lua_settop (lState, -2);
-				LuaLib.lua_pushstring (lState, "LUAINTERFACE LOADED");
-				LuaLib.lua_pushboolean (lState, true);
-				LuaLib.lua_settable (lState, (int)LuaIndexes.Registry);
 				luaState = lState;
-				LuaLib.lua_pushvalue (lState, (int)LuaIndexes.Globals);
-				LuaLib.lua_getglobal (lState, "luanet");
-				LuaLib.lua_pushstring (lState, "getmetatable");
-				LuaLib.lua_getglobal (lState, "getmetatable");
-				LuaLib.lua_settable (lState, -3);
-				LuaLib.lua_replace (lState, (int)LuaIndexes.Globals);
-				translator = new ObjectTranslator (this, luaState);
-				ObjectTranslatorPool.Instance.Add (luaState, translator);
-				LuaLib.lua_replace (lState, (int)LuaIndexes.Globals);
-				LuaLib.luaL_dostring (lState, Lua.init_luanet);	// steffenj: lua_dostring renamed to luaL_dostring
+				_StatePassed = true;
+				LuaLib.lua_settop (luaState, -2);
+				Init (luaState);
 			}
-				
-			_StatePassed = true;
+		}
+
+		void Init (LuaCore.lua_State luaState)
+		{
+			LuaLib.lua_pushstring (luaState, "LUAINTERFACE LOADED");
+			LuaLib.lua_pushboolean (luaState, true);
+			LuaLib.lua_settable (luaState, (int)LuaIndexes.Registry);
+			if (_StatePassed == false) {
+				LuaLib.lua_newtable (luaState);
+				LuaLib.lua_setglobal (luaState, "luanet");
+			}
+			LuaLib.luanet_pushglobaltable (luaState);
+			LuaLib.lua_getglobal (luaState, "luanet");
+			LuaLib.lua_pushstring (luaState, "getmetatable");
+			LuaLib.lua_getglobal (luaState, "getmetatable");
+			LuaLib.lua_settable (luaState, -3);
+			LuaLib.luanet_popglobaltable (luaState);
+			translator = new ObjectTranslator (this, luaState);
+			ObjectTranslatorPool.Instance.Add (luaState, translator);
+			LuaLib.luanet_popglobaltable (luaState);
+			LuaLib.luaL_dostring (luaState, Lua.init_luanet);
 		}
 
 		public void Close ()

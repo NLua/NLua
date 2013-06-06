@@ -135,18 +135,14 @@ namespace NLua
 			return LuaCore.lua_pcall (luaState, 0, -1, 0);
 		}
 
-		// steffenj: END Lua 5.1.1 API change (lua_dofile now in LuaLib as luaL_dofile)
 		public static void lua_getglobal (LuaCore.lua_State luaState, string name)
 		{
-			lua_pushstring (luaState, name);
-			LuaCore.lua_gettable (luaState, (int)LuaIndexes.Globals);
+			LuaCore.luanet_getglobal (luaState, name);
 		}
 
 		public static void lua_setglobal (LuaCore.lua_State luaState, string name)
 		{
-			lua_pushstring (luaState, name);
-			lua_insert (luaState, -2);
-			lua_settable (luaState, (int)LuaIndexes.Globals);
+			LuaCore.luanet_setglobal (luaState, name);
 		}
 
 		public static void lua_settop (LuaCore.lua_State luaState, int newTop)
@@ -468,6 +464,16 @@ namespace NLua
 		public static LuaCore.LuaTag luanet_gettag ()
 		{
 			return LuaCore.luanet_gettag ();
+		}
+
+		public static void luanet_pushglobaltable (LuaCore.lua_State luaState)
+		{
+			LuaCore.luanet_pushglobaltable (luaState);
+		}
+
+		public static void luanet_popglobaltable (LuaCore.lua_State luaState)
+		{
+			LuaCore.luanet_popglobaltable (luaState);
 		}
 
 	}
