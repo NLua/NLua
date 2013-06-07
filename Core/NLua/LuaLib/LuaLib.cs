@@ -421,6 +421,11 @@ namespace NLua
 			return LuaCore.luaL_checkmetatable (luaState, index);
 		}
 
+		public static int luanet_registryindex ()
+		{
+			return LuaCore.luanet_registryindex ();
+		}
+
 		public static int luanet_tonetobject (LuaCore.lua_State luaState, int index)
 		{
 			return LuaCore.luanet_tonetobject (luaState, index);
