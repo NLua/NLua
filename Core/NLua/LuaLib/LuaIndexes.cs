@@ -28,9 +28,22 @@ using System;
 
 namespace NLua
 {
-	public enum LuaIndexes : int
+#if USE_KOPILUA
+	using LuaCore = KopiLua.Lua;
+#else
+	using LuaCore = KeraLua.Lua;
+#endif
+	public class LuaIndexes
 	{
-		Registry    = (-10000),
-		Environment = (-10001),
+		static int registryIndex = 0;
+		public static int Registry {
+			get
+			{
+				if (registryIndex != 0)
+					return registryIndex;
+				registryIndex = LuaCore.luanet_registryindex ();
+				return registryIndex; 
+			}
+		}
 	}
 }
