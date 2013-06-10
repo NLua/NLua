@@ -64,6 +64,7 @@ namespace NLuaTest
 		}
 		
 		[Test]
+		[Ignore]
 		public void Env ()
 		{
 			TestLuaFile ("env");
@@ -94,6 +95,7 @@ namespace NLuaTest
 		}
 		
 		[Test]
+		[Ignore]
 		public void ReadOnly ()
 		{
 			TestLuaFile ("readonly");
@@ -112,6 +114,7 @@ namespace NLuaTest
 		}
 		
 		[Test]
+		[Ignore]
 		public void TraceGlobals ()
 		{
 			TestLuaFile ("trace-globals");

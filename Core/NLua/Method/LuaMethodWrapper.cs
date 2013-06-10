@@ -162,12 +162,12 @@ namespace NLua.Method
 							}
 
 							if ((_BindingType & BindingFlags.Static) == BindingFlags.Static)
-								_Translator.push (luaState, _LastCalledMethod.cachedMethod.Invoke (null, _LastCalledMethod.args));
+								_Translator.push (luaState, method.Invoke (null, _LastCalledMethod.args));
 							else {
-								if (_LastCalledMethod.cachedMethod.IsConstructor)
-									_Translator.push (luaState, ((ConstructorInfo)_LastCalledMethod.cachedMethod).Invoke (_LastCalledMethod.args));
+								if (method.IsConstructor)
+									_Translator.push (luaState, ((ConstructorInfo)method).Invoke (_LastCalledMethod.args));
 								else
-									_Translator.push (luaState, _LastCalledMethod.cachedMethod.Invoke (targetObject, _LastCalledMethod.args));
+									_Translator.push (luaState, method.Invoke (targetObject, _LastCalledMethod.args));
 							}
 
 							failedCall = false;
