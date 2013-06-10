@@ -83,6 +83,11 @@ Windows: We don't have a CI Server for Windows.
 
 Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
 
+NLua 1.1.0
+----------
+* Port to WP7 (Thanks to Mangatome)
+* NLua now using Lua 5.2.2
+* Bug fixes.
 
 NLua 1.0.0
 ----------
