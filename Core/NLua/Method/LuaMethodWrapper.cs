@@ -33,9 +33,11 @@ namespace NLua.Method
 	#if USE_KOPILUA
 	using LuaCore  = KopiLua.Lua;
 	using LuaState = KopiLua.LuaState;
+	using LuaNativeFunction = KopiLua.LuaNativeFunction;
 	#else
 	using LuaCore  = KeraLua.Lua;
 	using LuaState = KeraLua.LuaState;
+	using LuaNativeFunction = KeraLua.LuaNativeFunction;
 	#endif
 
 	/*
@@ -51,7 +53,7 @@ namespace NLua.Method
 	 */
 	class LuaMethodWrapper
 	{
-		internal LuaCore.LuaNativeFunction invokeFunction;
+		internal LuaNativeFunction invokeFunction;
 		private ObjectTranslator _Translator;
 		private MethodBase _Method;
 		private MethodCache _LastCalledMethod = new MethodCache ();
@@ -66,7 +68,7 @@ namespace NLua.Method
 		 */
 		public LuaMethodWrapper (ObjectTranslator translator, object target, IReflect targetType, MethodBase method)
 		{
-			invokeFunction = new LuaCore.LuaNativeFunction (this.Call);
+			invokeFunction = new LuaNativeFunction (this.Call);
 			_Translator = translator;
 			_Target = target;
 
@@ -87,7 +89,7 @@ namespace NLua.Method
 		 */
 		public LuaMethodWrapper (ObjectTranslator translator, IReflect targetType, string methodName, BindingFlags bindingType)
 		{
-			invokeFunction = new LuaCore.LuaNativeFunction (this.Call);
+			invokeFunction = new LuaNativeFunction (this.Call);
 
 			_Translator = translator;
 			_MethodName = methodName;

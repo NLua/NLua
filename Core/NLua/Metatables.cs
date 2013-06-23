@@ -37,9 +37,11 @@ namespace NLua
 	#if USE_KOPILUA
 	using LuaCore  = KopiLua.Lua;
 	using LuaState = KopiLua.LuaState;
+	using LuaNativeFunction = KopiLua.LuaNativeFunction;
 	#else
 	using LuaCore  = KeraLua.Lua;
 	using LuaState = KeraLua.LuaState;
+	using LuaNativeFunction = KeraLua.LuaNativeFunction;
 	#endif
 
 	/*
@@ -51,7 +53,7 @@ namespace NLua
 	 */
 	public class MetaFunctions
 	{
-		internal LuaCore.LuaNativeFunction gcFunction, indexFunction, newindexFunction, baseIndexFunction,
+		internal LuaNativeFunction gcFunction, indexFunction, newindexFunction, baseIndexFunction,
 			classIndexFunction, classNewindexFunction, execDelegateFunction, callConstructorFunction, toStringFunction;
 		private Dictionary<object, object> memberCache = new Dictionary<object, object> ();
 		private ObjectTranslator translator;
@@ -79,22 +81,22 @@ namespace NLua
 		public MetaFunctions (ObjectTranslator translator)
 		{
 			this.translator = translator;
-			gcFunction = new LuaCore.LuaNativeFunction (MetaFunctions.CollectObject);
-			toStringFunction = new LuaCore.LuaNativeFunction (MetaFunctions.ToStringLua);
-			indexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.GetMethod);
-			newindexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.SetFieldOrProperty);
-			baseIndexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.GetBaseMethod);
-			callConstructorFunction = new LuaCore.LuaNativeFunction (MetaFunctions.CallConstructor);
-			classIndexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.GetClassMethod);
-			classNewindexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.SetClassFieldOrProperty);
-			execDelegateFunction = new LuaCore.LuaNativeFunction (MetaFunctions.RunFunctionDelegate);
+			gcFunction = new LuaNativeFunction (MetaFunctions.CollectObject);
+			toStringFunction = new LuaNativeFunction (MetaFunctions.ToStringLua);
+			indexFunction = new LuaNativeFunction (MetaFunctions.GetMethod);
+			newindexFunction = new LuaNativeFunction (MetaFunctions.SetFieldOrProperty);
+			baseIndexFunction = new LuaNativeFunction (MetaFunctions.GetBaseMethod);
+			callConstructorFunction = new LuaNativeFunction (MetaFunctions.CallConstructor);
+			classIndexFunction = new LuaNativeFunction (MetaFunctions.GetClassMethod);
+			classNewindexFunction = new LuaNativeFunction (MetaFunctions.SetClassFieldOrProperty);
+			execDelegateFunction = new LuaNativeFunction (MetaFunctions.RunFunctionDelegate);
 		}
 
 		/*
 		 * __call metafunction of CLR delegates, retrieves and calls the delegate.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int RunFunctionDelegate (LuaState luaState)
@@ -105,7 +107,7 @@ namespace NLua
 
 		private static int RunFunctionDelegate (LuaState luaState, ObjectTranslator translator)
 		{
-			LuaCore.LuaNativeFunction func = (LuaCore.LuaNativeFunction)translator.GetRawNetObject (luaState, 1);
+			LuaNativeFunction func = (LuaNativeFunction)translator.GetRawNetObject (luaState, 1);
 			LuaLib.LuaRemove (luaState, 1);
 			return func (luaState);
 		}
@@ -114,7 +116,7 @@ namespace NLua
 		 * __gc metafunction of CLR objects.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int CollectObject (LuaState luaState)
@@ -137,7 +139,7 @@ namespace NLua
 		 * __tostring metafunction of CLR objects.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int ToStringLua (LuaState luaState)
@@ -195,7 +197,7 @@ namespace NLua
 		 * If the member does not exist returns nil.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int GetMethod (LuaState luaState)
@@ -296,7 +298,7 @@ namespace NLua
 		 * Adds a prefix to the method name to call the base version of the method.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int GetBaseMethod (LuaState luaState)
@@ -368,8 +370,8 @@ namespace NLua
 			object cachedMember = CheckMemberCache (memberCache, objType, methodName);
 			//object cachedMember=null;
 
-			if (cachedMember is LuaCore.LuaNativeFunction) {
-				translator.PushFunction (luaState, (LuaCore.LuaNativeFunction)cachedMember);
+			if (cachedMember is LuaNativeFunction) {
+				translator.PushFunction (luaState, (LuaNativeFunction)cachedMember);
 				translator.Push (luaState, true);
 				return 2;
 			} else if (!cachedMember.IsNull ())
@@ -447,7 +449,7 @@ namespace NLua
 						translator.PushType (luaState, nestedType);
 					} else {
 						// Member type must be 'method'
-						var wrapper = new LuaCore.LuaNativeFunction ((new LuaMethodWrapper (translator, objType, methodName, bindingType)).invokeFunction);
+						var wrapper = new LuaNativeFunction ((new LuaMethodWrapper (translator, objType, methodName, bindingType)).invokeFunction);
 
 						if (cachedMember.IsNull ())
 							SetMemberCache (memberCache, objType, methodName, wrapper);
@@ -518,7 +520,7 @@ namespace NLua
 		 * and error if the assignment is invalid.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int SetFieldOrProperty (LuaState luaState)
@@ -694,7 +696,7 @@ namespace NLua
 		 * __index metafunction of type references, works on static members.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int GetClassMethod (LuaState luaState)
@@ -736,7 +738,7 @@ namespace NLua
 		 * __newindex function of type references, works on static members.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int SetClassFieldOrProperty (LuaState luaState)
@@ -767,7 +769,7 @@ namespace NLua
 		 * generates an exception.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int CallConstructor (LuaState luaState)

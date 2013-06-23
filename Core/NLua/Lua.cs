@@ -42,11 +42,13 @@ namespace NLua
 	using LuaState = KopiLua.LuaState;
 	using LuaHook  = KopiLua.LuaHook;
 	using LuaDebug = KopiLua.LuaDebug;
+	using LuaNativeFunction = KopiLua.LuaNativeFunction;
 	#else
 	using LuaCore  = KeraLua.Lua;
 	using LuaState = KeraLua.LuaState;
 	using LuaHook  = KeraLua.LuaHook;
 	using LuaDebug = KeraLua.LuaDebug;
+	using LuaNativeFunction = KeraLua.LuaNativeFunction;
 	#endif
 
 	/*
@@ -93,7 +95,7 @@ namespace NLua
 		/// </summary>
 		public bool IsExecuting { get { return executing; } }
 
-		private LuaCore.LuaNativeFunction panicCallback;
+		private LuaNativeFunction panicCallback;
 		private ObjectTranslator translator;
 		/// <summary>
 		/// Used to ensure multiple .net threads all get serialized by this single lock for access to the lua stack/objects
@@ -273,7 +275,7 @@ end
 			LuaLib.LuaLOpenLibs (luaState);		// steffenj: Lua 5.1.1 API change (luaopen_base is gone, just open all libs right here)
 			Init ();
 			// We need to keep this in a managed reference so the delegate doesn't get garbage collected
-			panicCallback = new LuaCore.LuaNativeFunction (PanicCallback);
+			panicCallback = new LuaNativeFunction (PanicCallback);
 			LuaLib.LuaAtPanic (luaState, panicCallback);
 		}
 
@@ -329,7 +331,7 @@ end
 		}
 
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		static int PanicCallback (LuaState luaState)
@@ -587,7 +589,7 @@ end
 		private void RegisterGlobal (string path, Type type, int recursionCounter)
 		{
 			// If the type is a global method, list it directly
-			if (type == typeof(LuaCore.LuaNativeFunction)) {
+			if (type == typeof(LuaNativeFunction)) {
 				// Format for easy method invocation
 				globals.Add (path + "(");
 			}
@@ -709,7 +711,7 @@ end
 		public LuaFunction GetFunction (string fullPath)
 		{
 			object obj = this [fullPath];
-			return (obj is LuaCore.LuaNativeFunction ? new LuaFunction ((LuaCore.LuaNativeFunction)obj, this) : (LuaFunction)obj);
+			return (obj is LuaNativeFunction ? new LuaFunction ((LuaNativeFunction)obj, this) : (LuaFunction)obj);
 		}
 
 		/*
@@ -996,7 +998,7 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		/// 
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_Hook))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaHook))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static void DebugHookCallback (LuaState luaState, LuaDebug luaDebug)
@@ -1136,7 +1138,7 @@ end
 			// We leave nothing on the stack when we are done
 			int oldTop = LuaLib.LuaGetTop (luaState);
 			var wrapper = new LuaMethodWrapper (translator, target, function.DeclaringType, function);
-			translator.Push (luaState, new LuaCore.LuaNativeFunction (wrapper.invokeFunction));
+			translator.Push (luaState, new LuaNativeFunction (wrapper.invokeFunction));
 			this [path] = translator.GetObject (luaState, -1);
 			var f = GetFunction (path);
 			LuaLib.LuaSetTop (luaState, oldTop);
@@ -1156,7 +1158,7 @@ end
 			return (equal != 0);
 		}
 
-		internal void PushCSFunction (LuaCore.LuaNativeFunction function)
+		internal void PushCSFunction (LuaNativeFunction function)
 		{
 			translator.PushFunction (luaState, function);
 		}

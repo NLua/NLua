@@ -32,14 +32,16 @@ namespace NLua
 	#if USE_KOPILUA
 	using LuaCore  = KopiLua.Lua;
 	using LuaState = KopiLua.LuaState;
+	using LuaNativeFunction = KopiLua.LuaNativeFunction;
 	#else
 	using LuaCore  = KeraLua.Lua;
 	using LuaState = KeraLua.LuaState;
+	using LuaNativeFunction = KeraLua.LuaNativeFunction;
 	#endif
 
 	public class LuaFunction : LuaBase
 	{
-		internal LuaCore.LuaNativeFunction function;
+		internal LuaNativeFunction function;
 
 		public LuaFunction (int reference, Lua interpreter)
 		{
@@ -48,7 +50,7 @@ namespace NLua
 			_Interpreter = interpreter;
 		}
 
-		public LuaFunction (LuaCore.LuaNativeFunction function, Lua interpreter)
+		public LuaFunction (LuaNativeFunction function, Lua interpreter)
 		{
 			_Reference = 0;
 			this.function = function;

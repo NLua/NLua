@@ -38,9 +38,11 @@ namespace NLua
 	#if USE_KOPILUA
 	using LuaCore  = KopiLua.Lua;
 	using LuaState = KopiLua.LuaState;
+	using LuaNativeFunction = KopiLua.LuaNativeFunction;
 	#else
 	using LuaCore  = KeraLua.Lua;
 	using LuaState = KeraLua.LuaState;
+	using LuaNativeFunction = KeraLua.LuaNativeFunction;
 	#endif
 
 	/*
@@ -51,7 +53,7 @@ namespace NLua
 	 */
 	public class ObjectTranslator
 	{
-		private LuaCore.LuaNativeFunction registerTableFunction, unregisterTableFunction, getMethodSigFunction, 
+		private LuaNativeFunction registerTableFunction, unregisterTableFunction, getMethodSigFunction, 
 			getConstructorSigFunction, importTypeFunction, loadAssemblyFunction;
 		// object to object #
 		public readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int> ();
@@ -86,12 +88,12 @@ namespace NLua
 			metaFunctions = new MetaFunctions (this);
 			assemblies = new List<Assembly> ();
 
-			importTypeFunction = new LuaCore.LuaNativeFunction (ObjectTranslator.ImportType);
-			loadAssemblyFunction = new LuaCore.LuaNativeFunction (ObjectTranslator.LoadAssembly);
-			registerTableFunction = new LuaCore.LuaNativeFunction (ObjectTranslator.RegisterTable);
-			unregisterTableFunction = new LuaCore.LuaNativeFunction (ObjectTranslator.UnregisterTable);
-			getMethodSigFunction = new LuaCore.LuaNativeFunction (ObjectTranslator.GetMethodSignature);
-			getConstructorSigFunction = new LuaCore.LuaNativeFunction (ObjectTranslator.GetConstructorSignature);
+			importTypeFunction = new LuaNativeFunction (ObjectTranslator.ImportType);
+			loadAssemblyFunction = new LuaNativeFunction (ObjectTranslator.LoadAssembly);
+			registerTableFunction = new LuaNativeFunction (ObjectTranslator.RegisterTable);
+			unregisterTableFunction = new LuaNativeFunction (ObjectTranslator.UnregisterTable);
+			getMethodSigFunction = new LuaNativeFunction (ObjectTranslator.GetMethodSignature);
+			getConstructorSigFunction = new LuaNativeFunction (ObjectTranslator.GetConstructorSignature);
 
 			CreateLuaObjectList (luaState);
 			CreateIndexingMetaFunction (luaState);
@@ -251,7 +253,7 @@ namespace NLua
 		 * if the assembly is not found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int LoadAssembly (LuaState luaState)
@@ -302,7 +304,7 @@ namespace NLua
 		 * type is not found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int ImportType (LuaState luaState)
@@ -330,7 +332,7 @@ namespace NLua
 		 * type passed as second argument in the stack.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int RegisterTable (LuaState luaState)
@@ -382,7 +384,7 @@ namespace NLua
 		 * base field, freeing the created object for garbage-collection
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int UnregisterTable (LuaState luaState)
@@ -427,7 +429,7 @@ namespace NLua
 		 * if no matching method is not found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int GetMethodSignature (LuaState luaState)
@@ -467,7 +469,7 @@ namespace NLua
 				//CP: Added ignore case
 				var method = klass.GetMethod (methodName, BindingFlags.Public | BindingFlags.Static |
 					BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.IgnoreCase, null, signature, null);
-				PushFunction (luaState, new LuaCore.LuaNativeFunction ((new LuaMethodWrapper (this, target, klass, method)).invokeFunction));
+				PushFunction (luaState, new LuaNativeFunction ((new LuaMethodWrapper (this, target, klass, method)).invokeFunction));
 			} catch (Exception e) {
 				ThrowError (luaState, e);
 				LuaLib.LuaPushNil (luaState);
@@ -481,7 +483,7 @@ namespace NLua
 		 * if no matching constructor is found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		private static int GetConstructorSignature (LuaState luaState)
@@ -508,7 +510,7 @@ namespace NLua
 
 			try {
 				ConstructorInfo constructor = klass.UnderlyingSystemType.GetConstructor (signature);
-				PushFunction (luaState, new LuaCore.LuaNativeFunction ((new LuaMethodWrapper (this, null, klass, constructor)).invokeFunction));
+				PushFunction (luaState, new LuaNativeFunction ((new LuaMethodWrapper (this, null, klass, constructor)).invokeFunction));
 			} catch (Exception e) {
 				ThrowError (luaState, e);
 				LuaLib.LuaPushNil (luaState);
@@ -528,7 +530,7 @@ namespace NLua
 		/*
 		 * Pushes a delegate into the stack
 		 */
-		internal void PushFunction (LuaState luaState, LuaCore.LuaNativeFunction func)
+		internal void PushFunction (LuaState luaState, LuaNativeFunction func)
 		{
 			PushObject (luaState, func, "luaNet_function");
 		}
@@ -861,8 +863,8 @@ namespace NLua
 				(((ILuaGeneratedType)o).LuaInterfaceGetLuaTable ()).Push (luaState);
 			else if (o is LuaTable)
 				((LuaTable)o).Push (luaState);
-			else if (o is LuaCore.LuaNativeFunction)
-				PushFunction (luaState, (LuaCore.LuaNativeFunction)o);
+			else if (o is LuaNativeFunction)
+				PushFunction (luaState, (LuaNativeFunction)o);
 			else if (o is LuaFunction)
 				((LuaFunction)o).Push (luaState);
 			else

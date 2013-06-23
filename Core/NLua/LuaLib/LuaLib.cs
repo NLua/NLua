@@ -30,15 +30,20 @@ using NLua.Extensions;
 
 namespace NLua
 {
+
 	#if USE_KOPILUA
 	using LuaCore  = KopiLua.Lua;
 	using LuaState = KopiLua.LuaState;
 	using LuaTag = KopiLua.LuaTag;
+	using LuaNativeFunction = KopiLua.LuaNativeFunction;
 	#else
 	using LuaCore  = KeraLua.Lua;
 	using LuaState = KeraLua.LuaState;
 	using LuaTag = KeraLua.LuaTag;
+	using LuaNativeFunction = KeraLua.LuaNativeFunction;
 	#endif
+
+
 
 	public class LuaLib
 	{
@@ -284,7 +289,7 @@ namespace NLua
 			LuaCore.LuaCall (luaState, nArgs, nResults);
 		}
 
-		public static void LuaPushStdCallCFunction (LuaState luaState, LuaCore.LuaNativeFunction function)
+		public static void LuaPushStdCallCFunction (LuaState luaState, LuaNativeFunction function)
 		{
 			LuaCore.LuaPushStdCallCFunction (luaState, function);
 		}
@@ -294,7 +299,7 @@ namespace NLua
 			return LuaCore.LuaNetPCall (luaState, nArgs, nResults, errfunc);
 		}
 
-		public static LuaCore.LuaNativeFunction LuaToCFunction (LuaState luaState, int index)
+		public static LuaNativeFunction LuaToCFunction (LuaState luaState, int index)
 		{
 			return LuaCore.LuaToCFunction (luaState, index);
 		}
@@ -331,9 +336,9 @@ namespace NLua
 				return "0";	// Because luaV_tostring does this
 		}
 
-		public static void LuaAtPanic (LuaState luaState, LuaCore.LuaNativeFunction panicf)
+		public static void LuaAtPanic (LuaState luaState, LuaNativeFunction panicf)
 		{
-			LuaCore.LuaAtPanic (luaState, (LuaCore.LuaNativeFunction)panicf);
+			LuaCore.LuaAtPanic (luaState, (LuaNativeFunction)panicf);
 		}
 
 

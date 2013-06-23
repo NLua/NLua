@@ -33,9 +33,11 @@ namespace NLua
 	#if USE_KOPILUA
 	using LuaCore  = KopiLua.Lua;
 	using LuaState = KopiLua.LuaState;
+	using LuaNativeFunction = KopiLua.LuaNativeFunction;
 	#else
 	using LuaCore  = KeraLua.Lua;
 	using LuaState = KeraLua.LuaState;
+	using LuaNativeFunction = KeraLua.LuaNativeFunction;
 	#endif
 
 	/*
@@ -102,8 +104,8 @@ namespace NLua
 		{
 			object obj = _Interpreter.RawGetObject (_Reference, field);
 
-			if (obj is LuaCore.LuaNativeFunction)
-				return new LuaFunction ((LuaCore.LuaNativeFunction)obj, _Interpreter);
+			if (obj is LuaNativeFunction)
+				return new LuaFunction ((LuaNativeFunction)obj, _Interpreter);
 			else
 				return obj;
 		}
