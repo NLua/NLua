@@ -36,9 +36,11 @@ using NLua.Extensions;
 namespace NLua
 {
 	#if USE_KOPILUA
-	using LuaCore = KopiLua.Lua;
+	using LuaCore  = KopiLua.Lua;
+	using LuaState = KopiLua.LuaState;
 	#else
-	using LuaCore = KeraLua.Lua;
+	using LuaCore  = KeraLua.Lua;
+	using LuaState = KeraLua.LuaState;
 	#endif
 
 	/*
@@ -77,7 +79,7 @@ namespace NLua
 			}
 		}
 
-		public ObjectTranslator (Lua interpreter, LuaCore.LuaState luaState)
+		public ObjectTranslator (Lua interpreter, LuaState luaState)
 		{
 			this.interpreter = interpreter;
 			typeChecker = new CheckType (this);
@@ -102,7 +104,7 @@ namespace NLua
 		/*
 		 * Sets up the list of objects in the Lua side
 		 */
-		private void createLuaObjectList (LuaCore.LuaState luaState)
+		private void createLuaObjectList (LuaState luaState)
 		{
 			LuaLib.lua_pushstring (luaState, "luaNet_objects");
 			LuaLib.lua_newtable (luaState);
@@ -118,7 +120,7 @@ namespace NLua
 		 * Registers the indexing function of CLR objects
 		 * passed to Lua
 		 */
-		private void createIndexingMetaFunction (LuaCore.LuaState luaState)
+		private void createIndexingMetaFunction (LuaState luaState)
 		{
 			LuaLib.lua_pushstring (luaState, "luaNet_indexfunction");
 			LuaLib.luaL_dostring (luaState, MetaFunctions.luaIndexFunction);	// steffenj: lua_dostring renamed to luaL_dostring
@@ -129,7 +131,7 @@ namespace NLua
 		 * Creates the metatable for superclasses (the base
 		 * field of registered tables)
 		 */
-		private void createBaseClassMetatable (LuaCore.LuaState luaState)
+		private void createBaseClassMetatable (LuaState luaState)
 		{
 			LuaLib.luaL_newmetatable (luaState, "luaNet_searchbase");
 			LuaLib.lua_pushstring (luaState, "__gc");
@@ -150,7 +152,7 @@ namespace NLua
 		/*
 		 * Creates the metatable for type references
 		 */
-		private void createClassMetatable (LuaCore.LuaState luaState)
+		private void createClassMetatable (LuaState luaState)
 		{
 			LuaLib.luaL_newmetatable (luaState, "luaNet_class");
 			LuaLib.lua_pushstring (luaState, "__gc");
@@ -174,7 +176,7 @@ namespace NLua
 		/*
 		 * Registers the global functions used by NLua
 		 */
-		private void setGlobalFunctions (LuaCore.LuaState luaState)
+		private void setGlobalFunctions (LuaState luaState)
 		{
 			LuaLib.lua_pushstdcallcfunction (luaState, metaFunctions.indexFunction);
 			LuaLib.lua_setglobal (luaState, "get_object_member");
@@ -195,7 +197,7 @@ namespace NLua
 		/*
 		 * Creates the metatable for delegates
 		 */
-		private void createFunctionMetatable (LuaCore.LuaState luaState)
+		private void createFunctionMetatable (LuaState luaState)
 		{
 			LuaLib.luaL_newmetatable (luaState, "luaNet_function");
 			LuaLib.lua_pushstring (luaState, "__gc");
@@ -210,7 +212,7 @@ namespace NLua
 		/*
 		 * Passes errors (argument e) to the Lua interpreter
 		 */
-		internal void throwError (LuaCore.LuaState luaState, object e)
+		internal void throwError (LuaState luaState, object e)
 		{
 			// We use this to remove anything pushed by luaL_where
 			int oldTop = LuaLib.lua_gettop (luaState);
@@ -252,13 +254,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int loadAssembly (LuaCore.LuaState luaState)
+		private static int loadAssembly (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return translator.loadAssemblyInternal (luaState);
 		}
 
-		private int loadAssemblyInternal (LuaCore.LuaState luaState)
+		private int loadAssemblyInternal (LuaState luaState)
 		{			
 			try {
 				string assemblyName = LuaLib.lua_tostring (luaState, 1).ToString ();
@@ -303,13 +305,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int importType (LuaCore.LuaState luaState)
+		private static int importType (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return translator.importTypeInternal (luaState);
 		}
 
-		private int importTypeInternal (LuaCore.LuaState luaState)
+		private int importTypeInternal (LuaState luaState)
 		{
 			string className = LuaLib.lua_tostring (luaState, 1).ToString ();
 			var klass = FindType (className);
@@ -331,13 +333,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int registerTable (LuaCore.LuaState luaState)
+		private static int registerTable (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return translator.registerTableInternal (luaState);
 		}
 
-		private int registerTableInternal (LuaCore.LuaState luaState)
+		private int registerTableInternal (LuaState luaState)
 		{
 			if (LuaLib.lua_type (luaState, 1) == LuaTypes.Table) {
 				var luaTable = getTable (luaState, 1);
@@ -383,13 +385,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int unregisterTable (LuaCore.LuaState luaState)
+		private static int unregisterTable (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return translator.unregisterTableInternal (luaState);
 		}
 
-		private int unregisterTableInternal (LuaCore.LuaState luaState)
+		private int unregisterTableInternal (LuaState luaState)
 		{
 			try {
 				if (LuaLib.lua_getmetatable (luaState, 1) != 0) {
@@ -428,13 +430,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int getMethodSignature (LuaCore.LuaState luaState)
+		private static int getMethodSignature (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return translator.getMethodSignatureInternal (luaState);
 		}
 
-		private int getMethodSignatureInternal (LuaCore.LuaState luaState)
+		private int getMethodSignatureInternal (LuaState luaState)
 		{
 			IReflect klass;
 			object target;
@@ -482,13 +484,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int getConstructorSignature (LuaCore.LuaState luaState)
+		private static int getConstructorSignature (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return translator.getConstructorSignatureInternal (luaState);
 		}
 
-		private int getConstructorSignatureInternal (LuaCore.LuaState luaState)
+		private int getConstructorSignatureInternal (LuaState luaState)
 		{
 			IReflect klass = null;
 			int udata = LuaLib.luanet_checkudata (luaState, 1, "luaNet_class");
@@ -518,7 +520,7 @@ namespace NLua
 		/*
 		 * Pushes a type reference into the stack
 		 */
-		internal void pushType (LuaCore.LuaState luaState, Type t)
+		internal void pushType (LuaState luaState, Type t)
 		{
 			pushObject (luaState, new ProxyType (t), "luaNet_class");
 		}
@@ -526,7 +528,7 @@ namespace NLua
 		/*
 		 * Pushes a delegate into the stack
 		 */
-		internal void pushFunction (LuaCore.LuaState luaState, LuaCore.LuaNativeFunction func)
+		internal void pushFunction (LuaState luaState, LuaCore.LuaNativeFunction func)
 		{
 			pushObject (luaState, func, "luaNet_function");
 		}
@@ -535,7 +537,7 @@ namespace NLua
 		 * Pushes a CLR object into the Lua stack as an userdata
 		 * with the provided metatable
 		 */
-		internal void pushObject (LuaCore.LuaState luaState, object o, string metatable)
+		internal void pushObject (LuaState luaState, object o, string metatable)
 		{
 			int index = -1;
 
@@ -577,7 +579,7 @@ namespace NLua
 		 * Pushes a new object into the Lua stack with the provided
 		 * metatable
 		 */
-		private void pushNewObject (LuaCore.LuaState luaState, object o, int index, string metatable)
+		private void pushNewObject (LuaState luaState, object o, int index, string metatable)
 		{
 			if (metatable == "luaNet_metatable") {
 				// Gets or creates the metatable for the object's type
@@ -625,7 +627,7 @@ namespace NLua
 		 * Gets an object from the Lua stack with the desired type, if it matches, otherwise
 		 * returns null.
 		 */
-		internal object getAsType (LuaCore.LuaState luaState, int stackPos, Type paramType)
+		internal object getAsType (LuaState luaState, int stackPos, Type paramType)
 		{
 			var extractor = typeChecker.checkType (luaState, stackPos, paramType);
 			return !extractor.IsNull () ? extractor (luaState, stackPos) : null;
@@ -671,7 +673,7 @@ namespace NLua
 		/*
 		 * Gets an object from the Lua stack according to its Lua type.
 		 */
-		internal object getObject (LuaCore.LuaState luaState, int index)
+		internal object getObject (LuaState luaState, int index)
 		{
 			var type = LuaLib.lua_type (luaState, index);
 
@@ -709,7 +711,7 @@ namespace NLua
 		/*
 		 * Gets the table in the index positon of the Lua stack.
 		 */
-		internal LuaTable getTable (LuaCore.LuaState luaState, int index)
+		internal LuaTable getTable (LuaState luaState, int index)
 		{
 			LuaLib.lua_pushvalue (luaState, index);
 			return new LuaTable (LuaLib.lua_ref (luaState, 1), interpreter);
@@ -718,7 +720,7 @@ namespace NLua
 		/*
 		 * Gets the userdata in the index positon of the Lua stack.
 		 */
-		internal LuaUserData getUserData (LuaCore.LuaState luaState, int index)
+		internal LuaUserData getUserData (LuaState luaState, int index)
 		{
 			LuaLib.lua_pushvalue (luaState, index);
 			return new LuaUserData (LuaLib.lua_ref (luaState, 1), interpreter);
@@ -727,7 +729,7 @@ namespace NLua
 		/*
 		 * Gets the function in the index positon of the Lua stack.
 		 */
-		internal LuaFunction getFunction (LuaCore.LuaState luaState, int index)
+		internal LuaFunction getFunction (LuaState luaState, int index)
 		{
 			LuaLib.lua_pushvalue (luaState, index);
 			return new LuaFunction (LuaLib.lua_ref (luaState, 1), interpreter);
@@ -737,7 +739,7 @@ namespace NLua
 		 * Gets the CLR object in the index positon of the Lua stack. Returns
 		 * delegates as Lua functions.
 		 */
-		internal object getNetObject (LuaCore.LuaState luaState, int index)
+		internal object getNetObject (LuaState luaState, int index)
 		{
 			int idx = LuaLib.luanet_tonetobject (luaState, index);
 			return idx != -1 ? objects [idx] : null;
@@ -747,7 +749,7 @@ namespace NLua
 		 * Gets the CLR object in the index position of the Lua stack. Returns
 		 * delegates as is.
 		 */
-		internal object getRawNetObject (LuaCore.LuaState luaState, int index)
+		internal object getRawNetObject (LuaState luaState, int index)
 		{
 			int udata = LuaLib.luanet_rawnetobj (luaState, index);
 			return udata != -1 ? objects [udata] : null;
@@ -757,7 +759,7 @@ namespace NLua
 		 * Pushes the entire array into the Lua stack and returns the number
 		 * of elements pushed.
 		 */
-		internal int returnValues (LuaCore.LuaState luaState, object[] returnValues)
+		internal int returnValues (LuaState luaState, object[] returnValues)
 		{
 			if (LuaLib.lua_checkstack (luaState, returnValues.Length + 5)) {
 				for (int i = 0; i < returnValues.Length; i++)
@@ -772,7 +774,7 @@ namespace NLua
 		 * Gets the values from the provided index to
 		 * the top of the stack and returns them in an array.
 		 */
-		internal object[] popValues (LuaCore.LuaState luaState, int oldTop)
+		internal object[] popValues (LuaState luaState, int oldTop)
 		{
 			int newTop = LuaLib.lua_gettop (luaState);
 
@@ -793,7 +795,7 @@ namespace NLua
 		 * the top of the stack and returns them in an array, casting
 		 * them to the provided types.
 		 */
-		internal object[] popValues (LuaCore.LuaState luaState, int oldTop, Type[] popTypes)
+		internal object[] popValues (LuaState luaState, int oldTop, Type[] popTypes)
 		{
 			int newTop = LuaLib.lua_gettop (luaState);
 
@@ -837,7 +839,7 @@ namespace NLua
 		/*
 		 * Pushes the object into the Lua stack according to its type.
 		 */
-		internal void push (LuaCore.LuaState luaState, object o)
+		internal void push (LuaState luaState, object o)
 		{
 			if (o.IsNull ())
 				LuaLib.lua_pushnil (luaState);
@@ -871,7 +873,7 @@ namespace NLua
 		 * Checks if the method matches the arguments in the Lua stack, getting
 		 * the arguments if it does.
 		 */
-		internal bool matchParameters (LuaCore.LuaState luaState, MethodBase method, ref MethodCache methodCache)
+		internal bool matchParameters (LuaState luaState, MethodBase method, ref MethodCache methodCache)
 		{
 			return metaFunctions.matchParameters (luaState, method, ref methodCache);
         }

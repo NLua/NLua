@@ -31,15 +31,17 @@ using NLua.Extensions;
 namespace NLua.Method
 {
 	#if USE_KOPILUA
-	using LuaCore = KopiLua.Lua;
+	using LuaCore  = KopiLua.Lua;
+	using LuaState = KopiLua.LuaState;
 	#else
-	using LuaCore = KeraLua.Lua;
+	using LuaCore  = KeraLua.Lua;
+	using LuaState = KeraLua.LuaState;
 	#endif
 
 	/*
 	 * Argument extraction with type-conversion function
 	 */
-	delegate object ExtractValue (LuaCore.LuaState luaState, int stackPos);
+	delegate object ExtractValue (LuaState luaState, int stackPos);
 
 	/*
 	 * Wrapper class for methods/constructors accessed from Lua.
@@ -112,7 +114,7 @@ namespace NLua.Method
 		 * Calls the method. Receives the arguments from the Lua stack
 		 * and returns values in it.
 		 */
-		int call (LuaCore.LuaState luaState)
+		int call (LuaState luaState)
 		{
 			var methodToCall = _Method;
 			object targetObject = _Target;

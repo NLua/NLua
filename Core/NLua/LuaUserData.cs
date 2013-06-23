@@ -30,9 +30,11 @@ using System.Collections.Generic;
 namespace NLua
 {
 	#if USE_KOPILUA
-	using LuaCore = KopiLua.Lua;
+	using LuaCore  = KopiLua.Lua;
+	using LuaState = KopiLua.LuaState;
 	#else
-	using LuaCore = KeraLua.Lua;
+	using LuaCore  = KeraLua.Lua;
+	using LuaState = KeraLua.LuaState;
 	#endif
 
 	public class LuaUserData : LuaBase
@@ -79,7 +81,7 @@ namespace NLua
 		/*
 		 * Pushes the userdata into the Lua stack
 		 */
-		internal void push (LuaCore.LuaState luaState)
+		internal void push (LuaState luaState)
 		{
 			LuaLib.lua_getref (luaState, _Reference);
 		}

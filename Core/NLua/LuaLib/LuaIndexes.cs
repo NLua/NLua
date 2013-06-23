@@ -28,11 +28,14 @@ using System;
 
 namespace NLua
 {
-#if USE_KOPILUA
-	using LuaCore = KopiLua.Lua;
-#else
-	using LuaCore = KeraLua.Lua;
-#endif
+	#if USE_KOPILUA
+	using LuaCore  = KopiLua.Lua;
+	using LuaState = KopiLua.LuaState;
+	#else
+	using LuaCore  = KeraLua.Lua;
+	using LuaState = KeraLua.LuaState;
+	#endif
+
 	public class LuaIndexes
 	{
 		static int registryIndex = 0;

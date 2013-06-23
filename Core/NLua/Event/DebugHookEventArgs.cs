@@ -27,11 +27,15 @@ using System;
 
 namespace NLua.Event
 {
-#if USE_KOPILUA
-	using LuaCore = KopiLua.Lua;
-#else
-	using LuaCore = KeraLua.Lua;
-#endif
+	#if USE_KOPILUA
+	using LuaCore  = KopiLua.Lua;
+	using LuaState = KopiLua.LuaState;
+	using LuaDebug = KopiLua.LuaDebug;
+	#else
+	using LuaCore  = KeraLua.Lua;
+	using LuaState = KeraLua.LuaState;
+	using LuaDebug = KeraLua.LuaDebug;
+	#endif
 
 	/// <summary>
 	/// Event args for hook callback event
@@ -39,14 +43,14 @@ namespace NLua.Event
 	/// <author>Reinhard Ostermeier</author>
 	public class DebugHookEventArgs : EventArgs
 	{
-		private readonly LuaCore.LuaDebug luaDebug;
+		private readonly LuaDebug luaDebug;
 
-		public DebugHookEventArgs (LuaCore.LuaDebug luaDebug)
+		public DebugHookEventArgs (LuaDebug luaDebug)
 		{
 			this.luaDebug = luaDebug;
 		}
 
-		public LuaCore.LuaDebug LuaDebug {
+		public LuaDebug LuaDebug {
 			get { return luaDebug; }
 		}
 	}

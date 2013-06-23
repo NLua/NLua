@@ -35,9 +35,11 @@ using NLua.Extensions;
 namespace NLua
 {
 	#if USE_KOPILUA
-	using LuaCore = KopiLua.Lua;
+	using LuaCore  = KopiLua.Lua;
+	using LuaState = KopiLua.LuaState;
 	#else
-	using LuaCore = KeraLua.Lua;
+	using LuaCore  = KeraLua.Lua;
+	using LuaState = KeraLua.LuaState;
 	#endif
 
 	/*
@@ -95,13 +97,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int runFunctionDelegate (LuaCore.LuaState luaState)
+		private static int runFunctionDelegate (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return runFunctionDelegate (luaState, translator);
 		}
 
-		private static int runFunctionDelegate (LuaCore.LuaState luaState, ObjectTranslator translator)
+		private static int runFunctionDelegate (LuaState luaState, ObjectTranslator translator)
 		{
 			LuaCore.LuaNativeFunction func = (LuaCore.LuaNativeFunction)translator.getRawNetObject (luaState, 1);
 			LuaLib.lua_remove (luaState, 1);
@@ -115,13 +117,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int collectObject (LuaCore.LuaState luaState)
+		private static int collectObject (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return collectObject (luaState, translator);
 		}
 
-		private static int collectObject (LuaCore.LuaState luaState, ObjectTranslator translator)
+		private static int collectObject (LuaState luaState, ObjectTranslator translator)
 		{
 			int udata = LuaLib.luanet_rawnetobj (luaState, 1);
 
@@ -138,13 +140,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int toString (LuaCore.LuaState luaState)
+		private static int toString (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return toString (luaState, translator);
 		}
 
-		private static int toString (LuaCore.LuaState luaState, ObjectTranslator translator)
+		private static int toString (LuaState luaState, ObjectTranslator translator)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
 
@@ -161,7 +163,7 @@ namespace NLua
 		/// Debug tool to dump the lua stack
 		/// </summary>
 		/// FIXME, move somewhere else
-		public static void dumpStack (ObjectTranslator translator, LuaCore.LuaState luaState)
+		public static void dumpStack (ObjectTranslator translator, LuaState luaState)
 		{
 			int depth = LuaLib.lua_gettop (luaState);
 			Debug.WriteLine ("lua stack depth: " + depth);
@@ -196,14 +198,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int getMethod (LuaCore.LuaState luaState)
+		private static int getMethod (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.getMethodInternal (luaState);
 		}
 
-		private int getMethodInternal (LuaCore.LuaState luaState)
+		private int getMethodInternal (LuaState luaState)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
 
@@ -297,14 +299,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int getBaseMethod (LuaCore.LuaState luaState)
+		private static int getBaseMethod (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.getBaseMethodInternal (luaState);
 		}
 
-		private int getBaseMethodInternal (LuaCore.LuaState luaState)
+		private int getBaseMethodInternal (LuaState luaState)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
 
@@ -359,7 +361,7 @@ namespace NLua
 		 * Uses reflection to find members, and stores the reflected MemberInfo object in
 		 * a cache (indexed by the type of the object and the name of the member).
 		 */
-		private int getMember (LuaCore.LuaState luaState, IReflect objType, object obj, string methodName, BindingFlags bindingType)
+		private int getMember (LuaState luaState, IReflect objType, object obj, string methodName, BindingFlags bindingType)
 		{
 			bool implicitStatic = false;
 			MemberInfo member = null;
@@ -519,14 +521,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int setFieldOrProperty (LuaCore.LuaState luaState)
+		private static int setFieldOrProperty (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.setFieldOrPropertyInternal (luaState);
 		}
 
-		private int setFieldOrPropertyInternal (LuaCore.LuaState luaState)
+		private int setFieldOrPropertyInternal (LuaState luaState)
  		{
 			object target = translator.getRawNetObject (luaState, 1);
 
@@ -592,7 +594,7 @@ namespace NLua
 		/// <param name="target"></param>
 		/// <param name="bindingType"></param>
 		/// <returns>false if unable to find the named member, true for success</returns>
-		private bool trySetMember (LuaCore.LuaState luaState, IReflect targetType, object target, BindingFlags bindingType, out string detailMessage)
+		private bool trySetMember (LuaState luaState, IReflect targetType, object target, BindingFlags bindingType, out string detailMessage)
 		{
 			detailMessage = null;   // No error yet
 
@@ -661,7 +663,7 @@ namespace NLua
 		 * Writes to fields or properties, either static or instance. Throws an error
 		 * if the operation is invalid.
 		 */
-		private int setMember (LuaCore.LuaState luaState, IReflect targetType, object target, BindingFlags bindingType)
+		private int setMember (LuaState luaState, IReflect targetType, object target, BindingFlags bindingType)
 		{
 			string detail;
 			bool success = trySetMember (luaState, targetType, target, bindingType, out detail);
@@ -677,7 +679,7 @@ namespace NLua
 		/// </summary>
 		/// <param name="e"></param>
 		/// We try to look into the exception to give the most meaningful description
-		void ThrowError (LuaCore.LuaState luaState, Exception e)
+		void ThrowError (LuaState luaState, Exception e)
 		{
 			// If we got inside a reflection show what really happened
 			var te = e as TargetInvocationException;
@@ -695,14 +697,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int getClassMethod (LuaCore.LuaState luaState)
+		private static int getClassMethod (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.getClassMethodInternal (luaState);
 		}
 
-		private int getClassMethodInternal (LuaCore.LuaState luaState)
+		private int getClassMethodInternal (LuaState luaState)
 		{
 			IReflect klass;
 			object obj = translator.getRawNetObject (luaState, 1);
@@ -737,14 +739,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int setClassFieldOrProperty (LuaCore.LuaState luaState)
+		private static int setClassFieldOrProperty (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.setClassFieldOrPropertyInternal (luaState);
 		}
 
-		private int setClassFieldOrPropertyInternal (LuaCore.LuaState luaState)
+		private int setClassFieldOrPropertyInternal (LuaState luaState)
 		{
 			IReflect target;
 			object obj = translator.getRawNetObject (luaState, 1);
@@ -768,14 +770,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int callConstructor (LuaCore.LuaState luaState)
+		private static int callConstructor (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.callConstructorInternal (luaState);
 		}
 
-		private int callConstructorInternal (LuaCore.LuaState luaState)
+		private int callConstructorInternal (LuaState luaState)
 		{
 			var validConstructor = new MethodCache ();
 			IReflect klass;
@@ -860,7 +862,7 @@ namespace NLua
 		 * if the match was succesful. It it was also returns the information
 		 * necessary to invoke the method.
 		 */
-		internal bool matchParameters (LuaCore.LuaState luaState, MethodBase method, ref MethodCache methodCache)
+		internal bool matchParameters (LuaState luaState, MethodBase method, ref MethodCache methodCache)
 		{
 			ExtractValue extractValue;
 			bool isMethod = true;
@@ -945,7 +947,7 @@ namespace NLua
 		/// <param name="currentNetParam"></param>
 		/// <param name="extractValue"></param>
 		/// <returns></returns>
-		private bool _IsTypeCorrect (LuaCore.LuaState luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
+		private bool _IsTypeCorrect (LuaState luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
 		{
 			try {
 				return (extractValue = translator.typeChecker.checkType (luaState, currentLuaParam, currentNetParam.ParameterType)) != null;
@@ -956,7 +958,7 @@ namespace NLua
 			}
 		}
 
-		private bool _IsParamsArray (LuaCore.LuaState luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
+		private bool _IsParamsArray (LuaState luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
 		{
 			extractValue = null;
 

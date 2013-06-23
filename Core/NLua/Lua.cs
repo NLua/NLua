@@ -38,9 +38,15 @@ using NLua.Extensions;
 namespace NLua
 {
 	#if USE_KOPILUA
-	using LuaCore = KopiLua.Lua;
+	using LuaCore  = KopiLua.Lua;
+	using LuaState = KopiLua.LuaState;
+	using LuaHook  = KopiLua.LuaHook;
+	using LuaDebug = KopiLua.LuaDebug;
 	#else
-	using LuaCore = KeraLua.Lua;
+	using LuaCore  = KeraLua.Lua;
+	using LuaState = KeraLua.LuaState;
+	using LuaHook  = KeraLua.LuaHook;
+	using LuaDebug = KeraLua.LuaDebug;
 	#endif
 
 	/*
@@ -75,13 +81,13 @@ namespace NLua
 		/// lua hook calback delegate
 		/// </summary>
 		/// <author>Reinhard Ostermeier</author>
-		private LuaCore.LuaHook hookCallback = null;
+		private LuaHook hookCallback = null;
 		#endregion
 		#region Globals auto-complete
 		private readonly List<string> globals = new List<string> ();
 		private bool globalsSorted;
 		#endregion
-		private /*readonly */ LuaCore.LuaState luaState;
+		private /*readonly */ LuaState luaState;
 		/// <summary>
 		/// True while a script is being executed
 		/// </summary>
@@ -274,7 +280,7 @@ end
 		/*
 			* CAUTION: NLua.Lua instances can't share the same lua state! 
 			*/
-		public Lua (LuaCore.LuaState lState)
+		public Lua (LuaState lState)
 		{
 			LuaLib.lua_pushstring (lState, "LUAINTERFACE LOADED");
 			LuaLib.lua_gettable (lState, (int)LuaIndexes.Registry);
@@ -290,7 +296,7 @@ end
 			}
 		}
 
-		void Init (LuaCore.LuaState luaState)
+		void Init (LuaState luaState)
 		{
 			LuaLib.lua_pushstring (luaState, "LUAINTERFACE LOADED");
 			LuaLib.lua_pushboolean (luaState, true);
@@ -320,14 +326,14 @@ end
 				LuaCore.LuaClose (luaState);
 				ObjectTranslatorPool.Instance.Remove (luaState);
 			}
-			//luaState = LuaCore.LuaState.Zero; <- suggested by Christopher Cebulski http://luaforge.net/forum/forum.php?thread_id = 44593&forum_id = 146
+			//luaState = LuaState.Zero; <- suggested by Christopher Cebulski http://luaforge.net/forum/forum.php?thread_id = 44593&forum_id = 146
 		}
 
 #if MONOTOUCH
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		static int PanicCallback (LuaCore.LuaState luaState)
+		static int PanicCallback (LuaState luaState)
 		{
 			string reason = string.Format ("unprotected error in call to Lua API ({0})", LuaLib.lua_tostring (luaState, -1));
 			throw new LuaException (reason);
@@ -852,7 +858,7 @@ end
 		public int SetDebugHook (EventMasks mask, int count)
 		{
 			if (hookCallback.IsNull ()) {
-				hookCallback = new LuaCore.LuaHook (Lua.DebugHookCallback);
+				hookCallback = new LuaHook (Lua.DebugHookCallback);
 				return LuaCore.LuaSetHook (luaState, hookCallback, (int)mask, count);
 			}
 
@@ -900,7 +906,7 @@ end
 		/*public bool GetStack(int level, out LuaCore.lua_Debug luaDebug)
 		{
 			luaDebug = new LuaDebug();
-			LuaCore.LuaState ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
+			LuaState ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
 			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
@@ -922,7 +928,7 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		/*public int GetInfo(String what, ref LuaCore.lua_Debug luaDebug)
 		{
-			LuaCore.LuaState ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
+			LuaState ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
 			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
@@ -942,7 +948,7 @@ end
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
 		/// <author>Reinhard Ostermeier</author>
-		public string GetLocal (LuaCore.LuaDebug luaDebug, int n)
+		public string GetLocal (LuaDebug luaDebug, int n)
 		{
 			return LuaCore.LuaGetLocal (luaState, luaDebug, n).ToString ();
 		}
@@ -954,7 +960,7 @@ end
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
 		/// <author>Reinhard Ostermeier</author>
-		public string SetLocal (LuaCore.LuaDebug luaDebug, int n)
+		public string SetLocal (LuaDebug luaDebug, int n)
 		{
 			return LuaCore.LuaSetLocal (luaState, luaDebug, n).ToString ();
 		}
@@ -994,7 +1000,7 @@ end
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_Hook))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static void DebugHookCallback (LuaCore.LuaState luaState, LuaCore.LuaDebug luaDebug)
+		private static void DebugHookCallback (LuaState luaState, LuaDebug luaDebug)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var lua = translator.Interpreter;
@@ -1002,7 +1008,7 @@ end
 			lua.DebugHookCallbackInternal (luaState, luaDebug);
 		}
 
-		private void DebugHookCallbackInternal (LuaCore.LuaState luaState, LuaCore.LuaDebug luaDebug)
+		private void DebugHookCallbackInternal (LuaState luaState, LuaDebug luaDebug)
 		{
 			try {
 				var temp = DebugHook;

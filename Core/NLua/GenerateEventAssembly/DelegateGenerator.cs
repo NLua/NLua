@@ -28,9 +28,11 @@ using System;
 namespace NLua
 {
 	#if USE_KOPILUA
-	using LuaCore = KopiLua.Lua;
+	using LuaCore  = KopiLua.Lua;
+	using LuaState = KopiLua.LuaState;
 	#else
-	using LuaCore = KeraLua.Lua;
+	using LuaCore  = KeraLua.Lua;
+	using LuaState = KeraLua.LuaState;
 	#endif
 	/*
 	 * Class used for generating delegates that get a function from the Lua
@@ -51,7 +53,7 @@ namespace NLua
 			this.delegateType = delegateType;
 		}
 
-		public object extractGenerated (LuaCore.LuaState luaState, int stackPos)
+		public object extractGenerated (LuaState luaState, int stackPos)
 		{
 			return CodeGeneration.Instance.GetDelegate (delegateType, translator.getFunction (luaState, stackPos));
 		}

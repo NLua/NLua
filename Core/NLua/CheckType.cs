@@ -32,9 +32,11 @@ using NLua.Extensions;
 namespace NLua
 {
 	#if USE_KOPILUA
-	using LuaCore = KopiLua.Lua;
+	using LuaCore  = KopiLua.Lua;
+	using LuaState = KopiLua.LuaState;
 	#else
-	using LuaCore = KeraLua.Lua;
+	using LuaCore  = KeraLua.Lua;
+	using LuaState = KeraLua.LuaState;
 	#endif
 
 	/*
@@ -95,7 +97,7 @@ namespace NLua
 			return extractValues.ContainsKey(extractKey) ? extractValues[extractKey] : extractNetObject;
 		}
 
-		internal ExtractValue checkType (LuaCore.LuaState luaState, int stackPos, Type paramType)
+		internal ExtractValue checkType (LuaState luaState, int stackPos, Type paramType)
 		{
 			var luatype = LuaLib.lua_type (luaState, stackPos);
 
@@ -189,7 +191,7 @@ namespace NLua
 		 * index stackPos as the desired type if it can, or null
 		 * otherwise.
 		 */
-		private object getAsSbyte (LuaCore.LuaState luaState, int stackPos)
+		private object getAsSbyte (LuaState luaState, int stackPos)
 		{
 			sbyte retVal = (sbyte)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -198,7 +200,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsByte (LuaCore.LuaState luaState, int stackPos)
+		private object getAsByte (LuaState luaState, int stackPos)
 		{
 			byte retVal = (byte)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -207,7 +209,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsShort (LuaCore.LuaState luaState, int stackPos)
+		private object getAsShort (LuaState luaState, int stackPos)
 		{
 			short retVal = (short)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -216,7 +218,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsUshort (LuaCore.LuaState luaState, int stackPos)
+		private object getAsUshort (LuaState luaState, int stackPos)
 		{
 			ushort retVal = (ushort)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -225,7 +227,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsInt (LuaCore.LuaState luaState, int stackPos)
+		private object getAsInt (LuaState luaState, int stackPos)
 		{
 			int retVal = (int)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -234,7 +236,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsUint (LuaCore.LuaState luaState, int stackPos)
+		private object getAsUint (LuaState luaState, int stackPos)
 		{
 			uint retVal = (uint)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -243,7 +245,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsLong (LuaCore.LuaState luaState, int stackPos)
+		private object getAsLong (LuaState luaState, int stackPos)
 		{
 			long retVal = (long)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -252,7 +254,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsUlong (LuaCore.LuaState luaState, int stackPos)
+		private object getAsUlong (LuaState luaState, int stackPos)
 		{
 			ulong retVal = (ulong)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -261,7 +263,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsDouble (LuaCore.LuaState luaState, int stackPos)
+		private object getAsDouble (LuaState luaState, int stackPos)
 		{
 			double retVal = LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -270,7 +272,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsChar (LuaCore.LuaState luaState, int stackPos)
+		private object getAsChar (LuaState luaState, int stackPos)
 		{
 			char retVal = (char)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -279,7 +281,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsFloat (LuaCore.LuaState luaState, int stackPos)
+		private object getAsFloat (LuaState luaState, int stackPos)
 		{
 			float retVal = (float)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -288,7 +290,7 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsDecimal (LuaCore.LuaState luaState, int stackPos)
+		private object getAsDecimal (LuaState luaState, int stackPos)
 		{
 			decimal retVal = (decimal)LuaLib.lua_tonumber (luaState, stackPos);
 			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
@@ -297,12 +299,12 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsBoolean (LuaCore.LuaState luaState, int stackPos)
+		private object getAsBoolean (LuaState luaState, int stackPos)
 		{
 			return LuaLib.lua_toboolean (luaState, stackPos);
 		}
 
-		private object getAsString (LuaCore.LuaState luaState, int stackPos)
+		private object getAsString (LuaState luaState, int stackPos)
 		{
 			string retVal = LuaLib.lua_tostring (luaState, stackPos).ToString ();
 			if (retVal == string.Empty && !LuaLib.lua_isstring (luaState, stackPos))
@@ -311,22 +313,22 @@ namespace NLua
 			return retVal;
 		}
 
-		private object getAsTable (LuaCore.LuaState luaState, int stackPos)
+		private object getAsTable (LuaState luaState, int stackPos)
 		{
 			return translator.getTable (luaState, stackPos);
 		}
 
-		private object getAsFunction (LuaCore.LuaState luaState, int stackPos)
+		private object getAsFunction (LuaState luaState, int stackPos)
 		{
 			return translator.getFunction (luaState, stackPos);
 		}
 
-		private object getAsUserdata (LuaCore.LuaState luaState, int stackPos)
+		private object getAsUserdata (LuaState luaState, int stackPos)
 		{
 			return translator.getUserData (luaState, stackPos);
 		}
 
-		public object getAsObject (LuaCore.LuaState luaState, int stackPos)
+		public object getAsObject (LuaState luaState, int stackPos)
 		{
 			if (LuaLib.lua_type (luaState, stackPos) == LuaTypes.Table) {
 				if (LuaLib.luaL_getmetafield (luaState, stackPos, "__index")) {
@@ -342,7 +344,7 @@ namespace NLua
 			return obj;
 		}
 
-		public object getAsNetObject (LuaCore.LuaState luaState, int stackPos)
+		public object getAsNetObject (LuaState luaState, int stackPos)
 		{
 			object obj = translator.getNetObject (luaState, stackPos);
 
