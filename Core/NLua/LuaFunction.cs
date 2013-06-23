@@ -59,9 +59,9 @@ namespace NLua
 		 * Calls the function casting return values to the types
 		 * in returnTypes
 		 */
-		internal object[] call (object[] args, Type[] returnTypes)
+		internal object[] Call (object[] args, Type[] returnTypes)
 		{
-			return _Interpreter.callFunction (this, args, returnTypes);
+			return _Interpreter.CallFunction (this, args, returnTypes);
 		}
 
 		/*
@@ -70,18 +70,18 @@ namespace NLua
 		 */
 		public object[] Call (params object[] args)
 		{
-			return _Interpreter.callFunction (this, args);
+			return _Interpreter.CallFunction (this, args);
 		}
 
 		/*
 		 * Pushes the function into the Lua stack
 		 */
-		internal void push (LuaState luaState)
+		internal void Push (LuaState luaState)
 		{
 			if (_Reference != 0)
-				LuaLib.lua_getref (luaState, _Reference);
+				LuaLib.LuaGetRef (luaState, _Reference);
 			else
-				_Interpreter.pushCSFunction (function);
+				_Interpreter.PushCSFunction (function);
 		}
 
 		public override string ToString ()
@@ -95,7 +95,7 @@ namespace NLua
 				var l = (LuaFunction)o;
 
 				if (this._Reference != 0 && l._Reference != 0)
-					return _Interpreter.compareRef (l._Reference, this._Reference);
+					return _Interpreter.CompareRef (l._Reference, this._Reference);
 				else
 					return this.function == l.function;
 			} else

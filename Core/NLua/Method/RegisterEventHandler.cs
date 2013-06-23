@@ -59,13 +59,6 @@ namespace NLua.Method
 			pendingEvents.Add (handlerDelegate, this);
 
 			return handlerDelegate;
-			//MethodInfo mi = eventInfo.EventHandlerType.GetMethod("Invoke");
-			//ParameterInfo[] pi = mi.GetParameters();
-			//LuaEventHandler handler=CodeGeneration.Instance.GetEvent(pi[1].ParameterType,function);
-			//Delegate handlerDelegate=Delegate.CreateDelegate(eventInfo.EventHandlerType,handler,"HandleEvent");
-			//eventInfo.AddEventHandler(target,handlerDelegate);
-			//pendingEvents.Add(handlerDelegate, this);
-			//return handlerDelegate;
 		}
 
 		/*

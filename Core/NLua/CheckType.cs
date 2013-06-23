@@ -45,7 +45,7 @@ namespace NLua
 	 * Author: Fabio Mascarenhas
 	 * Version: 1.0
 	 */
-	class CheckType
+	sealed class CheckType
 	{
 #if SILVERLIGHT
 		private Dictionary<Type, ExtractValue> extractValues = new Dictionary<Type, ExtractValue>();
@@ -58,48 +58,48 @@ namespace NLua
 		public CheckType (ObjectTranslator translator)
 		{
 			this.translator = translator;
-			extractValues.Add(getExtractDictionaryKey(typeof(object)), new ExtractValue(getAsObject));
-			extractValues.Add(getExtractDictionaryKey(typeof(sbyte)), new ExtractValue(getAsSbyte));
-			extractValues.Add(getExtractDictionaryKey(typeof(byte)), new ExtractValue(getAsByte));
-			extractValues.Add(getExtractDictionaryKey(typeof(short)), new ExtractValue(getAsShort));
-			extractValues.Add(getExtractDictionaryKey(typeof(ushort)), new ExtractValue(getAsUshort));
-			extractValues.Add(getExtractDictionaryKey(typeof(int)), new ExtractValue(getAsInt));
-			extractValues.Add(getExtractDictionaryKey(typeof(uint)), new ExtractValue(getAsUint));
-			extractValues.Add(getExtractDictionaryKey(typeof(long)), new ExtractValue(getAsLong));
-			extractValues.Add(getExtractDictionaryKey(typeof(ulong)), new ExtractValue(getAsUlong));
-			extractValues.Add(getExtractDictionaryKey(typeof(double)), new ExtractValue(getAsDouble));
-			extractValues.Add(getExtractDictionaryKey(typeof(char)), new ExtractValue(getAsChar));
-			extractValues.Add(getExtractDictionaryKey(typeof(float)), new ExtractValue(getAsFloat));
-			extractValues.Add(getExtractDictionaryKey(typeof(decimal)), new ExtractValue(getAsDecimal));
-			extractValues.Add(getExtractDictionaryKey(typeof(bool)), new ExtractValue(getAsBoolean));
-			extractValues.Add(getExtractDictionaryKey(typeof(string)), new ExtractValue(getAsString));
-			extractValues.Add(getExtractDictionaryKey(typeof(LuaFunction)), new ExtractValue(getAsFunction));
-			extractValues.Add(getExtractDictionaryKey(typeof(LuaTable)), new ExtractValue(getAsTable));
-			extractValues.Add(getExtractDictionaryKey(typeof(LuaUserData)), new ExtractValue(getAsUserdata));
-			extractNetObject = new ExtractValue (getAsNetObject);		
+			extractValues.Add(GetExtractDictionaryKey(typeof(object)), new ExtractValue(GetAsObject));
+			extractValues.Add(GetExtractDictionaryKey(typeof(sbyte)), new ExtractValue(GetAsSbyte));
+			extractValues.Add(GetExtractDictionaryKey(typeof(byte)), new ExtractValue(GetAsByte));
+			extractValues.Add(GetExtractDictionaryKey(typeof(short)), new ExtractValue(GetAsShort));
+			extractValues.Add(GetExtractDictionaryKey(typeof(ushort)), new ExtractValue(GetAsUshort));
+			extractValues.Add(GetExtractDictionaryKey(typeof(int)), new ExtractValue(GetAsInt));
+			extractValues.Add(GetExtractDictionaryKey(typeof(uint)), new ExtractValue(GetAsUint));
+			extractValues.Add(GetExtractDictionaryKey(typeof(long)), new ExtractValue(GetAsLong));
+			extractValues.Add(GetExtractDictionaryKey(typeof(ulong)), new ExtractValue(GetAsUlong));
+			extractValues.Add(GetExtractDictionaryKey(typeof(double)), new ExtractValue(GetAsDouble));
+			extractValues.Add(GetExtractDictionaryKey(typeof(char)), new ExtractValue(GetAsChar));
+			extractValues.Add(GetExtractDictionaryKey(typeof(float)), new ExtractValue(GetAsFloat));
+			extractValues.Add(GetExtractDictionaryKey(typeof(decimal)), new ExtractValue(GetAsDecimal));
+			extractValues.Add(GetExtractDictionaryKey(typeof(bool)), new ExtractValue(GetAsBoolean));
+			extractValues.Add(GetExtractDictionaryKey(typeof(string)), new ExtractValue(GetAsString));
+			extractValues.Add(GetExtractDictionaryKey(typeof(LuaFunction)), new ExtractValue(GetAsFunction));
+			extractValues.Add(GetExtractDictionaryKey(typeof(LuaTable)), new ExtractValue(GetAsTable));
+			extractValues.Add(GetExtractDictionaryKey(typeof(LuaUserData)), new ExtractValue(GetAsUserdata));
+			extractNetObject = new ExtractValue (GetAsNetObject);		
 		}
 
 		/*
 		 * Checks if the value at Lua stack index stackPos matches paramType, 
 		 * returning a conversion function if it does and null otherwise.
 		 */
-		internal ExtractValue getExtractor (IReflect paramType)
+		internal ExtractValue GetExtractor (IReflect paramType)
 		{
-			return getExtractor (paramType.UnderlyingSystemType);
+			return GetExtractor (paramType.UnderlyingSystemType);
 		}
 
-		internal ExtractValue getExtractor (Type paramType)
+		internal ExtractValue GetExtractor (Type paramType)
 		{
 			if (paramType.IsByRef)
 				paramType = paramType.GetElementType ();
 
-			var extractKey = getExtractDictionaryKey(paramType);
+			var extractKey = GetExtractDictionaryKey(paramType);
 			return extractValues.ContainsKey(extractKey) ? extractValues[extractKey] : extractNetObject;
 		}
 
-		internal ExtractValue checkType (LuaState luaState, int stackPos, Type paramType)
+		internal ExtractValue CheckLuaType (LuaState luaState, int stackPos, Type paramType)
 		{
-			var luatype = LuaLib.lua_type (luaState, stackPos);
+			var luatype = LuaLib.LuaType (luaState, stackPos);
 
 			if (paramType.IsByRef)
 				paramType = paramType.GetElementType ();
@@ -109,7 +109,7 @@ namespace NLua
 			if (!underlyingType.IsNull ())
 				paramType = underlyingType;	 // Silently convert nullable types to their non null requics
 
-			var extractKey = getExtractDictionaryKey (paramType);
+			var extractKey = GetExtractDictionaryKey (paramType);
 
 			if (paramType.Equals (typeof(object)))
 				return extractValues [extractKey];
@@ -117,27 +117,27 @@ namespace NLua
 			//CP: Added support for generic parameters
 			if (paramType.IsGenericParameter) {
 				if (luatype == LuaTypes.Boolean)
-					return extractValues [getExtractDictionaryKey (typeof(bool))];
+					return extractValues [GetExtractDictionaryKey (typeof(bool))];
 				else if (luatype == LuaTypes.String)
-					return extractValues[getExtractDictionaryKey (typeof(string))];
+					return extractValues[GetExtractDictionaryKey (typeof(string))];
 				else if (luatype == LuaTypes.Table)
-					return extractValues [getExtractDictionaryKey (typeof(LuaTable))];
+					return extractValues [GetExtractDictionaryKey (typeof(LuaTable))];
 				else if (luatype == LuaTypes.UserData)
-					return extractValues [getExtractDictionaryKey (typeof(object))];
+					return extractValues [GetExtractDictionaryKey (typeof(object))];
 				else if (luatype == LuaTypes.Function)
-					return extractValues [getExtractDictionaryKey (typeof(LuaFunction))];
+					return extractValues [GetExtractDictionaryKey (typeof(LuaFunction))];
 				else if (luatype == LuaTypes.Number)
-					return extractValues [getExtractDictionaryKey (typeof(double))];
+					return extractValues [GetExtractDictionaryKey (typeof(double))];
 			}
 
-			if (LuaLib.lua_isnumber (luaState, stackPos))
+			if (LuaLib.LuaIsNumber (luaState, stackPos))
 				return extractValues [extractKey];
 
 			if (paramType == typeof(bool)) {
-				if (LuaLib.lua_isboolean (luaState, stackPos))
+				if (LuaLib.LuaIsBoolean (luaState, stackPos))
 					return extractValues [extractKey];
 			} else if (paramType == typeof(string)) {
-				if (LuaLib.lua_isstring (luaState, stackPos))
+				if (LuaLib.LuaIsString (luaState, stackPos))
 					return extractValues [extractKey];
 				else if (luatype == LuaTypes.Nil)
 					return extractNetObject; // kevinh - silently convert nil to a null string pointer
@@ -151,22 +151,22 @@ namespace NLua
 				if (luatype == LuaTypes.Function)
 					return extractValues [extractKey];
 			} else if (typeof(Delegate).IsAssignableFrom (paramType) && luatype == LuaTypes.Function)
-				return new ExtractValue (new DelegateGenerator (translator, paramType).extractGenerated);
+				return new ExtractValue (new DelegateGenerator (translator, paramType).ExtractGenerated);
 			else if (paramType.IsInterface && luatype == LuaTypes.Table)
-				return new ExtractValue (new ClassGenerator (translator, paramType).extractGenerated);
+				return new ExtractValue (new ClassGenerator (translator, paramType).ExtractGenerated);
 			else if ((paramType.IsInterface || paramType.IsClass) && luatype == LuaTypes.Nil) {
 				// kevinh - allow nil to be silently converted to null - extractNetObject will return null when the item ain't found
 				return extractNetObject;
-			} else if (LuaLib.lua_type (luaState, stackPos) == LuaTypes.Table) {
-				if (LuaLib.luaL_getmetafield (luaState, stackPos, "__index")) {
-					object obj = translator.getNetObject (luaState, -1);
-					LuaLib.lua_settop (luaState, -2);
+			} else if (LuaLib.LuaType (luaState, stackPos) == LuaTypes.Table) {
+				if (LuaLib.LuaLGetMetafield (luaState, stackPos, "__index")) {
+					object obj = translator.GetNetObject (luaState, -1);
+					LuaLib.LuaSetTop (luaState, -2);
 					if (!obj.IsNull () && paramType.IsAssignableFrom (obj.GetType ()))
 						return extractNetObject;
 				} else
 					return null;
 			} else {
-				object obj = translator.getNetObject (luaState, stackPos);
+				object obj = translator.GetNetObject (luaState, stackPos);
 				if (!obj.IsNull () && paramType.IsAssignableFrom (obj.GetType ()))
 					return extractNetObject;
 			}
@@ -175,12 +175,12 @@ namespace NLua
 		}
 
 #if SILVERLIGHT
-		private Type getExtractDictionaryKey(Type targetType)
+		private Type GetExtractDictionaryKey(Type targetType)
 		{
 			return targetType;
 		}
 #else
-		private long getExtractDictionaryKey(Type targetType)
+		private long GetExtractDictionaryKey(Type targetType)
 		{
 			return targetType.TypeHandle.Value.ToInt64();
 		}
@@ -191,171 +191,171 @@ namespace NLua
 		 * index stackPos as the desired type if it can, or null
 		 * otherwise.
 		 */
-		private object getAsSbyte (LuaState luaState, int stackPos)
+		private object GetAsSbyte (LuaState luaState, int stackPos)
 		{
-			sbyte retVal = (sbyte)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			sbyte retVal = (sbyte)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsByte (LuaState luaState, int stackPos)
+		private object GetAsByte (LuaState luaState, int stackPos)
 		{
-			byte retVal = (byte)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			byte retVal = (byte)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsShort (LuaState luaState, int stackPos)
+		private object GetAsShort (LuaState luaState, int stackPos)
 		{
-			short retVal = (short)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			short retVal = (short)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsUshort (LuaState luaState, int stackPos)
+		private object GetAsUshort (LuaState luaState, int stackPos)
 		{
-			ushort retVal = (ushort)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			ushort retVal = (ushort)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsInt (LuaState luaState, int stackPos)
+		private object GetAsInt (LuaState luaState, int stackPos)
 		{
-			int retVal = (int)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			int retVal = (int)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsUint (LuaState luaState, int stackPos)
+		private object GetAsUint (LuaState luaState, int stackPos)
 		{
-			uint retVal = (uint)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			uint retVal = (uint)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsLong (LuaState luaState, int stackPos)
+		private object GetAsLong (LuaState luaState, int stackPos)
 		{
-			long retVal = (long)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			long retVal = (long)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsUlong (LuaState luaState, int stackPos)
+		private object GetAsUlong (LuaState luaState, int stackPos)
 		{
-			ulong retVal = (ulong)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			ulong retVal = (ulong)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsDouble (LuaState luaState, int stackPos)
+		private object GetAsDouble (LuaState luaState, int stackPos)
 		{
-			double retVal = LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			double retVal = LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsChar (LuaState luaState, int stackPos)
+		private object GetAsChar (LuaState luaState, int stackPos)
 		{
-			char retVal = (char)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			char retVal = (char)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsFloat (LuaState luaState, int stackPos)
+		private object GetAsFloat (LuaState luaState, int stackPos)
 		{
-			float retVal = (float)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			float retVal = (float)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsDecimal (LuaState luaState, int stackPos)
+		private object GetAsDecimal (LuaState luaState, int stackPos)
 		{
-			decimal retVal = (decimal)LuaLib.lua_tonumber (luaState, stackPos);
-			if (retVal == 0 && !LuaLib.lua_isnumber (luaState, stackPos))
+			decimal retVal = (decimal)LuaLib.LuaToNumber (luaState, stackPos);
+			if (retVal == 0 && !LuaLib.LuaIsNumber (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsBoolean (LuaState luaState, int stackPos)
+		private object GetAsBoolean (LuaState luaState, int stackPos)
 		{
-			return LuaLib.lua_toboolean (luaState, stackPos);
+			return LuaLib.LuaToBoolean (luaState, stackPos);
 		}
 
-		private object getAsString (LuaState luaState, int stackPos)
+		private object GetAsString (LuaState luaState, int stackPos)
 		{
-			string retVal = LuaLib.lua_tostring (luaState, stackPos).ToString ();
-			if (retVal == string.Empty && !LuaLib.lua_isstring (luaState, stackPos))
+			string retVal = LuaLib.LuaToString (luaState, stackPos).ToString ();
+			if (string.IsNullOrEmpty(retVal) && !LuaLib.LuaIsString (luaState, stackPos))
 				return null;
 
 			return retVal;
 		}
 
-		private object getAsTable (LuaState luaState, int stackPos)
+		private object GetAsTable (LuaState luaState, int stackPos)
 		{
-			return translator.getTable (luaState, stackPos);
+			return translator.GetTable (luaState, stackPos);
 		}
 
-		private object getAsFunction (LuaState luaState, int stackPos)
+		private object GetAsFunction (LuaState luaState, int stackPos)
 		{
-			return translator.getFunction (luaState, stackPos);
+			return translator.GetFunction (luaState, stackPos);
 		}
 
-		private object getAsUserdata (LuaState luaState, int stackPos)
+		private object GetAsUserdata (LuaState luaState, int stackPos)
 		{
-			return translator.getUserData (luaState, stackPos);
+			return translator.GetUserData (luaState, stackPos);
 		}
 
-		public object getAsObject (LuaState luaState, int stackPos)
+		public object GetAsObject (LuaState luaState, int stackPos)
 		{
-			if (LuaLib.lua_type (luaState, stackPos) == LuaTypes.Table) {
-				if (LuaLib.luaL_getmetafield (luaState, stackPos, "__index")) {
-					if (LuaLib.luaL_checkmetatable (luaState, -1)) {
-						LuaLib.lua_insert (luaState, stackPos);
-						LuaLib.lua_remove (luaState, stackPos + 1);
+			if (LuaLib.LuaType (luaState, stackPos) == LuaTypes.Table) {
+				if (LuaLib.LuaLGetMetafield (luaState, stackPos, "__index")) {
+					if (LuaLib.LuaLCheckMetatable (luaState, -1)) {
+						LuaLib.LuaInsert (luaState, stackPos);
+						LuaLib.LuaRemove (luaState, stackPos + 1);
 					} else
-						LuaLib.lua_settop (luaState, -2);
+						LuaLib.LuaSetTop (luaState, -2);
 				}
 			}
 
-			object obj = translator.getObject (luaState, stackPos);
+			object obj = translator.GetObject (luaState, stackPos);
 			return obj;
 		}
 
-		public object getAsNetObject (LuaState luaState, int stackPos)
+		public object GetAsNetObject (LuaState luaState, int stackPos)
 		{
-			object obj = translator.getNetObject (luaState, stackPos);
+			object obj = translator.GetNetObject (luaState, stackPos);
 
-			if (obj.IsNull () && LuaLib.lua_type (luaState, stackPos) == LuaTypes.Table) {
-				if (LuaLib.luaL_getmetafield (luaState, stackPos, "__index")) {
-					if (LuaLib.luaL_checkmetatable (luaState, -1)) {
-						LuaLib.lua_insert (luaState, stackPos);
-						LuaLib.lua_remove (luaState, stackPos + 1);
-						obj = translator.getNetObject (luaState, stackPos);
+			if (obj.IsNull () && LuaLib.LuaType (luaState, stackPos) == LuaTypes.Table) {
+				if (LuaLib.LuaLGetMetafield (luaState, stackPos, "__index")) {
+					if (LuaLib.LuaLCheckMetatable (luaState, -1)) {
+						LuaLib.LuaInsert (luaState, stackPos);
+						LuaLib.LuaRemove (luaState, stackPos + 1);
+						obj = translator.GetNetObject (luaState, stackPos);
 					} else 
-						LuaLib.lua_settop (luaState, -2);
+						LuaLib.LuaSetTop (luaState, -2);
 				}
 			}
 

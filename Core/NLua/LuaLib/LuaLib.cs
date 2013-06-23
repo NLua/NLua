@@ -42,95 +42,80 @@ namespace NLua
 
 	public class LuaLib
 	{
-		// steffenj: BEGIN additional Lua API functions new in Lua 5.1
-		public static int lua_gc (LuaState luaState, GCOptions what, int data)
+		public static int LuaGC (LuaState luaState, GCOptions what, int data)
 		{
 			return LuaCore.LuaGC (luaState, (int)what, data);
 		}
 
-		public static string lua_typename (LuaState luaState, LuaTypes type)
+		public static string LuaTypeName (LuaState luaState, LuaTypes type)
 		{
 			return LuaCore.LuaTypeName (luaState, (int)type).ToString ();
 		}
 
-		public static string luaL_typename (LuaState luaState, int stackPos)
+		public static string LuaLTypeName (LuaState luaState, int stackPos)
 		{
-			return lua_typename (luaState, lua_type (luaState, stackPos));
+			return LuaTypeName (luaState, LuaType (luaState, stackPos));
 		}
 
-		public static void luaL_error (LuaState luaState, string message)
+		public static void LuaLError (LuaState luaState, string message)
 		{
 			LuaCore.LuaLError (luaState, message);
 		}
 
-		public static void luaL_where (LuaState luaState, int level)
+		public static void LuaLWhere (LuaState luaState, int level)
 		{
 			LuaCore.LuaLWhere (luaState, level);
 		}
 
-		// steffenj: BEGIN Lua 5.1.1 API change (lua_open replaced by luaL_newstate)
-		public static LuaState luaL_newstate ()
+		public static LuaState LuaLNewState ()
 		{
 			return LuaCore.LuaLNewState ();
 		}
 
-		// steffenj: BEGIN Lua 5.1.1 API change (new function luaL_openlibs)
-		public static void luaL_openlibs (LuaState luaState)
+		public static void LuaLOpenLibs (LuaState luaState)
 		{
 			LuaCore.LuaLOpenLibs (luaState);
 		}
 
-		// steffenj: END Lua 5.1.1 API change (lua_strlen is now lua_objlen)
-		// steffenj: BEGIN Lua 5.1.1 API change (lua_dostring is now a macro luaL_dostring)
-		public static int luaL_loadstring (LuaState luaState, string chunk)
+		public static int LuaLLoadString (LuaState luaState, string chunk)
 		{
 			return LuaCore.LuaLLoadString (luaState, chunk);
 		}
 
-		public static int luaL_loadstring (LuaState luaState, byte[] chunk)
+		public static int LuaLLoadString (LuaState luaState, byte[] chunk)
 		{
 			return LuaCore.LuaLLoadString (luaState, chunk);
 		}
 
-		public static int luaL_dostring (LuaState luaState, string chunk)
+		public static int LuaLDoString (LuaState luaState, string chunk)
 		{
-			int result = luaL_loadstring (luaState, chunk);
+			int result = LuaLLoadString (luaState, chunk);
 			if (result != 0)
 				return result;
 
-			return lua_pcall (luaState, 0, -1, 0);
+			return LuaPCall (luaState, 0, -1, 0);
 		}
 
-		public static int luaL_dostring (LuaState luaState, byte[] chunk)
+		public static int LuaLDoString (LuaState luaState, byte[] chunk)
 		{
-			int result = luaL_loadstring (luaState, chunk);
+			int result = LuaLLoadString (luaState, chunk);
 			if (result != 0)
 				return result;
 			
-			return lua_pcall (luaState, 0, -1, 0);
+			return LuaPCall (luaState, 0, -1, 0);
 		}
 		
-		/// <summary>DEPRECATED - use luaL_dostring(LuaState luaState, string chunk) instead!</summary>
-		public static int lua_dostring (LuaState luaState, string chunk)
-		{
-			return luaL_dostring (luaState, chunk);
-		}
-
-		// steffenj: END Lua 5.1.1 API change (lua_dostring is now a macro luaL_dostring)
-		// steffenj: BEGIN Lua 5.1.1 API change (lua_newtable is gone, lua_createtable is new)
-		public static void lua_createtable (LuaState luaState, int narr, int nrec)
+		public static void LuaCreateTable (LuaState luaState, int narr, int nrec)
 		{
 			LuaCore.LuaCreateTable (luaState, narr, nrec);
 		}
 
-		public static void lua_newtable (LuaState luaState)
+		public static void LuaNewTable (LuaState luaState)
 		{
-			lua_createtable (luaState, 0, 0);
+			LuaCreateTable (luaState, 0, 0);
 		}
 
-		// steffenj: END Lua 5.1.1 API change (lua_newtable is gone, lua_createtable is new)
-		// steffenj: BEGIN Lua 5.1.1 API change (lua_dofile now in LuaLib as luaL_dofile macro)
-		public static int luaL_dofile (LuaState luaState, string fileName)
+		public static int LuaLDoFile (LuaState luaState, string fileName)
 		{
 			int result = LuaCore.LuaNetLoadFile (luaState, fileName);
 			if (result != 0)
@@ -139,199 +124,198 @@ namespace NLua
 			return LuaCore.LuaNetPCall (luaState, 0, -1, 0);
 		}
 
-		public static void lua_getglobal (LuaState luaState, string name)
+		public static void LuaGetGlobal (LuaState luaState, string name)
 		{
 			LuaCore.LuaNetGetGlobal (luaState, name);
 		}
 
-		public static void lua_setglobal (LuaState luaState, string name)
+		public static void LuaSetGlobal (LuaState luaState, string name)
 		{
 			LuaCore.LuaNetSetGlobal (luaState, name);
 		}
 
-		public static void lua_settop (LuaState luaState, int newTop)
+		public static void LuaSetTop (LuaState luaState, int newTop)
 		{
 			LuaCore.LuaSetTop (luaState, newTop);
 		}
 
-		public static void lua_pop (LuaState luaState, int amount)
+		public static void LuaPop (LuaState luaState, int amount)
 		{
-			lua_settop (luaState, -(amount) - 1);
+			LuaSetTop (luaState, -(amount) - 1);
 		}
 
-		public static void lua_insert (LuaState luaState, int newTop)
+		public static void LuaInsert (LuaState luaState, int newTop)
 		{
 			LuaCore.LuaInsert (luaState, newTop);
 		}
 
-		public static void lua_remove (LuaState luaState, int index)
+		public static void LuaRemove (LuaState luaState, int index)
 		{
 			LuaCore.LuaRemove (luaState, index);
 		}
 
-		public static void lua_gettable (LuaState luaState, int index)
+		public static void LuaGetTable (LuaState luaState, int index)
 		{
 			LuaCore.LuaGetTable (luaState, index);
 		}
 
-		public static void lua_rawget (LuaState luaState, int index)
+		public static void LuaRawGet (LuaState luaState, int index)
 		{
 			LuaCore.LuaRawGet (luaState, index);
 		}
 
-		public static void lua_settable (LuaState luaState, int index)
+		public static void LuaSetTable (LuaState luaState, int index)
 		{
 			LuaCore.LuaSetTable (luaState, index);
 		}
 
-		public static void lua_rawset (LuaState luaState, int index)
+		public static void LuaRawSet (LuaState luaState, int index)
 		{
 			LuaCore.LuaRawSet (luaState, index);
 		}
 
-		public static void lua_setmetatable (LuaState luaState, int objIndex)
+		public static void LuaSetMetatable (LuaState luaState, int objIndex)
 		{
 			LuaCore.LuaSetMetatable (luaState, objIndex);
 		}
 
-		public static int lua_getmetatable (LuaState luaState, int objIndex)
+		public static int LuaGetMetatable (LuaState luaState, int objIndex)
 		{
 			return LuaCore.LuaGetMetatable (luaState, objIndex);
 		}
 
-		public static int lua_equal (LuaState luaState, int index1, int index2)
+		public static int LuaEqual (LuaState luaState, int index1, int index2)
 		{
 			return LuaCore.LuaNetEqual (luaState, index1, index2);
 		}
 
-		public static void lua_pushvalue (LuaState luaState, int index)
+		public static void LuaPushValue (LuaState luaState, int index)
 		{
 			LuaCore.LuaPushValue (luaState, index);
 		}
 
-		public static void lua_replace (LuaState luaState, int index)
+		public static void LuaReplace (LuaState luaState, int index)
 		{
 			LuaCore.LuaReplace (luaState, index);
 		}
 
-		public static int lua_gettop (LuaState luaState)
+		public static int LuaGetTop (LuaState luaState)
 		{
 			return LuaCore.LuaGetTop (luaState);
 		}
 
-		public static LuaTypes lua_type (LuaState luaState, int index)
+		public static LuaTypes LuaType (LuaState luaState, int index)
 		{
 			return (LuaTypes)LuaCore.LuaType (luaState, index);
 		}
 
-		public static bool lua_isnil (LuaState luaState, int index)
+		public static bool LuaIsNil (LuaState luaState, int index)
 		{
-			return lua_type (luaState, index) == LuaTypes.Nil;
+			return LuaType (luaState, index) == LuaTypes.Nil;
 		}
 
-		public static bool lua_isnumber (LuaState luaState, int index)
+		public static bool LuaIsNumber (LuaState luaState, int index)
 		{
-			return lua_type (luaState, index) == LuaTypes.Number;
+			return LuaType (luaState, index) == LuaTypes.Number;
 		}
 
-		public static bool lua_isboolean (LuaState luaState, int index)
+		public static bool LuaIsBoolean (LuaState luaState, int index)
 		{
-			return lua_type (luaState, index) == LuaTypes.Boolean;
+			return LuaType (luaState, index) == LuaTypes.Boolean;
 		}
 
-		public static int luaL_ref (LuaState luaState, int registryIndex)
+		public static int LuaLRef (LuaState luaState, int registryIndex)
 		{
 			return LuaCore.LuaLRef (luaState, registryIndex);
 		}
 
-		public static int lua_ref (LuaState luaState, int lockRef)
+		public static int LuaRef (LuaState luaState, int lockRef)
 		{
-			return lockRef != 0 ? luaL_ref (luaState, (int)LuaIndexes.Registry) : 0;
+			return lockRef != 0 ? LuaLRef (luaState, (int)LuaIndexes.Registry) : 0;
 		}
 
-		public static void lua_rawgeti (LuaState luaState, int tableIndex, int index)
+		public static void LuaRawGetI (LuaState luaState, int tableIndex, int index)
 		{
 			LuaCore.LuaRawGetI (luaState, tableIndex, index);
 		}
 
-		public static void lua_rawseti (LuaState luaState, int tableIndex, int index)
+		public static void LuaRawSetI (LuaState luaState, int tableIndex, int index)
 		{
 			LuaCore.LuaRawSetI (luaState, tableIndex, index);
 		}
 
-		public static object lua_newuserdata (LuaState luaState, int size)
+		public static object LuaNewUserData (LuaState luaState, int size)
 		{
 			return LuaCore.LuaNewUserData (luaState, (uint)size);
 		}
 
-		public static object lua_touserdata (LuaState luaState, int index)
+		public static object LuaToUserData (LuaState luaState, int index)
 		{
 			return LuaCore.LuaToUserData (luaState, index);
 		}
 
-		public static void lua_getref (LuaState luaState, int reference)
+		public static void LuaGetRef (LuaState luaState, int reference)
 		{
-			lua_rawgeti (luaState, (int)LuaIndexes.Registry, reference);
+			LuaRawGetI (luaState, (int)LuaIndexes.Registry, reference);
 		}
 
-		public static void lua_unref (LuaState luaState, int reference)
+		public static void LuaUnref (LuaState luaState, int reference)
 		{
 			LuaCore.LuaLUnref (luaState, (int)LuaIndexes.Registry, reference);
 		}
 
-		public static bool lua_isstring (LuaState luaState, int index)
+		public static bool LuaIsString (LuaState luaState, int index)
 		{
 			return LuaCore.LuaIsString (luaState, index) != 0;
 		}
 
-		public static bool lua_iscfunction (LuaState luaState, int index)
+		public static bool LuaIsCFunction (LuaState luaState, int index)
 		{
 			return LuaCore.LuaIsCFunction (luaState, index);
 		}
 
-		public static void lua_pushnil (LuaState luaState)
+		public static void LuaPushNil (LuaState luaState)
 		{
 			LuaCore.LuaPushNil (luaState);
 		}
 
-		public static void lua_call (LuaState luaState, int nArgs, int nResults)
+		public static void LuaCall (LuaState luaState, int nArgs, int nResults)
 		{
 			LuaCore.LuaCall (luaState, nArgs, nResults);
 		}
 
-		public static void lua_pushstdcallcfunction (LuaState luaState, LuaCore.LuaNativeFunction function)
+		public static void LuaPushStdCallCFunction (LuaState luaState, LuaCore.LuaNativeFunction function)
 		{
 			LuaCore.LuaPushStdCallCFunction (luaState, function);
 		}
 
-		public static int lua_pcall (LuaState luaState, int nArgs, int nResults, int errfunc)
+		public static int LuaPCall (LuaState luaState, int nArgs, int nResults, int errfunc)
 		{
 			return LuaCore.LuaNetPCall (luaState, nArgs, nResults, errfunc);
 		}
 
-		public static LuaCore.LuaNativeFunction lua_tocfunction (LuaState luaState, int index)
+		public static LuaCore.LuaNativeFunction LuaToCFunction (LuaState luaState, int index)
 		{
 			return LuaCore.LuaToCFunction (luaState, index);
 		}
 
-		public static double lua_tonumber (LuaState luaState, int index)
+		public static double LuaToNumber (LuaState luaState, int index)
 		{
 			return LuaCore.LuaNetToNumber (luaState, index);
 		}
 
-		public static bool lua_toboolean (LuaState luaState, int index)
+		public static bool LuaToBoolean (LuaState luaState, int index)
 		{
 			return LuaCore.LuaToBoolean (luaState, index) != 0;
 		}
 
-		public static string lua_tostring (LuaState luaState, int index)
+		public static string LuaToString (LuaState luaState, int index)
 		{
-#if true
 			// FIXME use the same format string as lua i.e. LUA_NUMBER_FMT
-			var t = lua_type (luaState, index);
+			var t = LuaType (luaState, index);
 
 			if (t == LuaTypes.Number)
-				return string.Format ("{0}", lua_tonumber (luaState, index));
+				return string.Format ("{0}", LuaToNumber (luaState, index));
 			else if (t == LuaTypes.String) {
 				uint strlen;
 				// Changed 2013-05-18 by Dirk Weltz
@@ -345,145 +329,132 @@ namespace NLua
 				return null;			// treat lua nulls to as C# nulls
 			else
 				return "0";	// Because luaV_tostring does this
-#else
-			size_t strlen;
-
-			// Note!  This method will _change_ the representation of the object on the stack to a string.
-			// We do not want this behavior so we do the conversion ourselves
-			const char *str = LuaCore.lua_tolstring(luaState, index, &strlen);
-			if (str)
-				return Marshal::PtrToStringAnsi(IntPtr((char *) str), strlen);
-			else
-				return nullptr;			// treat lua nulls to as C# nulls
-#endif
 		}
 
-		public static void lua_atpanic (LuaState luaState, LuaCore.LuaNativeFunction panicf)
+		public static void LuaAtPanic (LuaState luaState, LuaCore.LuaNativeFunction panicf)
 		{
 			LuaCore.LuaAtPanic (luaState, (LuaCore.LuaNativeFunction)panicf);
 		}
 
 
-		public static void lua_pushnumber (LuaState luaState, double number)
+		public static void LuaPushNumber (LuaState luaState, double number)
 		{
 			LuaCore.LuaPushNumber (luaState, number);
 		}
 
-		public static void lua_pushboolean (LuaState luaState, bool value)
+		public static void LuaPushBoolean (LuaState luaState, bool value)
 		{
 			LuaCore.LuaPushBoolean (luaState, value ? 1 : 0);
 		}
 
-		public static void lua_pushstring (LuaState luaState, string str)
+		public static void LuaPushString (LuaState luaState, string str)
 		{
 			LuaCore.LuaPushString (luaState, str);
 		}
 
-		public static int luaL_newmetatable (LuaState luaState, string meta)
+		public static int LuaLNewMetatable (LuaState luaState, string meta)
 		{
 			return LuaCore.LuaLNewMetatable (luaState, meta);
 		}
 
-		// steffenj: BEGIN Lua 5.1.1 API change (luaL_getmetatable is now a macro using lua_getfield)
-		public static void lua_getfield (LuaState luaState, int stackPos, string meta)
+		public static void LuaGetField (LuaState luaState, int stackPos, string meta)
 		{
 			LuaCore.LuaGetField (luaState, stackPos, meta);
 		}
 
-		public static void luaL_getmetatable (LuaState luaState, string meta)
+		public static void LuaLGetMetatable (LuaState luaState, string meta)
 		{
-			lua_getfield (luaState, (int)LuaIndexes.Registry, meta);
+			LuaGetField (luaState, (int)LuaIndexes.Registry, meta);
 		}
 
-		public static object luaL_checkudata (LuaState luaState, int stackPos, string meta)
+		public static object LuaLCheckUData (LuaState luaState, int stackPos, string meta)
 		{
 			return LuaCore.LuaLCheckUData (luaState, stackPos, meta);
 		}
 
-		public static bool luaL_getmetafield (LuaState luaState, int stackPos, string field)
+		public static bool LuaLGetMetafield (LuaState luaState, int stackPos, string field)
 		{
 			return LuaCore.LuaLGetMetafield (luaState, stackPos, field) != 0;
 		}
 
-		public static int luaL_loadbuffer (LuaState luaState, string buff, string name)
+		public static int LuaLLoadBuffer (LuaState luaState, string buff, string name)
 		{
 			return LuaCore.LuaNetLoadBuffer (luaState, buff, (uint)buff.Length, name);
 		}
 
-		public static int luaL_loadbuffer (LuaState luaState, byte [] buff, string name)
+		public static int LuaLLoadBuffer (LuaState luaState, byte [] buff, string name)
 		{
 			return LuaCore.LuaNetLoadBuffer (luaState, buff, (uint)buff.Length, name);
 		}
 
-		public static int luaL_loadfile (LuaState luaState, string filename)
+		public static int LuaLLoadFile (LuaState luaState, string filename)
 		{
 			return LuaCore.LuaNetLoadFile (luaState, filename);
 		}
 
-		public static bool luaL_checkmetatable (LuaState luaState, int index)
+		public static bool LuaLCheckMetatable (LuaState luaState, int index)
 		{
 			return LuaCore.LuaLCheckMetatable (luaState, index);
 		}
 
-		public static int luanet_registryindex ()
+		public static int LuaNetRegistryIndex ()
 		{
 			return LuaCore.LuaNetRegistryIndex ();
 		}
 
-		public static int luanet_tonetobject (LuaState luaState, int index)
+		public static int LuaNetToNetObject (LuaState luaState, int index)
 		{
 			return LuaCore.LuaNetToNetObject (luaState, index);
 		}
 
-		public static void luanet_newudata (LuaState luaState, int val)
+		public static void LuaNetNewUData (LuaState luaState, int val)
 		{
 			LuaCore.LuaNetNewUData (luaState, val);
 		}
 
-		public static int luanet_rawnetobj (LuaState luaState, int obj)
+		public static int LuaNetRawNetObj (LuaState luaState, int obj)
 		{
 			return LuaCore.LuaNetRawNetObj (luaState, obj);
 		}
 
-		public static int luanet_checkudata (LuaState luaState, int ud, string tname)
+		public static int LuaNetCheckUData (LuaState luaState, int ud, string tname)
 		{
 			return LuaCore.LuaNetCheckUData (luaState, ud, tname);
 		}
 
-		public static void lua_error (LuaState luaState)
+		public static void LuaError (LuaState luaState)
 		{
 			LuaCore.LuaError (luaState);
 		}
 
-		public static bool lua_checkstack (LuaState luaState, int extra)
+		public static bool LuaCheckStack (LuaState luaState, int extra)
 		{
 			return LuaCore.LuaCheckStack (luaState, extra) != 0;
 		}
 
-		public static int lua_next (LuaState luaState, int index)
+		public static int LuaNext (LuaState luaState, int index)
 		{
 			return LuaCore.LuaNext (luaState, index);
 		}
 
-		public static void lua_pushlightuserdata (LuaState luaState, LuaTag udata)
+		public static void LuaPushLightUserData (LuaState luaState, LuaTag udata)
 		{
 			LuaCore.LuaPushLightUserData (luaState, udata.Tag);
 		}
 
-		public static LuaTag luanet_gettag ()
+		public static LuaTag LuaNetGetTag ()
 		{
 			return LuaCore.LuaNetGetTag ();
 		}
 
-		public static void luanet_pushglobaltable (LuaState luaState)
+		public static void LuaNetPushGlobalTable (LuaState luaState)
 		{
 			LuaCore.LuaNetPushGlobalTable (luaState);
 		}
 
-		public static void luanet_popglobaltable (LuaState luaState)
+		public static void LuaNetPopGlobalTable (LuaState luaState)
 		{
 			LuaCore.LuaNetPopGlobalTable (luaState);
 		}
-
 	}
 }

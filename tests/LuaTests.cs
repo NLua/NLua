@@ -285,7 +285,7 @@ namespace NLuaTest
 				object [] args = new object [] {sender, eventArgs };
 				object [] inArgs = new object [] { sender, eventArgs };
 				int [] outArgs = new int [] { };
-				base.callFunction (args, inArgs, outArgs);
+				base.CallFunction (args, inArgs, outArgs);
 			}
 		}
 
@@ -1436,8 +1436,8 @@ namespace NLuaTest
                                 };
 				int [] outArgs = new int [] { };
 				Type [] returnTypes = __luaInterface_returnTypes [0];
-				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "overridableMethod");
-				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "overridableMethod");
+				object ret = NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				return (int)ret;
 			}
 		}
@@ -1464,8 +1464,8 @@ namespace NLuaTest
 					object [] inArgs = new object [] { __luaInterface_luaTable };
 					int [] outArgs = new int [] { };
 					Type [] returnTypes = __luaInterface_returnTypes [0];
-					LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "get_intProp");
-					object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+					LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "get_intProp");
+					object ret = NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 					return (int)ret;
 				}
 				set {
@@ -1480,8 +1480,8 @@ namespace NLuaTest
 					};
 					int [] outArgs = new int [] { };
 					Type [] returnTypes = __luaInterface_returnTypes [1];
-					LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "set_intProp");
-					NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+					LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "set_intProp");
+					NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				}
 			}
 
@@ -1491,8 +1491,8 @@ namespace NLuaTest
 					object [] inArgs = new object [] { __luaInterface_luaTable };
 					int [] outArgs = new int [] { };
 					Type [] returnTypes = __luaInterface_returnTypes [2];
-					LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "get_refProp");
-					object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+					LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "get_refProp");
+					object ret = NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 					return (TestClass)ret;
 				}
 				set {
@@ -1507,8 +1507,8 @@ namespace NLuaTest
 					};
 					int [] outArgs = new int [] { };
 					Type [] returnTypes = __luaInterface_returnTypes [3];
-					LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "set_refProp");
-					NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+					LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "set_refProp");
+					NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				}
 			}
 
@@ -1526,8 +1526,8 @@ namespace NLuaTest
                         };
 				int [] outArgs = new int [] { };
 				Type [] returnTypes = __luaInterface_returnTypes [4];
-				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test1");
-				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "test1");
+				object ret = NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				return (int)ret;
 			}
 
@@ -1544,8 +1544,8 @@ namespace NLuaTest
                                 };
 				int [] outArgs = new int [] { 1 };
 				Type [] returnTypes = __luaInterface_returnTypes [5];
-				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test2");
-				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "test2");
+				object ret = NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				b = (int)args [1];
 				return (int)ret;
 			}
@@ -1564,8 +1564,8 @@ namespace NLuaTest
                                 };
 				int [] outArgs = new int [] { 1 };
 				Type [] returnTypes = __luaInterface_returnTypes [6];
-				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test3");
-				NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "test3");
+				NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				b = (int)args [1];
 			}
 
@@ -1583,8 +1583,8 @@ namespace NLuaTest
                                 };
 				int [] outArgs = new int [] { };
 				Type [] returnTypes = __luaInterface_returnTypes [7];
-				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test4");
-				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "test4");
+				object ret = NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				return (TestClass)ret;
 			}
 
@@ -1602,8 +1602,8 @@ namespace NLuaTest
                                 };
 				int [] outArgs = new int [] { };
 				Type [] returnTypes = __luaInterface_returnTypes [8];
-				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test5");
-				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "test5");
+				object ret = NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				return (int)ret;
 			}
 
@@ -1620,8 +1620,8 @@ namespace NLuaTest
                                 };
 				int [] outArgs = new int [] { 1};
 				Type [] returnTypes = __luaInterface_returnTypes [9];
-				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test6");
-				object ret = NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "test6");
+				object ret = NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				b = (TestClass)args [1];
 
 				return (int)ret;
@@ -1641,8 +1641,8 @@ namespace NLuaTest
                                 };
 				int [] outArgs = new int [] { 1 };
 				Type [] returnTypes = __luaInterface_returnTypes [10];
-				LuaFunction function = NLua.Method.LuaClassHelper.getTableFunction (__luaInterface_luaTable, "test7");
-				NLua.Method.LuaClassHelper.callFunction (function, args, returnTypes, inArgs, outArgs);
+				LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction (__luaInterface_luaTable, "test7");
+				NLua.Method.LuaClassHelper.CallFunction (function, args, returnTypes, inArgs, outArgs);
 				b = (TestClass)args [1];
 			}
 		}

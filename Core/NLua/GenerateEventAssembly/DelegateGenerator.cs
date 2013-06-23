@@ -47,15 +47,15 @@ namespace NLua
 		private Type delegateType;
 		
 
-		public DelegateGenerator (ObjectTranslator translator, Type delegateType)
+		public DelegateGenerator (ObjectTranslator objectTranslator, Type type)
 		{
-			this.translator = translator;
-			this.delegateType = delegateType;
+			translator = objectTranslator;
+			delegateType = type;
 		}
 
-		public object extractGenerated (LuaState luaState, int stackPos)
+		public object ExtractGenerated (LuaState luaState, int stackPos)
 		{
-			return CodeGeneration.Instance.GetDelegate (delegateType, translator.getFunction (luaState, stackPos));
+			return CodeGeneration.Instance.GetDelegate (delegateType, translator.GetFunction (luaState, stackPos));
 		}
 	}
 }

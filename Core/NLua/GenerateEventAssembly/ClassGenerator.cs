@@ -46,15 +46,15 @@ namespace NLua
 		private ObjectTranslator translator;
 		private Type klass;
 
-		public ClassGenerator (ObjectTranslator translator, Type klass)
+		public ClassGenerator (ObjectTranslator objTranslator, Type typeClass)
 		{
-			this.translator = translator;
-			this.klass = klass;
+			translator = objTranslator;
+			klass = typeClass;
 		}
 
-		public object extractGenerated (LuaState luaState, int stackPos)
+		public object ExtractGenerated (LuaState luaState, int stackPos)
 		{
-			return CodeGeneration.Instance.GetClassInstance (klass, translator.getTable (luaState, stackPos));
+			return CodeGeneration.Instance.GetClassInstance (klass, translator.GetTable (luaState, stackPos));
 		}
 	}
 }

@@ -57,10 +57,10 @@ namespace NLua
 		 */
 		public object this [string field] {
 			get {
-				return _Interpreter.getObject (_Reference, field);
+				return _Interpreter.GetObject (_Reference, field);
 			}
 			set {
-				_Interpreter.setObject (_Reference, field, value);
+				_Interpreter.SetObject (_Reference, field, value);
 			}
 		}
 
@@ -69,10 +69,10 @@ namespace NLua
 		 */
 		public object this [object field] {
 			get {
-				return _Interpreter.getObject (_Reference, field);
+				return _Interpreter.GetObject (_Reference, field);
 			}
 			set {
-				_Interpreter.setObject (_Reference, field, value);
+				_Interpreter.SetObject (_Reference, field, value);
 			}
 		}
 
@@ -93,14 +93,14 @@ namespace NLua
 		 * Gets an string fields of a table ignoring its metatable,
 		 * if it exists
 		 */
-		internal object rawget (string field)
+		internal object RawGet (string field)
 		{
-			return _Interpreter.rawGetObject (_Reference, field);
+			return _Interpreter.RawGetObject (_Reference, field);
 		}
 
-		internal object rawgetFunction (string field)
+		internal object RawGetFunction (string field)
 		{
-			object obj = _Interpreter.rawGetObject (_Reference, field);
+			object obj = _Interpreter.RawGetObject (_Reference, field);
 
 			if (obj is LuaCore.LuaNativeFunction)
 				return new LuaFunction ((LuaCore.LuaNativeFunction)obj, _Interpreter);
@@ -111,9 +111,9 @@ namespace NLua
 		/*
 		 * Pushes this table into the Lua stack
 		 */
-		internal void push (LuaState luaState)
+		internal void Push (LuaState luaState)
 		{
-			LuaLib.lua_getref (luaState, _Reference);
+			LuaLib.LuaGetRef (luaState, _Reference);
 		}
 
 		public override string ToString ()

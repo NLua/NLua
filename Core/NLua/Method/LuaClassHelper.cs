@@ -38,9 +38,9 @@ namespace NLua.Method
 		 *  Gets the function called name from the provided table,
 		 * returning null if it does not exist
 		 */
-		public static LuaFunction getTableFunction (LuaTable luaTable, string name)
+		public static LuaFunction GetTableFunction (LuaTable luaTable, string name)
 		{
-			object funcObj = luaTable.rawget (name);
+			object funcObj = luaTable.RawGet (name);
 
 			if (funcObj is LuaFunction)
 				return (LuaFunction)funcObj;
@@ -51,14 +51,14 @@ namespace NLua.Method
 		/*
 		 * Calls the provided function with the provided parameters
 		 */
-		public static object callFunction (LuaFunction function, object[] args, Type[] returnTypes, object[] inArgs, int[] outArgs)
+		public static object CallFunction (LuaFunction function, object[] args, Type[] returnTypes, object[] inArgs, int[] outArgs)
 		{
 			// args is the return array of arguments, inArgs is the actual array
 			// of arguments passed to the function (with in parameters only), outArgs
 			// has the positions of out parameters
 			object returnValue;
 			int iRefArgs;
-			object[] returnValues = function.call (inArgs, returnTypes);
+			object[] returnValues = function.Call (inArgs, returnTypes);
 
 			if (returnTypes [0] == typeof(void)) {
 				returnValue = null;

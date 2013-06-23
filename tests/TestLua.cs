@@ -35,7 +35,7 @@ namespace NLuaTest.Mock
 			object [] inArgs = new object [] { a, b };
 			int [] outArgs = new int [] { };
 			
-			object ret = base.callFunction (args, inArgs, outArgs);
+			object ret = base.CallFunction (args, inArgs, outArgs);
 			
 			return (int)ret;
 		}
@@ -49,7 +49,7 @@ namespace NLuaTest.Mock
 			object [] inArgs = new object [] { a };
 			int [] outArgs = new int [] { 1 };
 			
-			object ret = base.callFunction (args, inArgs, outArgs);
+			object ret = base.CallFunction (args, inArgs, outArgs);
 
 			b = (int)args [1];
 			return (int)ret;
@@ -64,7 +64,7 @@ namespace NLuaTest.Mock
 			object [] inArgs = new object [] { a, b };
 			int [] outArgs = new int [] { 1 };
 			
-			base.callFunction (args, inArgs, outArgs);
+			base.CallFunction (args, inArgs, outArgs);
 
 			b = (int)args [1];
 		}
@@ -78,7 +78,7 @@ namespace NLuaTest.Mock
 			object [] inArgs = new object [] { a, b };
 			int [] outArgs = new int [] { };
 			
-			object ret = base.callFunction (args, inArgs, outArgs);
+			object ret = base.CallFunction (args, inArgs, outArgs);
 
 			return (TestClass)ret;
 		}
@@ -92,7 +92,7 @@ namespace NLuaTest.Mock
 			object [] inArgs = new object [] { a, b };
 			int [] outArgs = new int [] {  };
 			
-			object ret = base.callFunction (args, inArgs, outArgs);
+			object ret = base.CallFunction (args, inArgs, outArgs);
 			
 			return (int)ret;
 		}
@@ -106,7 +106,7 @@ namespace NLuaTest.Mock
 			object [] inArgs = new object [] { a };
 			int [] outArgs = new int [] { 1 };
 			
-			object ret = base.callFunction (args, inArgs, outArgs);
+			object ret = base.CallFunction (args, inArgs, outArgs);
 			
 			b = (TestClass)args [1];
 			return (int)ret;
@@ -121,7 +121,7 @@ namespace NLuaTest.Mock
 			object [] inArgs = new object [] { a , b};
 			int [] outArgs = new int [] { 1 };
 			
-			base.callFunction (args, inArgs, outArgs);
+			base.CallFunction (args, inArgs, outArgs);
 			
 			b = (TestClass)args [1];
 		}

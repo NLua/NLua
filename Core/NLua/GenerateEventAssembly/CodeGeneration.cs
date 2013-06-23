@@ -67,9 +67,6 @@ namespace NLua
 
 		private CodeGeneration ()
 		{
-
-
-
 			// Create an assembly name
 			assemblyName = new AssemblyName ();
 			assemblyName.Name = "NLua_generatedcode";
@@ -78,7 +75,6 @@ namespace NLua
 			newAssembly = Thread.GetDomain ().DefineDynamicAssembly (assemblyName, AssemblyBuilderAccess.Run);
 			newModule = newAssembly.DefineDynamicModule ("NLua_generatedcode");
 #endif
-
 		}
 
 		/*

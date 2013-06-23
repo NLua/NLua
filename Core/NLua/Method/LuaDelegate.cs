@@ -45,14 +45,14 @@ namespace NLua.Method
 			returnTypes = null;
 		}
 
-		public object callFunction (object[] args, object[] inArgs, int[] outArgs)
+		public object CallFunction (object[] args, object[] inArgs, int[] outArgs)
 		{
 			// args is the return array of arguments, inArgs is the actual array
 			// of arguments passed to the function (with in parameters only), outArgs
 			// has the positions of out parameters
 			object returnValue;
 			int iRefArgs;
-			object[] returnValues = function.call (inArgs, returnTypes);
+			object[] returnValues = function.Call (inArgs, returnTypes);
 
 			if (returnTypes [0] == typeof(void)) {
 				returnValue = null;

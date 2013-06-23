@@ -50,10 +50,10 @@ namespace NLua
 		 */
 		public object this [string field] {
 			get {
-				return _Interpreter.getObject (_Reference, field);
+				return _Interpreter.GetObject (_Reference, field);
 			}
 			set {
-				_Interpreter.setObject (_Reference, field, value);
+				_Interpreter.SetObject (_Reference, field, value);
 			}
 		}
 
@@ -62,10 +62,10 @@ namespace NLua
 		 */
 		public object this [object field] {
 			get {
-				return _Interpreter.getObject (_Reference, field);
+				return _Interpreter.GetObject (_Reference, field);
 			}
 			set {
-				_Interpreter.setObject (_Reference, field, value);
+				_Interpreter.SetObject (_Reference, field, value);
 			}
 		}
 
@@ -75,15 +75,15 @@ namespace NLua
 		 */
 		public object[] Call (params object[] args)
 		{
-			return _Interpreter.callFunction (this, args);
+			return _Interpreter.CallFunction (this, args);
 		}
 
 		/*
 		 * Pushes the userdata into the Lua stack
 		 */
-		internal void push (LuaState luaState)
+		internal void Push (LuaState luaState)
 		{
-			LuaLib.lua_getref (luaState, _Reference);
+			LuaLib.LuaGetRef (luaState, _Reference);
 		}
 
 		public override string ToString ()

@@ -58,7 +58,7 @@ namespace NLua
 			if (!_Disposed) {
 				if (disposeManagedResources) {
 					if (_Reference != 0)
-						_Interpreter.dispose (_Reference);
+						_Interpreter.DisposeInternal (_Reference);
 				}
 
 				_Interpreter = null;
@@ -70,7 +70,7 @@ namespace NLua
 		{
 			if (o is LuaBase) {
 				var l = (LuaBase)o;
-				return _Interpreter.compareRef (l._Reference, _Reference);
+				return _Interpreter.CompareRef (l._Reference, _Reference);
 			} else
 				return false;
 		}

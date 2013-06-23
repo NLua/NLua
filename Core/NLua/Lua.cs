@@ -87,7 +87,7 @@ namespace NLua
 		private readonly List<string> globals = new List<string> ();
 		private bool globalsSorted;
 		#endregion
-		private /*readonly */ LuaState luaState;
+		private LuaState luaState;
 		/// <summary>
 		/// True while a script is being executed
 		/// </summary>
@@ -101,7 +101,7 @@ namespace NLua
 		//private object luaLock = new object();
 		private bool _StatePassed;
 		private bool executing;
-		static string init_luanet =
+		static string initLuanet =
 			"local metatable = {}														\n" +
 				"local import_type = luanet.import_type										\n" +
 				"local load_assembly = luanet.load_assembly									\n" +
@@ -269,12 +269,12 @@ end
 
 		public Lua ()
 		{
-			luaState = LuaLib.luaL_newstate ();	// steffenj: Lua 5.1.1 API change (lua_open is gone)
-			LuaLib.luaL_openlibs (luaState);		// steffenj: Lua 5.1.1 API change (luaopen_base is gone, just open all libs right here)
-			Init (luaState);
+			luaState = LuaLib.LuaLNewState ();	// steffenj: Lua 5.1.1 API change (lua_open is gone)
+			LuaLib.LuaLOpenLibs (luaState);		// steffenj: Lua 5.1.1 API change (luaopen_base is gone, just open all libs right here)
+			Init ();
 			// We need to keep this in a managed reference so the delegate doesn't get garbage collected
 			panicCallback = new LuaCore.LuaNativeFunction (PanicCallback);
-			LuaLib.lua_atpanic (luaState, panicCallback);
+			LuaLib.LuaAtPanic (luaState, panicCallback);
 		}
 
 		/*
@@ -282,39 +282,39 @@ end
 			*/
 		public Lua (LuaState lState)
 		{
-			LuaLib.lua_pushstring (lState, "LUAINTERFACE LOADED");
-			LuaLib.lua_gettable (lState, (int)LuaIndexes.Registry);
+			LuaLib.LuaPushString (lState, "LUAINTERFACE LOADED");
+			LuaLib.LuaGetTable (lState, (int)LuaIndexes.Registry);
 
-			if (LuaLib.lua_toboolean (lState, -1)) {
-				LuaLib.lua_settop (lState, -2);
+			if (LuaLib.LuaToBoolean (lState, -1)) {
+				LuaLib.LuaSetTop (lState, -2);
 				throw new LuaException ("There is already a NLua.Lua instance associated with this Lua state");
 			} else {
 				luaState = lState;
 				_StatePassed = true;
-				LuaLib.lua_settop (luaState, -2);
-				Init (luaState);
+				LuaLib.LuaSetTop (luaState, -2);
+				Init ();
 			}
 		}
 
-		void Init (LuaState luaState)
+		void Init ()
 		{
-			LuaLib.lua_pushstring (luaState, "LUAINTERFACE LOADED");
-			LuaLib.lua_pushboolean (luaState, true);
-			LuaLib.lua_settable (luaState, (int)LuaIndexes.Registry);
+			LuaLib.LuaPushString (luaState, "LUAINTERFACE LOADED");
+			LuaLib.LuaPushBoolean (luaState, true);
+			LuaLib.LuaSetTable (luaState, (int)LuaIndexes.Registry);
 			if (_StatePassed == false) {
-				LuaLib.lua_newtable (luaState);
-				LuaLib.lua_setglobal (luaState, "luanet");
+				LuaLib.LuaNewTable (luaState);
+				LuaLib.LuaSetGlobal (luaState, "luanet");
 			}
-			LuaLib.luanet_pushglobaltable (luaState);
-			LuaLib.lua_getglobal (luaState, "luanet");
-			LuaLib.lua_pushstring (luaState, "getmetatable");
-			LuaLib.lua_getglobal (luaState, "getmetatable");
-			LuaLib.lua_settable (luaState, -3);
-			LuaLib.luanet_popglobaltable (luaState);
+			LuaLib.LuaNetPushGlobalTable (luaState);
+			LuaLib.LuaGetGlobal (luaState, "luanet");
+			LuaLib.LuaPushString (luaState, "getmetatable");
+			LuaLib.LuaGetGlobal (luaState, "getmetatable");
+			LuaLib.LuaSetTable (luaState, -3);
+			LuaLib.LuaNetPopGlobalTable (luaState);
 			translator = new ObjectTranslator (this, luaState);
 			ObjectTranslatorPool.Instance.Add (luaState, translator);
-			LuaLib.luanet_popglobaltable (luaState);
-			LuaLib.luaL_dostring (luaState, Lua.init_luanet);
+			LuaLib.LuaNetPopGlobalTable (luaState);
+			LuaLib.LuaLDoString (luaState, Lua.initLuanet);
 		}
 
 		public void Close ()
@@ -326,7 +326,6 @@ end
 				LuaCore.LuaClose (luaState);
 				ObjectTranslatorPool.Instance.Remove (luaState);
 			}
-			//luaState = LuaState.Zero; <- suggested by Christopher Cebulski http://luaforge.net/forum/forum.php?thread_id = 44593&forum_id = 146
 		}
 
 #if MONOTOUCH
@@ -335,7 +334,7 @@ end
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		static int PanicCallback (LuaState luaState)
 		{
-			string reason = string.Format ("unprotected error in call to Lua API ({0})", LuaLib.lua_tostring (luaState, -1));
+			string reason = string.Format ("unprotected error in call to Lua API ({0})", LuaLib.LuaToString (luaState, -1));
 			throw new LuaException (reason);
 		}
 
@@ -345,8 +344,8 @@ end
 		/// <exception cref = "LuaScriptException">Thrown if the script caused an exception</exception>
 		private void ThrowExceptionFromError (int oldTop)
 		{
-			object err = translator.getObject (luaState, -1);
-			LuaLib.lua_settop (luaState, oldTop);
+			object err = translator.GetObject (luaState, -1);
+			LuaLib.LuaSetTop (luaState, oldTop);
 
 			// A pre-wrapped exception - just rethrow it (stack trace of InnerException will be preserved)
 			var luaEx = err as LuaScriptException;
@@ -371,8 +370,8 @@ end
 			var caughtExcept = e;
 
 			if (!caughtExcept.IsNull ()) {
-				translator.throwError (luaState, caughtExcept);
-				LuaLib.lua_pushnil (luaState);
+				translator.ThrowError (luaState, caughtExcept);
+				LuaLib.LuaPushNil (luaState);
 				return 1;
 			} else
 				return 0;
@@ -386,18 +385,18 @@ end
 		/// <returns></returns>
 		public LuaFunction LoadString (string chunk, string name)
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
+			int oldTop = LuaLib.LuaGetTop (luaState);
 			executing = true;
 
 			try {
-				if (LuaLib.luaL_loadbuffer (luaState, chunk, name) != 0)
+				if (LuaLib.LuaLLoadBuffer (luaState, chunk, name) != 0)
 					ThrowExceptionFromError (oldTop);
 			} finally {
 				executing = false;
 			}
 
-			var result = translator.getFunction (luaState, -1);
-			translator.popValues (luaState, oldTop);
+			var result = translator.GetFunction (luaState, -1);
+			translator.PopValues (luaState, oldTop);
 			return result;
 		}
 
@@ -409,18 +408,18 @@ end
 		/// <returns></returns>
 		public LuaFunction LoadString (byte[] chunk, string name)
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
+			int oldTop = LuaLib.LuaGetTop (luaState);
 			executing = true;
 			
 			try {
-				if (LuaLib.luaL_loadbuffer (luaState, chunk, name) != 0)
+				if (LuaLib.LuaLLoadBuffer (luaState, chunk, name) != 0)
 					ThrowExceptionFromError (oldTop);
 			} finally {
 				executing = false;
 			}
 			
-			var result = translator.getFunction (luaState, -1);
-			translator.popValues (luaState, oldTop);
+			var result = translator.GetFunction (luaState, -1);
+			translator.PopValues (luaState, oldTop);
 			return result;
 		}
 		
@@ -431,13 +430,13 @@ end
 		/// <returns></returns>
 		public LuaFunction LoadFile (string fileName)
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
+			int oldTop = LuaLib.LuaGetTop (luaState);
 
-			if (LuaLib.luaL_loadfile (luaState, fileName) != 0)
+			if (LuaLib.LuaLLoadFile (luaState, fileName) != 0)
 				ThrowExceptionFromError (oldTop);
 
-			var result = translator.getFunction (luaState, -1);
-			translator.popValues (luaState, oldTop);
+			var result = translator.GetFunction (luaState, -1);
+			translator.PopValues (luaState, oldTop);
 			return result;
 		}
 
@@ -447,17 +446,17 @@ end
 		/// <param name = "chunk">Chunk to execute</param>
 		/// <param name = "chunkName">Name to associate with the chunk. Defaults to "chunk".</param>
 		/// <returns></returns>
-		public object[] DoString(byte[] chunk, string chunkName = "chunk")
+		public object[] DoString (byte[] chunk, string chunkName = "chunk")
 		{
-			int oldTop = LuaLib.lua_gettop(luaState);
+			int oldTop = LuaLib.LuaGetTop(luaState);
 			executing = true;
 
-			if (LuaLib.luaL_loadbuffer(luaState, chunk, chunkName) == 0)
+			if (LuaLib.LuaLLoadBuffer(luaState, chunk, chunkName) == 0)
 			{
 				try
 				{
-					if (LuaLib.lua_pcall(luaState, 0, -1, 0) == 0)
-						return translator.popValues(luaState, oldTop);
+					if (LuaLib.LuaPCall(luaState, 0, -1, 0) == 0)
+						return translator.PopValues(luaState, oldTop);
 					else
 						ThrowExceptionFromError(oldTop);
 				}
@@ -478,17 +477,17 @@ end
 		/// <param name = "chunk">Chunk to execute</param>
 		/// <param name = "chunkName">Name to associate with the chunk. Defaults to "chunk".</param>
 		/// <returns></returns>
-		public object[] DoString(string chunk, string chunkName = "chunk")
+		public object[] DoString (string chunk, string chunkName = "chunk")
 		{
-			int oldTop = LuaLib.lua_gettop(luaState);
+			int oldTop = LuaLib.LuaGetTop(luaState);
 			executing = true;
 
-			if (LuaLib.luaL_loadbuffer(luaState, chunk, chunkName) == 0)
+			if (LuaLib.LuaLLoadBuffer(luaState, chunk, chunkName) == 0)
 			{
 				try
 				{
-					if (LuaLib.lua_pcall(luaState, 0, -1, 0) == 0)
-						return translator.popValues(luaState, oldTop);
+					if (LuaLib.LuaPCall(luaState, 0, -1, 0) == 0)
+						return translator.PopValues(luaState, oldTop);
 					else
 						ThrowExceptionFromError(oldTop);
 				}
@@ -509,14 +508,14 @@ end
 			*/
 		public object[] DoFile (string fileName)
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
+			int oldTop = LuaLib.LuaGetTop (luaState);
 
-			if (LuaLib.luaL_loadfile (luaState, fileName) == 0) {
+			if (LuaLib.LuaLLoadFile (luaState, fileName) == 0) {
 				executing = true;
 
 				try {
-					if (LuaLib.lua_pcall (luaState, 0, -1, 0) == 0)
-						return translator.popValues (luaState, oldTop);
+					if (LuaLib.LuaPCall (luaState, 0, -1, 0) == 0)
+						return translator.PopValues (luaState, oldTop);
 					else
 						ThrowExceptionFromError (oldTop);
 				} finally {
@@ -536,35 +535,35 @@ end
 		public object this [string fullPath] {
 			get {
 				object returnValue = null;
-				int oldTop = LuaLib.lua_gettop (luaState);
+				int oldTop = LuaLib.LuaGetTop (luaState);
 				string[] path = fullPath.Split (new char[] { '.' });
-				LuaLib.lua_getglobal (luaState, path [0]);
-				returnValue = translator.getObject (luaState, -1);
+				LuaLib.LuaGetGlobal (luaState, path [0]);
+				returnValue = translator.GetObject (luaState, -1);
 
 				if (path.Length > 1) {
 					string[] remainingPath = new string[path.Length - 1];
 					Array.Copy (path, 1, remainingPath, 0, path.Length - 1);
-					returnValue = getObject (remainingPath);
+					returnValue = GetObject (remainingPath);
 				}
 
-				LuaLib.lua_settop (luaState, oldTop);
+				LuaLib.LuaSetTop (luaState, oldTop);
 				return returnValue;
 			}
 			set {
-				int oldTop = LuaLib.lua_gettop (luaState);
+				int oldTop = LuaLib.LuaGetTop (luaState);
 				string[] path = fullPath.Split (new char[] { '.' });
 
 				if (path.Length == 1) {
-					translator.push (luaState, value);
-					LuaLib.lua_setglobal (luaState, fullPath);
+					translator.Push (luaState, value);
+					LuaLib.LuaSetGlobal (luaState, fullPath);
 				} else {
-					LuaLib.lua_getglobal (luaState, path [0]);
+					LuaLib.LuaGetGlobal (luaState, path [0]);
 					string[] remainingPath = new string[path.Length - 1];
 					Array.Copy (path, 1, remainingPath, 0, path.Length - 1);
-					setObject (remainingPath, value);
+					SetObject (remainingPath, value);
 				}
 
-				LuaLib.lua_settop (luaState, oldTop);
+				LuaLib.LuaSetTop (luaState, oldTop);
 
 				// Globals auto-complete
 				if (value.IsNull ()) {
@@ -573,7 +572,7 @@ end
 				} else {
 					// Add new entries
 					if (!globals.Contains (fullPath))
-						registerGlobal (fullPath, value.GetType (), 0);
+						RegisterGlobal (fullPath, value.GetType (), 0);
 				}
 			}
 		}
@@ -585,7 +584,7 @@ end
 		/// <param name = "path">The index accessor path ot the entry</param>
 		/// <param name = "type">The type of the entry</param>
 		/// <param name = "recursionCounter">How deep have we gone with recursion?</param>
-		private void registerGlobal (string path, Type type, int recursionCounter)
+		private void RegisterGlobal (string path, Type type, int recursionCounter)
 		{
 			// If the type is a global method, list it directly
 			if (type == typeof(LuaCore.LuaNativeFunction)) {
@@ -625,7 +624,7 @@ end
 						(field.GetCustomAttributes (typeof(LuaHideAttribute), false).Length == 0) &&
 						(field.GetCustomAttributes (typeof(LuaGlobalAttribute), false).Length == 0)) {
 						// Go into recursion for members
-						registerGlobal (path + "." + field.Name, field.FieldType, recursionCounter + 1);
+						RegisterGlobal (path + "." + field.Name, field.FieldType, recursionCounter + 1);
 					}
 				}
 				#endregion
@@ -639,7 +638,7 @@ end
 					// Exclude some generic .NET properties that wouldn't be very usefull in Lua
 						&& property.Name != "Item") {
 						// Go into recursion for members
-						registerGlobal (path + "." + property.Name, property.PropertyType, recursionCounter + 1);
+						RegisterGlobal (path + "." + property.Name, property.PropertyType, recursionCounter + 1);
 					}
 				}
 				#endregion
@@ -655,14 +654,14 @@ end
 			* Navigates a table in the top of the stack, returning
 			* the value of the specified field
 			*/
-		internal object getObject (string[] remainingPath)
+		internal object GetObject (string[] remainingPath)
 		{
 			object returnValue = null;
 
 			for (int i = 0; i < remainingPath.Length; i++) {
-				LuaLib.lua_pushstring (luaState, remainingPath [i]);
-				LuaLib.lua_gettable (luaState, -2);
-				returnValue = translator.getObject (luaState, -1);
+				LuaLib.LuaPushString (luaState, remainingPath [i]);
+				LuaLib.LuaGetTable (luaState, -2);
+				returnValue = translator.GetObject (luaState, -1);
 
 				if (returnValue.IsNull ())
 					break;	
@@ -729,7 +728,7 @@ end
 
 		public void LoadCLRPackage ()
 		{
-			LuaLib.luaL_dostring (luaState, Lua.clr_package);
+			LuaLib.LuaLDoString (luaState, Lua.clr_package);
 		}
 		/*
 			* Gets a function global variable as a delegate of
@@ -744,9 +743,9 @@ end
 			* Calls the object as a function with the provided arguments, 
 			* returning the function's returned values inside an array
 			*/
-		internal object[] callFunction (object function, object[] args)
+		internal object[] CallFunction (object function, object[] args)
 		{
-			return callFunction (function, args, null);
+			return CallFunction (function, args, null);
 		}
 
 		/*
@@ -754,49 +753,49 @@ end
 			* casting returned values to the types in returnTypes before returning
 			* them in an array
 			*/
-		internal object[] callFunction (object function, object[] args, Type[] returnTypes)
+		internal object[] CallFunction (object function, object[] args, Type[] returnTypes)
 		{
 			int nArgs = 0;
-			int oldTop = LuaLib.lua_gettop (luaState);
+			int oldTop = LuaLib.LuaGetTop (luaState);
 
-			if (!LuaLib.lua_checkstack (luaState, args.Length + 6))
+			if (!LuaLib.LuaCheckStack (luaState, args.Length + 6))
 				throw new LuaException ("Lua stack overflow");
 
-			translator.push (luaState, function);
+			translator.Push (luaState, function);
 
 			if (!args.IsNull ()) {
 				nArgs = args.Length;
 
 				for (int i = 0; i < args.Length; i++) 
-					translator.push (luaState, args [i]);
+					translator.Push (luaState, args [i]);
 			}
 
 			executing = true;
 
 			try {
-				int error = LuaLib.lua_pcall (luaState, nArgs, -1, 0);
+				int error = LuaLib.LuaPCall (luaState, nArgs, -1, 0);
 				if (error != 0)
 					ThrowExceptionFromError (oldTop);
 			} finally {
 				executing = false;
 			}
 
-			return !returnTypes.IsNull () ? translator.popValues (luaState, oldTop, returnTypes) : translator.popValues (luaState, oldTop);
+			return !returnTypes.IsNull () ? translator.PopValues (luaState, oldTop, returnTypes) : translator.PopValues (luaState, oldTop);
 		}
 
 		/*
 			* Navigates a table to set the value of one of its fields
 			*/
-		internal void setObject (string[] remainingPath, object val)
+		internal void SetObject (string[] remainingPath, object val)
 		{
 			for (int i = 0; i < remainingPath.Length-1; i++) {
-				LuaLib.lua_pushstring (luaState, remainingPath [i]);
-				LuaLib.lua_gettable (luaState, -2);
+				LuaLib.LuaPushString (luaState, remainingPath [i]);
+				LuaLib.LuaGetTable (luaState, -2);
 			}
 
-			LuaLib.lua_pushstring (luaState, remainingPath [remainingPath.Length - 1]);
-			translator.push (luaState, val);
-			LuaLib.lua_settable (luaState, -3);
+			LuaLib.LuaPushString (luaState, remainingPath [remainingPath.Length - 1]);
+			translator.Push (luaState, val);
+			LuaLib.LuaSetTable (luaState, -3);
 		}
 
 		/*
@@ -806,40 +805,40 @@ end
 		public void NewTable (string fullPath)
 		{
 			string[] path = fullPath.Split (new char[] { '.' });
-			int oldTop = LuaLib.lua_gettop (luaState);
+			int oldTop = LuaLib.LuaGetTop (luaState);
 
 			if (path.Length == 1) {
-				LuaLib.lua_newtable (luaState);
-				LuaLib.lua_setglobal (luaState, fullPath);
+				LuaLib.LuaNewTable (luaState);
+				LuaLib.LuaSetGlobal (luaState, fullPath);
 			} else {
-				LuaLib.lua_getglobal (luaState, path [0]);
+				LuaLib.LuaGetGlobal (luaState, path [0]);
 
 				for (int i = 1; i < path.Length-1; i++) {
-					LuaLib.lua_pushstring (luaState, path [i]);
-					LuaLib.lua_gettable (luaState, -2);
+					LuaLib.LuaPushString (luaState, path [i]);
+					LuaLib.LuaGetTable (luaState, -2);
 				}
 
-				LuaLib.lua_pushstring (luaState, path [path.Length - 1]);
-				LuaLib.lua_newtable (luaState);
-				LuaLib.lua_settable (luaState, -3);
+				LuaLib.LuaPushString (luaState, path [path.Length - 1]);
+				LuaLib.LuaNewTable (luaState);
+				LuaLib.LuaSetTable (luaState, -3);
 			}
 
-			LuaLib.lua_settop (luaState, oldTop);
+			LuaLib.LuaSetTop (luaState, oldTop);
 		}
 
 		public Dictionary<object, object> GetTableDict (LuaTable table)
 		{
 			var dict = new Dictionary<object, object> ();
-			int oldTop = LuaLib.lua_gettop (luaState);
-			translator.push (luaState, table);
-			LuaLib.lua_pushnil (luaState);
+			int oldTop = LuaLib.LuaGetTop (luaState);
+			translator.Push (luaState, table);
+			LuaLib.LuaPushNil (luaState);
 
-			while (LuaLib.lua_next(luaState, -2) != 0) {
-				dict [translator.getObject (luaState, -2)] = translator.getObject (luaState, -1);
-				LuaLib.lua_settop (luaState, -2);
+			while (LuaLib.LuaNext(luaState, -2) != 0) {
+				dict [translator.GetObject (luaState, -2)] = translator.GetObject (luaState, -1);
+				LuaLib.LuaSetTop (luaState, -2);
 			}
 
-			LuaLib.lua_settop (luaState, oldTop);
+			LuaLib.LuaSetTop (luaState, oldTop);
 			return dict;
 		}
 
@@ -1034,8 +1033,8 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		public object Pop ()
 		{
-			int top = LuaLib.lua_gettop (luaState);
-			return translator.popValues (luaState, top - 1) [0];
+			int top = LuaLib.LuaGetTop (luaState);
+			return translator.PopValues (luaState, top - 1) [0];
 		}
 
 		/// <summary>
@@ -1045,40 +1044,40 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		public void Push (object value)
 		{
-			translator.push (luaState, value);
+			translator.Push (luaState, value);
 		}
 		#endregion
 
-		internal void dispose (int reference)
+		internal void DisposeInternal (int reference)
 		{
 			if (!luaState.IsNull ()) //Fix submitted by Qingrui Li
-				LuaLib.lua_unref (luaState, reference);
+				LuaLib.LuaUnref (luaState, reference);
 		}
 
 		/*
 		 * Gets a field of the table corresponding to the provided reference
 		 * using rawget (do not use metatables)
 		 */
-		internal object rawGetObject (int reference, string field)
+		internal object RawGetObject (int reference, string field)
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
-			LuaLib.lua_getref (luaState, reference);
-			LuaLib.lua_pushstring (luaState, field);
-			LuaLib.lua_rawget (luaState, -2);
-			object obj = translator.getObject (luaState, -1);
-			LuaLib.lua_settop (luaState, oldTop);
+			int oldTop = LuaLib.LuaGetTop (luaState);
+			LuaLib.LuaGetRef (luaState, reference);
+			LuaLib.LuaPushString (luaState, field);
+			LuaLib.LuaRawGet (luaState, -2);
+			object obj = translator.GetObject (luaState, -1);
+			LuaLib.LuaSetTop (luaState, oldTop);
 			return obj;
 		}
 
 		/*
 		 * Gets a field of the table or userdata corresponding to the provided reference
 		 */
-		internal object getObject (int reference, string field)
+		internal object GetObject (int reference, string field)
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
-			LuaLib.lua_getref (luaState, reference);
-			object returnValue = getObject (field.Split (new char[] {'.'}));
-			LuaLib.lua_settop (luaState, oldTop);
+			int oldTop = LuaLib.LuaGetTop (luaState);
+			LuaLib.LuaGetRef (luaState, reference);
+			object returnValue = GetObject (field.Split (new char[] {'.'}));
+			LuaLib.LuaSetTop (luaState, oldTop);
 			return returnValue;
 		}
 
@@ -1086,14 +1085,14 @@ end
 		 * Gets a numeric field of the table or userdata corresponding the the provided reference
 		 */
 
-		internal object getObject (int reference, object field)
+		internal object GetObject (int reference, object field)
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
-			LuaLib.lua_getref (luaState, reference);
-			translator.push (luaState, field);
-			LuaLib.lua_gettable (luaState, -2);
-			object returnValue = translator.getObject (luaState, -1);
-			LuaLib.lua_settop (luaState, oldTop);
+			int oldTop = LuaLib.LuaGetTop (luaState);
+			LuaLib.LuaGetRef (luaState, reference);
+			translator.Push (luaState, field);
+			LuaLib.LuaGetTable (luaState, -2);
+			object returnValue = translator.GetObject (luaState, -1);
+			LuaLib.LuaSetTop (luaState, oldTop);
 			return returnValue;
 		}
 
@@ -1101,26 +1100,26 @@ end
 		 * Sets a field of the table or userdata corresponding the the provided reference
 		 * to the provided value
 		 */
-		internal void setObject (int reference, string field, object val)
+		internal void SetObject (int reference, string field, object val)
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
-			LuaLib.lua_getref (luaState, reference);
-			setObject (field.Split (new char[] {'.'}), val);
-			LuaLib.lua_settop (luaState, oldTop);
+			int oldTop = LuaLib.LuaGetTop (luaState);
+			LuaLib.LuaGetRef (luaState, reference);
+			SetObject (field.Split (new char[] {'.'}), val);
+			LuaLib.LuaSetTop (luaState, oldTop);
 		}
 
 		/*
 		 * Sets a numeric field of the table or userdata corresponding the the provided reference
 		 * to the provided value
 		 */
-		internal void setObject (int reference, object field, object val)
+		internal void SetObject (int reference, object field, object val)
 		{
-			int oldTop = LuaLib.lua_gettop (luaState);
-			LuaLib.lua_getref (luaState, reference);
-			translator.push (luaState, field);
-			translator.push (luaState, val);
-			LuaLib.lua_settable (luaState, -3);
-			LuaLib.lua_settop (luaState, oldTop);
+			int oldTop = LuaLib.LuaGetTop (luaState);
+			LuaLib.LuaGetRef (luaState, reference);
+			translator.Push (luaState, field);
+			translator.Push (luaState, val);
+			LuaLib.LuaSetTable (luaState, -3);
+			LuaLib.LuaSetTop (luaState, oldTop);
 		}
 
 		public LuaFunction RegisterFunction (string path,MethodBase function /*MethodInfo function*/)
@@ -1135,31 +1134,31 @@ end
 		public LuaFunction RegisterFunction (string path, object target, MethodBase function /*MethodInfo function*/)  //CP: Fix for struct constructor by Alexander Kappner (link: http://luaforge.net/forum/forum.php?thread_id = 2859&forum_id = 145)
 		{
 			// We leave nothing on the stack when we are done
-			int oldTop = LuaLib.lua_gettop (luaState);
+			int oldTop = LuaLib.LuaGetTop (luaState);
 			var wrapper = new LuaMethodWrapper (translator, target, function.DeclaringType, function);
-			translator.push (luaState, new LuaCore.LuaNativeFunction (wrapper.invokeFunction));
-			this [path] = translator.getObject (luaState, -1);
+			translator.Push (luaState, new LuaCore.LuaNativeFunction (wrapper.invokeFunction));
+			this [path] = translator.GetObject (luaState, -1);
 			var f = GetFunction (path);
-			LuaLib.lua_settop (luaState, oldTop);
+			LuaLib.LuaSetTop (luaState, oldTop);
 			return f;
 		}
 
 		/*
 		 * Compares the two values referenced by ref1 and ref2 for equality
 		 */
-		internal bool compareRef (int ref1, int ref2)
+		internal bool CompareRef (int ref1, int ref2)
 		{
-			int top = LuaLib.lua_gettop (luaState);
-			LuaLib.lua_getref (luaState, ref1);
-			LuaLib.lua_getref (luaState, ref2);
-			int equal = LuaLib.lua_equal (luaState, -1, -2);
-			LuaLib.lua_settop (luaState, top);
+			int top = LuaLib.LuaGetTop (luaState);
+			LuaLib.LuaGetRef (luaState, ref1);
+			LuaLib.LuaGetRef (luaState, ref2);
+			int equal = LuaLib.LuaEqual (luaState, -1, -2);
+			LuaLib.LuaSetTop (luaState, top);
 			return (equal != 0);
 		}
 
-		internal void pushCSFunction (LuaCore.LuaNativeFunction function)
+		internal void PushCSFunction (LuaCore.LuaNativeFunction function)
 		{
-			translator.pushFunction (luaState, function);
+			translator.PushFunction (luaState, function);
 		}
 
 		#region IDisposable Members

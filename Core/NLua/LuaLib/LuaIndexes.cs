@@ -39,6 +39,7 @@ namespace NLua
 	public class LuaIndexes
 	{
 		static int registryIndex = 0;
+
 		public static int Registry {
 			get
 			{
