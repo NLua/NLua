@@ -79,7 +79,7 @@ namespace NLua
 		/*
 		 * Pushes the userdata into the Lua stack
 		 */
-		internal void push (LuaCore.lua_State luaState)
+		internal void push (LuaCore.LuaState luaState)
 		{
 			LuaLib.lua_getref (luaState, _Reference);
 		}

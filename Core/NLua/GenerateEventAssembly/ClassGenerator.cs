@@ -50,7 +50,7 @@ namespace NLua
 			this.klass = klass;
 		}
 
-		public object extractGenerated (LuaCore.lua_State luaState, int stackPos)
+		public object extractGenerated (LuaCore.LuaState luaState, int stackPos)
 		{
 			return CodeGeneration.Instance.GetClassInstance (klass, translator.getTable (luaState, stackPos));
 		}

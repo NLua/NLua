@@ -75,19 +75,19 @@ namespace NLua
 		/// lua hook calback delegate
 		/// </summary>
 		/// <author>Reinhard Ostermeier</author>
-		private LuaCore.lua_Hook hookCallback = null;
+		private LuaCore.LuaHook hookCallback = null;
 		#endregion
 		#region Globals auto-complete
 		private readonly List<string> globals = new List<string> ();
 		private bool globalsSorted;
 		#endregion
-		private /*readonly */ LuaCore.lua_State luaState;
+		private /*readonly */ LuaCore.LuaState luaState;
 		/// <summary>
 		/// True while a script is being executed
 		/// </summary>
 		public bool IsExecuting { get { return executing; } }
 
-		private LuaCore.lua_CFunction panicCallback;
+		private LuaCore.LuaNativeFunction panicCallback;
 		private ObjectTranslator translator;
 		/// <summary>
 		/// Used to ensure multiple .net threads all get serialized by this single lock for access to the lua stack/objects
@@ -267,14 +267,14 @@ end
 			LuaLib.luaL_openlibs (luaState);		// steffenj: Lua 5.1.1 API change (luaopen_base is gone, just open all libs right here)
 			Init (luaState);
 			// We need to keep this in a managed reference so the delegate doesn't get garbage collected
-			panicCallback = new LuaCore.lua_CFunction (PanicCallback);
+			panicCallback = new LuaCore.LuaNativeFunction (PanicCallback);
 			LuaLib.lua_atpanic (luaState, panicCallback);
 		}
 
 		/*
 			* CAUTION: NLua.Lua instances can't share the same lua state! 
 			*/
-		public Lua (LuaCore.lua_State lState)
+		public Lua (LuaCore.LuaState lState)
 		{
 			LuaLib.lua_pushstring (lState, "LUAINTERFACE LOADED");
 			LuaLib.lua_gettable (lState, (int)LuaIndexes.Registry);
@@ -290,7 +290,7 @@ end
 			}
 		}
 
-		void Init (LuaCore.lua_State luaState)
+		void Init (LuaCore.LuaState luaState)
 		{
 			LuaLib.lua_pushstring (luaState, "LUAINTERFACE LOADED");
 			LuaLib.lua_pushboolean (luaState, true);
@@ -317,17 +317,17 @@ end
 				return;
 
 			if (!luaState.IsNull ()) {
-				LuaCore.lua_close (luaState);
+				LuaCore.LuaClose (luaState);
 				ObjectTranslatorPool.Instance.Remove (luaState);
 			}
-			//luaState = LuaCore.lua_State.Zero; <- suggested by Christopher Cebulski http://luaforge.net/forum/forum.php?thread_id = 44593&forum_id = 146
+			//luaState = LuaCore.LuaState.Zero; <- suggested by Christopher Cebulski http://luaforge.net/forum/forum.php?thread_id = 44593&forum_id = 146
 		}
 
 #if MONOTOUCH
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		static int PanicCallback (LuaCore.lua_State luaState)
+		static int PanicCallback (LuaCore.LuaState luaState)
 		{
 			string reason = string.Format ("unprotected error in call to Lua API ({0})", LuaLib.lua_tostring (luaState, -1));
 			throw new LuaException (reason);
@@ -582,7 +582,7 @@ end
 		private void registerGlobal (string path, Type type, int recursionCounter)
 		{
 			// If the type is a global method, list it directly
-			if (type == typeof(LuaCore.lua_CFunction)) {
+			if (type == typeof(LuaCore.LuaNativeFunction)) {
 				// Format for easy method invocation
 				globals.Add (path + "(");
 			}
@@ -704,7 +704,7 @@ end
 		public LuaFunction GetFunction (string fullPath)
 		{
 			object obj = this [fullPath];
-			return (obj is LuaCore.lua_CFunction ? new LuaFunction ((LuaCore.lua_CFunction)obj, this) : (LuaFunction)obj);
+			return (obj is LuaCore.LuaNativeFunction ? new LuaFunction ((LuaCore.LuaNativeFunction)obj, this) : (LuaFunction)obj);
 		}
 
 		/*
@@ -852,8 +852,8 @@ end
 		public int SetDebugHook (EventMasks mask, int count)
 		{
 			if (hookCallback.IsNull ()) {
-				hookCallback = new LuaCore.lua_Hook (Lua.DebugHookCallback);
-				return LuaCore.lua_sethook (luaState, hookCallback, (int)mask, count);
+				hookCallback = new LuaCore.LuaHook (Lua.DebugHookCallback);
+				return LuaCore.LuaSetHook (luaState, hookCallback, (int)mask, count);
 			}
 
 			return -1;
@@ -867,7 +867,7 @@ end
 		public int RemoveDebugHook ()
 		{
 			hookCallback = null;
-			return LuaCore.lua_sethook (luaState, null, 0, 0);
+			return LuaCore.LuaSetHook (luaState, null, 0, 0);
 		}
 
 		/// <summary>
@@ -877,7 +877,7 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		public EventMasks GetHookMask ()
 		{
-			return (EventMasks)LuaCore.lua_gethookmask (luaState);
+			return (EventMasks)LuaCore.LuaGetHookMask (luaState);
 		}
 
 		/// <summary>
@@ -887,7 +887,7 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		public int GetHookCount ()
 		{
-			return LuaCore.lua_gethookcount (luaState);
+			return LuaCore.LuaGetHookCount (luaState);
 		}
 
 		/// <summary>
@@ -900,7 +900,7 @@ end
 		/*public bool GetStack(int level, out LuaCore.lua_Debug luaDebug)
 		{
 			luaDebug = new LuaDebug();
-			LuaCore.lua_State ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
+			LuaCore.LuaState ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
 			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
@@ -922,7 +922,7 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		/*public int GetInfo(String what, ref LuaCore.lua_Debug luaDebug)
 		{
-			LuaCore.lua_State ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
+			LuaCore.LuaState ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
 			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
 			try
 			{
@@ -942,9 +942,9 @@ end
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
 		/// <author>Reinhard Ostermeier</author>
-		public string GetLocal (LuaCore.lua_Debug luaDebug, int n)
+		public string GetLocal (LuaCore.LuaDebug luaDebug, int n)
 		{
-			return LuaCore.lua_getlocal (luaState, luaDebug, n).ToString ();
+			return LuaCore.LuaGetLocal (luaState, luaDebug, n).ToString ();
 		}
 
 		/// <summary>
@@ -954,9 +954,9 @@ end
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
 		/// <author>Reinhard Ostermeier</author>
-		public string SetLocal (LuaCore.lua_Debug luaDebug, int n)
+		public string SetLocal (LuaCore.LuaDebug luaDebug, int n)
 		{
-			return LuaCore.lua_setlocal (luaState, luaDebug, n).ToString ();
+			return LuaCore.LuaSetLocal (luaState, luaDebug, n).ToString ();
 		}
 
 		/// <summary>
@@ -968,7 +968,7 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		public string GetUpValue (int funcindex, int n)
 		{
-			return LuaCore.lua_getupvalue (luaState, funcindex, n).ToString ();
+			return LuaCore.LuaGetUpValue (luaState, funcindex, n).ToString ();
 		}
 
 		/// <summary>
@@ -980,7 +980,7 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		public string SetUpValue (int funcindex, int n)
 		{
-			return LuaCore.lua_setupvalue (luaState, funcindex, n).ToString ();
+			return LuaCore.LuaSetUpValue (luaState, funcindex, n).ToString ();
 		}
 
 		/// <summary>
@@ -994,7 +994,7 @@ end
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_Hook))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static void DebugHookCallback (LuaCore.lua_State luaState, LuaCore.lua_Debug luaDebug)
+		private static void DebugHookCallback (LuaCore.LuaState luaState, LuaCore.LuaDebug luaDebug)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var lua = translator.Interpreter;
@@ -1002,7 +1002,7 @@ end
 			lua.DebugHookCallbackInternal (luaState, luaDebug);
 		}
 
-		private void DebugHookCallbackInternal (LuaCore.lua_State luaState, LuaCore.lua_Debug luaDebug)
+		private void DebugHookCallbackInternal (LuaCore.LuaState luaState, LuaCore.LuaDebug luaDebug)
 		{
 			try {
 				var temp = DebugHook;
@@ -1131,7 +1131,7 @@ end
 			// We leave nothing on the stack when we are done
 			int oldTop = LuaLib.lua_gettop (luaState);
 			var wrapper = new LuaMethodWrapper (translator, target, function.DeclaringType, function);
-			translator.push (luaState, new LuaCore.lua_CFunction (wrapper.invokeFunction));
+			translator.push (luaState, new LuaCore.LuaNativeFunction (wrapper.invokeFunction));
 			this [path] = translator.getObject (luaState, -1);
 			var f = GetFunction (path);
 			LuaLib.lua_settop (luaState, oldTop);
@@ -1151,7 +1151,7 @@ end
 			return (equal != 0);
 		}
 
-		internal void pushCSFunction (LuaCore.lua_CFunction function)
+		internal void pushCSFunction (LuaCore.LuaNativeFunction function)
 		{
 			translator.pushFunction (luaState, function);
 		}

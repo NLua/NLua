@@ -39,7 +39,7 @@ namespace NLua.Method
 	/*
 	 * Argument extraction with type-conversion function
 	 */
-	delegate object ExtractValue (LuaCore.lua_State luaState, int stackPos);
+	delegate object ExtractValue (LuaCore.LuaState luaState, int stackPos);
 
 	/*
 	 * Wrapper class for methods/constructors accessed from Lua.
@@ -49,7 +49,7 @@ namespace NLua.Method
 	 */
 	class LuaMethodWrapper
 	{
-		internal LuaCore.lua_CFunction invokeFunction;
+		internal LuaCore.LuaNativeFunction invokeFunction;
 		private ObjectTranslator _Translator;
 		private MethodBase _Method;
 		private MethodCache _LastCalledMethod = new MethodCache ();
@@ -64,7 +64,7 @@ namespace NLua.Method
 		 */
 		public LuaMethodWrapper (ObjectTranslator translator, object target, IReflect targetType, MethodBase method)
 		{
-			invokeFunction = new LuaCore.lua_CFunction (this.call);
+			invokeFunction = new LuaCore.LuaNativeFunction (this.call);
 			_Translator = translator;
 			_Target = target;
 
@@ -85,7 +85,7 @@ namespace NLua.Method
 		 */
 		public LuaMethodWrapper (ObjectTranslator translator, IReflect targetType, string methodName, BindingFlags bindingType)
 		{
-			invokeFunction = new LuaCore.lua_CFunction (this.call);
+			invokeFunction = new LuaCore.LuaNativeFunction (this.call);
 
 			_Translator = translator;
 			_MethodName = methodName;
@@ -112,7 +112,7 @@ namespace NLua.Method
 		 * Calls the method. Receives the arguments from the Lua stack
 		 * and returns values in it.
 		 */
-		int call (LuaCore.lua_State luaState)
+		int call (LuaCore.LuaState luaState)
 		{
 			var methodToCall = _Method;
 			object targetObject = _Target;

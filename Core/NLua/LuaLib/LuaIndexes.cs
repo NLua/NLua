@@ -41,7 +41,7 @@ namespace NLua
 			{
 				if (registryIndex != 0)
 					return registryIndex;
-				registryIndex = LuaCore.luanet_registryindex ();
+				registryIndex = LuaCore.LuaNetRegistryIndex ();
 				return registryIndex; 
 			}
 		}

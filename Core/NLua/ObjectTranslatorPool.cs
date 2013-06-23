@@ -36,7 +36,7 @@ namespace NLua
 	internal class ObjectTranslatorPool
 	{
 		private static volatile ObjectTranslatorPool instance = new ObjectTranslatorPool ();		
-		private Dictionary<LuaCore.lua_State, ObjectTranslator> translators = new Dictionary<LuaCore.lua_State, ObjectTranslator>();
+		private Dictionary<LuaCore.LuaState, ObjectTranslator> translators = new Dictionary<LuaCore.LuaState, ObjectTranslator>();
 		
 		public static ObjectTranslatorPool Instance
 		{
@@ -50,12 +50,12 @@ namespace NLua
 		{
 		}
 		
-		public void Add (LuaCore.lua_State luaState, ObjectTranslator translator)
+		public void Add (LuaCore.LuaState luaState, ObjectTranslator translator)
 		{
 			translators.Add(luaState , translator);			
 		}
 		
-		public ObjectTranslator Find (LuaCore.lua_State luaState)
+		public ObjectTranslator Find (LuaCore.LuaState luaState)
 		{
 			if (!translators.ContainsKey(luaState))
 				return null;
@@ -63,7 +63,7 @@ namespace NLua
 			return translators [luaState];
 		}
 		
-		public void Remove (LuaCore.lua_State luaState)
+		public void Remove (LuaCore.LuaState luaState)
 		{
 			if (!translators.ContainsKey (luaState))
 				return;

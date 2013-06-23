@@ -37,7 +37,7 @@ namespace NLua
 
 	public class LuaFunction : LuaBase
 	{
-		internal LuaCore.lua_CFunction function;
+		internal LuaCore.LuaNativeFunction function;
 
 		public LuaFunction (int reference, Lua interpreter)
 		{
@@ -46,7 +46,7 @@ namespace NLua
 			_Interpreter = interpreter;
 		}
 
-		public LuaFunction (LuaCore.lua_CFunction function, Lua interpreter)
+		public LuaFunction (LuaCore.LuaNativeFunction function, Lua interpreter)
 		{
 			_Reference = 0;
 			this.function = function;
@@ -74,7 +74,7 @@ namespace NLua
 		/*
 		 * Pushes the function into the Lua stack
 		 */
-		internal void push (LuaCore.lua_State luaState)
+		internal void push (LuaCore.LuaState luaState)
 		{
 			if (_Reference != 0)
 				LuaLib.lua_getref (luaState, _Reference);

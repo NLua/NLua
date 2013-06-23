@@ -100,8 +100,8 @@ namespace NLua
 		{
 			object obj = _Interpreter.rawGetObject (_Reference, field);
 
-			if (obj is LuaCore.lua_CFunction)
-				return new LuaFunction ((LuaCore.lua_CFunction)obj, _Interpreter);
+			if (obj is LuaCore.LuaNativeFunction)
+				return new LuaFunction ((LuaCore.LuaNativeFunction)obj, _Interpreter);
 			else
 				return obj;
 		}
@@ -109,7 +109,7 @@ namespace NLua
 		/*
 		 * Pushes this table into the Lua stack
 		 */
-		internal void push (LuaCore.lua_State luaState)
+		internal void push (LuaCore.LuaState luaState)
 		{
 			LuaLib.lua_getref (luaState, _Reference);
 		}

@@ -51,7 +51,7 @@ namespace NLua
 			this.delegateType = delegateType;
 		}
 
-		public object extractGenerated (LuaCore.lua_State luaState, int stackPos)
+		public object extractGenerated (LuaCore.LuaState luaState, int stackPos)
 		{
 			return CodeGeneration.Instance.GetDelegate (delegateType, translator.getFunction (luaState, stackPos));
 		}

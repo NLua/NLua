@@ -39,14 +39,14 @@ namespace NLua.Event
 	/// <author>Reinhard Ostermeier</author>
 	public class DebugHookEventArgs : EventArgs
 	{
-		private readonly LuaCore.lua_Debug luaDebug;
+		private readonly LuaCore.LuaDebug luaDebug;
 
-		public DebugHookEventArgs (LuaCore.lua_Debug luaDebug)
+		public DebugHookEventArgs (LuaCore.LuaDebug luaDebug)
 		{
 			this.luaDebug = luaDebug;
 		}
 
-		public LuaCore.lua_Debug LuaDebug {
+		public LuaCore.LuaDebug LuaDebug {
 			get { return luaDebug; }
 		}
 	}

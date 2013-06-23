@@ -49,7 +49,7 @@ namespace NLua
 	 */
 	public class MetaFunctions
 	{
-		internal LuaCore.lua_CFunction gcFunction, indexFunction, newindexFunction, baseIndexFunction,
+		internal LuaCore.LuaNativeFunction gcFunction, indexFunction, newindexFunction, baseIndexFunction,
 			classIndexFunction, classNewindexFunction, execDelegateFunction, callConstructorFunction, toStringFunction;
 		private Dictionary<object, object> memberCache = new Dictionary<object, object> ();
 		private ObjectTranslator translator;
@@ -77,15 +77,15 @@ namespace NLua
 		public MetaFunctions (ObjectTranslator translator)
 		{
 			this.translator = translator;
-			gcFunction = new LuaCore.lua_CFunction (MetaFunctions.collectObject);
-			toStringFunction = new LuaCore.lua_CFunction (MetaFunctions.toString);
-			indexFunction = new LuaCore.lua_CFunction (MetaFunctions.getMethod);
-			newindexFunction = new LuaCore.lua_CFunction (MetaFunctions.setFieldOrProperty);
-			baseIndexFunction = new LuaCore.lua_CFunction (MetaFunctions.getBaseMethod);
-			callConstructorFunction = new LuaCore.lua_CFunction (MetaFunctions.callConstructor);
-			classIndexFunction = new LuaCore.lua_CFunction (MetaFunctions.getClassMethod);
-			classNewindexFunction = new LuaCore.lua_CFunction (MetaFunctions.setClassFieldOrProperty);
-			execDelegateFunction = new LuaCore.lua_CFunction (MetaFunctions.runFunctionDelegate);
+			gcFunction = new LuaCore.LuaNativeFunction (MetaFunctions.collectObject);
+			toStringFunction = new LuaCore.LuaNativeFunction (MetaFunctions.toString);
+			indexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.getMethod);
+			newindexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.setFieldOrProperty);
+			baseIndexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.getBaseMethod);
+			callConstructorFunction = new LuaCore.LuaNativeFunction (MetaFunctions.callConstructor);
+			classIndexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.getClassMethod);
+			classNewindexFunction = new LuaCore.LuaNativeFunction (MetaFunctions.setClassFieldOrProperty);
+			execDelegateFunction = new LuaCore.LuaNativeFunction (MetaFunctions.runFunctionDelegate);
 		}
 
 		/*
@@ -95,15 +95,15 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int runFunctionDelegate (LuaCore.lua_State luaState)
+		private static int runFunctionDelegate (LuaCore.LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return runFunctionDelegate (luaState, translator);
 		}
 
-		private static int runFunctionDelegate (LuaCore.lua_State luaState, ObjectTranslator translator)
+		private static int runFunctionDelegate (LuaCore.LuaState luaState, ObjectTranslator translator)
 		{
-			LuaCore.lua_CFunction func = (LuaCore.lua_CFunction)translator.getRawNetObject (luaState, 1);
+			LuaCore.LuaNativeFunction func = (LuaCore.LuaNativeFunction)translator.getRawNetObject (luaState, 1);
 			LuaLib.lua_remove (luaState, 1);
 			return func (luaState);
 		}
@@ -115,13 +115,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int collectObject (LuaCore.lua_State luaState)
+		private static int collectObject (LuaCore.LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return collectObject (luaState, translator);
 		}
 
-		private static int collectObject (LuaCore.lua_State luaState, ObjectTranslator translator)
+		private static int collectObject (LuaCore.LuaState luaState, ObjectTranslator translator)
 		{
 			int udata = LuaLib.luanet_rawnetobj (luaState, 1);
 
@@ -138,13 +138,13 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int toString (LuaCore.lua_State luaState)
+		private static int toString (LuaCore.LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			return toString (luaState, translator);
 		}
 
-		private static int toString (LuaCore.lua_State luaState, ObjectTranslator translator)
+		private static int toString (LuaCore.LuaState luaState, ObjectTranslator translator)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
 
@@ -161,7 +161,7 @@ namespace NLua
 		/// Debug tool to dump the lua stack
 		/// </summary>
 		/// FIXME, move somewhere else
-		public static void dumpStack (ObjectTranslator translator, LuaCore.lua_State luaState)
+		public static void dumpStack (ObjectTranslator translator, LuaCore.LuaState luaState)
 		{
 			int depth = LuaLib.lua_gettop (luaState);
 			Debug.WriteLine ("lua stack depth: " + depth);
@@ -196,14 +196,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int getMethod (LuaCore.lua_State luaState)
+		private static int getMethod (LuaCore.LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.getMethodInternal (luaState);
 		}
 
-		private int getMethodInternal (LuaCore.lua_State luaState)
+		private int getMethodInternal (LuaCore.LuaState luaState)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
 
@@ -297,14 +297,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int getBaseMethod (LuaCore.lua_State luaState)
+		private static int getBaseMethod (LuaCore.LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.getBaseMethodInternal (luaState);
 		}
 
-		private int getBaseMethodInternal (LuaCore.lua_State luaState)
+		private int getBaseMethodInternal (LuaCore.LuaState luaState)
 		{
 			object obj = translator.getRawNetObject (luaState, 1);
 
@@ -359,15 +359,15 @@ namespace NLua
 		 * Uses reflection to find members, and stores the reflected MemberInfo object in
 		 * a cache (indexed by the type of the object and the name of the member).
 		 */
-		private int getMember (LuaCore.lua_State luaState, IReflect objType, object obj, string methodName, BindingFlags bindingType)
+		private int getMember (LuaCore.LuaState luaState, IReflect objType, object obj, string methodName, BindingFlags bindingType)
 		{
 			bool implicitStatic = false;
 			MemberInfo member = null;
 			object cachedMember = checkMemberCache (memberCache, objType, methodName);
 			//object cachedMember=null;
 
-			if (cachedMember is LuaCore.lua_CFunction) {
-				translator.pushFunction (luaState, (LuaCore.lua_CFunction)cachedMember);
+			if (cachedMember is LuaCore.LuaNativeFunction) {
+				translator.pushFunction (luaState, (LuaCore.LuaNativeFunction)cachedMember);
 				translator.push (luaState, true);
 				return 2;
 			} else if (!cachedMember.IsNull ())
@@ -445,7 +445,7 @@ namespace NLua
 						translator.pushType (luaState, nestedType);
 					} else {
 						// Member type must be 'method'
-						var wrapper = new LuaCore.lua_CFunction ((new LuaMethodWrapper (translator, objType, methodName, bindingType)).invokeFunction);
+						var wrapper = new LuaCore.LuaNativeFunction ((new LuaMethodWrapper (translator, objType, methodName, bindingType)).invokeFunction);
 
 						if (cachedMember.IsNull ())
 							setMemberCache (memberCache, objType, methodName, wrapper);
@@ -519,14 +519,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int setFieldOrProperty (LuaCore.lua_State luaState)
+		private static int setFieldOrProperty (LuaCore.LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.setFieldOrPropertyInternal (luaState);
 		}
 
-		private int setFieldOrPropertyInternal (LuaCore.lua_State luaState)
+		private int setFieldOrPropertyInternal (LuaCore.LuaState luaState)
  		{
 			object target = translator.getRawNetObject (luaState, 1);
 
@@ -592,7 +592,7 @@ namespace NLua
 		/// <param name="target"></param>
 		/// <param name="bindingType"></param>
 		/// <returns>false if unable to find the named member, true for success</returns>
-		private bool trySetMember (LuaCore.lua_State luaState, IReflect targetType, object target, BindingFlags bindingType, out string detailMessage)
+		private bool trySetMember (LuaCore.LuaState luaState, IReflect targetType, object target, BindingFlags bindingType, out string detailMessage)
 		{
 			detailMessage = null;   // No error yet
 
@@ -661,7 +661,7 @@ namespace NLua
 		 * Writes to fields or properties, either static or instance. Throws an error
 		 * if the operation is invalid.
 		 */
-		private int setMember (LuaCore.lua_State luaState, IReflect targetType, object target, BindingFlags bindingType)
+		private int setMember (LuaCore.LuaState luaState, IReflect targetType, object target, BindingFlags bindingType)
 		{
 			string detail;
 			bool success = trySetMember (luaState, targetType, target, bindingType, out detail);
@@ -677,7 +677,7 @@ namespace NLua
 		/// </summary>
 		/// <param name="e"></param>
 		/// We try to look into the exception to give the most meaningful description
-		void ThrowError (LuaCore.lua_State luaState, Exception e)
+		void ThrowError (LuaCore.LuaState luaState, Exception e)
 		{
 			// If we got inside a reflection show what really happened
 			var te = e as TargetInvocationException;
@@ -695,14 +695,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int getClassMethod (LuaCore.lua_State luaState)
+		private static int getClassMethod (LuaCore.LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.getClassMethodInternal (luaState);
 		}
 
-		private int getClassMethodInternal (LuaCore.lua_State luaState)
+		private int getClassMethodInternal (LuaCore.LuaState luaState)
 		{
 			IReflect klass;
 			object obj = translator.getRawNetObject (luaState, 1);
@@ -737,14 +737,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int setClassFieldOrProperty (LuaCore.lua_State luaState)
+		private static int setClassFieldOrProperty (LuaCore.LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.setClassFieldOrPropertyInternal (luaState);
 		}
 
-		private int setClassFieldOrPropertyInternal (LuaCore.lua_State luaState)
+		private int setClassFieldOrPropertyInternal (LuaCore.LuaState luaState)
 		{
 			IReflect target;
 			object obj = translator.getRawNetObject (luaState, 1);
@@ -768,14 +768,14 @@ namespace NLua
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaCore.lua_CFunction))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static int callConstructor (LuaCore.lua_State luaState)
+		private static int callConstructor (LuaCore.LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
 			var instance = translator.MetaFunctionsInstance;
 			return instance.callConstructorInternal (luaState);
 		}
 
-		private int callConstructorInternal (LuaCore.lua_State luaState)
+		private int callConstructorInternal (LuaCore.LuaState luaState)
 		{
 			var validConstructor = new MethodCache ();
 			IReflect klass;
@@ -860,7 +860,7 @@ namespace NLua
 		 * if the match was succesful. It it was also returns the information
 		 * necessary to invoke the method.
 		 */
-		internal bool matchParameters (LuaCore.lua_State luaState, MethodBase method, ref MethodCache methodCache)
+		internal bool matchParameters (LuaCore.LuaState luaState, MethodBase method, ref MethodCache methodCache)
 		{
 			ExtractValue extractValue;
 			bool isMethod = true;
@@ -945,7 +945,7 @@ namespace NLua
 		/// <param name="currentNetParam"></param>
 		/// <param name="extractValue"></param>
 		/// <returns></returns>
-		private bool _IsTypeCorrect (LuaCore.lua_State luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
+		private bool _IsTypeCorrect (LuaCore.LuaState luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
 		{
 			try {
 				return (extractValue = translator.typeChecker.checkType (luaState, currentLuaParam, currentNetParam.ParameterType)) != null;
@@ -956,7 +956,7 @@ namespace NLua
 			}
 		}
 
-		private bool _IsParamsArray (LuaCore.lua_State luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
+		private bool _IsParamsArray (LuaCore.LuaState luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
 		{
 			extractValue = null;
 
