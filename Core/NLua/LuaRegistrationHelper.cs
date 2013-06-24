@@ -44,10 +44,10 @@ namespace NLua
 		public static void TaggedInstanceMethods (Lua lua, object o)
 		{
 			#region Sanity checks
-			if (lua.IsNull ())
+			if (lua == null)
 				throw new ArgumentNullException ("lua");
 
-			if (o.IsNull ())
+			if (o == null)
 				throw new ArgumentNullException ("o");
 			#endregion
 
@@ -71,10 +71,10 @@ namespace NLua
 		public static void TaggedStaticMethods (Lua lua, Type type)
 		{
 			#region Sanity checks
-			if (lua.IsNull ())
+			if (lua == null)
 				throw new ArgumentNullException ("lua");
 
-			if (type.IsNull ())
+			if (type == null)
 				throw new ArgumentNullException ("type");
 
 			if (!type.IsClass)
@@ -102,7 +102,7 @@ namespace NLua
 		public static void Enumeration<T> (Lua lua)
 		{
 			#region Sanity checks
-			if (lua.IsNull ())
+			if (lua == null)
 				throw new ArgumentNullException ("lua");
 			#endregion
 

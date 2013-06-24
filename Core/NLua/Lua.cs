@@ -324,7 +324,7 @@ end
 			if (_StatePassed)
 				return;
 
-			if (!luaState.IsNull ()) {
+			if (! CheckNull.IsNull(luaState)) {
 				LuaCore.LuaClose (luaState);
 				ObjectTranslatorPool.Instance.Remove (luaState);
 			}
@@ -352,11 +352,11 @@ end
 			// A pre-wrapped exception - just rethrow it (stack trace of InnerException will be preserved)
 			var luaEx = err as LuaScriptException;
 
-			if (!luaEx.IsNull ())
+			if (luaEx != null)
 				throw luaEx;
 
 			// A non-wrapped Lua error (best interpreted as a string) - wrap it and throw it
-			if (err.IsNull ())
+			if (err == null)
 				err = "Unknown Lua Error";
 
 			throw new LuaScriptException (err.ToString (), string.Empty);
@@ -371,7 +371,7 @@ end
 		{
 			var caughtExcept = e;
 
-			if (!caughtExcept.IsNull ()) {
+			if (caughtExcept != null) {
 				translator.ThrowError (luaState, caughtExcept);
 				LuaLib.LuaPushNil (luaState);
 				return 1;
@@ -568,7 +568,7 @@ end
 				LuaLib.LuaSetTop (luaState, oldTop);
 
 				// Globals auto-complete
-				if (value.IsNull ()) {
+				if (value == null) {
 					// Remove now obsolete entries
 					globals.Remove (fullPath);
 				} else {
@@ -597,20 +597,21 @@ end
 			else if ((type.IsClass || type.IsInterface) && type != typeof(string) && recursionCounter < 2) {
 				#region Methods
 				foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance)) {
+					string name = method.Name;
 					if (
 						// Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
 						(method.GetCustomAttributes (typeof(LuaHideAttribute), false).Length == 0) &&
 						(method.GetCustomAttributes (typeof(LuaGlobalAttribute), false).Length == 0) &&
 					// Exclude some generic .NET methods that wouldn't be very usefull in Lua
-						method.Name != "GetType" && method.Name != "GetHashCode" && method.Name != "Equals" &&
-						method.Name != "ToString" && method.Name != "Clone" && method.Name != "Dispose" &&
-						method.Name != "GetEnumerator" && method.Name != "CopyTo" &&
-						!method.Name.StartsWith ("get_", StringComparison.Ordinal) &&
-						!method.Name.StartsWith ("set_", StringComparison.Ordinal) &&
-						!method.Name.StartsWith ("add_", StringComparison.Ordinal) &&
-						!method.Name.StartsWith ("remove_", StringComparison.Ordinal)) {
+						name != "GetType" && name != "GetHashCode" && name != "Equals" &&
+						name != "ToString" && name != "Clone" && name != "Dispose" &&
+						name != "GetEnumerator" && name != "CopyTo" &&
+						!name.StartsWith ("get_", StringComparison.Ordinal) &&
+						!name.StartsWith ("set_", StringComparison.Ordinal) &&
+						!name.StartsWith ("add_", StringComparison.Ordinal) &&
+						!name.StartsWith ("remove_", StringComparison.Ordinal)) {
 						// Format for easy method invocation
-						string command = path + ":" + method.Name + "(";
+						string command = path + ":" + name + "(";
 
 						if (method.GetParameters ().Length == 0)
 							command += ")";
@@ -665,7 +666,7 @@ end
 				LuaLib.LuaGetTable (luaState, -2);
 				returnValue = translator.GetObject (luaState, -1);
 
-				if (returnValue.IsNull ())
+				if (returnValue == null)
 					break;	
 			}
 
@@ -765,7 +766,7 @@ end
 
 			translator.Push (luaState, function);
 
-			if (!args.IsNull ()) {
+			if (args != null) {
 				nArgs = args.Length;
 
 				for (int i = 0; i < args.Length; i++) 
@@ -782,7 +783,7 @@ end
 				executing = false;
 			}
 
-			return !returnTypes.IsNull () ? translator.PopValues (luaState, oldTop, returnTypes) : translator.PopValues (luaState, oldTop);
+			return returnTypes != null ? translator.PopValues (luaState, oldTop, returnTypes) : translator.PopValues (luaState, oldTop);
 		}
 
 		/*
@@ -858,7 +859,7 @@ end
 		/// <author>Reinhard Ostermeier</author>
 		public int SetDebugHook (EventMasks mask, int count)
 		{
-			if (hookCallback.IsNull ()) {
+			if (hookCallback == null) {
 				hookCallback = new LuaHook (Lua.DebugHookCallback);
 				return LuaCore.LuaSetHook (luaState, hookCallback, (int)mask, count);
 			}
@@ -1014,7 +1015,7 @@ end
 			try {
 				var temp = DebugHook;
 
-				if (!temp.IsNull ())
+				if (temp != null)
 					temp (this, new DebugHookEventArgs (luaDebug));
 			} catch (Exception ex) {
 				OnHookException (new HookExceptionEventArgs (ex));
@@ -1024,7 +1025,7 @@ end
 		private void OnHookException (HookExceptionEventArgs e)
 		{
 			var temp = HookException;
-			if (!temp.IsNull ())
+			if (temp != null)
 				temp (this, e);
 		}
 
@@ -1052,7 +1053,7 @@ end
 
 		internal void DisposeInternal (int reference)
 		{
-			if (!luaState.IsNull ()) //Fix submitted by Qingrui Li
+			if (! CheckNull.IsNull(luaState)) //Fix submitted by Qingrui Li
 				LuaLib.LuaUnref (luaState, reference);
 		}
 
@@ -1166,13 +1167,12 @@ end
 		#region IDisposable Members
 		public virtual void Dispose ()
 		{
-			if (!translator.IsNull ()) {
+			if (translator != null) {
 				translator.pendingEvents.Dispose ();
 				translator = null;
 			}
 
-			this.Close ();
-			GC.Collect ();
+			Close ();
 			GC.WaitForPendingFinalizers ();
 		}
 		#endregion

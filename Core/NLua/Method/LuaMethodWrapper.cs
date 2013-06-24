@@ -72,7 +72,7 @@ namespace NLua.Method
 			_Translator = translator;
 			_Target = target;
 
-			if (!targetType.IsNull ())
+			if (targetType != null)
 				_ExtractTarget = translator.typeChecker.GetExtractor (targetType);
 
 			_Method = method;
@@ -94,7 +94,7 @@ namespace NLua.Method
 			_Translator = translator;
 			_MethodName = methodName;
 
-			if (!targetType.IsNull ())
+			if (targetType != null)
 				_ExtractTarget = translator.typeChecker.GetExtractor (targetType);
 
 			_BindingType = bindingType;
@@ -129,14 +129,13 @@ namespace NLua.Method
 			bool isStatic = (_BindingType & BindingFlags.Static) == BindingFlags.Static;
 			SetPendingException (null);
 
-			if (methodToCall.IsNull ()) { // Method from name
+			if (methodToCall == null) { // Method from name
 				if (isStatic)
 					targetObject = null;
 				else
 					targetObject = _ExtractTarget (luaState, 1);
 
-				//LuaLib.lua_remove(luaState,1); // Pops the receiver
-				if (!_LastCalledMethod.cachedMethod.IsNull ()) { // Cached?
+				if (_LastCalledMethod.cachedMethod != null) { // Cached?
 					int numStackToSkip = isStatic ? 0 : 1; // If this is an instance invoe we will have an extra arg on the stack for the targetObject
 					int numArgsPassed = LuaLib.LuaGetTop (luaState) - numStackToSkip;
 					MethodBase method = _LastCalledMethod.cachedMethod;
@@ -162,7 +161,7 @@ namespace NLua.Method
 
 								if (_LastCalledMethod.args [_LastCalledMethod.argTypes [i].index] == null &&
 									!LuaLib.LuaIsNil (luaState, i + 1 + numStackToSkip))
-									throw new LuaException ("argument number " + (i + 1) + " is invalid");
+									throw new LuaException (string.Format("argument number {0} is invalid",(i + 1)));
 							}
 
 							if ((_BindingType & BindingFlags.Static) == BindingFlags.Static)
@@ -191,7 +190,7 @@ namespace NLua.Method
 					// System.Diagnostics.Debug.WriteLine("cache miss on " + methodName);
 					// If we are running an instance variable, we can now pop the targetObject from the stack
 					if (!isStatic) {
-						if (targetObject.IsNull ()) {
+						if (targetObject == null) {
 							_Translator.ThrowError (luaState, String.Format ("instance method '{0}' requires a non null target object", _MethodName));
 							LuaLib.LuaPushNil (luaState);
 							return 1;

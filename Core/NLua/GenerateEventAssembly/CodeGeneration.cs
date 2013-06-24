@@ -96,7 +96,7 @@ namespace NLua
 #else
 			string typeName;
 			lock (this) {
-				typeName = "LuaGeneratedClass" + luaClassNumber;
+				typeName = "LuaGeneratedClass" + luaClassNumber.ToString ();
 				luaClassNumber++;
 			}
 
@@ -138,7 +138,7 @@ namespace NLua
 #else
 			string typeName;
 			lock (this) {
-				typeName = "LuaGeneratedClass" + luaClassNumber;
+				typeName = "LuaGeneratedClass" + luaClassNumber.ToString ();
 				luaClassNumber++;
 			}
 
@@ -319,7 +319,7 @@ namespace NLua
 #else
 			string typeName;
 			lock (this) {
-				typeName = "LuaGeneratedClass" + luaClassNumber;
+				typeName = "LuaGeneratedClass" + luaClassNumber.ToString ();
 				luaClassNumber++;
 			}
 

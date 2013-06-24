@@ -232,13 +232,13 @@ namespace NLua
 
 			string message = e as string;
 
-			if (!message.IsNull ()) {
+			if (message != null) {
 				// Wrap Lua error (just a string) and store the error location
 				e = new LuaScriptException (message, errLocation);
 			} else {
 				var ex = e as Exception;
 
-				if (!ex.IsNull ()) {
+				if (ex != null) {
 					// Wrap generic .NET exception as an InnerException and store the error location
 					e = new LuaScriptException (ex, errLocation);
 				}
@@ -275,11 +275,11 @@ namespace NLua
 				}
 
 #if !SILVERLIGHT
-				if (assembly.IsNull ())
+				if (assembly == null)
 					assembly = Assembly.Load (AssemblyName.GetAssemblyName (assemblyName));
 #endif
 
-				if (!assembly.IsNull () && !assemblies.Contains (assembly))
+				if (assembly != null && !assemblies.Contains (assembly))
 					assemblies.Add (assembly);
 			} catch (Exception e) {
 				ThrowError (luaState, e);
@@ -293,7 +293,7 @@ namespace NLua
 			foreach (var assembly in assemblies) {
 				var klass = assembly.GetType (className);
 
-				if (!klass.IsNull ())
+				if (klass != null)
 					return klass;
 			}
 			return null;
@@ -318,7 +318,7 @@ namespace NLua
 			string className = LuaLib.LuaToString (luaState, 1).ToString ();
 			var klass = FindType (className);
 
-			if (!klass.IsNull ())
+			if (klass != null)
 				PushType (luaState, klass);
 			else
 				LuaLib.LuaPushNil (luaState);
@@ -347,10 +347,10 @@ namespace NLua
 				var luaTable = GetTable (luaState, 1);
 				string superclassName = LuaLib.LuaToString (luaState, 2).ToString ();
 
-				if (!superclassName.IsNull ()) {
+				if (superclassName != null) {
 					var klass = FindType (superclassName);
 
-					if (!klass.IsNull ()) {
+					if (klass != null) {
 						// Creates and pushes the object in the stack, setting
 						// it as the  metatable of the first argument
 						object obj = CodeGeneration.Instance.GetClassInstance (klass, luaTable);
@@ -401,12 +401,12 @@ namespace NLua
 					LuaLib.LuaGetTable (luaState, -2);
 					object obj = GetRawNetObject (luaState, -1);
 
-					if (obj.IsNull ())
+					if (obj == null)
 						ThrowError (luaState, "unregister_table: arg is not valid table");
 
 					var luaTableField = obj.GetType ().GetField ("__luaInterface_luaTable");
 
-					if (luaTableField.IsNull ())
+					if (luaTableField == null)
 						ThrowError (luaState, "unregister_table: arg is not valid table");
 
 					luaTableField.SetValue (obj, null);
@@ -450,7 +450,7 @@ namespace NLua
 			} else {
 				target = GetRawNetObject (luaState, 1);
 
-				if (target.IsNull ()) {
+				if (target == null) {
 					ThrowError (luaState, "get_method_bysig: first arg is not type or object reference");
 					LuaLib.LuaPushNil (luaState);
 					return 1;
@@ -500,7 +500,7 @@ namespace NLua
 			if (udata != -1)
 				klass = (IReflect)objects [udata];
 
-			if (klass.IsNull ())
+			if (klass == null)
 				ThrowError (luaState, "get_constructor_bysig: first arg is invalid type reference");
 
 			var signature = new Type[LuaLib.LuaGetTop (luaState) - 1];
@@ -544,7 +544,7 @@ namespace NLua
 			int index = -1;
 
 			// Pushes nil
-			if (o.IsNull ()) {
+			if (o == null) {
 				LuaLib.LuaPushNil (luaState);
 				return;
 			}
@@ -632,7 +632,7 @@ namespace NLua
 		internal object GetAsType (LuaState luaState, int stackPos, Type paramType)
 		{
 			var extractor = typeChecker.CheckLuaType (luaState, stackPos, paramType);
-			return !extractor.IsNull () ? extractor (luaState, stackPos) : null;
+			return extractor != null ? extractor (luaState, stackPos) : null;
 		}
 
 		/// <summary>
@@ -757,20 +757,6 @@ namespace NLua
 			return udata != -1 ? objects [udata] : null;
 		}
 
-		/*
-		 * Pushes the entire array into the Lua stack and returns the number
-		 * of elements pushed.
-		 */
-		internal int ReturnValues (LuaState luaState, object[] returnValues)
-		{
-			if (LuaLib.LuaCheckStack (luaState, returnValues.Length + 5)) {
-				for (int i = 0; i < returnValues.Length; i++)
-					Push (luaState, returnValues [i]);
-
-				return returnValues.Length;
-			} else
-				return 0;
-		}
 
 		/*
 		 * Gets the values from the provided index to
@@ -829,13 +815,9 @@ namespace NLua
 			if (o is ILuaGeneratedType) {
 				// Make sure we are _really_ ILuaGenerated
 				var typ = o.GetType ();
-#if SILVERLIGHT
-				return (!typ.GetInterface ("ILuaGeneratedType", true).IsNull ());
-#else
-				return (!typ.GetInterface ("ILuaGeneratedType").IsNull ());
-#endif
-			} else
-				return false;
+				return typ.GetInterface ("ILuaGeneratedType", true) != null;
+			} 
+			return false;
 		}
 
 		/*
@@ -843,7 +825,7 @@ namespace NLua
 		 */
 		internal void Push (LuaState luaState, object o)
 		{
-			if (o.IsNull ())
+			if (o == null)
 				LuaLib.LuaPushNil (luaState);
 			else if (o is sbyte || o is byte || o is short || o is ushort ||
 				o is int || o is uint || o is long || o is float ||

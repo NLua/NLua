@@ -78,13 +78,6 @@ namespace NLua
 			return _Interpreter.CallFunction (this, args);
 		}
 
-		/*
-		 * Pushes the userdata into the Lua stack
-		 */
-		internal void Push (LuaState luaState)
-		{
-			LuaLib.LuaGetRef (luaState, _Reference);
-		}
 
 		public override string ToString ()
 		{

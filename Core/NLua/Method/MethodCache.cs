@@ -43,7 +43,7 @@ namespace NLua.Method
 				_cachedMethod = value;
 				var mi = value as MethodInfo;
 
-				if (!mi.IsNull ()) {
+				if (mi != null) {
 					IsReturnVoid = mi.ReturnType == typeof (void);
 				}
 			}

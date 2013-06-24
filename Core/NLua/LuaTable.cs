@@ -100,16 +100,6 @@ namespace NLua
 			return _Interpreter.RawGetObject (_Reference, field);
 		}
 
-		internal object RawGetFunction (string field)
-		{
-			object obj = _Interpreter.RawGetObject (_Reference, field);
-
-			if (obj is LuaNativeFunction)
-				return new LuaFunction ((LuaNativeFunction)obj, _Interpreter);
-			else
-				return obj;
-		}
-
 		/*
 		 * Pushes this table into the Lua stack
 		 */

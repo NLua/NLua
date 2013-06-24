@@ -106,7 +106,7 @@ namespace NLua
 
 			var underlyingType = Nullable.GetUnderlyingType (paramType);
 
-			if (!underlyingType.IsNull ())
+			if (underlyingType != null)
 				paramType = underlyingType;	 // Silently convert nullable types to their non null requics
 
 			var extractKey = GetExtractDictionaryKey (paramType);
@@ -161,13 +161,13 @@ namespace NLua
 				if (LuaLib.LuaLGetMetafield (luaState, stackPos, "__index")) {
 					object obj = translator.GetNetObject (luaState, -1);
 					LuaLib.LuaSetTop (luaState, -2);
-					if (!obj.IsNull () && paramType.IsAssignableFrom (obj.GetType ()))
+					if (obj != null && paramType.IsAssignableFrom (obj.GetType ()))
 						return extractNetObject;
 				} else
 					return null;
 			} else {
 				object obj = translator.GetNetObject (luaState, stackPos);
-				if (!obj.IsNull () && paramType.IsAssignableFrom (obj.GetType ()))
+				if (obj != null && paramType.IsAssignableFrom (obj.GetType ()))
 					return extractNetObject;
 			}
 
@@ -348,7 +348,7 @@ namespace NLua
 		{
 			object obj = translator.GetNetObject (luaState, stackPos);
 
-			if (obj.IsNull () && LuaLib.LuaType (luaState, stackPos) == LuaTypes.Table) {
+			if (obj == null && LuaLib.LuaType (luaState, stackPos) == LuaTypes.Table) {
 				if (LuaLib.LuaLGetMetafield (luaState, stackPos, "__index")) {
 					if (LuaLib.LuaLCheckMetatable (luaState, -1)) {
 						LuaLib.LuaInsert (luaState, stackPos);

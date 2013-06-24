@@ -29,7 +29,7 @@ namespace NLua.Extensions
 	/// <summary>
 	/// Some random extension stuff.
 	/// </summary>
-	static class GeneralExtensions
+	static class CheckNull
 	{
 		/// <summary>
 		/// Determines whether the specified obj is null.
@@ -38,14 +38,18 @@ namespace NLua.Extensions
 		/// <returns>
 		/// 	<c>true</c> if the specified obj is null; otherwise, <c>false</c>.
 		/// </returns>
-		public static bool IsNull (this object obj)
+		/// 
+#if USE_KOPILUA
+		public static bool IsNull (object obj)
 		{
 			return (obj == null);
 		}
+#else
 
-		public static bool IsNull (this IntPtr ptr)
+		public static bool IsNull (IntPtr ptr)
 		{
 			return (ptr.Equals (IntPtr.Zero));
 		}
+#endif
 	}
 }
