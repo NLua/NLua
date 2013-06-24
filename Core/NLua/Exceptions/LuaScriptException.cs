@@ -30,6 +30,10 @@ namespace NLua.Exceptions
 	/// <summary>
 	/// Exceptions thrown by the Lua runtime because of errors in the script
 	/// </summary>
+	/// 
+#if !SILVERLIGHT
+	[Serializable]
+#endif
 	public class LuaScriptException : LuaException
 	{
 		/// <summary>
