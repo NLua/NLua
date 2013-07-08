@@ -11,7 +11,7 @@ NLua
 > 		* iOS (done)
 >		* Windows/Linux/Mac (done)
 >		* Windows Phone 8 (bind using C++/CX instead p/Inoke like SharpDX)
->		* Windows Phone 7 (using KopiLua)
+>		* Windows Phone 7 (done)
 
 > * Fix warnings/Gendarme/FxCop issues.
 >* Contributing
@@ -42,6 +42,21 @@ iOS :  [![Build Status](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/ic
 
   [3]: http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
   [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
+  
+Win32: **Download** [![dwn_w32][6]][5]
+
+  [5]: https://www.dropbox.com/s/jkr1pnwvqw6w0r8/NLua.Win32.zip
+  [6]: http://nvlabs.github.com/cub/download-icon.png (Download for Win32)
+  
+Win64: **Download** [![dwn_w64][8]][7]
+
+  [7]: https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip
+  [8]: http://nvlabs.github.com/cub/download-icon.png (Download for Win64)
+  
+Windows Phone 7: **Download** [![dwn_wp7][10]][9]
+
+  [9]: https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip
+  [10]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 7)
 
 Windows: We don't have a CI Server for Windows. 
 	 You can build NLua , you will need (msysgit, CMake, NUnit) http://screencast.com/t/rYuDtCdFG7
