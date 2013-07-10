@@ -40,9 +40,13 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseKopiLua|AnyCPU'">
     <OutputPath>..\tests\</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -67,10 +71,11 @@
     </Compile>
     <Compile Include="LoadFileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AAACodeGenTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\KeraLua\src\KeraLua.csproj">
-      <Project>{47153754-10f5-44d8-b578-f5a32b69061a}</Project>
+      <Project>{47153754-10F5-44D8-B578-F5A32B69061A}</Project>
       <Name>KeraLua</Name>
     </ProjectReference>
     <ProjectReference Include="..\Core\KopiLua\KopiLua\KopiLua.csproj">

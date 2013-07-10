@@ -116,7 +116,7 @@ namespace NLua
 			generator.Emit (OpCodes.Ldarg_0);
 			generator.Emit (OpCodes.Ldarg_1);
 			generator.Emit (OpCodes.Ldarg_2);
-			var miGenericEventHandler = eventHandlerParent.GetMethod ("handleEvent");
+			var miGenericEventHandler = eventHandlerParent.GetMethod ("HandleEvent");
 			generator.Emit (OpCodes.Call, miGenericEventHandler);
 			// returns
 			generator.Emit (OpCodes.Ret);
@@ -245,7 +245,7 @@ namespace NLua
 			generator.Emit (OpCodes.Ldloc_0);
 			generator.Emit (OpCodes.Ldloc_1);
 			generator.Emit (OpCodes.Ldloc_2);
-			var miGenericEventHandler = delegateParent.GetMethod ("callFunction");
+			var miGenericEventHandler = delegateParent.GetMethod ("CallFunction");
 			generator.Emit (OpCodes.Call, miGenericEventHandler);
 
 			// Stores return value
@@ -564,7 +564,7 @@ namespace NLua
 			generator.Emit (OpCodes.Ldarg_0);
 			generator.Emit (OpCodes.Ldfld, luaTableField);
 			generator.Emit (OpCodes.Ldstr, method.Name);
-			generator.Emit (OpCodes.Call, classHelper.GetMethod ("getTableFunction"));
+			generator.Emit (OpCodes.Call, classHelper.GetMethod ("GetTableFunction"));
 			var lab1 = generator.DefineLabel ();
 			generator.Emit (OpCodes.Dup);
 			generator.Emit (OpCodes.Brtrue_S, lab1);
@@ -598,7 +598,7 @@ namespace NLua
 			generator.Emit (OpCodes.Ldelem_Ref);
 			generator.Emit (OpCodes.Ldloc_1);
 			generator.Emit (OpCodes.Ldloc_2);
-			generator.Emit (OpCodes.Call, classHelper.GetMethod ("callFunction"));
+			generator.Emit (OpCodes.Call, classHelper.GetMethod ("CallFunction"));
 			generator.MarkLabel (lab2);
 
 			// Stores the function return value

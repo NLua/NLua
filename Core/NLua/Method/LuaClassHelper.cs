@@ -40,6 +40,9 @@ namespace NLua.Method
 		 */
 		public static LuaFunction GetTableFunction (LuaTable luaTable, string name)
 		{
+			if (luaTable == null)
+				return null;
+
 			object funcObj = luaTable.RawGet (name);
 
 			if (funcObj is LuaFunction)
