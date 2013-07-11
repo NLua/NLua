@@ -80,7 +80,8 @@ FILES = \
 	../tests/TestLua.cs \
 	../tests/Core.cs \
 	LoadFileTests.cs \
-	Properties/AssemblyInfo.cs 
+	Properties/AssemblyInfo.cs \
+	AAACodeGenTests.cs 
 
 DATA_FILES = 
 
