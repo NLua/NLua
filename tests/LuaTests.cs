@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using NUnit.Framework;
 using NLuaTest.Mock;
 using System.Reflection;
 using System.Threading;
@@ -11,8 +10,18 @@ using NLua.Exceptions;
 using MonoTouch.Foundation;
 #endif
 
+#if WINDOWS_PHONE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using SetUp = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestInitializeAttribute;
+using TestFixture = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
+using Test = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+#else
+using NUnit.Framework;
+#endif
+
 namespace NLuaTest
 {
+   
 	[TestFixture]
 	#if MONOTOUCH
 	[Preserve (AllMembers = true)]
@@ -33,8 +42,8 @@ namespace NLuaTest
 				lua.DoString ("err,errMsg=pcall(test.exceptionMethod,test)");
 				bool err = (bool)lua ["err"];
 				Exception errMsg = (Exception)lua ["errMsg"];
-				Assert.False (err);
-				Assert.NotNull (errMsg.InnerException);
+				Assert.AreEqual (false , err);
+				Assert.AreNotEqual (null, errMsg.InnerException);
 				Assert.AreEqual ("exception test", errMsg.InnerException.Message);
 			}
 		}
@@ -54,10 +63,10 @@ namespace NLuaTest
 				try {
 					lua.DoString ("test:exceptionMethod()");
 					//failed
-					Assert.True (false);
+                    Assert.AreEqual(false, true);
 				} catch (Exception) {
 					//passed
-					Assert.True (true);
+					Assert.AreEqual (true, true);
 				}
 			}
 		}
@@ -75,10 +84,10 @@ namespace NLuaTest
 				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("val=test.NullableBool");
-				Assert.Null ((object)lua ["val"]);
+				Assert.AreEqual (null, (object)lua ["val"]);
 				lua.DoString ("test.NullableBool = true");
 				lua.DoString ("val=test.NullableBool");
-				Assert.True ((bool)lua ["val"]);
+				Assert.AreEqual (true, (bool)lua ["val"]);
 			}
 		}
 
@@ -120,6 +129,7 @@ namespace NLuaTest
 		public void TestDispose ()
 		{
 			System.GC.Collect ();
+#if !WINDOWS_PHONE
 			long startingMem = System.Diagnostics.Process.GetCurrentProcess ().WorkingSet64;
 
 			for (int i = 0; i < 100; i++) {
@@ -130,7 +140,8 @@ namespace NLuaTest
 
 			//TODO: make this test assert so that it is useful
 			Console.WriteLine ("Was using " + startingMem / 1024 / 1024 + "MB, now using: " + System.Diagnostics.Process.GetCurrentProcess ().WorkingSet64 / 1024 / 1024 + "MB");
-		}
+#endif
+        }
 
 		private void _Calc (Lua lua, int i)
 		{
@@ -179,7 +190,7 @@ namespace NLuaTest
 				while (completed < iterations && !failureDetected)
 					Thread.Sleep (50);
 
-				Assert.False (failureDetected);
+				Assert.AreEqual (false, failureDetected);
 			}
 		}
 
@@ -195,11 +206,11 @@ namespace NLuaTest
 				try {
 					lua.DoString ("test:_PrivateMethod()");
 				} catch {
-					Assert.True (true);
+					Assert.AreEqual (true, true);
 					return;
 				}
 
-				Assert.True (false);
+                Assert.AreEqual(true, false);
 			}
 		}
 
@@ -324,10 +335,10 @@ namespace NLuaTest
 					//Cause the event to be fired
 					entity.Click ();
 					//failed
-					Assert.True (false);
+                    Assert.AreEqual(true, false);
 				} catch (LuaException) {
 					//passed
-					Assert.True (true);
+					Assert.AreEqual (true, true);
 				}
 			}
 		}
@@ -339,7 +350,7 @@ namespace NLuaTest
 				try {
 					lua.DoString ("thiswillthrowanerror", "MyChunk");
 				} catch (Exception e) {
-					Assert.True (e.Message.StartsWith ("[string \"MyChunk\"]"));
+					Assert.AreEqual (true, e.Message.StartsWith ("[string \"MyChunk\"]"));
 				}
 			}
 		}
@@ -371,8 +382,8 @@ namespace NLuaTest
 				} catch {
 				}
 
-				Assert.True (classWithGenericMethod.GenericMethodSuccess);
-				Assert.True (classWithGenericMethod.Validate<double> (100)); //note the gotcha: numbers are all being passed to generic methods as doubles
+				Assert.AreEqual (true, classWithGenericMethod.GenericMethodSuccess);
+				Assert.AreEqual (true, classWithGenericMethod.Validate<double> (100)); //note the gotcha: numbers are all being passed to generic methods as doubles
 
 				try {
 					lua.DoString ("luanet.load_assembly('NLuaTest')");
@@ -382,7 +393,7 @@ namespace NLuaTest
 				} catch {
 				}
 
-				Assert.True (classWithGenericMethod.GenericMethodSuccess);
+				Assert.AreEqual (true, classWithGenericMethod.GenericMethodSuccess);
 				Assert.AreEqual (56, (classWithGenericMethod.PassedValue as TestClass).val);
 			}
 		}
@@ -414,8 +425,8 @@ namespace NLuaTest
 				string b = (string)lua.GetString ("b");
 				string c = (string)lua.GetString ("c");
 				Assert.AreEqual (2, a);
-				Assert.NotNull (b);
-				Assert.NotNull (c);
+				Assert.AreNotEqual (null, b);
+				Assert.AreNotEqual (null, c);
 			}
 		}
 
@@ -820,10 +831,10 @@ namespace NLuaTest
 				t1.testval = 4;
 				lua ["netobj"] = t1;
 				object o = lua ["netobj"];
-				Assert.True (o is TestClass);
+				Assert.AreEqual (true, o is TestClass);
 				TestClass t2 = (TestClass)lua ["netobj"];
 				Assert.AreEqual (t2.testval, 4);
-				Assert.True (t1 == t2);
+				Assert.AreEqual (t1 , t2);
 			}
 		}
 		///*
@@ -857,8 +868,8 @@ namespace NLuaTest
 				tab ["c"] = t1;
 				TestClass t2 = (TestClass)lua ["a.b.c"];
 				//Console.WriteLine("a.b.c="+t2.testval);
-				Assert.AreEqual (t2.testval, 4);
-				Assert.True (t1 == t2);
+				Assert.AreEqual (4, t2.testval);
+				Assert.AreEqual (t1 , t2);
 			}
 		}
 		/*
