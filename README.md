@@ -10,7 +10,7 @@ NLua
 >	 	* Android (port means create the project files + make files, no code change needed)
 > 		* iOS (done)
 >		* Windows/Linux/Mac (done)
->		* Windows Phone 8 (bind using C++/CX instead p/Inoke like SharpDX)
+>		* Windows Phone 8 (done)
 >		* Windows Phone 7 (done)
 
 > * Fix warnings/Gendarme/FxCop issues.
@@ -57,6 +57,11 @@ Windows Phone 7: **Download** [![dwn_wp7][10]][9]
 
   [9]: https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip
   [10]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 7)
+  
+Windows Phone 8: **Download** [![dwn_wp8][12]][11]
+
+  [11]: https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip
+  [12]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (ARM+x86))
 
 Windows: We don't have a CI Server for Windows. 
 	 You can build NLua , you will need (msysgit, CMake, NUnit) http://screencast.com/t/rYuDtCdFG7
