@@ -31,16 +31,16 @@ NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Ph
 
 Linux: [![Build Status](https://travis-ci.org/NLua/NLua.png?branch=master)](https://travis-ci.org/NLua/NLua)
 
-OSX: [![Build Status](http://codefoco.com:8080/job/NLua/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua/) 
+OSX: [![Build Status](http://codefoco.com:8080/job/NLua/badge/icon)](http://codefoco.com:8080/job/NLua/) 
 **Download** [![dwn_osx][2]][1]
 
-  [1]: http://jenkins-nlua.sytes.net:8080/job/NLua/lastSuccessfulBuild/artifact/NLua.OSX.zip
+  [1]: http://codefoco.com:8080/job/NLua/lastSuccessfulBuild/artifact/NLua.OSX.zip
   [2]: http://nvlabs.github.com/cub/download-icon.png (Download for OSX)
 
-iOS :  [![Build Status](http://codefoco.com:8080/job/NLua_iOS/badge/icon)](http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/)
+iOS :  [![Build Status](http://codefoco.com:8080/job/NLua_iOS/badge/icon)](http://codefoco.com:8080/job/NLua_iOS/)
 **Download** [![dwn_ios][4]][3]
 
-  [3]: http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
+  [3]: http://codefoco.com:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
   [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
   
 Win32: **Download** [![dwn_w32][6]][5]
