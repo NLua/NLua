@@ -17,7 +17,7 @@
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>..\..\Run\Debug</OutputPath>
+    <OutputPath>..\..\Run\Debug\net35\</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
-    <OutputPath>..\..\Run\Release</OutputPath>
+    <OutputPath>..\..\Run\Release\net35\</OutputPath>
     <DefineConstants>RELEASE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -103,15 +103,14 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\KeraLua\src\KeraLua.csproj">
-      <Project>{47153754-10F5-44D8-B578-F5A32B69061A}</Project>
-      <Name>KeraLua</Name>
+    <ProjectReference Include="..\KeraLua\src\KeraLua.Net35.csproj">
+      <Project>{47153754-10f5-44d8-b578-f5a32b69061a}</Project>
+      <Name>KeraLua.Net35</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KopiLua\KopiLua\KopiLua.csproj">
-      <Project>{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}</Project>
-      <Name>KopiLua</Name>
+    <ProjectReference Include="..\KopiLua\KopiLua\KopiLua.Net35.csproj">
+      <Project>{e8ddbc21-ef74-4aba-9c49-bfc702be25d8}</Project>
+      <Name>KopiLua.Net35</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
