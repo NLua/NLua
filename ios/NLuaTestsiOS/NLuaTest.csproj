@@ -105,12 +105,11 @@
     <Reference Include="monotouch" />
     <Reference Include="MonoTouch.NUnitLite" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Resources\" />
-    <Folder Include="Icons\" />
-    <Folder Include="LuaTests\" />
-  </ItemGroup>
-  <ItemGroup>
+    <BundleResource Include="..\..\tests\test_32.luac">
+      <Link>Resources\test_32.luac</Link>
+    </BundleResource>
     <None Include="Info.plist" />
   </ItemGroup>
   <ItemGroup>
