@@ -541,11 +541,15 @@ end
 				string[] path = fullPath.Split (new char[] { '.' });
 				LuaLib.LuaGetGlobal (luaState, path [0]);
 				returnValue = translator.GetObject (luaState, -1);
+				LuaBase dispose = null;
 
 				if (path.Length > 1) {
+					dispose = returnValue as LuaBase;
 					string[] remainingPath = new string[path.Length - 1];
 					Array.Copy (path, 1, remainingPath, 0, path.Length - 1);
 					returnValue = GetObject (remainingPath);
+					if (dispose != null)
+						dispose.Dispose ();
 				}
 
 				LuaLib.LuaSetTop (luaState, oldTop);

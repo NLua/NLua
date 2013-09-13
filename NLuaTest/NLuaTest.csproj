@@ -12,7 +12,7 @@
     <AssemblyName>NLuaTest</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ReleaseVersion>2.x</ReleaseVersion>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -49,8 +49,8 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\lib\nunit\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -74,18 +74,21 @@
     <Compile Include="AAACodeGenTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\KeraLua\src\KeraLua.csproj">
+    <ProjectReference Include="..\Core\KeraLua\src\KeraLua.Net40.csproj">
       <Project>{47153754-10F5-44D8-B578-F5A32B69061A}</Project>
-      <Name>KeraLua</Name>
+      <Name>KeraLua.Net40</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\KopiLua\KopiLua\KopiLua.csproj">
+    <ProjectReference Include="..\Core\KopiLua\KopiLua\KopiLua.Net40.csproj">
       <Project>{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}</Project>
-      <Name>KopiLua</Name>
+      <Name>KopiLua.Net40</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\NLua\NLua.csproj">
+    <ProjectReference Include="..\Core\NLua\NLua.Net40.csproj">
       <Project>{F55CABBB-4108-4A39-94E1-581FD46DC021}</Project>
-      <Name>NLua</Name>
+      <Name>NLua.Net40</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

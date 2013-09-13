@@ -8,9 +8,9 @@
 
 cd Core/KeraLua/
 make -f Makefile.Linux
-xbuild KeraLua.sln /p:Configuration=Release
+xbuild KeraLua.Net40.sln /p:Configuration=Release
 cd ../../
-xbuild NLua.sln /p:Configuration=Release
+xbuild NLua.Net40.sln /p:Configuration=Release
 export LD_LIBRARY_PATH=$PWD/Core/KeraLua/external/lua/linux/lib64
 cd tests/
 nunit-console NLuaTest.dll
