@@ -150,13 +150,19 @@ namespace NLua.Method
 							for (int i = 0; i < _LastCalledMethod.argTypes.Length; i++) {
 
 								MethodArgs type = _LastCalledMethod.argTypes [i];
-								object luaParamValue = type.extractValue (luaState, i + 1 + numStackToSkip);
+
+								int index = i + 1 + numStackToSkip;
+
+								Func<int, object> valueExtractor = (currentParam) => {
+									return type.extractValue (luaState, currentParam);							
+								};
 
 								if (_LastCalledMethod.argTypes [i].isParamsArray) {
-									Array paramArray = _Translator.TableToArray (luaParamValue, type.paramsArrayType);
+									int count = _LastCalledMethod.argTypes.Length - index;
+									Array paramArray = _Translator.TableToArray (valueExtractor, type.paramsArrayType, index, count);
 									args [_LastCalledMethod.argTypes [i].index] = paramArray;
 								} else {
-									args [type.index] = luaParamValue;
+									args [type.index] = valueExtractor (index);
 								}
 
 								if (_LastCalledMethod.args [_LastCalledMethod.argTypes [i].index] == null &&

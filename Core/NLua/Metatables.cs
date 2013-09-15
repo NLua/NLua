@@ -828,9 +828,11 @@ namespace NLua
 		}
 
 
-		internal Array TableToArray (object luaParamValue, Type paramArrayType)
+		internal Array TableToArray (Func<int, object> luaParamValueExtractor, Type paramArrayType, int startIndex, int count)
 		{
 			Array paramArray;
+
+			var luaParamValue = luaParamValueExtractor (startIndex);
 
 			if (luaParamValue is LuaTable) {
 				LuaTable table = (LuaTable)luaParamValue;
@@ -856,8 +858,15 @@ namespace NLua
 					paramArrayIndex++;
 				}
 			} else {
-				paramArray = Array.CreateInstance (paramArrayType, 1);
+
+				paramArray = Array.CreateInstance (paramArrayType, count);
 				paramArray.SetValue (luaParamValue, 0);
+
+				for (int i = 1; i < count; i++) {
+					startIndex++;
+					var value = luaParamValueExtractor (startIndex);
+					paramArray.SetValue (value, i);
+				}
 			}
 
 			return paramArray;
@@ -912,9 +921,14 @@ namespace NLua
 				}  // Type does not match, ignore if the parameter is optional
 				else if (IsParamsArray (luaState, currentLuaParam, currentNetParam, out extractValue)) {
 
-					object luaParamValue = extractValue (luaState, currentLuaParam);
 					var paramArrayType = currentNetParam.ParameterType.GetElementType ();
-					Array paramArray = TableToArray (luaParamValue, paramArrayType);
+
+					Func<int, object> extractDelegate = (currentParam) => {
+						currentLuaParam ++;
+						return extractValue (luaState, currentParam);
+					};
+					int count = (nLuaParams - currentLuaParam) + 1;
+					Array paramArray = TableToArray (extractDelegate, paramArrayType, currentLuaParam, count);
 
 					paramList.Add (paramArray);
 					int index = paramList.LastIndexOf (paramArray);
@@ -924,7 +938,7 @@ namespace NLua
 					methodArg.isParamsArray = true;
 					methodArg.paramsArrayType = paramArrayType;
 					argTypes.Add (methodArg);
-					currentLuaParam++;
+
 				} else if (currentNetParam.IsOptional)
 					paramList.Add (currentNetParam.DefaultValue);
 				else {  // No match
