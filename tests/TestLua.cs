@@ -565,5 +565,15 @@ namespace NLuaTest.Mock
 			k = 5;
 			Console.WriteLine ("Overload with out param" + i + ", " + j);
 		}
+
+		public void Print(params object[] msgs)
+		{
+			var output = "";
+			foreach(var msg in msgs)
+			{
+				output += msg.ToString() + "\t";
+			}
+			Console.WriteLine(output);
+		}
 	}
 }

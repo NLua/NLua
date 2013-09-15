@@ -1805,5 +1805,18 @@ namespace NLuaTest
 			}
 		}
 
+		[Test]
+		public void TestVarargs()
+		{
+			using(Lua lua = new Lua()){
+				lua.DoString ("luanet.load_assembly('mscorlib')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+				lua.DoString ("test=TestClass()");
+				lua.DoString ("test:Print('this will pass')");
+				lua.DoString ("test:Print('this will ','fail')");
+			}
+		}
+
 	}
 }
