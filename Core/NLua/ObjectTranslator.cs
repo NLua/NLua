@@ -267,18 +267,41 @@ namespace NLua
 			try {
 				string assemblyName = LuaLib.LuaToString (luaState, 1).ToString ();
 				Assembly assembly = null;
+				Exception exception = null;
 
 				try {
 					assembly = Assembly.Load (assemblyName);
 				} catch (BadImageFormatException) {
 					// The assemblyName was invalid.  It is most likely a path.
+				} catch (FileNotFoundException e) {
+					exception = e;
 				}
 
 #if !SILVERLIGHT
-				if (assembly == null)
-					assembly = Assembly.Load (AssemblyName.GetAssemblyName (assemblyName));
-#endif
+				if (assembly == null) {
+					try {
+						assembly = Assembly.Load (AssemblyName.GetAssemblyName (assemblyName));
+					} catch (FileNotFoundException e) {
+						exception = e;
+					}
+					if (assembly == null) {
 
+						AssemblyName mscor = assemblies [0].GetName ();
+						AssemblyName name = new AssemblyName ();
+						name.Name = assemblyName;
+						name.CultureInfo = mscor.CultureInfo;
+						name.Version = mscor.Version;
+						name.SetPublicKeyToken (mscor.GetPublicKeyToken ());
+						name.SetPublicKey (mscor.GetPublicKey ());
+						assembly = Assembly.Load (name);
+
+						if (assembly != null)
+							exception = null;
+					}
+					if (exception != null)
+						ThrowError (luaState, exception);
+				}
+#endif
 				if (assembly != null && !assemblies.Contains (assembly))
 					assemblies.Add (assembly);
 			} catch (Exception e) {
