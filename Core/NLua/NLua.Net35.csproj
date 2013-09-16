@@ -46,6 +46,12 @@
     <OutputPath>bin\ReleaseKopiLua\</OutputPath>
     <DefineConstants>USE_KOPILUA</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -112,5 +118,8 @@
       <Project>{e8ddbc21-ef74-4aba-9c49-bfc702be25d8}</Project>
       <Name>KopiLua.Net35</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="key.snk" />
   </ItemGroup>
 </Project>
