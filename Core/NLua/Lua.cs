@@ -104,44 +104,45 @@ namespace NLua
 		private bool _StatePassed;
 		private bool executing;
 		static string initLuanet =
-			"local metatable = {}														\n" +
-				"local import_type = luanet.import_type										\n" +
-				"local load_assembly = luanet.load_assembly									\n" +
-				"																			\n" +
-				"-- Lookup a .NET identifier component.										\n" +
-				"function metatable:__index(key) -- key is e.g. \"Form\"					\n" +
-				"	-- Get the fully-qualified name, e.g. \"System.Windows.Forms.Form\"		\n" +
-				"	local fqn = ((rawget(self, \".fqn\") and rawget(self, \".fqn\") ..		\n" +
-				"		\".\") or \"\") .. key												\n" +
-				"																			\n" +
-				"	-- Try to find either a luanet function or a CLR type					\n" +
-				"	local obj = rawget(luanet, key) or import_type(fqn)						\n" +
-				"																			\n" +
-				"	-- If key is neither a luanet function or a CLR type, then it is simply	\n" +
-				"	-- an identifier component.												\n" +
-				"	if obj == nil then														\n" +
-				"		-- It might be an assembly, so we load it too.						\n" +
-				"		load_assembly(fqn)													\n" +
-				"		obj = { [\".fqn\"] = fqn }											\n" +
-				"		setmetatable(obj, metatable)										\n" +
-				"	end																		\n" +
-				"																			\n" +
-				"	-- Cache this lookup													\n" +
-				"	rawset(self, key, obj)													\n" +
-				"	return obj																\n" +
-				"end																		\n" +
-				"																			\n" +
-				"-- A non-type has been called; e.g. foo = System.Foo()						\n" +
-				"function metatable:__call(...)												\n" +
-				"	error(\"No such type: \" .. rawget(self, \".fqn\"), 2)					\n" +
-				"end																		\n" +
-				"																			\n" +
-				"-- This is the root of the .NET namespace									\n" +
-				"luanet[\".fqn\"] = false													\n" +
-				"setmetatable(luanet, metatable)											\n" +
-				"																			\n" +
-				"-- Preload the mscorlib assembly											\n" +
-				"luanet.load_assembly(\"mscorlib\")											\n";
+ @"local metatable = {}
+        local rawget = rawget
+        local import_type = luanet.import_type
+        local load_assembly = luanet.load_assembly
+        luanet.error, luanet.type = error, type
+        -- Lookup a .NET identifier component.
+        function metatable:__index(key) -- key is e.g. 'Form'
+            -- Get the fully-qualified name, e.g. 'System.Windows.Forms.Form'
+            local fqn = rawget(self,'.fqn')
+            fqn = ((fqn and fqn .. '.') or '') .. key
+
+            -- Try to find either a luanet function or a CLR type
+            local obj = rawget(luanet,key) or import_type(fqn)
+
+            -- If key is neither a luanet function or a CLR type, then it is simply
+            -- an identifier component.
+            if obj == nil then
+                -- It might be an assembly, so we load it too.
+                pcall(load_assembly,fqn)
+                obj = { ['.fqn'] = fqn }
+                setmetatable(obj, metatable)
+            end
+
+            -- Cache this lookup
+            rawset(self, key, obj)
+            return obj
+        end
+
+        -- A non-type has been called; e.g. foo = System.Foo()
+        function metatable:__call(...)
+            error('No such type: ' .. rawget(self,'.fqn'), 2)
+        end
+
+        -- This is the root of the .NET namespace
+        luanet['.fqn'] = false
+        setmetatable(luanet, metatable)
+
+        -- Preload the mscorlib assembly
+        luanet.load_assembly('mscorlib')";
 
 		static string clr_package = @"---
 --- This lua module provides auto importing of .net classes into a named package.

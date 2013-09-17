@@ -1818,5 +1818,16 @@ namespace NLuaTest
 			}
 		}
 
+		[Test]
+		public void TestCtype ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.LoadCLRPackage ();
+				lua.DoString ("import'System'");
+				var x  = lua.DoString ("return luanet.ctype(String)")[0];
+				Assert.AreEqual (x, typeof(String), "#1 String ctype test");
+			}
+		}
+
 	}
 }

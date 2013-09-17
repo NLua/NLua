@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using NLua.Method;
 using NLua.Exceptions;
 using NLua.Extensions;
+using KopiLua;
 
 namespace NLua
 {
@@ -54,7 +55,7 @@ namespace NLua
 	public class ObjectTranslator
 	{
 		private LuaNativeFunction registerTableFunction, unregisterTableFunction, getMethodSigFunction, 
-			getConstructorSigFunction, importTypeFunction, loadAssemblyFunction;
+			getConstructorSigFunction, importTypeFunction, loadAssemblyFunction, ctypeFunction, enumFromIntFunction;
 		// object to object #
 		public readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int> ();
 		// object # to object (FIXME - it should be possible to get object address as an object #)
@@ -94,6 +95,8 @@ namespace NLua
 			unregisterTableFunction = new LuaNativeFunction (ObjectTranslator.UnregisterTable);
 			getMethodSigFunction = new LuaNativeFunction (ObjectTranslator.GetMethodSignature);
 			getConstructorSigFunction = new LuaNativeFunction (ObjectTranslator.GetConstructorSignature);
+			ctypeFunction = new LuaNativeFunction (ObjectTranslator.CType);
+			enumFromIntFunction = new LuaNativeFunction (ObjectTranslator.EnumFromInt);
 
 			CreateLuaObjectList (luaState);
 			CreateIndexingMetaFunction (luaState);
@@ -194,6 +197,10 @@ namespace NLua
 			LuaLib.LuaSetGlobal (luaState, "get_method_bysig");
 			LuaLib.LuaPushStdCallCFunction (luaState, getConstructorSigFunction);
 			LuaLib.LuaSetGlobal (luaState, "get_constructor_bysig");
+			LuaLib.LuaPushStdCallCFunction (luaState,ctypeFunction);
+			LuaLib.LuaSetGlobal (luaState,"ctype");
+			LuaLib.LuaPushStdCallCFunction (luaState,enumFromIntFunction);
+			LuaLib.LuaSetGlobal(luaState,"enum");
 		}
 
 		/*
@@ -883,10 +890,86 @@ namespace NLua
 		internal bool MatchParameters (LuaState luaState, MethodBase method, ref MethodCache methodCache)
 		{
 			return metaFunctions.MatchParameters (luaState, method, ref methodCache);
-        }
+	}
 		
 		internal Array TableToArray(Func<int, object> luaParamValue, Type paramArrayType, int startIndex, int count) {
 			return metaFunctions.TableToArray(luaParamValue,paramArrayType, startIndex, count);
+		}
+
+		private Type TypeOf (LuaState luaState, int idx)
+		{
+			int udata = LuaLib.LuaNetCheckUData (luaState, 1, "luaNet_class");
+			if (udata == -1)
+				return null;
+			
+			ProxyType pt = (ProxyType)objects [udata];
+			return pt.UnderlyingSystemType;
+		}
+
+		static int PushError (LuaState luaState, string msg)
+		{
+			LuaLib.LuaPushNil (luaState);
+			LuaLib.LuaPushString (luaState, msg);
+			return 2;
+		}
+
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		private static int CType (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return translator.CTypeInternal (luaState);
+		}
+
+		int CTypeInternal (LuaState luaState)
+		{
+			Type t = TypeOf (luaState, 1);
+			if (t == null)
+				return PushError (luaState, "Not a CLR Class");
+
+			PushObject (luaState, t, "luaNet_metatable");
+			return 1;
+		}
+
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		private static int EnumFromInt (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return translator.EnumFromIntInternal (luaState);
+		}
+
+		int EnumFromIntInternal (LuaState luaState)
+		{
+			Type t = TypeOf (luaState, 1);
+			if (t == null || !t.IsEnum)
+				return PushError (luaState, "Not an Enum.");
+
+			object res = null;
+			LuaTypes lt = LuaLib.LuaType (luaState, 2);
+			if (lt == LuaTypes.Number) {
+				int ival = (int)LuaLib.LuaToNumber (luaState, 2);
+				res = Enum.ToObject (t, ival);
+			} else
+				if (lt == LuaTypes.String) {
+					string sflags = LuaLib.LuaToString (luaState, 2);
+					string err = null;
+					try {
+						res = Enum.Parse (t, sflags);
+					} catch (ArgumentException e) {
+						err = e.Message;
+					}
+					if (err != null)
+						return PushError (luaState, err);
+				} else {
+					return PushError (luaState, "Second argument must be a integer or a string.");
+				}
+			PushObject (luaState, res, "luaNet_metatable");
+			return 1;
 		}
 	}
 }
