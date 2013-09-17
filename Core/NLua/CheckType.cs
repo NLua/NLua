@@ -73,6 +73,7 @@ namespace NLua
 			extractValues.Add(GetExtractDictionaryKey(typeof(decimal)), new ExtractValue(GetAsDecimal));
 			extractValues.Add(GetExtractDictionaryKey(typeof(bool)), new ExtractValue(GetAsBoolean));
 			extractValues.Add(GetExtractDictionaryKey(typeof(string)), new ExtractValue(GetAsString));
+			extractValues.Add(GetExtractDictionaryKey(typeof(char[])), new ExtractValue (GetAsCharArray));
 			extractValues.Add(GetExtractDictionaryKey(typeof(LuaFunction)), new ExtractValue(GetAsFunction));
 			extractValues.Add(GetExtractDictionaryKey(typeof(LuaTable)), new ExtractValue(GetAsTable));
 			extractValues.Add(GetExtractDictionaryKey(typeof(LuaUserData)), new ExtractValue(GetAsUserdata));
@@ -136,7 +137,7 @@ namespace NLua
 			if (paramType == typeof(bool)) {
 				if (LuaLib.LuaIsBoolean (luaState, stackPos))
 					return extractValues [extractKey];
-			} else if (paramType == typeof(string)) {
+			} else if (paramType == typeof (string) || paramType == typeof (char [])) {
 				if (LuaLib.LuaIsString (luaState, stackPos))
 					return extractValues [extractKey];
 				else if (luatype == LuaTypes.Nil)
@@ -302,6 +303,17 @@ namespace NLua
 		private object GetAsBoolean (LuaState luaState, int stackPos)
 		{
 			return LuaLib.LuaToBoolean (luaState, stackPos);
+		}
+
+
+
+		private object GetAsCharArray (LuaState luaState, int stackPos)
+		{
+			string retVal = LuaLib.LuaToString (luaState, stackPos).ToString ();
+			if (string.IsNullOrEmpty(retVal) && !LuaLib.LuaIsString (luaState, stackPos))
+				return null;
+
+			return retVal.ToCharArray();
 		}
 
 		private object GetAsString (LuaState luaState, int stackPos)
