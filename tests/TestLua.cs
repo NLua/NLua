@@ -566,10 +566,11 @@ namespace NLuaTest.Mock
 			Console.WriteLine ("Overload with out param" + i + ", " + j);
 		}
 
-		public void Print(params object[] msgs)
+		public void Print(object format,params object[] args)
 		{
-			var output = "";
-			foreach(var msg in msgs)
+			//just for test,this is not printf implements
+			var output = format.ToString() + "\t";
+			foreach(var msg in args)
 			{
 				output += msg.ToString() + "\t";
 			}
