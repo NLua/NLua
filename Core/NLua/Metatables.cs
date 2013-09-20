@@ -832,6 +832,9 @@ namespace NLua
 		{
 			Array paramArray;
 
+			if (count == 0)
+				return Array.CreateInstance (paramArrayType, 0);
+
 			var luaParamValue = luaParamValueExtractor (startIndex);
 
 			if (luaParamValue is LuaTable) {
@@ -860,6 +863,7 @@ namespace NLua
 			} else {
 
 				paramArray = Array.CreateInstance (paramArrayType, count);
+
 				paramArray.SetValue (luaParamValue, 0);
 
 				for (int i = 1; i < count; i++) {
@@ -898,14 +902,7 @@ namespace NLua
 				{					
 					paramList.Add (null);
 					outList.Add (paramList.LastIndexOf (null));
-				} else if (currentLuaParam > nLuaParams) { // Adds optional parameters
-					if (currentNetParam.IsOptional)
-						paramList.Add (currentNetParam.DefaultValue);
-					else {
-						isMethod = false;
-						break;
-					}
-				} else if (IsTypeCorrect (luaState, currentLuaParam, currentNetParam, out extractValue)) {  // Type checking
+				}  else if (IsTypeCorrect (luaState, currentLuaParam, currentNetParam, out extractValue)) {  // Type checking
 					var value = extractValue (luaState, currentLuaParam);
 					paramList.Add (value);
 					int index = paramList.LastIndexOf (value);
@@ -939,6 +936,13 @@ namespace NLua
 					methodArg.paramsArrayType = paramArrayType;
 					argTypes.Add (methodArg);
 
+				} else if (currentLuaParam > nLuaParams) { // Adds optional parameters
+					if (currentNetParam.IsOptional)
+						paramList.Add (currentNetParam.DefaultValue);
+					else {
+						isMethod = false;
+						break;
+					}
 				} else if (currentNetParam.IsOptional)
 					paramList.Add (currentNetParam.DefaultValue);
 				else {  // No match
