@@ -158,7 +158,7 @@ namespace NLua.Method
 								};
 
 								if (_LastCalledMethod.argTypes [i].isParamsArray) {
-									int count = _LastCalledMethod.argTypes.Length - index;
+									int count = index - _LastCalledMethod.argTypes.Length;
 									Array paramArray = _Translator.TableToArray (valueExtractor, type.paramsArrayType, index, count);
 									args [_LastCalledMethod.argTypes [i].index] = paramArray;
 								} else {
