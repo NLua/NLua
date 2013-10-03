@@ -959,7 +959,7 @@ namespace NLua
 					string sflags = LuaLib.LuaToString (luaState, 2);
 					string err = null;
 					try {
-						res = Enum.Parse (t, sflags);
+						res = Enum.Parse (t, sflags, true);
 					} catch (ArgumentException e) {
 						err = e.Message;
 					}
