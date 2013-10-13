@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NLua.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>NLuaiOS</AssemblyName>
+    <AssemblyName>NLua.iOS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
