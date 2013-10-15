@@ -1,5 +1,5 @@
 PROJECT=NLua.iOS.sln
-MDTOOL=/Applications/MonoDevelop.app/Contents/MacOS/mdtool
+MDTOOL=/Applications/Xamarin\ Studio.app/Contents/MacOS/mdtool
 MTOUCH=/Developer/MonoTouch/usr/bin/mtouch
 TOUCH_SERVER=./Touch.Server/bin/Debug/Touch.Server.exe
 
