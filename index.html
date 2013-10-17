@@ -3,64 +3,122 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
     <title>Nlua by NLua</title>
   </head>
 
   <body>
-    <header>
+    <div id="container">
       <div class="inner">
-        <h1>Nlua</h1>
-        <h2>NLua is the bind between Lua world and the .NET world.</h2>
-        <a href="https://github.com/NLua/NLua" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>NLua</h1>
+        <header>
+          <h1>Nlua</h1>
+          <h2>NLua is the bind between Lua world and the .NET world.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/NLua/NLua/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/NLua/NLua/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/NLua/NLua" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="nlua" class="anchor" href="#nlua"><span class="octicon octicon-link"></span></a>NLua</h1>
+
+<blockquote>
+<h3>
+<a name="help-nlua" class="anchor" href="#help-nlua"><span class="octicon octicon-link"></span></a>Help NLua</h3>
+
+<p>If you are using NLua consider to help with some easy todo items.</p>
+
+<h3>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO:</h3>
+
+<ul>
+<li>Windows CI server.</li>
+<li>
+<p>Port to other platforms (using a csproj/sln for each platform like RestSharp/MonoGame/Cocos2d-XNA)</p>
+
+<ul>
+<li>Android (port means create the project files + make files, no code change needed)</li>
+<li>iOS (done)</li>
+<li>Windows/Linux/Mac (done)</li>
+<li>Windows Phone 8 (done)</li>
+<li>Windows Phone 7 (done)</li>
+</ul>
+</li>
+<li><p>Fix warnings/Gendarme/FxCop issues.</p></li>
+<li><h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2></li>
+<li><p>NLua is using the Mono Code-Style <a href="http://www.mono-project.com/Coding_Guidelines">http://www.mono-project.com/Coding_Guidelines</a> .</p></li>
+<li><p>Please, do not change the line-end or re-indent the code.</p></li>
+<li><p>Run the tests before push.</p></li>
+<li><p>Avoid to push unneeded style changes (unless is really needed) renaming, move code.</p></li>
+</ul>
+</blockquote>
 
 <p><a href=""><img src="https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150" alt="Logo"></a></p>
 
-<p>NLua is a fork of project NLua (from Fábio Mascarenhas/Craig Presti).</p>
+<p>NLua is a fork of project LuaInterface (from Fábio Mascarenhas/Craig Presti).</p>
 
 <p>NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Phone 7 and Windows Phone 8.</p>
 
 <p>Linux: <a href="https://travis-ci.org/NLua/NLua"><img src="https://travis-ci.org/NLua/NLua.png?branch=master" alt="Build Status"></a></p>
 
-<p>OSX: <a href="http://jenkins-nlua.sytes.net:8080/job/NLua/"><img src="http://jenkins-nlua.sytes.net:8080/job/NLua/badge/icon" alt="Build Status"></a> 
-<strong>Download</strong> <a href="http://jenkins-nlua.sytes.net:8080/job/NLua/lastSuccessfulBuild/artifact/NLua.OSX.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_osx" title="Download for iOS"></a></p>
+<p>OSX: <a href="http://codefoco.com:8080/job/NLua/"><img src="http://codefoco.com:8080/job/NLua/badge/icon" alt="Build Status"></a> 
+<strong>Download</strong> <a href="http://codefoco.com:8080/job/NLua/lastSuccessfulBuild/artifact/NLua.OSX.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_osx" title="Download for OSX"></a></p>
 
-<p>iOS :  <a href="http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/"><img src="http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/badge/icon" alt="Build Status"></a>
-<strong>Download</strong> <a href="http://jenkins-nlua.sytes.net:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_ios" title="Download for iOS"></a></p>
+<p>iOS :  <a href="http://codefoco.com:8080/job/NLua_iOS/"><img src="http://codefoco.com:8080/job/NLua_iOS/badge/icon" alt="Build Status"></a>
+<strong>Download</strong> <a href="http://codefoco.com:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_ios" title="Download for iOS"></a></p>
 
-<div class="highlight"><pre>
-            <span class="kt">string</span> <span class="n">url</span> <span class="p">=</span> <span class="s">@"http://raw.github.com/NLua/NLua/master/README.md"</span><span class="p">;</span>
+<p>Win32: <strong>Download</strong> <a href="https://www.dropbox.com/s/jkr1pnwvqw6w0r8/NLua.Win32.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_w32" title="Download for Win32"></a></p>
 
+<p>Win64: <strong>Download</strong> <a href="https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_w64" title="Download for Win64"></a></p>
+
+<p>Windows Phone 7: <strong>Download</strong> <a href="https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_wp7" title="Download for Windows Phone 7"></a></p>
+
+<p>Windows Phone 8: <strong>Download</strong> <a href="https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_wp8" title="Download for Windows Phone 8 (ARM+x86)"></a></p>
+
+<p>Windows: We don't have a CI Server for Windows. 
+     You can build NLua , you will need (msysgit, CMake, NUnit) <a href="http://screencast.com/t/rYuDtCdFG7">http://screencast.com/t/rYuDtCdFG7</a></p>
+
+<div class="highlight highlight-csharp"><pre>
             <span class="kt">string</span> <span class="n">script</span> <span class="p">=</span> <span class="s">@"</span>
 
-<span class="s">                luanet.load_assembly ('System.dll')</span>
-<span class="s">                WebClient = luanet.import_type ('System.Net.WebClient')</span>
-<span class="s">                local client = WebClient ()</span>
+<span class="s">            local s = Scriptable (""My String Parameter"")</span>
+<span class="s">            s:DoSomething ()</span>
 
-<span class="s">                local ret = client:DownloadString (url);</span>
+<span class="s">            print (s.Param1)</span>
 
-<span class="s">                return ret;</span>
-<span class="s">                "</span><span class="p">;</span>
+<span class="s">            local ret = s:SumOfLengths (""Name"", 10);</span>
+
+<span class="s">            print (tostring(ret))</span>
+
+<span class="s">            Scriptable.Print(""Hello NLua"")</span>
+
+<span class="s">            s.Param3 = 0.5;</span>
+
+<span class="s">            local p2 = tostring(s.Param3)</span>
+
+<span class="s">            print (p2)</span>
+<span class="s">            "</span><span class="p">;</span>
 
             <span class="k">using</span> <span class="p">(</span><span class="n">Lua</span> <span class="n">lua</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Lua</span> <span class="p">())</span> <span class="p">{</span>
 
-                <span class="n">lua</span> <span class="p">[</span><span class="s">"url"</span><span class="p">]</span> <span class="p">=</span> <span class="n">url</span><span class="p">;</span>
+                <span class="n">lua</span><span class="p">.</span><span class="n">LoadCLRPackage</span> <span class="p">();</span>
+
+                <span class="n">lua</span><span class="p">.</span><span class="n">DoString</span> <span class="p">(</span><span class="s">@" import ('NLuaSample') "</span><span class="p">);</span>
+
+                <span class="n">lua</span> <span class="p">[</span><span class="s">"gValue"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"This is a global value"</span><span class="p">;</span> <span class="c1">// You can set a global value.</span>
 
                 <span class="kt">var</span> <span class="n">returns</span> <span class="p">=</span> <span class="n">lua</span><span class="p">.</span><span class="n">DoString</span> <span class="p">(</span><span class="n">script</span><span class="p">);</span>
 
@@ -68,14 +126,23 @@
             <span class="p">}</span>
 </pre></div>
 
-<p>Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)</p>
+<p>Copyright (c) 2013 Vinicius Jarina (<a href="mailto:viniciusjarina@gmail.com">viniciusjarina@gmail.com</a>)</p>
 
-<h2>NLua 1.0.0</h2>
+<h2>
+<a name="nlua-110" class="anchor" href="#nlua-110"><span class="octicon octicon-link"></span></a>NLua 1.1.0</h2>
+
+<ul>
+<li>Port to WP7 (Thanks to Mangatome)</li>
+<li>NLua now using Lua 5.2.2</li>
+<li>Bug fixes.</li>
+</ul><h2>
+<a name="nlua-100" class="anchor" href="#nlua-100"><span class="octicon octicon-link"></span></a>NLua 1.0.0</h2>
 
 <ul>
 <li>Forked from LuaInterface 2.0.4</li>
-<li>Added iOS support using KeraLua (C# PInvoke Lua)</li>
-</ul><h2>LuaInterface  </h2>
+<li>Added iOS support using KeraLua (C# P/Invoke Lua)</li>
+</ul><h2>
+<a name="luainterface--" class="anchor" href="#luainterface--"><span class="octicon octicon-link"></span></a>LuaInterface  </h2>
 
 <p>Copyright (c) 2003-2006 Fabio Mascarenhas de Queiroz</p>
 
@@ -83,7 +150,8 @@
 
 <p>lua51.dll and lua51.exe are Copyright (c) 2005 Tecgraf, PUC-Rio</p>
 
-<h2>Getting started with NLua:</h2>
+<h2>
+<a name="getting-started-with-nlua" class="anchor" href="#getting-started-with-nlua"><span class="octicon octicon-link"></span></a>Getting started with NLua:</h2>
 
 <ul>
 <li>Look at src/TestNLua/TestLua to see example usage from C# 
@@ -93,7 +161,8 @@ methods from Lua and use NLua from within your .NET application.</li>
 <li>Look at samples/testluaform.lua to see examples of how to use 
 .NET from inside Lua</li>
 <li>More instructions for installing and using in the doc/guide.pdf file.</li>
-</ul><h2>What's new in LuaInterface 2.0.3</h2>
+</ul><h2>
+<a name="whats-new-in-luainterface-203" class="anchor" href="#whats-new-in-luainterface-203"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 2.0.3</h2>
 
 <ul>
 <li>Fix: Private methods accessible via LuaInterface</li>
@@ -107,17 +176,20 @@ methods from Lua and use NLua from within your .NET application.</li>
 <li>Added: LoadString and LoadFile (submitted by Paul Moore)</li>
 <li>Added: Overloaded DoString</li>
 <li>Added: Lua debugging support (rostermeier)</li>
-</ul><h2>What's new in LuaInterface 2.0.1</h2>
+</ul><h2>
+<a name="whats-new-in-luainterface-201" class="anchor" href="#whats-new-in-luainterface-201"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 2.0.1</h2>
 
 <ul>
 <li>Apparently the 2.0 built binaries had an issue for some users, this is just a rebuild with the lua sources pulled into the LuaInterface.zip</li>
-</ul><h2>What's new in LuaInterface 2.0</h2>
+</ul><h2>
+<a name="whats-new-in-luainterface-20" class="anchor" href="#whats-new-in-luainterface-20"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 2.0</h2>
 
 <ul>
 <li>The base lua5.1.2 library is now built as entirely manged code.  LuaInterface is now pure CIL</li>
 <li>Various adapters to connect the older x86 version of lua are no longer needed</li>
 <li>Performance fixes contributed by Toby Lawrence, Oliver Nemoz and Craig Presti</li>
-</ul><h2>What's new in LuaInterface 1.5.3</h2>
+</ul><h2>
+<a name="whats-new-in-luainterface-153" class="anchor" href="#whats-new-in-luainterface-153"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5.3</h2>
 
 <ul>
 <li>Internal lua panics (due to API violations) now throw LuaExceptions into .net</li>
@@ -125,14 +197,16 @@ methods from Lua and use NLua from within your .NET application.</li>
 original exception is forwarded back out to .net land.</li>
 <li>Fix bug in the Lua 5.1.1 gmatch C code - it was improperly assuming gmatch
 only works with tables.</li>
-</ul><h2>What's new in LuaInterface 1.5.2</h2>
+</ul><h2>
+<a name="whats-new-in-luainterface-152" class="anchor" href="#whats-new-in-luainterface-152"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5.2</h2>
 
 <ul>
 <li>Overriding C# methods from Lua is fixed (broken with .net 2.0!)</li>
 <li>Registering static C# functions for Lua is fixed (broken with Lua-5.1.1)</li>
 <li>Rebuilt to fix linking problems with the binaries included in 1.5.1</li>
 <li>RegisterFunction has been leaking things onto the stack </li>
-</ul><h2>What's new in LuaInterface 1.5.1</h2>
+</ul><h2>
+<a name="whats-new-in-luainterface-151" class="anchor" href="#whats-new-in-luainterface-151"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5.1</h2>
 
 <p>Fix a serious bug w.r.t. garbage collection - made especially apparent 
 with the new lua5.1 switch: If you were <em>very</em> unlucky with timing 
@@ -147,7 +221,8 @@ course you can still use a colon if an <em>instance</em> is being used.</p>
 
 <p>Static method calls are now much faster (due to better caching).</p>
 
-<h2>What's new in LuaInterface 1.5</h2>
+<h2>
+<a name="whats-new-in-luainterface-15" class="anchor" href="#whats-new-in-luainterface-15"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5</h2>
 
 <p>LuaInterface is now updated to be based on Lua5.1.1.  You can either use 
 your own build/binaries for Lua5.1.1 or use the version distributed here. 
@@ -172,7 +247,8 @@ windows libraries.</p>
 modify Lua internals (a built version of lua51.dll is included in the 
 regular LuaInterface distribution)</p>
 
-<h2>What's New in LuaInterface 1.4</h2>
+<h2>
+<a name="whats-new-in-luainterface-14" class="anchor" href="#whats-new-in-luainterface-14"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.4</h2>
 
 <p>Note: Fabio area of interest has moved off in other directions (hopefully only temporarily).
 I've talked with Fabio and he's said he's okay with me doing a new release with various fixes
@@ -205,7 +281,8 @@ Lua 5.0.2 with an appropriate VS 2005 project file.  You do not need to
 download this file unless you want to modify Lua internals (a built version
 of lua50.dll is included in the regular LuaInterface distribution)</p>
 
-<h2>What's New in LuaInterface 1.3</h2>
+<h2>
+<a name="whats-new-in-luainterface-13" class="anchor" href="#whats-new-in-luainterface-13"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.3</h2>
 
 <p>LuaInterface now works with LuaBinaries Release 2 (<a href="http://luabinaries.luaforge.net">http://luabinaries.luaforge.net</a>)
 and Compat-5.1 Release 3 (<a href="http://luaforge.net/projects/compat">http://luaforge.net/projects/compat</a>). The loader DLL is now 
@@ -222,7 +299,8 @@ do require"luanet").</p>
 <p>There is an alternate form of loading assemblies and importing types (based on an
 anonymous contribution in the Lua wiki). Check the _alt files in the samples folder.</p>
 
-<h2>What's New in LuaInterface 1.2.1</h2>
+<h2>
+<a name="whats-new-in-luainterface-121" class="anchor" href="#whats-new-in-luainterface-121"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.2.1</h2>
 
 <p>Now checks if two LuaInterface.Lua instances are trying to share the same Lua state,
 and throws an exception if this is the case. Also included readonly clauses in public
@@ -231,7 +309,8 @@ members of the Lua and ObjectTranslator classes.</p>
 <p>This version includes the source of LuaInterfaceLoader.dll, with VS.Net 2003 project
 files.</p>
 
-<h2>What's New in LuaInterface 1.2</h2>
+<h2>
+<a name="whats-new-in-luainterface-12" class="anchor" href="#whats-new-in-luainterface-12"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.2</h2>
 
 <p>LuaInterface now can be loaded as a module, so you can use the lua standalone
 interpreter to run scripts. Thanks to Paul Winwood for this idea and sample code
@@ -255,23 +334,13 @@ will fail. The test cases in src/TestLuaInterface/TestLua.cs have examples of th
 functions.</p>
         </section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/NLua/NLua/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/NLua/NLua/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+        <footer>
+          Nlua is maintained by <a href="https://github.com/NLua">NLua</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
 
-          <p class="repo-owner"><a href="https://github.com/NLua/NLua"></a> is maintained by <a href="https://github.com/NLua">NLua</a>.</p>
-
-          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
+        
       </div>
     </div>
-
-  
   </body>
 </html>
