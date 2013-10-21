@@ -7,11 +7,10 @@ NLua
 >### TODO: ###
 > * Windows CI server.
 > * Port to other platforms (using a csproj/sln for each platform like RestSharp/MonoGame/Cocos2d-XNA)
->	 	* Android (port means create the project files + make files, no code change needed)
-> 		* iOS (done)
->		* Windows/Linux/Mac (done)
->		* Windows Phone 8 (done)
->		* Windows Phone 7 (done)
+>	 	* Unity Pro (using p/invoke)
+>		* Port NLua to use LuaJIT
+> * Create a NuGet package
+
 
 > * Fix warnings/Gendarme/FxCop issues.
 >* Contributing
@@ -42,26 +41,31 @@ iOS :  [![Build Status](http://codefoco.com:8080/job/NLua_iOS/badge/icon)](http:
 
   [3]: http://codefoco.com:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
   [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
+
+Android: **Download** [![dwn_android][6]][5]
+
+  [5]: https://www.dropbox.com/s/mjet2sh67e7y6xo/NLua.Android.zip
+  [6]: http://nvlabs.github.com/cub/download-icon.png (Download for Android)
   
 Win32: **Download** [![dwn_w32][6]][5]
 
-  [5]: https://www.dropbox.com/s/jkr1pnwvqw6w0r8/NLua.Win32.zip
-  [6]: http://nvlabs.github.com/cub/download-icon.png (Download for Win32)
+  [7]: https://www.dropbox.com/s/jkr1pnwvqw6w0r8/NLua.Win32.zip
+  [8]: http://nvlabs.github.com/cub/download-icon.png (Download for Win32)
   
 Win64: **Download** [![dwn_w64][8]][7]
 
-  [7]: https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip
-  [8]: http://nvlabs.github.com/cub/download-icon.png (Download for Win64)
+  [9]: https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip
+  [10]: http://nvlabs.github.com/cub/download-icon.png (Download for Win64)
   
 Windows Phone 7: **Download** [![dwn_wp7][10]][9]
 
-  [9]: https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip
-  [10]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 7)
+  [11]: https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip
+  [12]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 7)
   
 Windows Phone 8: **Download** [![dwn_wp8][12]][11]
 
-  [11]: https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip
-  [12]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (ARM+x86))
+  [13]: https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip
+  [14]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (ARM+x86))
 
 Windows: We don't have a CI Server for Windows. 
 	 You can build NLua , you will need (msysgit, CMake, NUnit) http://screencast.com/t/rYuDtCdFG7
