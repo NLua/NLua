@@ -45,17 +45,14 @@
 
 <ul>
 <li>Windows CI server.</li>
-<li>
-<p>Port to other platforms (using a csproj/sln for each platform like RestSharp/MonoGame/Cocos2d-XNA)</p>
+<li>Port to other platforms (using a csproj/sln for each platform like RestSharp/MonoGame/Cocos2d-XNA)
 
 <ul>
-<li>Android (port means create the project files + make files, no code change needed)</li>
-<li>iOS (done)</li>
-<li>Windows/Linux/Mac (done)</li>
-<li>Windows Phone 8 (done)</li>
-<li>Windows Phone 7 (done)</li>
+<li>Unity Pro (using p/invoke)</li>
+<li>Port NLua to use LuaJIT</li>
 </ul>
 </li>
+<li><p>Create a NuGet package</p></li>
 <li><p>Fix warnings/Gendarme/FxCop issues.</p></li>
 <li><h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2></li>
@@ -80,13 +77,15 @@
 <p>iOS :  <a href="http://codefoco.com:8080/job/NLua_iOS/"><img src="http://codefoco.com:8080/job/NLua_iOS/badge/icon" alt="Build Status"></a>
 <strong>Download</strong> <a href="http://codefoco.com:8080/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_ios" title="Download for iOS"></a></p>
 
-<p>Win32: <strong>Download</strong> <a href="https://www.dropbox.com/s/jkr1pnwvqw6w0r8/NLua.Win32.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_w32" title="Download for Win32"></a></p>
+<p>Android: <strong>Download</strong> <a href="https://www.dropbox.com/s/mjet2sh67e7y6xo/NLua.Android.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_android" title="Download for Android"></a></p>
 
-<p>Win64: <strong>Download</strong> <a href="https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_w64" title="Download for Win64"></a></p>
+<p>Win32: <strong>Download</strong> <a href="https://www.dropbox.com/s/mjet2sh67e7y6xo/NLua.Android.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_w32" title="Download for Android"></a></p>
 
-<p>Windows Phone 7: <strong>Download</strong> <a href="https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_wp7" title="Download for Windows Phone 7"></a></p>
+<p>Win64: <strong>Download</strong> <a href="https://www.dropbox.com/s/jkr1pnwvqw6w0r8/NLua.Win32.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_w64" title="Download for Win32"></a></p>
 
-<p>Windows Phone 8: <strong>Download</strong> <a href="https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_wp8" title="Download for Windows Phone 8 (ARM+x86)"></a></p>
+<p>Windows Phone 7: <strong>Download</strong> <a href="https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_wp7" title="Download for Win64"></a></p>
+
+<p>Windows Phone 8: <strong>Download</strong> <a href="https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip"><img src="http://nvlabs.github.com/cub/download-icon.png" alt="dwn_wp8" title="Download for Windows Phone 7"></a></p>
 
 <p>Windows: We don't have a CI Server for Windows. 
      You can build NLua , you will need (msysgit, CMake, NUnit) <a href="http://screencast.com/t/rYuDtCdFG7">http://screencast.com/t/rYuDtCdFG7</a></p>
@@ -129,6 +128,13 @@
 <p>Copyright (c) 2013 Vinicius Jarina (<a href="mailto:viniciusjarina@gmail.com">viniciusjarina@gmail.com</a>)</p>
 
 <h2>
+<a name="nlua-120" class="anchor" href="#nlua-120"><span class="octicon octicon-link"></span></a>NLua 1.2.0</h2>
+
+<ul>
+<li>Port to Android 15+ (armeabi, v7a, x86)</li>
+<li>Updated Lua 5.2.2 (patch 7)</li>
+<li>Lot of Bug fixes.</li>
+</ul><h2>
 <a name="nlua-110" class="anchor" href="#nlua-110"><span class="octicon octicon-link"></span></a>NLua 1.1.0</h2>
 
 <ul>
