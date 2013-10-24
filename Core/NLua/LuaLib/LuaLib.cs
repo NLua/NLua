@@ -384,7 +384,7 @@ namespace NLua
 
 		public static int LuaLLoadBuffer (LuaState luaState, string buff, string name)
 		{
-			return LuaCore.LuaNetLoadBuffer (luaState, buff, (uint)buff.Length, name);
+			return LuaCore.LuaNetLoadBuffer (luaState, buff, (uint)0, name);
 		}
 
 		public static int LuaLLoadBuffer (LuaState luaState, byte [] buff, string name)

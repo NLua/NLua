@@ -1829,5 +1829,14 @@ namespace NLuaTest
 			}
 		}
 
+		[Test]
+		public void TestPrintChars ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.DoString (@"print(""waüäq?=()[&]ß"")");
+				Assert.IsTrue (true);
+			}
+		}
+
 	}
 }
