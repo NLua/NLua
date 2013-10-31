@@ -47,24 +47,24 @@ Android: **Download** [![dwn_android][6]][5]
   [5]: https://www.dropbox.com/s/mjet2sh67e7y6xo/NLua.Android.zip
   [6]: http://nvlabs.github.com/cub/download-icon.png (Download for Android)
   
-Win32: **Download** [![dwn_w32][6]][5]
+Win32: **Download** [![dwn_w32][8]][7]
 
   [7]: https://www.dropbox.com/s/jkr1pnwvqw6w0r8/NLua.Win32.zip
   [8]: http://nvlabs.github.com/cub/download-icon.png (Download for Win32)
   
-Win64: **Download** [![dwn_w64][8]][7]
+Win64: **Download** [![dwn_w64][10]][9]
 
   [9]: https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip
   [10]: http://nvlabs.github.com/cub/download-icon.png (Download for Win64)
   
-Windows Phone 7: **Download** [![dwn_wp7][10]][9]
+Windows Phone 7: **Download** [![dwn_wp7][12]][11]
 
   [11]: https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip
   [12]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 7)
   
-Windows Phone 8: **Download** [![dwn_wp8][12]][11]
+Windows Phone 8: **Download** [![dwn_wp8][14]][13]
 
-  [13]: https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip
+  [13]: https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip?
   [14]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (ARM+x86))
 
 Windows: We don't have a CI Server for Windows. 
