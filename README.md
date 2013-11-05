@@ -1,30 +1,15 @@
 NLua
 ========
 
->###Help NLua###
-> If you are using NLua consider to help with some easy todo items.
->
->### TODO: ###
-> * Windows CI server.
-> * Port to other platforms (using a csproj/sln for each platform like RestSharp/MonoGame/Cocos2d-XNA)
->	 	* Unity Pro (using p/invoke)
->		* Port NLua to use LuaJIT
-> * Create a NuGet package
-
-
-> * Fix warnings/Gendarme/FxCop issues.
->* Contributing
->  --------------
-> * NLua is using the Mono Code-Style http://www.mono-project.com/Coding_Guidelines .
-> * Please, do not change the line-end or re-indent the code.
-> * Run the tests before push.
-> * Avoid to push unneeded style changes (unless is really needed) renaming, move code.
-
 
 
 [![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
 
 NLua is a fork of project LuaInterface (from Fábio Mascarenhas/Craig Presti).
+
+[![Cmd](https://raw.github.com/NLua/NLua/master/NLuaCommand.gif)]()
+
+Example: using NLua from command line.
 
 NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Phone 7 and Windows Phone 8.
 
@@ -109,6 +94,7 @@ Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
 
 NLua 1.2.0
 ----------
+* NuGet Package
 * Port to Android 15+ (armeabi, v7a, x86)
 * Updated Lua 5.2.2 (patch 7)
 * Lot of Bug fixes.
@@ -126,6 +112,29 @@ NLua 1.0.0
 * Added iOS support using KeraLua (C# P/Invoke Lua)
 
 
+>###Help NLua###
+> If you are using NLua consider to help with some easy todo items.
+>
+>### TODO: ###
+> * Windows CI server.
+> * Port to other platforms (using a csproj/sln for each platform like RestSharp/MonoGame/Cocos2d-XNA)
+>	 	* Unity Pro (using p/invoke)
+>		* Port NLua to use LuaJIT
+> * Create a NuGet package
+
+
+> * Fix warnings/Gendarme/FxCop issues.
+>* Contributing
+>  --------------
+> * NLua is using the Mono Code-Style http://www.mono-project.com/Coding_Guidelines .
+> * Please, do not change the line-end or re-indent the code.
+> * Run the tests before push.
+> * Avoid to push unneeded style changes (unless is really needed) renaming, move code.
+
+
+
+Old History
+-----------
 LuaInterface  
 --------------
 
