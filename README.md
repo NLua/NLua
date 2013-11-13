@@ -92,9 +92,14 @@ Windows: We don't have a CI Server for Windows.
 
 Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
 
+NLua 1.3.0
+----------
+* Update Lua to 5.2.3 (rc1)
+* Update to Xamarin components store. (http://components.xamarin.com/view/NLua)
+
 NLua 1.2.0
 ----------
-* NuGet Package
+* NuGet Package (https://www.nuget.org/packages/NLua/)
 * Port to Android 15+ (armeabi, v7a, x86)
 * Updated Lua 5.2.2 (patch 7)
 * Lot of Bug fixes.
