@@ -1,5 +1,3 @@
---require 'luanet'
-require 'CLRPackage'
 import 'System'
 import 'System.Reflection'
 local get_flags = luanet.enum(BindingFlags,'GetProperty,IgnoreCase,Public')
@@ -36,19 +34,12 @@ function com_wrapper(obj)
   local T = obj:GetType()
   return setmetatable({},{
     __index = function(self,key)
-        local ok,res = pcall(T.InvokeMember,T,key,get_flags,nil,obj,empty)
-        if not ok then
-            res = tostring(res)
-            if res:match 'Member not found' then
-                return caller(obj,key) --local c =
---~                 rawset(self,key,c)
---~                 return c
-            else
-                error("cannot find "..key,2)
-            end
-        else
-            return maybe_wrap(res)
-        end
+      local ok,res = pcall(T.InvokeMember, T, key, get_flags, nil, obj, empty)
+      if ok then
+        return maybe_wrap(res)
+      else 
+        return caller(obj, key)
+      end
     end;
     __newindex = function(self,key,value)
         T:InvokeMember(key,put_flags,nil,A{value})
