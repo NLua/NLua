@@ -1,12 +1,10 @@
 -- kevinh - the following lines are part of our standard init
 -- require("compat-5.1")
 
-luanet.load_assembly("System.Windows.Forms")
-luanet.load_assembly("System.Drawing")
+import("System.Windows.Forms")
+import("System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+import("System.Drawing")
 
-Form=luanet.import_type("System.Windows.Forms.Form")
-Button=luanet.import_type("System.Windows.Forms.Button")
-Point=luanet.import_type("System.Drawing.Point")
 
 form1=Form()
 button1=Button()
@@ -19,7 +17,7 @@ function handleClick(sender,data)
     sender.Text="OK"
   end
   button1.MouseUp:Remove(handler)
-  print(sender:ToString())
+  MessageBox.Show (sender:ToString())
 end
 
 button1.Text = "OK"
