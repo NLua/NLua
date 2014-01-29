@@ -284,11 +284,6 @@ namespace NLua
 			LuaCore.LuaPushNil (luaState);
 		}
 
-		public static void LuaCall (LuaState luaState, int nArgs, int nResults)
-		{
-			LuaCore.LuaCall (luaState, nArgs, nResults);
-		}
-
 		public static void LuaPushStdCallCFunction (LuaState luaState, LuaNativeFunction function)
 		{
 			LuaCore.LuaPushStdCallCFunction (luaState, function);
