@@ -1838,25 +1838,24 @@ namespace NLuaTest
 			}
 		}
 
-        [Test]
+        	[Test]
 		public void TestCoroutine ()
-        {
-           using (Lua lua = new Lua ()) {
+        	{
+           		using (Lua lua = new Lua ()) {
 				lua.LoadCLRPackage ();
-                lua.RegisterFunction ("func1", null, typeof(TestClass2).GetMethod ("func"));
-                lua.DoString("function yielder() " +
-                                "a=1;" + "coroutine.yield();" +
-                                "func1();" + "coroutine.yield();" + // This line triggers System.NullReferenceException
-                                "a=2;" + "coroutine.yield();" +
-                             "end;" +
-                             "co_routine = coroutine.create(yielder);" + 
-                             "while coroutine.resume(co_routine) do end;");
+        			lua.RegisterFunction ("func1", null, typeof(TestClass2).GetMethod ("func"));
+                		lua.DoString("function yielder() " +
+                                		"a=1;" + "coroutine.yield();" +
+                                		"func1();" + "coroutine.yield();" +
+                                		"a=2;" + "coroutine.yield();" +
+                             			"end;" +
+                             			"co_routine = coroutine.create(yielder);" + 
+                             			"while coroutine.resume(co_routine) do end;");
 
 				double num = lua.GetNumber("a");
 				//Console.WriteLine("a="+num);
 				Assert.AreEqual(num, 2d);
-            }
-        }
-
+            		}
+        	}
 	}
 }
