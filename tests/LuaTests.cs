@@ -28,6 +28,15 @@ namespace NLuaTest
 	#endif
 	public class LuaTests
 	{
+
+		public static readonly char UnicodeChar = '\uE007';
+		public static string UnicodeString
+		{
+			get
+			{
+				return Convert.ToString (UnicodeChar);
+			}
+		}
 		/*
         * Tests capturing an exception
         */
@@ -1835,6 +1844,19 @@ namespace NLuaTest
 			using (Lua lua = new Lua ()) {
 				lua.DoString (@"print(""waüäq?=()[&]ß"")");
 				Assert.IsTrue (true);
+			}
+		}
+
+		[Test]
+		public void TestUnicodeChars ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.LoadCLRPackage ();
+				lua.DoString ("import('NLuaTest')");
+				lua.DoString ("res = LuaTests.UnicodeString");
+				string res = (string)lua ["res"];
+
+				Assert.AreEqual (LuaTests.UnicodeString, res);
 			}
 		}
 
