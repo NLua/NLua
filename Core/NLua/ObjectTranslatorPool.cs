@@ -59,10 +59,15 @@ namespace NLua
 		
 		public ObjectTranslator Find (LuaState luaState)
 		{
-			if (!translators.ContainsKey(luaState))
-				return null;
+			if (translators.ContainsKey (luaState))
+				return translators [luaState];
+
+			LuaState main = LuaCore.LuaNetGetMainState (luaState);
+
+			if (translators.ContainsKey (main))
+				return translators [main];
 			
-			return translators [luaState];
+			return null;
 		}
 		
 		public void Remove (LuaState luaState)
