@@ -517,6 +517,8 @@ namespace NLua
 				members = new Dictionary<object, object>();
 				memberCache[objType] = members;
 			}
+
+			members [memberName] = member;
 		}
 
 		/*
