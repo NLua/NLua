@@ -1,0 +1,4 @@
+[submodule "Core/KopiLua"]
+	path = Core/KopiLua
+	url = git://github.com/miaodadao/KopiLua.git
+	branch = unity3d
