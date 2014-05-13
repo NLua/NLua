@@ -120,6 +120,20 @@ namespace NLuaTest
 		}
 
 		[Test]
+		public void TestStructHashesEqual()
+		{
+			using (Lua lua = new Lua())
+			{
+				lua.DoString("luanet.load_assembly('NLuaTest')");
+				lua.DoString("TestStruct=luanet.import_type('NLuaTest.Mock.TestStruct')");
+				lua.DoString("struct1=TestStruct(0)");
+				lua.DoString("struct2=TestStruct(0)");
+				lua.DoString("struct2.val=1");
+				Assert.AreEqual(0, (double)lua["struct1.val"]);
+			}
+		}
+
+		[Test]
 		public void TestMethodOverloads ()
 		{
 			using (Lua lua = new Lua ()) {
