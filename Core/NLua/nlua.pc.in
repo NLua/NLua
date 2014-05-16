@@ -1,6 +1,0 @@
-Name: NLua
-Description: NLua
-Version: 2.x
-
-Requires: 
-Libs: -r:@expanded_libdir@/@PACKAGE@/NLua.dll
