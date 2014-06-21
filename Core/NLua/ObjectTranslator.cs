@@ -54,21 +54,21 @@ namespace NLua
 	 */
 	public class ObjectTranslator
 	{
-		private LuaNativeFunction registerTableFunction, unregisterTableFunction, getMethodSigFunction, 
+		LuaNativeFunction registerTableFunction, unregisterTableFunction, getMethodSigFunction, 
 			getConstructorSigFunction, importTypeFunction, loadAssemblyFunction, ctypeFunction, enumFromIntFunction;
 		// object to object #
-		public readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int> ();
+		readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int> ();
 		// object # to object (FIXME - it should be possible to get object address as an object #)
-		public readonly Dictionary<int, object> objects = new Dictionary<int, object> ();
+		readonly Dictionary<int, object> objects = new Dictionary<int, object> ();
 		internal EventHandlerContainer pendingEvents = new EventHandlerContainer ();
-		private MetaFunctions metaFunctions;
-		private List<Assembly> assemblies;
+		MetaFunctions metaFunctions;
+		List<Assembly> assemblies;
 		internal CheckType typeChecker;
 		internal Lua interpreter;
 		/// <summary>
 		/// We want to ensure that objects always have a unique ID
 		/// </summary>
-		private int nextObj = 0;
+		int nextObj = 0;
 
 		public MetaFunctions MetaFunctionsInstance {
 			get {
@@ -580,7 +580,7 @@ namespace NLua
 			}
 
 			// Object already in the list of Lua objects? Push the stored reference.
-			bool found = objectsBackMap.TryGetValue (o, out index);
+			bool found = (!objectsBackMap.GetType().IsValueType) && objectsBackMap.TryGetValue (o, out index);
 
 			if (found) {
 				LuaLib.LuaLGetMetatable (luaState, "luaNet_objects");
@@ -675,11 +675,8 @@ namespace NLua
 			bool found = objects.TryGetValue (udata, out o);
 
 			// The other variant of collectObject might have gotten here first, in that case we will silently ignore the missing entry
-			if (found) {
-				// Debug.WriteLine("Removing " + o.ToString() + " @ " + udata);
-				objects.Remove (udata);
-				objectsBackMap.Remove (o);
-			}
+			if (found) 
+				CollectObject (o, udata);
 		}
 
 		/// <summary>
@@ -688,9 +685,9 @@ namespace NLua
 		/// <param name = "udata"></param>
 		private void CollectObject (object o, int udata)
 		{
-			// Debug.WriteLine("Removing " + o.ToString() + " @ " + udata);
 			objects.Remove (udata);
-			objectsBackMap.Remove (o);
+			if (!o.GetType ().IsValueType)
+				objectsBackMap.Remove (o);
 		}
 
 		private int AddObject (object obj)
@@ -698,7 +695,8 @@ namespace NLua
 			// New object: inserts it in the list
 			int index = nextObj++;
 			objects [index] = obj;
-			objectsBackMap [obj] = index;
+			if (!obj.GetType().IsValueType)
+				objectsBackMap [obj] = index;
 			return index;
 		}
 
