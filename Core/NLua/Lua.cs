@@ -1007,12 +1007,17 @@ end
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaHook))]
 #endif
 		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
-		private static void DebugHookCallback (LuaState luaState, LuaDebug luaDebug)
+#if USE_KOPILUA
+		static void DebugHookCallback (LuaState luaState, LuaDebug debug)
 		{
-			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			var lua = translator.Interpreter;
-
-			lua.DebugHookCallbackInternal (luaState, luaDebug);
+#else
+		static void DebugHookCallback (LuaState luaState, IntPtr luaDebug)
+		{	
+			LuaDebug debug = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure (luaDebug, typeof (LuaDebug));
+#endif
+			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find (luaState);
+			Lua lua = translator.Interpreter;
+			lua.DebugHookCallbackInternal (luaState, debug);
 		}
 
 		private void DebugHookCallbackInternal (LuaState luaState, LuaDebug luaDebug)

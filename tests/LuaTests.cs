@@ -1894,5 +1894,24 @@ namespace NLuaTest
 			}
 		}
 
+		[Test]
+		public void TestDebugHook ()
+		{
+			int [] lines = { 1, 2, 1, 3 };
+			int line = 0;
+
+			using (Lua lua = new Lua ()) {
+				lua.DebugHook += (sender,args) => {
+					Assert.AreEqual (args.LuaDebug.currentline,lines [line]);
+					line ++;
+				};
+				lua.SetDebugHook (NLua.Event.EventMasks.LUA_MASKLINE, 0);
+
+				lua.DoString (@"function testing_hooks() return 10 end
+							val = testing_hooks() 
+							val = val + 1");
+			}
+		}
+
 	}
 }
