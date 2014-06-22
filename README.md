@@ -15,13 +15,13 @@ NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Ph
 
 Linux: [![Build Status](https://travis-ci.org/NLua/NLua.png?branch=master)](https://travis-ci.org/NLua/NLua)
 
-OSX: [![Build Status](http://codefoco.zapto.org:8085/job/NLua/badge/icon)](http://codefoco.zapto.org:8085/job/NLua/) 
+OSX: [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua)](http://codefoco.zapto.org:8085/job/NLua/) 
 **Download** [![dwn_osx][2]][1]
 
   [1]: http://codefoco.zapto.org:8085/job/NLua/lastSuccessfulBuild/artifact/NLua.OSX.zip
   [2]: http://nvlabs.github.com/cub/download-icon.png (Download for OSX)
 
-iOS :  [![Build Status](http://codefoco.zapto.org:8085/job/NLua_iOS/badge/icon)](http://codefoco.zapto.org:8085/job/NLua_iOS/)
+iOS :  [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS)](http://codefoco.zapto.org:8085/job/NLua_iOS/)
 **Download** [![dwn_ios][4]][3]
 
   [3]: http://codefoco..zapto.org:8085/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
