@@ -18,13 +18,13 @@ Linux: [![Build Status](https://travis-ci.org/NLua/NLua.png?branch=master)](http
 OSX: [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua)](http://codefoco.zapto.org:8085/job/NLua/) 
 **Download** [![dwn_osx][2]][1]
 
-  [1]: http://codefoco.zapto.org:8085/job/NLua/lastSuccessfulBuild/artifact/NLua.OSX.zip
+  [1]: https://www.dropbox.com/s/w99igtc12uocq4k/NLua.OSX.zip
   [2]: http://nvlabs.github.com/cub/download-icon.png (Download for OSX)
 
 iOS :  [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS)](http://codefoco.zapto.org:8085/job/NLua_iOS/)
 **Download** [![dwn_ios][4]][3]
 
-  [3]: http://codefoco..zapto.org:8085/job/NLua_iOS/lastSuccessfulBuild/artifact/NLua.iOS.zip
+  [3]: https://www.dropbox.com/s/s3xte19719446lx/NLua.iOS.zip
   [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
 
 Android: **Download** [![dwn_android][6]][5]
