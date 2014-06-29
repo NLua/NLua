@@ -27,8 +27,7 @@ iOS :  [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua
   [3]: https://www.dropbox.com/s/s3xte19719446lx/NLua.iOS.zip
   [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
 
-Android: **Download** [![dwn_android][6]][5]
-
+Android: [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android)](http://codefoco.zapto.org:8085/job/NLua_iOS/)**Download** [![dwn_android][6]][5]
   [5]: https://www.dropbox.com/s/mjet2sh67e7y6xo/NLua.Android.zip
   [6]: http://nvlabs.github.com/cub/download-icon.png (Download for Android)
   
@@ -92,9 +91,12 @@ Windows: We don't have a CI Server for Windows.
 			}
 ```
 
-Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)
+Copyright (c) 2014 Vinicius Jarina (viniciusjarina@gmail.com)
 
+NLua 1.3.1
+----------
 
+Soon
 
 NLua 1.3.0
 ----------
