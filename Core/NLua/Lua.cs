@@ -25,6 +25,7 @@
  */
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Reflection;
 using System.Collections;
@@ -539,7 +540,7 @@ end
 			get {
 				object returnValue = null;
 				int oldTop = LuaLib.LuaGetTop (luaState);
-				string[] path = fullPath.Split (new char[] { '.' });
+				string [] path = FullPathToArray (fullPath);
 				LuaLib.LuaGetGlobal (luaState, path [0]);
 				returnValue = translator.GetObject (luaState, -1);
 				LuaBase dispose = null;
@@ -558,8 +559,7 @@ end
 			}
 			set {
 				int oldTop = LuaLib.LuaGetTop (luaState);
-				string[] path = fullPath.Split (new char[] { '.' });
-
+				string [] path = FullPathToArray (fullPath);
 				if (path.Length == 1) {
 					translator.Push (luaState, value);
 					LuaLib.LuaSetGlobal (luaState, fullPath);
@@ -806,13 +806,17 @@ end
 			LuaLib.LuaSetTable (luaState, -3);
 		}
 
+		string [] FullPathToArray (string fullPath)
+		{
+			return fullPath.SplitWithEscape ('.', '\\').ToArray ();
+		}
 		/*
 			* Creates a new table as a global variable or as a field
 			* inside an existing table
 			*/
 		public void NewTable (string fullPath)
 		{
-			string[] path = fullPath.Split (new char[] { '.' });
+			string [] path = FullPathToArray (fullPath);
 			int oldTop = LuaLib.LuaGetTop (luaState);
 
 			if (path.Length == 1) {
@@ -1089,7 +1093,7 @@ end
 		{
 			int oldTop = LuaLib.LuaGetTop (luaState);
 			LuaLib.LuaGetRef (luaState, reference);
-			object returnValue = GetObject (field.Split (new char[] {'.'}));
+			object returnValue = GetObject (FullPathToArray (field));
 			LuaLib.LuaSetTop (luaState, oldTop);
 			return returnValue;
 		}
@@ -1117,7 +1121,7 @@ end
 		{
 			int oldTop = LuaLib.LuaGetTop (luaState);
 			LuaLib.LuaGetRef (luaState, reference);
-			SetObject (field.Split (new char[] {'.'}), val);
+			SetObject (FullPathToArray (field), val);
 			LuaLib.LuaSetTop (luaState, oldTop);
 		}
 

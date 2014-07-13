@@ -1913,5 +1913,16 @@ namespace NLuaTest
 			}
 		}
 
+		[Test]
+		public void TestKeyWithDots ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.DoString (@"g_dot = {} 
+							 g_dot['key.with.dot'] = 42");
+
+				Assert.AreEqual (42, (int)(double)lua ["g_dot.key\\.with\\.dot"]);
+			}
+		}
+
 	}
 }
