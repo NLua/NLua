@@ -639,6 +639,7 @@ namespace NLua
 					LuaLib.LuaPushString (luaState, "__newindex");
 					LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.newindexFunction);
 					LuaLib.LuaRawSet (luaState, -3);
+					RegisterOperatorsFunctions (luaState, o.GetType ());
 				}
 			} else
 				LuaLib.LuaLGetMetatable (luaState, metatable);
@@ -653,6 +654,15 @@ namespace NLua
 			LuaLib.LuaPushValue (luaState, -1);
 			LuaLib.LuaRawSetI (luaState, -3, index);
 			LuaLib.LuaRemove (luaState, -2);
+		}
+
+		void RegisterOperatorsFunctions (LuaState luaState, Type type)
+		{
+			if (type.HasAdditionOpertator ()) {
+				LuaLib.LuaPushString (luaState, "__add");
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.addFunction);
+				LuaLib.LuaRawSet (luaState, -3);
+			}
 		}
 
 		/*

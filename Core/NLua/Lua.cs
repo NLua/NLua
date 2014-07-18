@@ -273,8 +273,8 @@ end
 
 		public Lua ()
 		{
-			luaState = LuaLib.LuaLNewState ();	// steffenj: Lua 5.1.1 API change (lua_open is gone)
-			LuaLib.LuaLOpenLibs (luaState);		// steffenj: Lua 5.1.1 API change (luaopen_base is gone, just open all libs right here)
+			luaState = LuaLib.LuaLNewState ();
+			LuaLib.LuaLOpenLibs (luaState);
 			Init ();
 			// We need to keep this in a managed reference so the delegate doesn't get garbage collected
 			panicCallback = new LuaNativeFunction (PanicCallback);

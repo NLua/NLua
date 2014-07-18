@@ -43,13 +43,16 @@ namespace ConsoleTest
  		{
 			 lua.DebugHook += DebugHook;
 			 lua.SetDebugHook (NLua.Event.EventMasks.LUA_MASKLINE, 0);
-			 
-			 lua.DoString (@"function testing_hooks() return 10 end
-							val = testing_hooks() 
-							val = val + 1
-			");
-			 double res = (double)lua ["val"];
-			 Console.WriteLine ("{0}", res);
+			 var a = new System.Numerics.Complex (10, 0);
+			 var b = new System.Numerics.Complex (0, 3);
+			 var x = a + b;
+
+			// lua.LoadCLRPackage ();
+			 lua ["a"] = a;
+			 lua ["b"] = 1;
+			 var res = lua.DoString (@"return a + b")[0];
+
+			
  		}
 
 

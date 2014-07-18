@@ -54,7 +54,7 @@ namespace NLua
 	public class MetaFunctions
 	{
 		internal LuaNativeFunction gcFunction, indexFunction, newindexFunction, baseIndexFunction,
-			classIndexFunction, classNewindexFunction, execDelegateFunction, callConstructorFunction, toStringFunction;
+			classIndexFunction, classNewindexFunction, execDelegateFunction, callConstructorFunction, toStringFunction, addFunction;
 		private Dictionary<object, object> memberCache = new Dictionary<object, object> ();
 		private ObjectTranslator translator;
 
@@ -90,6 +90,7 @@ namespace NLua
 			classIndexFunction = new LuaNativeFunction (MetaFunctions.GetClassMethod);
 			classNewindexFunction = new LuaNativeFunction (MetaFunctions.SetClassFieldOrProperty);
 			execDelegateFunction = new LuaNativeFunction (MetaFunctions.RunFunctionDelegate);
+			addFunction = new LuaNativeFunction (MetaFunctions.AddLua);
 		}
 
 		/*
@@ -157,6 +158,42 @@ namespace NLua
 			else
 				LuaLib.LuaPushNil (luaState);
 
+			return 1;
+		}
+
+		/*
+ * __tostring metafunction of CLR objects.
+ */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		static int AddLua (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return AddLua (luaState, translator);
+		}
+		static int AddLua (LuaState luaState, ObjectTranslator translator)
+		{
+			object obj1 = translator.GetRawNetObject (luaState, 1);
+			object obj2 = translator.GetRawNetObject (luaState, 2);
+
+			if (obj1 == null || obj2 == null) {
+				translator.ThrowError (luaState, "Cannot add a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = obj1.GetType ();
+			MethodInfo opAddition = type.GetMethod ("op_Addition");
+
+			if (opAddition == null) {
+				translator.ThrowError (luaState, "Cannot add object (" + type.Name+ " does not overload the operator +)");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+			obj1 = opAddition.Invoke (obj1, new object[] { obj1, obj2 });
+			translator.Push (luaState, obj1);
 			return 1;
 		}
 

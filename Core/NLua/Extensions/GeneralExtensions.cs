@@ -55,6 +55,18 @@ namespace NLua.Extensions
 #endif
 	}
 
+	static class TypeExtensions
+	{
+		public static bool HasAdditionOpertator (this Type t)
+		{
+			if (t.IsPrimitive) 
+				return true;
+
+			var op_add = t.GetMethod ("op_Addition");
+			return op_add != null;  
+		} 
+	}
+
 	static class StringExtensions
 	{
 		public static IEnumerable<string> SplitWithEscape (this string input, char separator, char escapeCharacter)
