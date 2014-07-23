@@ -5,13 +5,13 @@ NLua
 
 [![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
 
-NLua is a fork of project LuaInterface (from Fábio Mascarenhas/Craig Presti).
+NLua is a fork project of LuaInterface (from Fábio Mascarenhas/Craig Presti).
 
 [![Cmd](https://raw.github.com/NLua/NLua/master/NLuaCommand.gif)]()
 
 Example: using NLua from command line.
 
-NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android, Windows Phone 7 and Windows Phone 8.
+NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Windows Phone 7 and 8.
 
 Linux: [![Build Status](https://travis-ci.org/NLua/NLua.png?branch=master)](https://travis-ci.org/NLua/NLua)
 
@@ -51,10 +51,10 @@ Windows Phone 8: **Download** [![dwn_wp8][14]][13]
   [13]: https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip?
   [14]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (ARM+x86))
 
-Unity3D support on branch [unity3d](https://github.com/NLua/NLua/tree/unity3d) by [miaodadao](https://github.com/miaodadao).
+Unity3D support branch:  [unity3d](https://github.com/NLua/NLua/tree/unity3d) by [miaodadao](https://github.com/miaodadao).
 
-Windows: We don't have a CI Server for Windows. 
-	 You can build NLua , you will need (msysgit, CMake, NUnit) http://screencast.com/t/rYuDtCdFG7
+Windows: We don't have a CI Server for Windows yet. 
+	 To build NLua you will need msysgit, CMake and NUnit http://screencast.com/t/rYuDtCdFG7
 ```csharp
 
 			string script = @"
@@ -124,7 +124,7 @@ NLua 1.0.0
 
 
 >###Help NLua###
-> If you are using NLua consider to help with some easy todo items.
+> If you are using NLua, consider helping with some easy todo items.
 >
 >### TODO: ###
 > * Windows CI server.
@@ -137,10 +137,10 @@ NLua 1.0.0
 > * Fix warnings/Gendarme/FxCop issues.
 >* Contributing
 >  --------------
-> * NLua is using the Mono Code-Style http://www.mono-project.com/Coding_Guidelines .
+> * NLua uses the Mono Code-Style http://www.mono-project.com/Coding_Guidelines .
 > * Please, do not change the line-end or re-indent the code.
-> * Run the tests before push.
-> * Avoid to push unneeded style changes (unless is really needed) renaming, move code.
+> * Run the tests before you push.
+> * Avoid pushing style changes (unless they are really needed), renaming and move code.
 
 
 
@@ -159,13 +159,15 @@ lua51.dll and lua51.exe are Copyright (c) 2005 Tecgraf, PUC-Rio
 Getting started with NLua:
 -------------------------
 
-* Look at src/TestNLua/TestLua to see example usage from C# 
-(optionally run this from inside of the NLua solution in 
-the debugger).  Also provides a good example of how to override .net 
-methods from Lua and use NLua from within your .NET application.
+* Look at src/TestNLua/TestLua to see an example of usage from C# 
+(optionally you can run this from inside the NLua solution using the debugger).  
+Also provides a good example of how to override .NET methods of Lua and usage of NLua
+from within your .NET application.
+
 * Look at samples/testluaform.lua to see examples of how to use 
-.NET from inside Lua
-* More instructions for installing and using in the doc/guide.pdf file.
+.NET inside Lua
+
+* More installation and usage instructions in the doc/guide.pdf file.
 
 What's new in LuaInterface 2.0.3
 ------------------------------
