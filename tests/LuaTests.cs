@@ -1924,5 +1924,97 @@ namespace NLuaTest
 			}
 		}
 
+		[Test]
+		public void TestOperatorAdd ()
+		{
+			using (Lua lua = new Lua ()) {
+				var a = new System.Numerics.Complex (10, 0);
+				var b = new System.Numerics.Complex (0, 3);
+				var x = a + b;
+
+				lua ["a"] = a;
+				lua ["b"] = b;
+				var res = lua.DoString (@"return a + b") [0];
+				Assert.AreEqual (x, res);
+			}
+		}
+
+		[Test]
+		public void TestOperatorMinus ()
+		{
+			using (Lua lua = new Lua ()) {
+				var a = new System.Numerics.Complex (10, 0);
+				var b = new System.Numerics.Complex (0, 3);
+				var x = a - b;
+
+				lua ["a"] = a;
+				lua ["b"] = b;
+				var res = lua.DoString (@"return a - b") [0];
+				Assert.AreEqual (x, res);
+			}
+		}
+
+		[Test]
+		public void TestOperatorMultiply ()
+		{
+			using (Lua lua = new Lua ()) {
+				var a = new System.Numerics.Complex (10, 0);
+				var b = new System.Numerics.Complex (0, 3);
+				var x = a * b;
+
+				lua ["a"] = a;
+				lua ["b"] = b;
+				var res = lua.DoString (@"return a * b") [0];
+				Assert.AreEqual (x, res);
+			}
+		}
+
+		[Test]
+		public void TestOperatorEqual ()
+		{
+			using (Lua lua = new Lua ()) {
+				var a = new System.Numerics.Complex (10, 0);
+				var b = new System.Numerics.Complex (0, 3);
+				var x = a == b;
+
+				lua ["a"] = a;
+				lua ["b"] = b;
+				var res = lua.DoString (@"return a == b") [0];
+				Assert.AreEqual (x, res);
+			}
+		}
+
+		[Test]
+		public void TestOperatorNotEqual ()
+		{
+			using (Lua lua = new Lua ()) {
+				var a = new System.Numerics.Complex (10, 0);
+				var b = new System.Numerics.Complex (0, 3);
+				var x = a != b;
+
+				lua ["a"] = a;
+				lua ["b"] = b;
+				var res = lua.DoString (@"return a ~= b") [0];
+				Assert.AreEqual (x, res);
+			}
+		}
+
+		[Test]
+		public void TestUnaryMinus ()
+		{
+			using (Lua lua = new Lua ()) {
+
+				lua.LoadCLRPackage ();
+				lua.DoString (@" import ('System.Numerics')
+							  c = Complex (10, 5) 
+							  c = -c ");
+
+				var expected = new System.Numerics.Complex (-10, -5);
+
+				var res = lua ["c"];
+				Assert.AreEqual (expected, res);
+			}
+		}
+					
 	}
 }

@@ -42,15 +42,21 @@ namespace ConsoleTest
 		 using (Lua lua = new Lua())
  		{
 			 lua.DebugHook += DebugHook;
+			 lua.LoadCLRPackage ();
 			 lua.SetDebugHook (NLua.Event.EventMasks.LUA_MASKLINE, 0);
+
+			 lua.DoString (@" import ('System.Numerics')
+							  c = Complex (10, 5) 
+							  c = -c ");
 			 var a = new System.Numerics.Complex (10, 0);
-			 var b = new System.Numerics.Complex (0, 3);
+			 var b = new System.Numerics.Complex (10, 0);
+			 var c = lua ["c"];
 			 var x = a + b;
 
 			// lua.LoadCLRPackage ();
 			 lua ["a"] = a;
-			 lua ["b"] = 1;
-			 var res = lua.DoString (@"return a + b")[0];
+			 lua ["b"] = b;
+			 var res = lua.DoString (@"return a ~= b")[0];
 
 			
  		}

@@ -128,7 +128,7 @@ namespace NLua
 		private void CreateIndexingMetaFunction (LuaState luaState)
 		{
 			LuaLib.LuaPushString (luaState, "luaNet_indexfunction");
-			LuaLib.LuaLDoString (luaState, MetaFunctions.luaIndexFunction);
+			LuaLib.LuaLDoString (luaState, MetaFunctions.LuaIndexFunction);
 			LuaLib.LuaRawSet (luaState, (int)LuaIndexes.Registry);
 		}
 
@@ -140,16 +140,16 @@ namespace NLua
 		{
 			LuaLib.LuaLNewMetatable (luaState, "luaNet_searchbase");
 			LuaLib.LuaPushString (luaState, "__gc");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.gcFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.GcFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaPushString (luaState, "__tostring");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.toStringFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.ToStringFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaPushString (luaState, "__index");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.baseIndexFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.BaseIndexFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaPushString (luaState, "__newindex");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.newindexFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.NewIndexFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaSetTop (luaState, -2);
 		}
@@ -161,19 +161,19 @@ namespace NLua
 		{
 			LuaLib.LuaLNewMetatable (luaState, "luaNet_class");
 			LuaLib.LuaPushString (luaState, "__gc");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.gcFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.GcFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaPushString (luaState, "__tostring");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.toStringFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.ToStringFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaPushString (luaState, "__index");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.classIndexFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.ClassIndexFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaPushString (luaState, "__newindex");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.classNewindexFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.ClassNewindexFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaPushString (luaState, "__call");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.callConstructorFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.CallConstructorFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaSetTop (luaState, -2);
 		}
@@ -183,7 +183,7 @@ namespace NLua
 		 */
 		private void SetGlobalFunctions (LuaState luaState)
 		{
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.indexFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.IndexFunction);
 			LuaLib.LuaSetGlobal (luaState, "get_object_member");
 			LuaLib.LuaPushStdCallCFunction (luaState, importTypeFunction);
 			LuaLib.LuaSetGlobal (luaState, "import_type");
@@ -210,10 +210,10 @@ namespace NLua
 		{
 			LuaLib.LuaLNewMetatable (luaState, "luaNet_function");
 			LuaLib.LuaPushString (luaState, "__gc");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.gcFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.GcFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaPushString (luaState, "__call");
-			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.execDelegateFunction);
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.ExecuteDelegateFunction);
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaSetTop (luaState, -2);
 		}
@@ -631,14 +631,15 @@ namespace NLua
 					LuaLib.LuaRawGet (luaState, (int)LuaIndexes.Registry);
 					LuaLib.LuaRawSet (luaState, -3);
 					LuaLib.LuaPushString (luaState, "__gc");
-					LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.gcFunction);
+					LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.GcFunction);
 					LuaLib.LuaRawSet (luaState, -3);
 					LuaLib.LuaPushString (luaState, "__tostring");
-					LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.toStringFunction);
+					LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.ToStringFunction);
 					LuaLib.LuaRawSet (luaState, -3);
 					LuaLib.LuaPushString (luaState, "__newindex");
-					LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.newindexFunction);
+					LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.NewIndexFunction);
 					LuaLib.LuaRawSet (luaState, -3);
+					// Bind C# operator with Lua metamethods (__add, __sub, __mul)
 					RegisterOperatorsFunctions (luaState, o.GetType ());
 				}
 			} else
@@ -660,7 +661,47 @@ namespace NLua
 		{
 			if (type.HasAdditionOpertator ()) {
 				LuaLib.LuaPushString (luaState, "__add");
-				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.addFunction);
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.AddFunction);
+				LuaLib.LuaRawSet (luaState, -3);
+			}
+			if (type.HasSubtractionOpertator ()) {
+				LuaLib.LuaPushString (luaState, "__sub");
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.SubtractFunction);
+				LuaLib.LuaRawSet (luaState, -3);
+			}
+			if (type.HasMultiplyOpertator ()) {
+				LuaLib.LuaPushString (luaState, "__mul");
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.MultiplyFunction);
+				LuaLib.LuaRawSet (luaState, -3);
+			}
+			if (type.HasDivisionOpertator ()) {
+				LuaLib.LuaPushString (luaState, "__div");
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.DivisionFunction);
+				LuaLib.LuaRawSet (luaState, -3);
+			}
+			if (type.HasModulusOpertator ()) {
+				LuaLib.LuaPushString (luaState, "__mod");
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.ModulosFunction);
+				LuaLib.LuaRawSet (luaState, -3);
+			}
+			if (type.HasUnaryNegationOpertator ()) {
+				LuaLib.LuaPushString (luaState, "__unm");
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.UnaryNegationFunction);
+				LuaLib.LuaRawSet (luaState, -3);
+			}
+			if (type.HasEqualityOpertator ()) {
+				LuaLib.LuaPushString (luaState, "__eq");
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.EqualFunction);
+				LuaLib.LuaRawSet (luaState, -3);
+			}
+			if (type.HasLessThanOpertator ()) {
+				LuaLib.LuaPushString (luaState, "__lt");
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.LessThanFunction);
+				LuaLib.LuaRawSet (luaState, -3);
+			}
+			if (type.HasLessThanOrEqualOpertator ()) {
+				LuaLib.LuaPushString (luaState, "__le");
+				LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.LessThanOrEqualFunction);
 				LuaLib.LuaRawSet (luaState, -3);
 			}
 		}

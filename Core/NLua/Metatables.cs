@@ -1,6 +1,6 @@
 /*
  * This file is part of NLua.
- * 
+ * Copyright (C) 2014 Vinicius Jarina.
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 
@@ -48,23 +48,39 @@ namespace NLua
 	 * Functions used in the metatables of userdata representing
 	 * CLR objects
 	 * 
-	 * Author: Fabio Mascarenhas
-	 * Version: 1.0
 	 */
 	public class MetaFunctions
 	{
-		internal LuaNativeFunction gcFunction, indexFunction, newindexFunction, baseIndexFunction,
-			classIndexFunction, classNewindexFunction, execDelegateFunction, callConstructorFunction, toStringFunction, addFunction;
-		private Dictionary<object, object> memberCache = new Dictionary<object, object> ();
-		private ObjectTranslator translator;
+		public LuaNativeFunction GcFunction { get; private set; }
+		public LuaNativeFunction IndexFunction { get; private set; }
+		public LuaNativeFunction NewIndexFunction { get; private set; }
+		public LuaNativeFunction BaseIndexFunction { get; private set; }
+		public LuaNativeFunction ClassIndexFunction { get; private set; }
+		public LuaNativeFunction ClassNewindexFunction { get; private set; }
+		public LuaNativeFunction ExecuteDelegateFunction { get; private set; }
+		public LuaNativeFunction CallConstructorFunction { get; private set; }
+		public LuaNativeFunction ToStringFunction { get; private set; }
+		 
+		public LuaNativeFunction AddFunction { get; private set; }
+		public LuaNativeFunction SubtractFunction { get; private set; }
+		public LuaNativeFunction MultiplyFunction { get; private set; }
+		public LuaNativeFunction DivisionFunction { get; private set; }
+		public LuaNativeFunction ModulosFunction { get; private set; }
+		public LuaNativeFunction UnaryNegationFunction { get; private set; }
+		public LuaNativeFunction EqualFunction { get; private set; }
+		public LuaNativeFunction LessThanFunction { get; private set; }
+		public LuaNativeFunction LessThanOrEqualFunction { get; private set; }
+
+		Dictionary<object, object> memberCache = new Dictionary<object, object> ();
+		ObjectTranslator translator;
 
 		/*
 		 * __index metafunction for CLR objects. Implemented in Lua.
 		 */
-		internal static string luaIndexFunction =
+		static string luaIndexFunction =
 			@"local function index(obj,name)
-			    local meta=getmetatable(obj)
-			    local cached=meta.cache[name]
+			    local meta = getmetatable(obj)
+			    local cached = meta.cache[name]
 			    if cached ~= nil then
 			       return cached
 			    else
@@ -77,20 +93,30 @@ namespace NLua
 			     end
 		    end
 		    return index";
-
+		public static string LuaIndexFunction {
+			get { return luaIndexFunction; }
+		}
 		public MetaFunctions (ObjectTranslator translator)
 		{
 			this.translator = translator;
-			gcFunction = new LuaNativeFunction (MetaFunctions.CollectObject);
-			toStringFunction = new LuaNativeFunction (MetaFunctions.ToStringLua);
-			indexFunction = new LuaNativeFunction (MetaFunctions.GetMethod);
-			newindexFunction = new LuaNativeFunction (MetaFunctions.SetFieldOrProperty);
-			baseIndexFunction = new LuaNativeFunction (MetaFunctions.GetBaseMethod);
-			callConstructorFunction = new LuaNativeFunction (MetaFunctions.CallConstructor);
-			classIndexFunction = new LuaNativeFunction (MetaFunctions.GetClassMethod);
-			classNewindexFunction = new LuaNativeFunction (MetaFunctions.SetClassFieldOrProperty);
-			execDelegateFunction = new LuaNativeFunction (MetaFunctions.RunFunctionDelegate);
-			addFunction = new LuaNativeFunction (MetaFunctions.AddLua);
+			GcFunction = new LuaNativeFunction (MetaFunctions.CollectObject);
+			ToStringFunction = new LuaNativeFunction (MetaFunctions.ToStringLua);
+			IndexFunction = new LuaNativeFunction (MetaFunctions.GetMethod);
+			NewIndexFunction = new LuaNativeFunction (MetaFunctions.SetFieldOrProperty);
+			BaseIndexFunction = new LuaNativeFunction (MetaFunctions.GetBaseMethod);
+			CallConstructorFunction = new LuaNativeFunction (MetaFunctions.CallConstructor);
+			ClassIndexFunction = new LuaNativeFunction (MetaFunctions.GetClassMethod);
+			ClassNewindexFunction = new LuaNativeFunction (MetaFunctions.SetClassFieldOrProperty);
+			ExecuteDelegateFunction = new LuaNativeFunction (MetaFunctions.RunFunctionDelegate);
+			AddFunction = new LuaNativeFunction (MetaFunctions.AddLua);
+			SubtractFunction = new LuaNativeFunction (MetaFunctions.SubtractLua);
+			MultiplyFunction = new LuaNativeFunction (MetaFunctions.MultiplyLua);
+			DivisionFunction = new LuaNativeFunction (MetaFunctions.DivideLua);
+			ModulosFunction = new LuaNativeFunction (MetaFunctions.ModLua);
+			UnaryNegationFunction = new LuaNativeFunction (MetaFunctions.UnaryNegationLua);
+			EqualFunction = new LuaNativeFunction (MetaFunctions.EqualLua);
+			LessThanFunction = new LuaNativeFunction (MetaFunctions.LessThanLua);
+			LessThanOrEqualFunction = new LuaNativeFunction (MetaFunctions.LessThanOrEqualLua);
 		}
 
 		/*
@@ -161,8 +187,8 @@ namespace NLua
 			return 1;
 		}
 
-		/*
- * __tostring metafunction of CLR objects.
+/*
+ * __add metafunction of CLR objects.
  */
 #if MONOTOUCH
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
@@ -197,6 +223,294 @@ namespace NLua
 			return 1;
 		}
 
+		/*
+		* __sub metafunction of CLR objects.
+		*/
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		static int SubtractLua (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return SubtractLua (luaState, translator);
+		}
+		static int SubtractLua (LuaState luaState, ObjectTranslator translator)
+		{
+			object obj1 = translator.GetRawNetObject (luaState, 1);
+			object obj2 = translator.GetRawNetObject (luaState, 2);
+
+			if (obj1 == null || obj2 == null) {
+				translator.ThrowError (luaState, "Cannot subtract a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = obj1.GetType ();
+			MethodInfo opSubtract = type.GetMethod ("op_Subtraction");
+
+			if (opSubtract == null) {
+				translator.ThrowError (luaState, "Cannot subtract object (" + type.Name + " does not overload the operator -)");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+			obj1 = opSubtract.Invoke (obj1, new object [] { obj1, obj2 });
+			translator.Push (luaState, obj1);
+			return 1;
+		}
+
+		/*
+		* __mul metafunction of CLR objects.
+		*/
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		static int MultiplyLua (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return MultiplyLua (luaState, translator);
+		}
+		static int MultiplyLua (LuaState luaState, ObjectTranslator translator)
+		{
+			object obj1 = translator.GetRawNetObject (luaState, 1);
+			object obj2 = translator.GetRawNetObject (luaState, 2);
+
+			if (obj1 == null || obj2 == null) {
+				translator.ThrowError (luaState, "Cannot multiply a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = obj1.GetType ();
+			MethodInfo opMultiply = type.GetMethod ("op_Multiply");
+
+			if (opMultiply == null) {
+				translator.ThrowError (luaState, "Cannot multiply object (" + type.Name + " does not overload the operator *)");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+			obj1 = opMultiply.Invoke (obj1, new object [] { obj1, obj2 });
+			translator.Push (luaState, obj1);
+			return 1;
+		}
+
+		/*
+		* __div metafunction of CLR objects.
+		*/
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		static int DivideLua (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return DivideLua (luaState, translator);
+		}
+		static int DivideLua (LuaState luaState, ObjectTranslator translator)
+		{
+			object obj1 = translator.GetRawNetObject (luaState, 1);
+			object obj2 = translator.GetRawNetObject (luaState, 2);
+
+			if (obj1 == null || obj2 == null) {
+				translator.ThrowError (luaState, "Cannot divide a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = obj1.GetType ();
+			MethodInfo opDivide = type.GetMethod ("op_Division");
+
+			if (opDivide == null) {
+				translator.ThrowError (luaState, "Cannot divide object (" + type.Name + " does not overload the operator /)");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+			obj1 = opDivide.Invoke (obj1, new object [] { obj1, obj2 });
+			translator.Push (luaState, obj1);
+			return 1;
+		}
+
+		/*
+		* __mod metafunction of CLR objects.
+		*/
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		static int ModLua (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return ModLua (luaState, translator);
+		}
+		static int ModLua (LuaState luaState, ObjectTranslator translator)
+		{
+			object obj1 = translator.GetRawNetObject (luaState, 1);
+			object obj2 = translator.GetRawNetObject (luaState, 2);
+
+			if (obj1 == null || obj2 == null) {
+				translator.ThrowError (luaState, "Cannot mod a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = obj1.GetType ();
+			MethodInfo opMod = type.GetMethod ("op_Modulus");
+
+			if (opMod == null) {
+				translator.ThrowError (luaState, "Cannot mod object (" + type.Name + " does not overload the operator %)");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+			obj1 = opMod.Invoke (obj1, new object [] { obj1, obj2 });
+			translator.Push (luaState, obj1);
+			return 1;
+		}
+
+		/*
+		* __unm metafunction of CLR objects.
+		*/
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		static int UnaryNegationLua (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return UnaryNegationLua (luaState, translator);
+		}
+		static int UnaryNegationLua (LuaState luaState, ObjectTranslator translator)
+		{
+			object obj1 = translator.GetRawNetObject (luaState, 1);
+
+			if (obj1 == null) {
+				translator.ThrowError (luaState, "Cannot negate a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = obj1.GetType ();
+			MethodInfo opUnaryNegation = type.GetMethod ("op_UnaryNegation");
+
+			if (opUnaryNegation == null) {
+				translator.ThrowError (luaState, "Cannot negate object (" + type.Name + " does not overload the operator -)");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+			obj1 = opUnaryNegation.Invoke (obj1, new object [] { obj1 });
+			translator.Push (luaState, obj1);
+			return 1;
+		}
+
+
+		/*
+		* __eq metafunction of CLR objects.
+		*/
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		static int EqualLua (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return EqualLua (luaState, translator);
+		}
+		static int EqualLua (LuaState luaState, ObjectTranslator translator)
+		{
+			object obj1 = translator.GetRawNetObject (luaState, 1);
+			object obj2 = translator.GetRawNetObject (luaState, 2);
+
+			if (obj1 == null || obj2 == null) {
+				translator.ThrowError (luaState, "Cannot compare a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = obj1.GetType ();
+			MethodInfo opEqual = type.GetMethod ("op_Equality");
+
+			if (opEqual == null) {
+				translator.ThrowError (luaState, "Cannot compare object (" + type.Name + " does not overload the operator =)");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+			obj1 = opEqual.Invoke (obj1, new object [] { obj1, obj2 });
+			translator.Push (luaState, obj1);
+			return 1;
+		}
+
+
+		/*
+		* __lt metafunction of CLR objects.
+		*/
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		static int LessThanLua (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return LessThanLua (luaState, translator);
+		}
+		static int LessThanLua (LuaState luaState, ObjectTranslator translator)
+		{
+			object obj1 = translator.GetRawNetObject (luaState, 1);
+			object obj2 = translator.GetRawNetObject (luaState, 2);
+
+			if (obj1 == null || obj2 == null) {
+				translator.ThrowError (luaState, "Cannot compare a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = obj1.GetType ();
+			MethodInfo opLessThan = type.GetMethod ("op_LessThan");
+
+			if (opLessThan == null) {
+				translator.ThrowError (luaState, "Cannot compare object (" + type.Name + " does not overload the operator <)");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+			obj1 = opLessThan.Invoke (obj1, new object [] { obj1, obj2 });
+			translator.Push (luaState, obj1);
+			return 1;
+		}
+
+		/*
+		 * __le metafunction of CLR objects.
+		 */
+#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+#endif
+		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
+		static int LessThanOrEqualLua (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			return LessThanOrEqualLua (luaState, translator);
+		}
+		static int LessThanOrEqualLua (LuaState luaState, ObjectTranslator translator)
+		{
+			object obj1 = translator.GetRawNetObject (luaState, 1);
+			object obj2 = translator.GetRawNetObject (luaState, 2);
+
+			if (obj1 == null || obj2 == null) {
+				translator.ThrowError (luaState, "Cannot compare a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = obj1.GetType ();
+			MethodInfo opLessThanOrEqual = type.GetMethod ("op_LessThanOrEqual");
+
+			if (opLessThanOrEqual == null) {
+				translator.ThrowError (luaState, "Cannot compare object (" + type.Name + " does not overload the operator <=)");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+			obj1 = opLessThanOrEqual.Invoke (obj1, new object [] { obj1, obj2 });
+			translator.Push (luaState, obj1);
+			return 1;
+		}
 
 		/// <summary>
 		/// Debug tool to dump the lua stack

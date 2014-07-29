@@ -64,7 +64,79 @@ namespace NLua.Extensions
 
 			var op_add = t.GetMethod ("op_Addition");
 			return op_add != null;  
-		} 
+		}
+
+		public static bool HasSubtractionOpertator (this Type t)
+		{
+			if (t.IsPrimitive)
+				return true;
+
+			var op_add = t.GetMethod ("op_Subtraction");
+			return op_add != null;
+		}
+
+		public static bool HasMultiplyOpertator (this Type t)
+		{
+			if (t.IsPrimitive)
+				return true;
+
+			var op_add = t.GetMethod ("op_Multiply");
+			return op_add != null;
+		}
+
+		public static bool HasDivisionOpertator (this Type t)
+		{
+			if (t.IsPrimitive)
+				return true;
+
+			var op_add = t.GetMethod ("op_Division");
+			return op_add != null;
+		}
+
+		public static bool HasModulusOpertator (this Type t)
+		{
+			if (t.IsPrimitive)
+				return true;
+
+			var op_add = t.GetMethod ("op_Modulus");
+			return op_add != null;
+		}
+
+		public static bool HasUnaryNegationOpertator (this Type t)
+		{
+			if (t.IsPrimitive)
+				return true;
+
+			var op_add = t.GetMethod ("op_UnaryNegation");
+			return op_add != null;
+		}
+
+		public static bool HasEqualityOpertator (this Type t)
+		{
+			if (t.IsPrimitive)
+				return true;
+
+			var op_add = t.GetMethod ("op_Equality");
+			return op_add != null;
+		}
+
+		public static bool HasLessThanOpertator (this Type t)
+		{
+			if (t.IsPrimitive)
+				return true;
+
+			var op_add = t.GetMethod ("op_LessThan");
+			return op_add != null;
+		}
+
+		public static bool HasLessThanOrEqualOpertator (this Type t)
+		{
+			if (t.IsPrimitive)
+				return true;
+
+			var op_add = t.GetMethod ("op_LessThanOrEqual");
+			return op_add != null;
+		}
 	}
 
 	static class StringExtensions
