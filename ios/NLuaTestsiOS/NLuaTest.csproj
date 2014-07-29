@@ -109,6 +109,7 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="MonoTouch.NUnitLite" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -138,6 +139,7 @@
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\..\Core\NLua\NLua.iOS.csproj">
       <Project>{7064B157-DD57-4828-94C5-CA149B25CB40}</Project>
