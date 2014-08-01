@@ -580,7 +580,7 @@ namespace NLua
 			}
 
 			// Object already in the list of Lua objects? Push the stored reference.
-			bool found = (!objectsBackMap.GetType().IsValueType) && objectsBackMap.TryGetValue (o, out index);
+			bool found = (!o.GetType().IsValueType) && objectsBackMap.TryGetValue (o, out index);
 
 			if (found) {
 				LuaLib.LuaLGetMetatable (luaState, "luaNet_objects");
