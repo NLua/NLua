@@ -496,9 +496,8 @@ namespace NLua
 				signature [i] = FindType (LuaLib.LuaToString (luaState, i + 3).ToString ());
 
 			try {
-				//CP: Added ignore case
 				var method = klass.GetMethod (methodName, BindingFlags.Public | BindingFlags.Static |
-					BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.IgnoreCase, null, signature, null);
+					BindingFlags.Instance | BindingFlags.FlattenHierarchy, null, signature, null);
 				PushFunction (luaState, new LuaNativeFunction ((new LuaMethodWrapper (this, target, klass, method)).invokeFunction));
 			} catch (Exception e) {
 				ThrowError (luaState, e);

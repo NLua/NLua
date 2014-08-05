@@ -22,13 +22,24 @@ using NUnit.Framework;
 namespace NLuaTest
 {
    
+	#if MONOTOUCH
+	[Preserve (AllMembers = true)]
+	#endif
+	public class TestCaseName {
+		public string name = "name";
+		public string Name {
+			get {
+				return "**" + name + "**";
+			}
+		}
+	}
+
 	[TestFixture]
 	#if MONOTOUCH
 	[Preserve (AllMembers = true)]
 	#endif
 	public class LuaTests
 	{
-
 		public static readonly char UnicodeChar = '\uE007';
 		public static string UnicodeString
 		{
@@ -2015,6 +2026,28 @@ namespace NLuaTest
 				Assert.AreEqual (expected, res);
 			}
 		}
+
+		[Test]
+		public void TestCaseFields ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.LoadCLRPackage ();
+
+				lua.DoString (@" import ('NLuaTest')
+							  x = TestCaseName()
+							  name  = x.name;
+							  name2 = x.Name;
+							  Name = x.Name;
+							  Name2 = x.name");
+
+				Assert.AreEqual ("name", lua ["name"]);
+				Assert.AreEqual ("**name**", lua ["name2"]);
+				Assert.AreEqual ("**name**", lua ["Name"]);
+				Assert.AreEqual ("name", lua ["Name2"]);
+			}
+		}
+
+		
 					
 	}
 }

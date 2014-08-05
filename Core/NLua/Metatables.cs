@@ -584,7 +584,7 @@ namespace NLua
 			// ie: xmlelement['item'] <- item is a property of xmlelement
 			try {
 				if (!string.IsNullOrEmpty(methodName) && IsMemberPresent (objType, methodName))
-					return GetMember (luaState, objType, obj, methodName, BindingFlags.Instance | BindingFlags.IgnoreCase);
+					return GetMember (luaState, objType, obj, methodName, BindingFlags.Instance);
 			} catch {
 			}
 
@@ -683,12 +683,12 @@ namespace NLua
 				return 2;
 			}
 
-			GetMember (luaState, obj.GetType (), obj, "__luaInterface_base_" + methodName, BindingFlags.Instance | BindingFlags.IgnoreCase);
+			GetMember (luaState, obj.GetType (), obj, "__luaInterface_base_" + methodName, BindingFlags.Instance);
 			LuaLib.LuaSetTop (luaState, -2);
 
 			if (LuaLib.LuaType (luaState, -1) == LuaTypes.Nil) {
 				LuaLib.LuaSetTop (luaState, -2);
-				return GetMember (luaState, obj.GetType (), obj, methodName, BindingFlags.Instance | BindingFlags.IgnoreCase);
+				return GetMember (luaState, obj.GetType (), obj, methodName, BindingFlags.Instance);
 			}
 
 			LuaLib.LuaPushBoolean (luaState, false);
@@ -708,8 +708,7 @@ namespace NLua
 			if (cachedMember != null)
 				return true;
 
-			//CP: Removed NonPublic binding search
-			var members = objType.GetMember (methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+			var members = objType.GetMember (methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
 			return (members.Length > 0);
 		}
 
@@ -719,12 +718,11 @@ namespace NLua
 		 * Uses reflection to find members, and stores the reflected MemberInfo object in
 		 * a cache (indexed by the type of the object and the name of the member).
 		 */
-		private int GetMember (LuaState luaState, IReflect objType, object obj, string methodName, BindingFlags bindingType)
+		int GetMember (LuaState luaState, IReflect objType, object obj, string methodName, BindingFlags bindingType)
 		{
 			bool implicitStatic = false;
 			MemberInfo member = null;
 			object cachedMember = CheckMemberCache (memberCache, objType, methodName);
-			//object cachedMember=null;
 
 			if (cachedMember is LuaNativeFunction) {
 				translator.PushFunction (luaState, (LuaNativeFunction)cachedMember);
@@ -733,16 +731,13 @@ namespace NLua
 			} else if (cachedMember != null)
 				member = (MemberInfo)cachedMember;
 			else {
-				//CP: Removed NonPublic binding search
-				var members = objType.GetMember (methodName, bindingType | BindingFlags.Public | BindingFlags.IgnoreCase/*| BindingFlags.NonPublic*/);
+				var members = objType.GetMember (methodName, bindingType | BindingFlags.Public);
 
 				if (members.Length > 0)
 					member = members [0];
 				else {
 					// If we can't find any suitable instance members, try to find them as statics - but we only want to allow implicit static
-					// lookups for fields/properties/events -kevinh
-					//CP: Removed NonPublic binding search and made case insensitive
-					members = objType.GetMember (methodName, bindingType | BindingFlags.Static | BindingFlags.Public | BindingFlags.IgnoreCase/*| BindingFlags.NonPublic*/);
+					members = objType.GetMember (methodName, bindingType | BindingFlags.Static | BindingFlags.Public);
 
 					if (members.Length > 0) {
 						member = members [0];
@@ -901,7 +896,7 @@ namespace NLua
 
 			// First try to look up the parameter as a property name
 			string detailMessage;
-			bool didMember = TrySetMember (luaState, type, target, BindingFlags.Instance | BindingFlags.IgnoreCase, out detailMessage);
+			bool didMember = TrySetMember (luaState, type, target, BindingFlags.Instance, out detailMessage);
 
 			if (didMember)
 				return 0;	   // Must have found the property name
@@ -977,8 +972,7 @@ namespace NLua
 			// Find our member via reflection or the cache
 			var member = (MemberInfo)CheckMemberCache (memberCache, targetType, fieldName);
 			if (member == null) {
-				//CP: Removed NonPublic binding search and made case insensitive
-				var members = targetType.GetMember (fieldName, bindingType | BindingFlags.Public | BindingFlags.IgnoreCase/*| BindingFlags.NonPublic*/);
+				var members = targetType.GetMember (fieldName, bindingType | BindingFlags.Public);
 
 				if (members.Length > 0) {
 					member = members [0];
@@ -1086,9 +1080,9 @@ namespace NLua
 				if (string.IsNullOrEmpty(methodName)) {
 					LuaLib.LuaPushNil (luaState);
 					return 1;
-				} //CP: Ignore case
+				}
 				else
-					return GetMember (luaState, klass, null, methodName, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.IgnoreCase);
+					return GetMember (luaState, klass, null, methodName, BindingFlags.FlattenHierarchy | BindingFlags.Static);
 			}
 		}
 
@@ -1117,7 +1111,7 @@ namespace NLua
 			} else
 				target = (IReflect)obj;
 
-			return SetMember (luaState, target, null, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.IgnoreCase);
+			return SetMember (luaState, target, null, BindingFlags.FlattenHierarchy | BindingFlags.Static);
 		}
 
 		/*

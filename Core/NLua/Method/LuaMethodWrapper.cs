@@ -98,8 +98,7 @@ namespace NLua.Method
 				_ExtractTarget = translator.typeChecker.GetExtractor (targetType);
 
 			_BindingType = bindingType;
-			//CP: Removed NonPublic binding search and added IgnoreCase
-			_Members = targetType.UnderlyingSystemType.GetMember (methodName, MemberTypes.Method, bindingType | BindingFlags.Public | BindingFlags.IgnoreCase/*|BindingFlags.NonPublic*/);
+			_Members = targetType.UnderlyingSystemType.GetMember (methodName, MemberTypes.Method, bindingType | BindingFlags.Public);
 		}
 
 		/// <summary>
