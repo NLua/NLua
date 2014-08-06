@@ -23,7 +23,9 @@
  * THE SOFTWARE.
  */
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace NLua.Extensions
 {
@@ -57,13 +59,18 @@ namespace NLua.Extensions
 
 	static class TypeExtensions
 	{
+		public static bool HasMethod (this Type t, string name)
+		{
+			var op = t.GetMethods (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+			return op.Count (m => m.Name == name) > 0;  
+		}
+
 		public static bool HasAdditionOpertator (this Type t)
 		{
 			if (t.IsPrimitive) 
 				return true;
 
-			var op_add = t.GetMethod ("op_Addition");
-			return op_add != null;  
+			return t.HasMethod ("op_Addition");
 		}
 
 		public static bool HasSubtractionOpertator (this Type t)
@@ -71,8 +78,7 @@ namespace NLua.Extensions
 			if (t.IsPrimitive)
 				return true;
 
-			var op_add = t.GetMethod ("op_Subtraction");
-			return op_add != null;
+			return t.HasMethod ("op_Subtraction");
 		}
 
 		public static bool HasMultiplyOpertator (this Type t)
@@ -80,8 +86,7 @@ namespace NLua.Extensions
 			if (t.IsPrimitive)
 				return true;
 
-			var op_add = t.GetMethod ("op_Multiply");
-			return op_add != null;
+			return t.HasMethod ("op_Multiply");
 		}
 
 		public static bool HasDivisionOpertator (this Type t)
@@ -89,8 +94,7 @@ namespace NLua.Extensions
 			if (t.IsPrimitive)
 				return true;
 
-			var op_add = t.GetMethod ("op_Division");
-			return op_add != null;
+			return t.HasMethod ("op_Division");
 		}
 
 		public static bool HasModulusOpertator (this Type t)
@@ -98,26 +102,23 @@ namespace NLua.Extensions
 			if (t.IsPrimitive)
 				return true;
 
-			var op_add = t.GetMethod ("op_Modulus");
-			return op_add != null;
+			return t.HasMethod ("op_Modulus");
 		}
 
 		public static bool HasUnaryNegationOpertator (this Type t)
 		{
 			if (t.IsPrimitive)
 				return true;
-
-			var op_add = t.GetMethod ("op_UnaryNegation");
-			return op_add != null;
+			// Unary - will always have only one version.
+			var op = t.GetMethod ("op_UnaryNegation",BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+			return op != null;
 		}
 
 		public static bool HasEqualityOpertator (this Type t)
 		{
 			if (t.IsPrimitive)
 				return true;
-
-			var op_add = t.GetMethod ("op_Equality");
-			return op_add != null;
+			return t.HasMethod ("op_Equality");
 		}
 
 		public static bool HasLessThanOpertator (this Type t)
@@ -125,17 +126,19 @@ namespace NLua.Extensions
 			if (t.IsPrimitive)
 				return true;
 
-			var op_add = t.GetMethod ("op_LessThan");
-			return op_add != null;
+			return t.HasMethod ("op_LessThan");
 		}
 
 		public static bool HasLessThanOrEqualOpertator (this Type t)
 		{
 			if (t.IsPrimitive)
 				return true;
+			return t.HasMethod ("op_LessThanOrEqual");
+		}
 
-			var op_add = t.GetMethod ("op_LessThanOrEqual");
-			return op_add != null;
+		public static IEnumerable<MethodInfo> GetMethods (this Type t, string name, BindingFlags flags)
+		{
+			return t.GetMethods (flags).Where (m => m.Name == name);
 		}
 	}
 

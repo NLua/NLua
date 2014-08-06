@@ -23,6 +23,7 @@
  * THE SOFTWARE.
  */
 using System;
+using System.Linq;
 using System.IO;
 using System.Collections;
 using System.Reflection;
@@ -187,6 +188,7 @@ namespace NLua
 			return 1;
 		}
 
+
 /*
  * __add metafunction of CLR objects.
  */
@@ -197,32 +199,9 @@ namespace NLua
 		static int AddLua (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			return AddLua (luaState, translator);
+			return MatchOperator (luaState, "op_Addition", translator);
 		}
-		static int AddLua (LuaState luaState, ObjectTranslator translator)
-		{
-			object obj1 = translator.GetRawNetObject (luaState, 1);
-			object obj2 = translator.GetRawNetObject (luaState, 2);
-
-			if (obj1 == null || obj2 == null) {
-				translator.ThrowError (luaState, "Cannot add a nil object");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-
-			Type type = obj1.GetType ();
-			MethodInfo opAddition = type.GetMethod ("op_Addition");
-
-			if (opAddition == null) {
-				translator.ThrowError (luaState, "Cannot add object (" + type.Name+ " does not overload the operator +)");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-			obj1 = opAddition.Invoke (obj1, new object[] { obj1, obj2 });
-			translator.Push (luaState, obj1);
-			return 1;
-		}
-
+	
 		/*
 		* __sub metafunction of CLR objects.
 		*/
@@ -233,30 +212,7 @@ namespace NLua
 		static int SubtractLua (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			return SubtractLua (luaState, translator);
-		}
-		static int SubtractLua (LuaState luaState, ObjectTranslator translator)
-		{
-			object obj1 = translator.GetRawNetObject (luaState, 1);
-			object obj2 = translator.GetRawNetObject (luaState, 2);
-
-			if (obj1 == null || obj2 == null) {
-				translator.ThrowError (luaState, "Cannot subtract a nil object");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-
-			Type type = obj1.GetType ();
-			MethodInfo opSubtract = type.GetMethod ("op_Subtraction");
-
-			if (opSubtract == null) {
-				translator.ThrowError (luaState, "Cannot subtract object (" + type.Name + " does not overload the operator -)");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-			obj1 = opSubtract.Invoke (obj1, new object [] { obj1, obj2 });
-			translator.Push (luaState, obj1);
-			return 1;
+			return MatchOperator (luaState, "op_Multiply", translator);
 		}
 
 		/*
@@ -269,32 +225,9 @@ namespace NLua
 		static int MultiplyLua (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			return MultiplyLua (luaState, translator);
+			return MatchOperator (luaState, "op_Multiply", translator);
 		}
-		static int MultiplyLua (LuaState luaState, ObjectTranslator translator)
-		{
-			object obj1 = translator.GetRawNetObject (luaState, 1);
-			object obj2 = translator.GetRawNetObject (luaState, 2);
-
-			if (obj1 == null || obj2 == null) {
-				translator.ThrowError (luaState, "Cannot multiply a nil object");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-
-			Type type = obj1.GetType ();
-			MethodInfo opMultiply = type.GetMethod ("op_Multiply");
-
-			if (opMultiply == null) {
-				translator.ThrowError (luaState, "Cannot multiply object (" + type.Name + " does not overload the operator *)");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-			obj1 = opMultiply.Invoke (obj1, new object [] { obj1, obj2 });
-			translator.Push (luaState, obj1);
-			return 1;
-		}
-
+		
 		/*
 		* __div metafunction of CLR objects.
 		*/
@@ -305,30 +238,7 @@ namespace NLua
 		static int DivideLua (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			return DivideLua (luaState, translator);
-		}
-		static int DivideLua (LuaState luaState, ObjectTranslator translator)
-		{
-			object obj1 = translator.GetRawNetObject (luaState, 1);
-			object obj2 = translator.GetRawNetObject (luaState, 2);
-
-			if (obj1 == null || obj2 == null) {
-				translator.ThrowError (luaState, "Cannot divide a nil object");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-
-			Type type = obj1.GetType ();
-			MethodInfo opDivide = type.GetMethod ("op_Division");
-
-			if (opDivide == null) {
-				translator.ThrowError (luaState, "Cannot divide object (" + type.Name + " does not overload the operator /)");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-			obj1 = opDivide.Invoke (obj1, new object [] { obj1, obj2 });
-			translator.Push (luaState, obj1);
-			return 1;
+			return MatchOperator (luaState, "op_Division", translator);
 		}
 
 		/*
@@ -341,32 +251,9 @@ namespace NLua
 		static int ModLua (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			return ModLua (luaState, translator);
+			return MatchOperator (luaState, "op_Modulus", translator);
 		}
-		static int ModLua (LuaState luaState, ObjectTranslator translator)
-		{
-			object obj1 = translator.GetRawNetObject (luaState, 1);
-			object obj2 = translator.GetRawNetObject (luaState, 2);
-
-			if (obj1 == null || obj2 == null) {
-				translator.ThrowError (luaState, "Cannot mod a nil object");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-
-			Type type = obj1.GetType ();
-			MethodInfo opMod = type.GetMethod ("op_Modulus");
-
-			if (opMod == null) {
-				translator.ThrowError (luaState, "Cannot mod object (" + type.Name + " does not overload the operator %)");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-			obj1 = opMod.Invoke (obj1, new object [] { obj1, obj2 });
-			translator.Push (luaState, obj1);
-			return 1;
-		}
-
+	
 		/*
 		* __unm metafunction of CLR objects.
 		*/
@@ -413,32 +300,8 @@ namespace NLua
 		static int EqualLua (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			return EqualLua (luaState, translator);
+			return MatchOperator (luaState, "op_Equality", translator);
 		}
-		static int EqualLua (LuaState luaState, ObjectTranslator translator)
-		{
-			object obj1 = translator.GetRawNetObject (luaState, 1);
-			object obj2 = translator.GetRawNetObject (luaState, 2);
-
-			if (obj1 == null || obj2 == null) {
-				translator.ThrowError (luaState, "Cannot compare a nil object");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-
-			Type type = obj1.GetType ();
-			MethodInfo opEqual = type.GetMethod ("op_Equality");
-
-			if (opEqual == null) {
-				translator.ThrowError (luaState, "Cannot compare object (" + type.Name + " does not overload the operator =)");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-			obj1 = opEqual.Invoke (obj1, new object [] { obj1, obj2 });
-			translator.Push (luaState, obj1);
-			return 1;
-		}
-
 
 		/*
 		* __lt metafunction of CLR objects.
@@ -450,32 +313,9 @@ namespace NLua
 		static int LessThanLua (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			return LessThanLua (luaState, translator);
+			return MatchOperator (luaState, "op_LessThan", translator);
 		}
-		static int LessThanLua (LuaState luaState, ObjectTranslator translator)
-		{
-			object obj1 = translator.GetRawNetObject (luaState, 1);
-			object obj2 = translator.GetRawNetObject (luaState, 2);
-
-			if (obj1 == null || obj2 == null) {
-				translator.ThrowError (luaState, "Cannot compare a nil object");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-
-			Type type = obj1.GetType ();
-			MethodInfo opLessThan = type.GetMethod ("op_LessThan");
-
-			if (opLessThan == null) {
-				translator.ThrowError (luaState, "Cannot compare object (" + type.Name + " does not overload the operator <)");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-			obj1 = opLessThan.Invoke (obj1, new object [] { obj1, obj2 });
-			translator.Push (luaState, obj1);
-			return 1;
-		}
-
+		
 		/*
 		 * __le metafunction of CLR objects.
 		 */
@@ -486,31 +326,8 @@ namespace NLua
 		static int LessThanOrEqualLua (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			return LessThanOrEqualLua (luaState, translator);
-		}
-		static int LessThanOrEqualLua (LuaState luaState, ObjectTranslator translator)
-		{
-			object obj1 = translator.GetRawNetObject (luaState, 1);
-			object obj2 = translator.GetRawNetObject (luaState, 2);
-
-			if (obj1 == null || obj2 == null) {
-				translator.ThrowError (luaState, "Cannot compare a nil object");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-
-			Type type = obj1.GetType ();
-			MethodInfo opLessThanOrEqual = type.GetMethod ("op_LessThanOrEqual");
-
-			if (opLessThanOrEqual == null) {
-				translator.ThrowError (luaState, "Cannot compare object (" + type.Name + " does not overload the operator <=)");
-				LuaLib.LuaPushNil (luaState);
-				return 1;
-			}
-			obj1 = opLessThanOrEqual.Invoke (obj1, new object [] { obj1, obj2 });
-			translator.Push (luaState, obj1);
-			return 1;
-		}
+			return MatchOperator (luaState, "op_LessThanOrEqual", translator);
+		}		
 
 		/// <summary>
 		/// Debug tool to dump the lua stack
@@ -1170,9 +987,63 @@ namespace NLua
 			LuaLib.LuaPushNil (luaState);
 			return 1;
 		}
-		private static bool IsInteger(double x) {
+		static bool IsInteger(double x) {
 			return Math.Ceiling(x) == x;	
 		}
+
+		static object GetTargetObject (LuaState luaState, string operation, ObjectTranslator translator)
+		{
+			Type t;
+			object target = translator.GetRawNetObject (luaState, 1);
+			if (target != null) {
+				t = target.GetType ();
+				if (t.HasMethod (operation))
+					return target;
+			}
+			target = translator.GetRawNetObject (luaState, 2);
+			if (target != null) {
+				t = target.GetType ();
+				if (t.HasMethod (operation))
+					return target;
+			}
+			return null;
+		}
+		
+		static int MatchOperator (LuaState luaState, string operation, ObjectTranslator translator)
+		{
+			var validOperator = new MethodCache ();
+
+			object target = GetTargetObject (luaState, operation, translator);
+
+			if (target == null) {
+				translator.ThrowError (luaState, "Cannot call " + operation + " on a nil object");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			Type type = target.GetType ();
+			var operators = type.GetMethods (operation, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+
+			foreach (var op in operators) {
+				bool isOk = translator.MatchParameters (luaState, op, ref validOperator);
+
+				if (!isOk)
+					continue;
+
+				object result;
+				if (op.IsStatic)
+					result = op.Invoke (null, validOperator.args);
+				else
+					result = op.Invoke (target, validOperator.args);
+				translator.Push (luaState, result);
+				return 1;
+			}
+
+			translator.ThrowError (luaState, "Cannot call (" + operation + ") on object type " + type.Name);
+			LuaLib.LuaPushNil (luaState);
+			return 1;
+		}
+
 
 
 		internal Array TableToArray (Func<int, object> luaParamValueExtractor, Type paramArrayType, int startIndex, int count)
@@ -1226,7 +1097,7 @@ namespace NLua
 		
 		/*
 		 * Matches a method against its arguments in the Lua stack. Returns
-		 * if the match was succesful. It it was also returns the information
+		 * if the match was successful. It it was also returns the information
 		 * necessary to invoke the method.
 		 */
 		internal bool MatchParameters (LuaState luaState, MethodBase method, ref MethodCache methodCache)
@@ -1306,7 +1177,6 @@ namespace NLua
 				methodCache.outList = outList.ToArray ();
 				methodCache.argTypes = argTypes.ToArray ();
 			}
-
 			return isMethod;
 		}
 

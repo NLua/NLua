@@ -34,6 +34,30 @@ namespace NLuaTest
 		}
 	}
 
+#if MONOTOUCH
+	[Preserve (AllMembers = true)]
+#endif
+	public class Vector
+	{
+		public double x;
+		public double y;
+		public static Vector operator * (float k, Vector v)
+		{
+			var r = new Vector ();
+			r.x = v.x * k;
+			r.y = v.y * k;
+			return r;
+		}
+
+		public static Vector operator * (Vector v, float k)
+		{
+			var r = new Vector ();
+			r.x = v.x * k;
+			r.y = v.y * k;
+			return r;
+		}
+	}
+
 	[TestFixture]
 	#if MONOTOUCH
 	[Preserve (AllMembers = true)]
@@ -2044,6 +2068,31 @@ namespace NLuaTest
 				Assert.AreEqual ("**name**", lua ["name2"]);
 				Assert.AreEqual ("**name**", lua ["Name"]);
 				Assert.AreEqual ("name", lua ["Name2"]);
+			}
+		}
+
+		[Test]
+		public void TestStaticOperators ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.LoadCLRPackage ();
+
+				lua.DoString (@" import ('NLuaTest')
+							  v = Vector()
+							  v.x = 10
+							  v.y = 3
+							  v = v*2 ");
+
+				var v = (Vector)lua ["v"];
+
+				Assert.AreEqual (20, v.x, "#1");
+				Assert.AreEqual (6, v.y, "#2");
+
+				lua.DoString (@" x = 2 * v");
+				var x = (Vector)lua ["x"];
+
+				Assert.AreEqual (40, x.x, "#3");
+				Assert.AreEqual (12, x.y, "#4");
 			}
 		}
 

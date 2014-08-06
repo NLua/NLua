@@ -8,21 +8,26 @@ using NLuaTest.Mock;
 
 namespace ConsoleTest
 {
-	 struct Sub2 {
+	public class Vector
+	{
+		public double x;
+		public double y;
+		public static Vector operator *(float k, Vector v)
+		{
+			var r = new Vector();
+			r.x = v.x * k;
+			r.y = v.y * k;
+			return r;
+		}
 
-		 int someval; 
+		public static Vector operator * (Vector v, float k)
+		{
+			var r = new Vector ();
+			r.x = v.x * k;
+			r.y = v.y * k;
+			return r;
+		}
 	}
-
-	 struct Sub {
-
-		 public Sub2 z; 
-	}
-
-	 struct Top { 
-		
-		 public Sub y; 
-	}
-	
 
 	public class Program
 	{
@@ -41,22 +46,22 @@ namespace ConsoleTest
 
 		 using (Lua lua = new Lua())
  		{
-			 lua.DebugHook += DebugHook;
 			 lua.LoadCLRPackage ();
-			 lua.SetDebugHook (NLua.Event.EventMasks.LUA_MASKLINE, 0);
 
-			 lua.DoString (@" import ('System.Numerics')
-							  c = Complex (10, 5) 
-							  c = -c ");
-			 var a = new System.Numerics.Complex (10, 0);
-			 var b = new System.Numerics.Complex (10, 0);
-			 var c = lua ["c"];
-			 var x = a + b;
+			 lua.DoString (@" import ('ConsoleTest')
+							  v = Vector()
+							  v.x = 10
+							  v.y = 3
+							  v = v*2
+							  v = 3 * v
+			");
+
+			 var v = lua ["v"];
+			
 
 			// lua.LoadCLRPackage ();
-			 lua ["a"] = a;
-			 lua ["b"] = b;
-			 var res = lua.DoString (@"return a ~= b")[0];
+			
+		
 
 			
  		}
