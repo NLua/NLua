@@ -212,7 +212,7 @@ namespace NLua
 		static int SubtractLua (LuaState luaState)
 		{
 			var translator = ObjectTranslatorPool.Instance.Find (luaState);
-			return MatchOperator (luaState, "op_Multiply", translator);
+			return MatchOperator (luaState, "op_Subtraction", translator);
 		}
 
 		/*
