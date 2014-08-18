@@ -13,45 +13,45 @@ Example: using NLua from command line.
 
 NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Windows Phone 7 and 8.
 
-Linux: [![Build Status](https://travis-ci.org/NLua/NLua.png?branch=master)](https://travis-ci.org/NLua/NLua)
-
-OSX: [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua)](http://codefoco.zapto.org:8085/job/NLua/) 
-**Download** [![dwn_osx][2]][1]
 
   [1]: https://www.dropbox.com/s/w99igtc12uocq4k/NLua.OSX.zip
   [2]: http://nvlabs.github.com/cub/download-icon.png (Download for OSX)
 
-iOS :  [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS)](http://codefoco.zapto.org:8085/job/NLua_iOS/)
-**Download** [![dwn_ios][4]][3]
 
   [3]: https://www.dropbox.com/s/s3xte19719446lx/NLua.iOS.zip
   [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
 
-Android: [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android)](http://codefoco.zapto.org:8085/job/NLua_Android/)**Download** [![dwn_android][6]][5]
+
   [5]: https://www.dropbox.com/s/mjet2sh67e7y6xo/NLua.Android.zip
   [6]: http://nvlabs.github.com/cub/download-icon.png (Download for Android)
-  
-Win32: **Download** [![dwn_w32][8]][7]
 
   [7]: https://www.dropbox.com/s/jkr1pnwvqw6w0r8/NLua.Win32.zip
   [8]: http://nvlabs.github.com/cub/download-icon.png (Download for Win32)
-  
-Win64: **Download** [![dwn_w64][10]][9]
 
   [9]: https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip
   [10]: http://nvlabs.github.com/cub/download-icon.png (Download for Win64)
-  
-Windows Phone 7: **Download** [![dwn_wp7][12]][11]
 
   [11]: https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip
   [12]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 7)
-  
-Windows Phone 8: **Download** [![dwn_wp8][14]][13]
 
   [13]: https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip?
   [14]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (ARM+x86))
+  
+|  | Build Status | Download |
+| :------ | ------: | :------: |
+| **Linux** | [![Linux](https://travis-ci.org/NLua/NLua.png?branch=master)](https://travis-ci.org/NLua/NLua) |
+| **OSX**   | [![OSX](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_OSX)](http://codefoco.zapto.org:8085/job/NLua_OSX/) | [![dwn_osx][2]][1] |
+| **iOS** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS)](http://codefoco.zapto.org:8085/view/X/job/NLua_iOS/) | [![dwn_ios][4]][3] |
+| **Android** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android)](http://codefoco.zapto.org:8085/view/X/job/NLua_Android/) | [![dwn_android][6]][5] |
+| **Win32** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows)](http://codefoco.zapto.org:8085/view/X/job/NLua_Windows/) | [![dwn_w32][8]][7] |
+| **Win64** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows)](http://codefoco.zapto.org:8085/view/X/job/NLua_Windows/) | [![dwn_w64][10]][9] |
 
 Unity3D support branch:  [unity3d](https://github.com/NLua/NLua/tree/unity3d) by [miaodadao](https://github.com/miaodadao).
+
+[15]: 
+[16]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS
+[17]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android
+[18]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows
 
 Windows: We don't have a CI Server for Windows yet. 
 	 To build NLua you will need msysgit, CMake and NUnit http://screencast.com/t/rYuDtCdFG7
