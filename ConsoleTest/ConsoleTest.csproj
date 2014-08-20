@@ -87,7 +87,7 @@
       <Name>KeraLua.Net45</Name>
     </ProjectReference>
     <ProjectReference Include="..\NLuaTest\NLuaTest.csproj">
-      <Project>{d5fcadfa-5047-40c2-b392-256875862920}</Project>
+      <Project>{D5FCADFA-5047-40C2-B392-256875862920}</Project>
       <Name>NLuaTest</Name>
     </ProjectReference>
   </ItemGroup>
