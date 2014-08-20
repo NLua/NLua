@@ -1,5 +1,5 @@
 #!/bin/sh
-xbuild NLua.Net40.sln /p:Configuration=ReleaseKopiLua
+xbuild NLua.Net45.sln /p:Configuration=ReleaseKopiLua
 cd tests/
-export MONO_PATH="/Library/Frameworks/Mono.framework/Libraries/mono/4.0/"
+export MONO_PATH="/Library/Frameworks/Mono.framework/Libraries/mono/4.5/"
 nunit-console NLuaTest.dll -xml=$1
