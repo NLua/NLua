@@ -93,6 +93,10 @@
       <Project>{47153754-10F5-44D8-B578-F5A32B69061A}</Project>
       <Name>KeraLua.Net45</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Core\KopiLua\KopiLua\KopiLua.Net45.csproj">
+      <Project>{e8ddbc21-ef74-4aba-9c49-bfc702be25d8}</Project>
+      <Name>KopiLua.Net45</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core\NLua\NLua.Net45.csproj">
       <Project>{F55CABBB-4108-4A39-94E1-581FD46DC021}</Project>
       <Name>NLua.Net45</Name>

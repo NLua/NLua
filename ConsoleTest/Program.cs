@@ -47,14 +47,19 @@ namespace ConsoleTest
 
 			using (Lua lua = new Lua ()) {
 				lua.LoadCLRPackage ();
-				lua.DoString ("import('NLuaTest')");
-				lua.DoString ("res = LuaTests.UnicodeString");
-				string res = (string)lua ["res"];
 
-				if (LuaTests.UnicodeString == res)
-					Console.WriteLine ("Gronha");
+				lua.DoString (@" import ('ConsoleTest')
+							  v = Vector()
+							  v.x = 10
+							  v.y = 3
+							  v = v*2 ");
+
+				var v = (ConsoleTest.Vector)lua ["v"];
+
+
+				lua.DoString (@" x = 2*v");
+				var x = (Vector)lua ["x"];
 			}
-
 
 		}
 	}
