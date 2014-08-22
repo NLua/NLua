@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{0E28CF40-4DFA-46FE-95BB-E90648DFE6F5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{B13128D8-A4F3-4C53-A4C6-F2EA34F527BD}"
@@ -12,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.Net35", "Core\NLua\NLua.Net35.csproj", "{F55CABBB-4108-4A39-94E1-581FD46DC021}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeraLua.Net35", "Core\KeraLua\src\KeraLua.Net35.csproj", "{47153754-10F5-44D8-B578-F5A32B69061A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.35", "NLuaTest\NLuaTest.35.csproj", "{D5FCADFA-5047-40C2-B392-256875862920}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{47153754-10F5-44D8-B578-F5A32B69061A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{47153754-10F5-44D8-B578-F5A32B69061A}.ReleaseKopiLua|Any CPU.ActiveCfg = ReleaseKopiLua|Any CPU
 		{47153754-10F5-44D8-B578-F5A32B69061A}.ReleaseKopiLua|Any CPU.Build.0 = ReleaseKopiLua|Any CPU
+		{D5FCADFA-5047-40C2-B392-256875862920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5FCADFA-5047-40C2-B392-256875862920}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5FCADFA-5047-40C2-B392-256875862920}.DebugKopiLua|Any CPU.ActiveCfg = DebugKopiLua|Any CPU
+		{D5FCADFA-5047-40C2-B392-256875862920}.DebugKopiLua|Any CPU.Build.0 = DebugKopiLua|Any CPU
+		{D5FCADFA-5047-40C2-B392-256875862920}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5FCADFA-5047-40C2-B392-256875862920}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5FCADFA-5047-40C2-B392-256875862920}.ReleaseKopiLua|Any CPU.ActiveCfg = ReleaseKopiLua|Any CPU
+		{D5FCADFA-5047-40C2-B392-256875862920}.ReleaseKopiLua|Any CPU.Build.0 = ReleaseKopiLua|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +65,7 @@ Global
 		{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8} = {B8664957-CB71-4F11-A4DB-59E7514BC5F3}
 		{F55CABBB-4108-4A39-94E1-581FD46DC021} = {B8664957-CB71-4F11-A4DB-59E7514BC5F3}
 		{47153754-10F5-44D8-B578-F5A32B69061A} = {B8664957-CB71-4F11-A4DB-59E7514BC5F3}
+		{D5FCADFA-5047-40C2-B392-256875862920} = {0E28CF40-4DFA-46FE-95BB-E90648DFE6F5}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = NLuaTest\NLuaTest.csproj

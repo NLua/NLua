@@ -1958,7 +1958,7 @@ namespace NLuaTest
 				Assert.AreEqual (42, (int)(double)lua ["g_dot.key\\.with\\.dot"]);
 			}
 		}
-
+#if !WINDOWS_PHONE && !NET_3_5
 		[Test]
 		public void TestOperatorAdd ()
 		{
@@ -2050,7 +2050,7 @@ namespace NLuaTest
 				Assert.AreEqual (expected, res);
 			}
 		}
-
+#endif
 		[Test]
 		public void TestCaseFields ()
 		{
