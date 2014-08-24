@@ -44,7 +44,7 @@ NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Win
 | **iOS** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS)](http://codefoco.zapto.org:8085/view/X/job/NLua_iOS/) | [![dwn_ios][4]][3] |
 | **Android** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android)](http://codefoco.zapto.org:8085/view/X/job/NLua_Android/) | [![dwn_android][6]][5] |
 | **Win32** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows)](http://codefoco.zapto.org:8085/view/X/job/NLua_Windows/) | [![dwn_w32][8]][7] |
-| **Win64** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows)](http://codefoco.zapto.org:8085/view/X/job/NLua_Windows/) | [![dwn_w64][10]][9] |
+| **Win64** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Win64)](http://codefoco.zapto.org:8085/view/X/job/NLua_Windows/) | [![dwn_w64][10]][9] |
 
 Unity3D support branch:  [unity3d](https://github.com/NLua/NLua/tree/unity3d) by [miaodadao](https://github.com/miaodadao).
 
