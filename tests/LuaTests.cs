@@ -56,6 +56,19 @@ namespace NLuaTest
 			r.y = v.y * k;
 			return r;
 		}
+
+		public void Func ()
+		{
+			Console.WriteLine ("Func");
+		}
+	}
+
+	public static class VectorExtension
+	{
+		public static double Lenght (this Vector v)
+		{
+			return v.x * v.x + v.y * v.y;
+		}
 	}
 
 	[TestFixture]
@@ -2093,6 +2106,28 @@ namespace NLuaTest
 
 				Assert.AreEqual (40, x.x, "#3");
 				Assert.AreEqual (12, x.y, "#4");
+			}
+		}
+
+		[Test]
+		public void TestExtensionMethods ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.LoadCLRPackage ();
+
+				lua.DoString (@" import ('NLuaTest')
+							  v = Vector()
+							  v.x = 10
+							  v.y = 3
+							  v = v*2 ");
+
+				var v = (Vector)lua ["v"];
+
+				double len = v.Lenght ();
+				lua.DoString (" v:Lenght() ");
+				lua.DoString (@" len2 = v:Lenght()");
+				double len2 = (double)lua ["len2"];
+				Assert.AreEqual (len, len2, "#1");
 			}
 		}
 

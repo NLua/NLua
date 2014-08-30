@@ -26,6 +26,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace NLua.Extensions
 {
@@ -139,6 +140,45 @@ namespace NLua.Extensions
 		public static IEnumerable<MethodInfo> GetMethods (this Type t, string name, BindingFlags flags)
 		{
 			return t.GetMethods (flags).Where (m => m.Name == name);
+		}
+
+		public static MethodInfo [] GetExtensionMethods (this Type type, IEnumerable<Assembly> assemblies = null)
+		{
+			List<Type> types = new List<Type> ();
+
+			types.AddRange (type.Assembly.GetTypes ().Where (t => t.IsPublic));
+
+			if (assemblies != null) {
+				foreach (Assembly item in assemblies) {
+					if (item == type.Assembly)
+						continue;
+					types.AddRange (item.GetTypes ().Where (t => t.IsPublic));
+				}
+			}
+
+			var query = from extensionType in types
+						where extensionType.IsSealed && !extensionType.IsGenericType && !extensionType.IsNested
+						from method in extensionType.GetMethods (BindingFlags.Static | BindingFlags.Public)
+						where method.IsDefined (typeof (ExtensionAttribute), false)
+						where method.GetParameters () [0].ParameterType == type
+						select method;
+			return query.ToArray<MethodInfo> ();
+		}
+
+		/// <summary>
+		/// Extends the System.Type-type to search for a given extended MethodeName.
+		/// </summary>
+		/// <param name="MethodeName">Name of the Methode</param>
+		/// <returns>the found Methode or null</returns>
+		public static MethodInfo GetExtensionMethod (this Type t, string name, IEnumerable<Assembly> assemblies = null)
+		{
+			var mi = from methode in t.GetExtensionMethods (assemblies)
+					 where methode.Name == name
+					 select methode;
+			if (!mi.Any<MethodInfo> ())
+				return null;
+			else
+				return mi.First<MethodInfo> ();
 		}
 	}
 

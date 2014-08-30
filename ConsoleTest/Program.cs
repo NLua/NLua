@@ -9,26 +9,6 @@ using NLuaTest;
 
 namespace ConsoleTest
 {
-	public class Vector
-	{
-		public double x;
-		public double y;
-		public static Vector operator *(float k, Vector v)
-		{
-			var r = new Vector();
-			r.x = v.x * k;
-			r.y = v.y * k;
-			return r;
-		}
-
-		public static Vector operator * (Vector v, float k)
-		{
-			var r = new Vector ();
-			r.x = v.x * k;
-			r.y = v.y * k;
-			return r;
-		}
-	}
 
 	public class Program
 	{
@@ -48,17 +28,19 @@ namespace ConsoleTest
 			using (Lua lua = new Lua ()) {
 				lua.LoadCLRPackage ();
 
-				lua.DoString (@" import ('ConsoleTest')
+				lua.DoString (@" import ('NLuaTest')
 							  v = Vector()
 							  v.x = 10
 							  v.y = 3
 							  v = v*2 ");
 
-				var v = (ConsoleTest.Vector)lua ["v"];
+				var v = (Vector)lua ["v"];
 
-
-				lua.DoString (@" x = 2*v");
-				var x = (Vector)lua ["x"];
+				double len = v.Lenght ();
+				lua.DoString (" v:Lenght() ");
+				lua.DoString (@" len2 = v:Lenght()");
+				double len2 = (double)lua ["len2"];
+				
 			}
 
 		}

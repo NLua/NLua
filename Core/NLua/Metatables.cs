@@ -404,7 +404,7 @@ namespace NLua
 					return GetMember (luaState, objType, obj, methodName, BindingFlags.Instance);
 			} catch {
 			}
-
+			
 			// Try to access by array if the type is right and index is an int (lua numbers always come across as double)
 			if (objType.IsArray && index is double) {
 				int intIndex = (int)((double)index);
@@ -423,6 +423,10 @@ namespace NLua
 					translator.Push (luaState, arr [intIndex]);
 				}
 			} else {
+
+				if (!string.IsNullOrEmpty (methodName) && IsExtensionMethodPresent (objType, methodName)) {
+					return GetExtensionMethod (luaState, objType, obj, methodName);
+				}
 				// Try to use get_Item to index into this .net object
 				var methods = objType.GetMethods ();
 
@@ -527,6 +531,36 @@ namespace NLua
 
 			var members = objType.GetMember (methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
 			return (members.Length > 0);
+		}
+
+		bool IsExtensionMethodPresent (Type type, string name)
+		{
+			object cachedMember = CheckMemberCache (memberCache, type, name);
+
+			if (cachedMember != null)
+				return true;
+
+			return translator.IsExtensionMethodPresent (type, name);
+		}
+
+		int GetExtensionMethod (LuaState luaState, Type type, object obj, string name)
+		{
+			object cachedMember = CheckMemberCache (memberCache, type, name);
+
+			if (cachedMember != null && cachedMember is LuaNativeFunction) {
+					translator.PushFunction (luaState, (LuaNativeFunction)cachedMember);
+					translator.Push (luaState, true);
+					return 2;
+			}
+
+			MethodInfo methodInfo = translator.GetExtensionMethod (type, name);
+			var wrapper = new LuaNativeFunction ((new LuaMethodWrapper (translator, obj, type, methodInfo)).invokeFunction);
+
+			SetMemberCache (memberCache, type, name, wrapper);
+
+			translator.PushFunction (luaState, wrapper);
+			translator.Push (luaState, true);
+			return 2;			
 		}
 
 		/*
