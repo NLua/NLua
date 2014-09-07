@@ -70,7 +70,6 @@ namespace NLua
 		/// <summary>
 		/// Event that is raised when an exception occures during a hook call.
 		/// </summary>
-		/// <author>Reinhard Ostermeier</author>
 		public event EventHandler<HookExceptionEventArgs> HookException;
 		/// <summary>
 		/// Event when lua hook callback is called
@@ -78,12 +77,10 @@ namespace NLua
 		/// <remarks>
 		/// Is only raised if SetDebugHook is called before.
 		/// </remarks>
-		/// <author>Reinhard Ostermeier</author>
 		public event EventHandler<DebugHookEventArgs> DebugHook;
 		/// <summary>
 		/// lua hook calback delegate
 		/// </summary>
-		/// <author>Reinhard Ostermeier</author>
 		private LuaHook hookCallback = null;
 		#endregion
 		#region Globals auto-complete
@@ -903,50 +900,7 @@ end
 			return LuaCore.LuaGetHookCount (luaState);
 		}
 
-		/// <summary>
-		/// Gets the stack entry on a given level
-		/// </summary>
-		/// <param name = "level">level</param>
-		/// <param name = "luaDebug">lua debug structure</param>
-		/// <returns>Returns true if level was allowed, false if level was invalid.</returns>
-		/*public bool GetStack(int level, out LuaCore.lua_Debug luaDebug)
-		{
-			luaDebug = new LuaDebug();
-			LuaState ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
-			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
-			try
-			{
-				return LuaLib.lua_getstack(luaState, level, luaDebug) != 0;
-			}
-			finally
-			{
-				luaDebug = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(ld, typeof(LuaDebug));
-				System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
-			}
-		}*/
-
-		/// <summary>
-		/// Gets info (see lua docs)
-		/// </summary>
-		/// <param name = "what">what (see lua docs)</param>
-		/// <param name = "luaDebug">lua debug structure</param>
-		/// <returns>see lua docs</returns>
-		/// <author>Reinhard Ostermeier</author>
-		/*public int GetInfo(String what, ref LuaCore.lua_Debug luaDebug)
-		{
-			LuaState ld = System.Runtime.InteropServices.Marshal.AllocHGlobal(System.Runtime.InteropServices.Marshal.SizeOf(luaDebug));
-			System.Runtime.InteropServices.Marshal.StructureToPtr(luaDebug, ld, false);
-			try
-			{
-				return LuaLib.lua_getinfo(luaState, what, ld);
-			}
-			finally
-			{
-				luaDebug = (LuaDebug)System.Runtime.InteropServices.Marshal.PtrToStructure(ld, typeof(LuaDebug));
-				System.Runtime.InteropServices.Marshal.FreeHGlobal(ld);
-			}
-		}*/
-
+			
 		/// <summary>
 		/// Gets local (see lua docs)
 		/// </summary>
@@ -1047,7 +1001,6 @@ end
 		/// Pops a value from the lua stack.
 		/// </summary>
 		/// <returns>Returns the top value from the lua stack.</returns>
-		/// <author>Reinhard Ostermeier</author>
 		public object Pop ()
 		{
 			int top = LuaLib.LuaGetTop (luaState);

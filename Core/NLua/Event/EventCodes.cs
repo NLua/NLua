@@ -33,7 +33,6 @@ namespace NLua.Event
 	/// <remarks>
 	/// Do not change any of the values because they must match the lua values
 	/// </remarks>
-	/// <author>Reinhard Ostermeier</author>
 	public enum EventCodes
 	{
 		LUA_HOOKCALL    = 0,

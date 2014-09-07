@@ -93,7 +93,7 @@ namespace NLuaTest
 		[Test]
 		public void Life ()
 		{
-			//TestLuaFile ("life");
+			TestLuaFile ("life");
 		}
 		
 		[Test]
