@@ -36,7 +36,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugKopiLua|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugKopiLua\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;USE_KOPILUA</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -50,6 +50,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>true</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>USE_KOPILUA</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

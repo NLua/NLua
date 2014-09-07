@@ -2131,7 +2131,60 @@ namespace NLuaTest
 			}
 		}
 
-		
+		[Test]
+		public void TestGetStack ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.LoadCLRPackage ();
+				m_lua = lua;
+				lua.DoString (@" 
+								import ('ConsoleTest')
+								function f1 ()
+									 f2 ()
+								 end
+								 
+								function f2()
+									f3()
+								end
+
+								function f3()
+									Program.func()
+								end
+								
+								f1 ()
+								");
+			}
+			m_lua = null;
+		}
+
+		public static void func()
+		{
+#if USE_KOPILUA
+			string expected = "[0] [C]:-1 -- func [field]\n[1] [string \"chunk\"]:12 -- f3 [global]\n[2] [string \"chunk\"]:8 -- f2 [global]\n[3] [string \"chunk\"]:4 -- f1 [global]\n[4] [string \"chunk\"]:15 -- <unknow> []\n";
+			KopiLua.LuaDebug info = new KopiLua.LuaDebug ();
+#else
+			string expected = "[0] func:-1 -- <unknown> [func]\n[1] f3:12 -- <unknown> [f3]\n[2] f2:8 -- <unknown> [f2]\n[3] f1:4 -- <unknown> [f1]\n[4] :15 --  []\n";
+			KeraLua.LuaDebug info = new KeraLua.LuaDebug ();
+#endif
+
+			int level = 0;
+			StringBuilder sb = new StringBuilder ();
+			while (m_lua.GetStack (level,ref info) != 0) {
+				m_lua.GetInfo ("nSl", ref info);
+				string name = "<unknow>";
+				if (info.name != null && !string.IsNullOrEmpty(info.name.ToString()))
+					name = info.name.ToString ();
+
+				sb.AppendFormat ("[{0}] {1}:{2} -- {3} [{4}]\n",
+					level, info.shortsrc, info.currentline,
+					name, info.namewhat);
+				++level;
+			}
+			string x = sb.ToString ();
+			Assert.AreEqual (expected, x);
+		}
+
+		static Lua m_lua;
 					
 	}
 }

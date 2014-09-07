@@ -865,7 +865,6 @@ end
 		/// <param name = "mask">Mask</param>
 		/// <param name = "count">Count</param>
 		/// <returns>see lua docs. -1 if hook is already set</returns>
-		/// <author>Reinhard Ostermeier</author>
 		public int SetDebugHook (EventMasks mask, int count)
 		{
 			if (hookCallback == null) {
@@ -880,7 +879,6 @@ end
 		/// Removes the debug hook
 		/// </summary>
 		/// <returns>see lua docs</returns>
-		/// <author>Reinhard Ostermeier</author>
 		public int RemoveDebugHook ()
 		{
 			hookCallback = null;
@@ -891,7 +889,6 @@ end
 		/// Gets the hook mask.
 		/// </summary>
 		/// <returns>hook mask</returns>
-		/// <author>Reinhard Ostermeier</author>
 		public EventMasks GetHookMask ()
 		{
 			return (EventMasks)LuaCore.LuaGetHookMask (luaState);
@@ -901,7 +898,6 @@ end
 		/// Gets the hook count
 		/// </summary>
 		/// <returns>see lua docs</returns>
-		/// <author>Reinhard Ostermeier</author>
 		public int GetHookCount ()
 		{
 			return LuaCore.LuaGetHookCount (luaState);
@@ -913,7 +909,6 @@ end
 		/// <param name = "level">level</param>
 		/// <param name = "luaDebug">lua debug structure</param>
 		/// <returns>Returns true if level was allowed, false if level was invalid.</returns>
-		/// <author>Reinhard Ostermeier</author>
 		/*public bool GetStack(int level, out LuaCore.lua_Debug luaDebug)
 		{
 			luaDebug = new LuaDebug();
@@ -958,7 +953,6 @@ end
 		/// <param name = "luaDebug">lua debug structure</param>
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
-		/// <author>Reinhard Ostermeier</author>
 		public string GetLocal (LuaDebug luaDebug, int n)
 		{
 			return LuaCore.LuaGetLocal (luaState, luaDebug, n).ToString ();
@@ -970,10 +964,19 @@ end
 		/// <param name = "luaDebug">lua debug structure</param>
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
-		/// <author>Reinhard Ostermeier</author>
 		public string SetLocal (LuaDebug luaDebug, int n)
 		{
 			return LuaCore.LuaSetLocal (luaState, luaDebug, n).ToString ();
+		}
+
+		public int GetStack (int level, ref LuaDebug ar)
+		{
+			return LuaCore.LuaGetStack (luaState, level,ref ar);
+		}
+
+		public int GetInfo (string what, ref LuaDebug ar)
+		{
+			return LuaCore.LuaGetInfo (luaState, what, ref ar);
 		}
 
 		/// <summary>
@@ -982,7 +985,6 @@ end
 		/// <param name = "funcindex">see lua docs</param>
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
-		/// <author>Reinhard Ostermeier</author>
 		public string GetUpValue (int funcindex, int n)
 		{
 			return LuaCore.LuaGetUpValue (luaState, funcindex, n).ToString ();
@@ -994,7 +996,6 @@ end
 		/// <param name = "funcindex">see lua docs</param>
 		/// <param name = "n">see lua docs</param>
 		/// <returns>see lua docs</returns>
-		/// <author>Reinhard Ostermeier</author>
 		public string SetUpValue (int funcindex, int n)
 		{
 			return LuaCore.LuaSetUpValue (luaState, funcindex, n).ToString ();
@@ -1005,7 +1006,6 @@ end
 		/// </summary>
 		/// <param name = "luaState">lua state</param>
 		/// <param name = "luaDebug">Pointer to LuaDebug (lua_debug) structure</param>
-		/// <author>Reinhard Ostermeier</author>
 		/// 
 #if MONOTOUCH
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaHook))]
@@ -1058,7 +1058,6 @@ end
 		/// Pushes a value onto the lua stack.
 		/// </summary>
 		/// <param name = "value">Value to push.</param>
-		/// <author>Reinhard Ostermeier</author>
 		public void Push (object value)
 		{
 			translator.Push (luaState, value);
@@ -1101,7 +1100,6 @@ end
 		/*
 		 * Gets a numeric field of the table or userdata corresponding the the provided reference
 		 */
-
 		internal object GetObject (int reference, object field)
 		{
 			int oldTop = LuaLib.LuaGetTop (luaState);
@@ -1116,8 +1114,7 @@ end
 		/*
 		 * Sets a field of the table or userdata corresponding the the provided reference
 		 * to the provided value
-		 */
-		internal void SetObject (int reference, string field, object val)
+		 */		internal void SetObject (int reference, string field, object val)
 		{
 			int oldTop = LuaLib.LuaGetTop (luaState);
 			LuaLib.LuaGetRef (luaState, reference);

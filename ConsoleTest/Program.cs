@@ -14,33 +14,51 @@ namespace ConsoleTest
 	{
 		public static void func()
 		{
-			Console.WriteLine ("Casa");
-		}
+			KopiLua.LuaDebug info = new KopiLua.LuaDebug ();
+			int level = 0;
+			StringBuilder sb = new StringBuilder ();
+			while (m_lua.GetStack (level,ref info) != 0) {
+				m_lua.GetInfo ("nSl", ref info);
+				string name = "<unknow>";
+				if (info.name != null && !string.IsNullOrEmpty(info.name.ToString()))
+					name = info.name.ToString ();
 
-		static void DebugHook (object sender, NLua.Event.DebugHookEventArgs args)
-		{
-
+				sb.AppendFormat ("[{0}] {1}:{2} -- {3} [{4}]\n",
+					level, info.shortsrc, info.currentline,
+					name, info.namewhat);
+				++level;
+			}
+			string expected = "[0] [C]:-1 -- func [field]\n[1] [string \"chunk\"]:12 -- f3 [global]\n[2] [string \"chunk\"]:8 -- f2 [global]\n[3] [string \"chunk\"]:4 -- f1 [global]\n[4] [string \"chunk\"]:15 -- <unknow> []\n";
+			string x = sb.ToString ();
+			if (x == expected)
+				Console.WriteLine ("OK");
+			Console.Write (x);
 		}
+		static Lua m_lua;
+
 
 		static void Main (string [] args)
 		{
 
 			using (Lua lua = new Lua ()) {
 				lua.LoadCLRPackage ();
+				m_lua = lua;
+				lua.DoString (@" 
+								import ('ConsoleTest')
+								function f1 ()
+									 f2 ()
+								 end
+								 
+								function f2()
+									f3()
+								end
 
-				lua.DoString (@" import ('NLuaTest')
-							  v = Vector()
-							  v.x = 10
-							  v.y = 3
-							  v = v*2 ");
-
-				var v = (Vector)lua ["v"];
-
-				double len = v.Lenght ();
-				lua.DoString (" v:Lenght() ");
-				lua.DoString (@" len2 = v:Lenght()");
-				double len2 = (double)lua ["len2"];
-				
+								function f3()
+									Program.func()
+								end
+								
+								f1 ()
+								");				
 			}
 
 		}
