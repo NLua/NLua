@@ -14,7 +14,7 @@ namespace ConsoleTest
 	{
 		public static void func()
 		{
-			KopiLua.LuaDebug info = new KopiLua.LuaDebug ();
+			KeraLua.LuaDebug info = new KeraLua.LuaDebug ();
 			int level = 0;
 			StringBuilder sb = new StringBuilder ();
 			while (m_lua.GetStack (level,ref info) != 0) {
