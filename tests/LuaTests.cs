@@ -2138,7 +2138,7 @@ namespace NLuaTest
 				lua.LoadCLRPackage ();
 				m_lua = lua;
 				lua.DoString (@" 
-								import ('ConsoleTest')
+								import ('NLuaTest')
 								function f1 ()
 									 f2 ()
 								 end
@@ -2148,7 +2148,7 @@ namespace NLuaTest
 								end
 
 								function f3()
-									Program.func()
+									LuaTests.func()
 								end
 								
 								f1 ()
