@@ -2,7 +2,6 @@ NLua
 ========
 
 
-
 [![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
 
 NLua is a fork project of LuaInterface (from Fábio Mascarenhas/Craig Presti).
