@@ -7,7 +7,7 @@ language: c
 
 # We need CMake, Mono and NUnit
 install:
-  - sudo apt-get install cmake mono-complete nunit >/dev/null 2>&1
+  - sudo apt-get install cmake mono-devel nunit >/dev/null 2>&1
 
 script:
   - uname --all
