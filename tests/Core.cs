@@ -49,12 +49,11 @@ namespace NLuaTest
 		public void Setup()
 		{
 			lua = new Lua ();
-		
+			lua.RegisterFunction ("WriteLineString", typeof (Console).GetMethod ("WriteLine", new Type [] { typeof (String) }));
+			
 			lua.DoString (@"
-			luanet.load_assembly ('System')
-			Console = luanet.import_type ('System.Console')
-			function print (...)
-				Console.WriteLine (...)
+			function print (param)
+				WriteLineString (tostring(param))
 			end
 			");
 		}
