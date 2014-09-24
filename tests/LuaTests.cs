@@ -2132,6 +2132,24 @@ namespace NLuaTest
 		}
 
 		[Test]
+		public void TestOverloadedMethods ()
+		{
+			using (Lua lua = new Lua ()) {
+				var obj = new TestClassWithOverloadedMethod ();
+				lua ["obj"] = obj;
+				lua.DoString (@" 
+								obj:Func (10)
+								obj:Func ('10')
+								obj:Func (10)
+								obj:Func ('10')
+								obj:Func (10)
+								");
+				Assert.AreEqual (3, obj.CallsToIntFunc,"#integer");
+				Assert.AreEqual (2, obj.CallsToStringFunc, "#string");
+			}
+		}
+
+		[Test]
 		public void TestGetStack ()
 		{
 			using (Lua lua = new Lua ()) {
