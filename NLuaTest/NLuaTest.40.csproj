@@ -45,6 +45,7 @@
     <OutputPath>..\tests\</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>true</Optimize>
+    <DefineConstants>USE_KOPILUA</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
