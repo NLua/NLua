@@ -171,6 +171,7 @@ local mt = {
 		local class = rawget(package, classname)
 		if class == nil then
 			class = import_type(package.packageName .. ""."" .. classname)
+			if class == nil then class = import_type(classname) end
 			package[classname] = class		-- keep what we found around, so it will be shared
 		end
 		return class
