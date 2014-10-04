@@ -35,10 +35,14 @@ namespace NLua
 	public abstract class LuaBase : IDisposable
 	{
 		private bool _Disposed;
+#if !UNITY_3D
 		[CLSCompliantAttribute(false)]
+#endif
 		protected int
 			_Reference;
+#if !UNITY_3D
 		[CLSCompliantAttribute(false)]
+#endif
 		protected Lua
 			_Interpreter;
 
