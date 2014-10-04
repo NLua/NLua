@@ -339,6 +339,8 @@ namespace NLua
 
 #if WINDOWS_PHONE
 			Debug.WriteLine("lua stack depth: {0}", depth);
+#elif UNITY_3D
+			UnityEngine.Debug.Log(string.Format("lua stack depth: {0}", depth));
 #elif !SILVERLIGHT
 			Debug.Print ("lua stack depth: {0}", depth);
 #endif
@@ -356,6 +358,8 @@ namespace NLua
 
 #if WINDOWS_PHONE
                 Debug.WriteLine("{0}: ({1}) {2}", i, typestr, strrep);
+#elif UNITY_3D
+				UnityEngine.Debug.Log(string.Format("{0}: ({1}) {2}", i, typestr, strrep));
 #elif !SILVERLIGHT
 				Debug.Print ("{0}: ({1}) {2}", i, typestr, strrep);
 #endif
