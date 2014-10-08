@@ -87,6 +87,7 @@
     <Compile Include="Method\MethodCache.cs" />
     <Compile Include="Method\RegisterEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Platform\CLSCompliantAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile.am" />
