@@ -333,7 +333,6 @@ end
 #if MONOTOUCH
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
-		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 		static int PanicCallback (LuaState luaState)
 		{
 			string reason = string.Format ("unprotected error in call to Lua API ({0})", LuaLib.LuaToString (luaState, -1));
@@ -426,7 +425,7 @@ end
 		}
 		
 		/// <summary>
-		/// 
+		/// Load a File on, and return a LuaFunction to execute the file loaded (useful to see if the syntax of a file is ok)
 		/// </summary>
 		/// <param name = "fileName"></param>
 		/// <returns></returns>
@@ -603,8 +602,8 @@ end
 					string name = method.Name;
 					if (
 						// Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-						(method.GetCustomAttributes (typeof(LuaHideAttribute), false).Length == 0) &&
-						(method.GetCustomAttributes (typeof(LuaGlobalAttribute), false).Length == 0) &&
+						(!method.GetCustomAttributes (typeof(LuaHideAttribute), false).Any ()) &&
+						(!method.GetCustomAttributes (typeof(LuaGlobalAttribute), false).Any ()) &&
 					// Exclude some generic .NET methods that wouldn't be very usefull in Lua
 						name != "GetType" && name != "GetHashCode" && name != "Equals" &&
 						name != "ToString" && name != "Clone" && name != "Dispose" &&
@@ -627,8 +626,8 @@ end
 				foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Instance)) {
 					if (
 						// Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-						(field.GetCustomAttributes (typeof(LuaHideAttribute), false).Length == 0) &&
-						(field.GetCustomAttributes (typeof(LuaGlobalAttribute), false).Length == 0)) {
+						(!field.GetCustomAttributes (typeof(LuaHideAttribute), false).Any ()) &&
+						(!field.GetCustomAttributes (typeof(LuaGlobalAttribute), false).Any ())) {
 						// Go into recursion for members
 						RegisterGlobal (path + "." + field.Name, field.FieldType, recursionCounter + 1);
 					}
@@ -639,8 +638,8 @@ end
 				foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
 					if (
 						// Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-						(property.GetCustomAttributes (typeof(LuaHideAttribute), false).Length == 0) &&
-						(property.GetCustomAttributes (typeof(LuaGlobalAttribute), false).Length == 0)
+						(!property.GetCustomAttributes (typeof(LuaHideAttribute), false).Any ()) &&
+						(!property.GetCustomAttributes (typeof(LuaGlobalAttribute), false).Any ())
 					// Exclude some generic .NET properties that wouldn't be very usefull in Lua
 						&& property.Name != "Item") {
 						// Go into recursion for members
@@ -660,7 +659,7 @@ end
 			* Navigates a table in the top of the stack, returning
 			* the value of the specified field
 			*/
-		internal object GetObject (string[] remainingPath)
+		object GetObject (string[] remainingPath)
 		{
 			object returnValue = null;
 
@@ -792,7 +791,7 @@ end
 		/*
 			* Navigates a table to set the value of one of its fields
 			*/
-		internal void SetObject (string[] remainingPath, object val)
+		void SetObject (string[] remainingPath, object val)
 		{
 			for (int i = 0; i < remainingPath.Length-1; i++) {
 				LuaLib.LuaPushString (luaState, remainingPath [i]);
@@ -965,7 +964,6 @@ end
 #if MONOTOUCH
 		[MonoTouch.MonoPInvokeCallback (typeof (LuaHook))]
 #endif
-		[System.Runtime.InteropServices.AllowReversePInvokeCalls]
 #if USE_KOPILUA
 		static void DebugHookCallback (LuaState luaState, LuaDebug debug)
 		{
@@ -1068,7 +1066,8 @@ end
 		/*
 		 * Sets a field of the table or userdata corresponding the the provided reference
 		 * to the provided value
-		 */		internal void SetObject (int reference, string field, object val)
+		 */		
+		internal void SetObject (int reference, string field, object val)
 		{
 			int oldTop = LuaLib.LuaGetTop (luaState);
 			LuaLib.LuaGetRef (luaState, reference);

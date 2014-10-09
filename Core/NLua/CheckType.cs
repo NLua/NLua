@@ -47,13 +47,9 @@ namespace NLua
 	 */
 	sealed class CheckType
 	{
-#if SILVERLIGHT
-		private Dictionary<Type, ExtractValue> extractValues = new Dictionary<Type, ExtractValue>();
-#else
-		private Dictionary<long, ExtractValue> extractValues = new Dictionary<long, ExtractValue> ();
-#endif
-		private ExtractValue extractNetObject;
-		private ObjectTranslator translator;
+		Dictionary<Type, ExtractValue> extractValues = new Dictionary<Type, ExtractValue>();
+		ExtractValue extractNetObject;
+		ObjectTranslator translator;
 
 		public CheckType (ObjectTranslator translator)
 		{
@@ -185,17 +181,10 @@ namespace NLua
 			return null;
 		}
 
-#if SILVERLIGHT
-		private Type GetExtractDictionaryKey(Type targetType)
+		Type GetExtractDictionaryKey(Type targetType)
 		{
 			return targetType;
 		}
-#else
-		private long GetExtractDictionaryKey(Type targetType)
-		{
-			return targetType.TypeHandle.Value.ToInt64();
-		}
-#endif
 
 		/*
 		 * The following functions return the value in the Lua stack
