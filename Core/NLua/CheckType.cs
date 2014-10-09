@@ -84,7 +84,7 @@ namespace NLua
 		 * Checks if the value at Lua stack index stackPos matches paramType, 
 		 * returning a conversion function if it does and null otherwise.
 		 */
-		internal ExtractValue GetExtractor (IReflect paramType)
+		internal ExtractValue GetExtractor (ProxyType paramType)
 		{
 			return GetExtractor (paramType.UnderlyingSystemType);
 		}

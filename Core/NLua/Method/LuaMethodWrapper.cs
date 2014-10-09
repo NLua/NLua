@@ -66,7 +66,7 @@ namespace NLua.Method
 		/*
 		 * Constructs the wrapper for a known MethodBase instance
 		 */
-		public LuaMethodWrapper (ObjectTranslator translator, object target, IReflect targetType, MethodBase method)
+		public LuaMethodWrapper (ObjectTranslator translator, object target, ProxyType targetType, MethodBase method)
 		{
 			invokeFunction = new LuaNativeFunction (this.Call);
 			_Translator = translator;
@@ -87,7 +87,7 @@ namespace NLua.Method
 		/*
 		 * Constructs the wrapper for a known method name
 		 */
-		public LuaMethodWrapper (ObjectTranslator translator, IReflect targetType, string methodName, BindingFlags bindingType)
+		public LuaMethodWrapper (ObjectTranslator translator, ProxyType targetType, string methodName, BindingFlags bindingType)
 		{
 			invokeFunction = new LuaNativeFunction (this.Call);
 

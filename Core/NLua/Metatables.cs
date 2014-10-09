@@ -398,14 +398,14 @@ namespace NLua
 			//var indexType = index.GetType();
 			string methodName = index as string;		// will be null if not a string arg
 			var objType = obj.GetType ();
-
+			var proxyType = new ProxyType (objType);
 			// Handle the most common case, looking up the method by name. 
 
 			// CP: This will fail when using indexers and attempting to get a value with the same name as a property of the object, 
 			// ie: xmlelement['item'] <- item is a property of xmlelement
 			try {
-				if (!string.IsNullOrEmpty(methodName) && IsMemberPresent (objType, methodName))
-					return GetMember (luaState, objType, obj, methodName, BindingFlags.Instance);
+				if (!string.IsNullOrEmpty(methodName) && IsMemberPresent (proxyType, methodName))
+					return GetMember (luaState, proxyType, obj, methodName, BindingFlags.Instance);
 			} catch {
 			}
 			
@@ -508,12 +508,12 @@ namespace NLua
 				return 2;
 			}
 
-			GetMember (luaState, obj.GetType (), obj, "__luaInterface_base_" + methodName, BindingFlags.Instance);
+			GetMember (luaState, new ProxyType(obj.GetType ()), obj, "__luaInterface_base_" + methodName, BindingFlags.Instance);
 			LuaLib.LuaSetTop (luaState, -2);
 
 			if (LuaLib.LuaType (luaState, -1) == LuaTypes.Nil) {
 				LuaLib.LuaSetTop (luaState, -2);
-				return GetMember (luaState, obj.GetType (), obj, methodName, BindingFlags.Instance);
+				return GetMember (luaState, new ProxyType(obj.GetType ()), obj, methodName, BindingFlags.Instance);
 			}
 
 			LuaLib.LuaPushBoolean (luaState, false);
@@ -526,7 +526,7 @@ namespace NLua
 		/// <param name="objType"></param>
 		/// <param name="methodName"></param>
 		/// <returns></returns>
-		bool IsMemberPresent (IReflect objType, string methodName)
+		bool IsMemberPresent (ProxyType objType, string methodName)
 		{
 			object cachedMember = CheckMemberCache (memberCache, objType, methodName);
 
@@ -558,7 +558,7 @@ namespace NLua
 			}
 
 			MethodInfo methodInfo = translator.GetExtensionMethod (type, name);
-			var wrapper = new LuaNativeFunction ((new LuaMethodWrapper (translator, obj, type, methodInfo)).invokeFunction);
+			var wrapper = new LuaNativeFunction ((new LuaMethodWrapper (translator, obj,new ProxyType(type), methodInfo)).invokeFunction);
 
 			SetMemberCache (memberCache, type, name, wrapper);
 
@@ -573,7 +573,7 @@ namespace NLua
 		 * Uses reflection to find members, and stores the reflected MemberInfo object in
 		 * a cache (indexed by the type of the object and the name of the member).
 		 */
-		int GetMember (LuaState luaState, IReflect objType, object obj, string methodName, BindingFlags bindingType)
+		int GetMember (LuaState luaState, ProxyType objType, object obj, string methodName, BindingFlags bindingType)
 		{
 			bool implicitStatic = false;
 			MemberInfo member = null;
@@ -624,8 +624,8 @@ namespace NLua
 					} catch (ArgumentException) {
 						// If we can't find the getter in our class, recurse up to the base class and see
 						// if they can help.
-						if (objType is Type && !(((Type)objType) == typeof(object)))
-							return GetMember (luaState, ((Type)objType).BaseType, obj, methodName, bindingType);
+						if (objType.UnderlyingSystemType != typeof(object))
+							return GetMember (luaState, new ProxyType(objType.UnderlyingSystemType.BaseType), obj, methodName, bindingType);
 						else
 							LuaLib.LuaPushNil (luaState);
 					} catch (TargetInvocationException e) {  // Convert this exception into a Lua error
@@ -685,7 +685,12 @@ namespace NLua
 		/*
 		 * Checks if a MemberInfo object is cached, returning it or null.
 		 */
-		private object CheckMemberCache (Dictionary<object, object> memberCache, IReflect objType, string memberName)
+		object CheckMemberCache (Dictionary<object, object> memberCache, Type objType, string memberName)
+		{
+			return CheckMemberCache (memberCache, new ProxyType (objType), memberName);
+		}
+
+		object CheckMemberCache (Dictionary<object, object> memberCache, ProxyType objType, string memberName)
 		{
 			object members = null;
 
@@ -707,7 +712,12 @@ namespace NLua
 		/*
 		 * Stores a MemberInfo object in the member cache.
 		 */
-		private void SetMemberCache (Dictionary<object, object> memberCache, IReflect objType, string memberName, object member)
+		void SetMemberCache (Dictionary<object, object> memberCache, Type objType, string memberName, object member)
+		{
+			SetMemberCache (memberCache, new ProxyType (objType), memberName, member);
+		}
+
+		void SetMemberCache (Dictionary<object, object> memberCache, ProxyType objType, string memberName, object member)
 		{
 			Dictionary<object, object> members = null;
 			object memberCacheValue = null;
@@ -751,7 +761,7 @@ namespace NLua
 
 			// First try to look up the parameter as a property name
 			string detailMessage;
-			bool didMember = TrySetMember (luaState, type, target, BindingFlags.Instance, out detailMessage);
+			bool didMember = TrySetMember (luaState, new ProxyType(type), target, BindingFlags.Instance, out detailMessage);
 
 			if (didMember)
 				return 0;	   // Must have found the property name
@@ -804,7 +814,7 @@ namespace NLua
 		/// <param name="target"></param>
 		/// <param name="bindingType"></param>
 		/// <returns>false if unable to find the named member, true for success</returns>
-		private bool TrySetMember (LuaState luaState, IReflect targetType, object target, BindingFlags bindingType, out string detailMessage)
+		bool TrySetMember (LuaState luaState, ProxyType targetType, object target, BindingFlags bindingType, out string detailMessage)
 		{
 			detailMessage = null;   // No error yet
 
@@ -872,7 +882,7 @@ namespace NLua
 		 * Writes to fields or properties, either static or instance. Throws an error
 		 * if the operation is invalid.
 		 */
-		private int SetMember (LuaState luaState, IReflect targetType, object target, BindingFlags bindingType)
+		private int SetMember (LuaState luaState, ProxyType targetType, object target, BindingFlags bindingType)
 		{
 			string detail;
 			bool success = TrySetMember (luaState, targetType, target, bindingType, out detail);
@@ -915,15 +925,15 @@ namespace NLua
 
 		private int GetClassMethodInternal (LuaState luaState)
 		{
-			IReflect klass;
+			ProxyType klass;
 			object obj = translator.GetRawNetObject (luaState, 1);
 
-			if (obj == null || !(obj is IReflect)) {
+			if (obj == null || !(obj is ProxyType)) {
 				translator.ThrowError (luaState, "trying to index an invalid type reference");
 				LuaLib.LuaPushNil (luaState);
 				return 1;
 			} else
-				klass = (IReflect)obj;
+				klass = (ProxyType)obj;
 
 			if (LuaLib.LuaIsNumber (luaState, 2)) {
 				int size = (int)LuaLib.LuaToNumber (luaState, 2);
@@ -957,14 +967,14 @@ namespace NLua
 
 		private int SetClassFieldOrPropertyInternal (LuaState luaState)
 		{
-			IReflect target;
+			ProxyType target;
 			object obj = translator.GetRawNetObject (luaState, 1);
 
-			if (obj == null || !(obj is IReflect)) {
+			if (obj == null || !(obj is ProxyType)) {
 				translator.ThrowError (luaState, "trying to index an invalid type reference");
 				return 0;
 			} else
-				target = (IReflect)obj;
+				target = (ProxyType)obj;
 
 			return SetMember (luaState, target, null, BindingFlags.FlattenHierarchy | BindingFlags.Static);
 		}
@@ -989,15 +999,15 @@ namespace NLua
 		private int CallConstructorInternal (LuaState luaState)
 		{
 			var validConstructor = new MethodCache ();
-			IReflect klass;
+			ProxyType klass;
 			object obj = translator.GetRawNetObject (luaState, 1);
 
-			if (obj == null || !(obj is IReflect)) {
+			if (obj == null || !(obj is ProxyType)) {
 				translator.ThrowError (luaState, "trying to call constructor on an invalid type reference");
 				LuaLib.LuaPushNil (luaState);
 				return 1;
 			} else
-				klass = (IReflect)obj;
+				klass = (ProxyType)obj;
 
 			LuaLib.LuaRemove (luaState, 1);
 			var constructors = klass.UnderlyingSystemType.GetConstructors ();

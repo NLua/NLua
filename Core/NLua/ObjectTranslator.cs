@@ -480,12 +480,12 @@ namespace NLua
 
 		private int GetMethodSignatureInternal (LuaState luaState)
 		{
-			IReflect klass;
+			ProxyType klass;
 			object target;
 			int udata = LuaLib.LuaNetCheckUData (luaState, 1, "luaNet_class");
 
 			if (udata != -1) {
-				klass = (IReflect)objects [udata];
+				klass = (ProxyType)objects [udata];
 				target = null;
 			} else {
 				target = GetRawNetObject (luaState, 1);
@@ -496,7 +496,7 @@ namespace NLua
 					return 1;
 				}
 
-				klass = target.GetType ();
+				klass = new ProxyType(target.GetType ());
 			}
 
 			string methodName = LuaLib.LuaToString (luaState, 2).ToString ();
@@ -533,11 +533,11 @@ namespace NLua
 
 		private int GetConstructorSignatureInternal (LuaState luaState)
 		{
-			IReflect klass = null;
+			ProxyType klass = null;
 			int udata = LuaLib.LuaNetCheckUData (luaState, 1, "luaNet_class");
 
 			if (udata != -1)
-				klass = (IReflect)objects [udata];
+				klass = (ProxyType)objects [udata];
 
 			if (klass == null)
 				ThrowError (luaState, "get_constructor_bysig: first arg is invalid type reference");

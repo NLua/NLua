@@ -1103,7 +1103,7 @@ end
 		{
 			// We leave nothing on the stack when we are done
 			int oldTop = LuaLib.LuaGetTop (luaState);
-			var wrapper = new LuaMethodWrapper (translator, target, function.DeclaringType, function);
+			var wrapper = new LuaMethodWrapper (translator, target, new ProxyType(function.DeclaringType), function);
 			translator.Push (luaState, new LuaNativeFunction (wrapper.invokeFunction));
 			this [path] = translator.GetObject (luaState, -1);
 			var f = GetFunction (path);

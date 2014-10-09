@@ -32,7 +32,7 @@ namespace NLua
 	/// <summary>
 	/// Summary description for ProxyType.
 	/// </summary>
-	public class ProxyType : IReflect
+	public class ProxyType
 	{
 		private Type proxy;
 
@@ -54,14 +54,18 @@ namespace NLua
 			get { return proxy; }
 		}
 
-		public FieldInfo GetField (string name, BindingFlags bindingAttr)
+		public override bool Equals (object obj)
 		{
-			return proxy.GetField (name, bindingAttr);
+			if (obj is Type)
+				return proxy.Equals ((Type)obj);
+			if (obj is ProxyType)
+				return proxy.Equals (((ProxyType)obj).UnderlyingSystemType);
+			return proxy.Equals (obj);
 		}
 
-		public FieldInfo[] GetFields (BindingFlags bindingAttr)
+		public override int GetHashCode ()
 		{
-			return proxy.GetFields (bindingAttr);
+			return proxy.GetHashCode ();
 		}
 
 		public MemberInfo[] GetMember (string name, BindingFlags bindingAttr)
@@ -69,44 +73,9 @@ namespace NLua
 			return proxy.GetMember (name, bindingAttr);
 		}
 
-		public MemberInfo[] GetMembers (BindingFlags bindingAttr)
-		{
-			return proxy.GetMembers (bindingAttr);
-		}
-
-		public MethodInfo GetMethod (string name, BindingFlags bindingAttr)
-		{
-			return proxy.GetMethod (name, bindingAttr);
-		}
-
 		public MethodInfo GetMethod (string name, BindingFlags bindingAttr, Binder binder, Type[] types, ParameterModifier[] modifiers)
 		{
 			return proxy.GetMethod (name, bindingAttr, binder, types, modifiers);
-		}
-
-		public MethodInfo[] GetMethods (BindingFlags bindingAttr)
-		{
-			return proxy.GetMethods (bindingAttr);
-		}
-
-		public PropertyInfo GetProperty (string name, BindingFlags bindingAttr)
-		{
-			return proxy.GetProperty (name, bindingAttr);
-		}
-
-		public PropertyInfo GetProperty (string name, BindingFlags bindingAttr, Binder binder, Type returnType, Type[] types, ParameterModifier[] modifiers)
-		{
-			return proxy.GetProperty (name, bindingAttr, binder, returnType, types, modifiers);
-		}
-
-		public PropertyInfo[] GetProperties (BindingFlags bindingAttr)
-		{
-			return proxy.GetProperties (bindingAttr);
-		}
-
-		public object InvokeMember (string name, BindingFlags invokeAttr, Binder binder, object target, object[] args, ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)
-		{
-			return proxy.InvokeMember (name, invokeAttr, binder, target, args, modifiers, culture, namedParameters);
 		}
 	}
 }
