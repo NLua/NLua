@@ -124,6 +124,7 @@
     <Compile Include="ObjectTranslatorPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyType.cs" />
+    <Compile Include="Platform\CLSCompliantAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KeraLua\external\lua\wp8_build\lua\lua52\lua52.vcxproj">

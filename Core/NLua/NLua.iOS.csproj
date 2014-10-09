@@ -84,6 +84,7 @@
     <Compile Include="ObjectTranslator.cs" />
     <Compile Include="ProxyType.cs" />
     <Compile Include="ObjectTranslatorPool.cs" />
+    <Compile Include="Platform\CLSCompliantAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KeraLua\src\KeraLua.iOS.csproj">

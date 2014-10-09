@@ -107,6 +107,7 @@
     <Compile Include="LuaLib\LuaLib.cs" />
     <Compile Include="Config\NLuaConfig.cs" />
     <Compile Include="ObjectTranslatorPool.cs" />
+    <Compile Include="Platform\CLSCompliantAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
