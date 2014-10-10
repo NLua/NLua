@@ -73,9 +73,9 @@ namespace NLua
 			return proxy.GetMember (name, bindingAttr);
 		}
 
-		public MethodInfo GetMethod (string name, BindingFlags bindingAttr, Binder binder, Type[] types, ParameterModifier[] modifiers)
+		public MethodInfo GetMethod (string name, BindingFlags bindingAttr, Type[] signature)
 		{
-			return proxy.GetMethod (name, bindingAttr, binder, types, modifiers);
+			return proxy.GetMethod (name, bindingAttr, null, signature, null);
 		}
 	}
 }

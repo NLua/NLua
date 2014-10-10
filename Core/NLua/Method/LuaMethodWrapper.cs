@@ -54,14 +54,14 @@ namespace NLua.Method
 	class LuaMethodWrapper
 	{
 		internal LuaNativeFunction invokeFunction;
-		private ObjectTranslator _Translator;
-		private MethodBase _Method;
-		private MethodCache _LastCalledMethod = new MethodCache ();
-		private string _MethodName;
-		private MemberInfo[] _Members;
-		private ExtractValue _ExtractTarget;
-		private object _Target;
-		private BindingFlags _BindingType;
+		ObjectTranslator _Translator;
+		MethodBase _Method;
+		MethodCache _LastCalledMethod = new MethodCache ();
+		string _MethodName;
+		MemberInfo[] _Members;
+		ExtractValue _ExtractTarget;
+		object _Target;
+		bool _IsStatic;
 
 		/*
 		 * Constructs the wrapper for a known MethodBase instance
@@ -77,11 +77,7 @@ namespace NLua.Method
 
 			_Method = method;
 			_MethodName = method.Name;
-
-			if (method.IsStatic)
-				_BindingType = BindingFlags.Static;
-			else
-				_BindingType = BindingFlags.Instance;
+			_IsStatic = method.IsStatic;
 		}
 
 		/*
@@ -97,8 +93,8 @@ namespace NLua.Method
 			if (targetType != null)
 				_ExtractTarget = translator.typeChecker.GetExtractor (targetType);
 
-			_BindingType = bindingType;
-			_Members = targetType.UnderlyingSystemType.GetMember (methodName, MemberTypes.Method, bindingType | BindingFlags.Public);
+			_IsStatic = (bindingType & BindingFlags.Static) == BindingFlags.Static;
+			_Members  = targetType.UnderlyingSystemType.GetMember (methodName, MemberTypes.Method, bindingType | BindingFlags.Public);
 		}
 
 		/// <summary>
@@ -125,7 +121,7 @@ namespace NLua.Method
 			if (!LuaLib.LuaCheckStack (luaState, 5))
 				throw new LuaException ("Lua stack overflow");
 
-			bool isStatic = (_BindingType & BindingFlags.Static) == BindingFlags.Static;
+			bool isStatic = _IsStatic;
 			SetPendingException (null);
 
 			if (methodToCall == null) { // Method from name
@@ -169,7 +165,7 @@ namespace NLua.Method
 									throw new LuaException (string.Format("argument number {0} is invalid",(i + 1)));
 							}
 
-							if ((_BindingType & BindingFlags.Static) == BindingFlags.Static)
+							if (_IsStatic)
 								_Translator.Push (luaState, method.Invoke (null, _LastCalledMethod.args));
 							else {
 								if (method.IsConstructor)

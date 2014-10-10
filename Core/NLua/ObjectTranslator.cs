@@ -502,7 +502,7 @@ namespace NLua
 
 			try {
 				var method = klass.GetMethod (methodName, BindingFlags.Public | BindingFlags.Static |
-					BindingFlags.Instance | BindingFlags.FlattenHierarchy, null, signature, null);
+					BindingFlags.Instance | BindingFlags.FlattenHierarchy, signature);
 				PushFunction (luaState, new LuaNativeFunction ((new LuaMethodWrapper (this, target, klass, method)).invokeFunction));
 			} catch (Exception e) {
 				ThrowError (luaState, e);
