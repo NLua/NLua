@@ -159,9 +159,9 @@ namespace NLua
 					return extractValues [extractKey];
 			} else if (typeof(Delegate).IsAssignableFrom (paramType) && luatype == LuaTypes.Function)
 				return new ExtractValue (new DelegateGenerator (translator, paramType).ExtractGenerated);
-			else if (paramType.IsInterface && luatype == LuaTypes.Table)
+			else if (paramType.IsInterface() && luatype == LuaTypes.Table)
 				return new ExtractValue (new ClassGenerator (translator, paramType).ExtractGenerated);
-			else if ((paramType.IsInterface || paramType.IsClass) && luatype == LuaTypes.Nil) {
+			else if ((paramType.IsInterface() || paramType.IsClass()) && luatype == LuaTypes.Nil) {
 				// kevinh - allow nil to be silently converted to null - extractNetObject will return null when the item ain't found
 				return extractNetObject;
 			} else if (LuaLib.LuaType (luaState, stackPos) == LuaTypes.Table) {

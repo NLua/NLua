@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 using System;
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 using System.Runtime.Serialization;
 #endif
 
@@ -33,7 +33,7 @@ namespace NLua.Exceptions
 	/// <summary>
 	/// Exceptions thrown by the Lua runtime
 	/// </summary>
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 	[Serializable]
 #endif
 	public class LuaException : Exception
@@ -50,7 +50,7 @@ namespace NLua.Exceptions
 		{
 		}
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 		protected LuaException (SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 		}

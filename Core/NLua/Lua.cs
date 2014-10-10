@@ -596,7 +596,7 @@ end
 				globals.Add (path + "(");
 			}
 			// If the type is a class or an interface and recursion hasn't been running too long, list the members
-			else if ((type.IsClass || type.IsInterface) && type != typeof(string) && recursionCounter < 2) {
+			else if ((type.IsClass () || type.IsInterface ()) && type != typeof(string) && recursionCounter < 2) {
 				#region Methods
 				foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance)) {
 					string name = method.Name;
@@ -967,6 +967,11 @@ end
 #if USE_KOPILUA
 		static void DebugHookCallback (LuaState luaState, LuaDebug debug)
 		{
+#elif NETFX_CORE
+		static void DebugHookCallback (LuaState luaState, long luaDebug)
+		{
+			IntPtr ptr = new IntPtr (luaDebug);
+			LuaDebug debug = System.Runtime.InteropServices.Marshal.PtrToStructure <LuaDebug> (ptr);
 #else
 		static void DebugHookCallback (LuaState luaState, IntPtr luaDebug)
 		{	

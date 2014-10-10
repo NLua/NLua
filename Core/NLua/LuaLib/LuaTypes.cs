@@ -27,7 +27,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
 using NLua.Extensions;

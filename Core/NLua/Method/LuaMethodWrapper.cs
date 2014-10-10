@@ -204,7 +204,11 @@ namespace NLua.Method
 					string candidateName = null;
 
 					foreach (var member in _Members) {
+#if NETFX_CORE
+						candidateName = member.DeclaringType.Name + "." + member.Name;
+#else
 						candidateName = member.ReflectedType.Name + "." + member.Name;
+#endif
 						var m = (MethodInfo)member;
 						bool isMethod = _Translator.MatchParameters (luaState, m, ref _LastCalledMethod);
 

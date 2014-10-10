@@ -326,7 +326,7 @@ namespace NLua
 		{
 			int depth = LuaLib.LuaGetTop (luaState);
 
-#if WINDOWS_PHONE
+#if WINDOWS_PHONE || NETFX_CORE
 			Debug.WriteLine("lua stack depth: {0}", depth);
 #elif UNITY_3D
 			UnityEngine.Debug.Log(string.Format("lua stack depth: {0}", depth));
@@ -345,7 +345,7 @@ namespace NLua
 					strrep = obj.ToString ();
 				}
 
-#if WINDOWS_PHONE
+#if WINDOWS_PHONE || NETFX_CORE
                 Debug.WriteLine("{0}: ({1}) {2}", i, typestr, strrep);
 #elif UNITY_3D
 			UnityEngine.Debug.Log(string.Format("{0}: ({1}) {2}", i, typestr, strrep));
@@ -400,14 +400,19 @@ namespace NLua
 			// Try to access by array if the type is right and index is an int (lua numbers always come across as double)
 			if (objType.IsArray && index is double) {
 				int intIndex = (int)((double)index);
+#if NETFX_CORE
+				Type type = objType;
+#else
+				Type type = objType.UnderlyingSystemType;
+#endif
 
-				if (objType.UnderlyingSystemType == typeof(float[])) {
+				if (type == typeof(float[])) {
 					float[] arr = ((float[])obj);
 					translator.Push (luaState, arr [intIndex]);
-				} else if (objType.UnderlyingSystemType == typeof(double[])) {
+				} else if (type == typeof(double[])) {
 					double[] arr = ((double[])obj);
 					translator.Push (luaState, arr [intIndex]);
-				} else if (objType.UnderlyingSystemType == typeof(int[])) {
+				} else if (type == typeof(int[])) {
 					int[] arr = ((int[])obj);
 					translator.Push (luaState, arr [intIndex]);
 				} else {
@@ -612,7 +617,11 @@ namespace NLua
 						// If we can't find the getter in our class, recurse up to the base class and see
 						// if they can help.
 						if (objType.UnderlyingSystemType != typeof(object))
+#if NETFX_CORE
+							return GetMember (luaState, new ProxyType(objType.UnderlyingSystemType.GetTypeInfo().BaseType), obj, methodName, bindingType);
+#else
 							return GetMember (luaState, new ProxyType(objType.UnderlyingSystemType.BaseType), obj, methodName, bindingType);
+#endif
 						else
 							LuaLib.LuaPushNil (luaState);
 					} catch (TargetInvocationException e) {  // Convert this exception into a Lua error
@@ -932,7 +941,7 @@ namespace NLua
 					return 1;
 				}
 				else
-					return GetMember (luaState, klass, null, methodName, BindingFlags.FlattenHierarchy | BindingFlags.Static);
+					return GetMember (luaState, klass, null, methodName, BindingFlags.Static);
 			}
 		}
 
@@ -960,7 +969,7 @@ namespace NLua
 			} else
 				target = (ProxyType)obj;
 
-			return SetMember (luaState, target, null, BindingFlags.FlattenHierarchy | BindingFlags.Static);
+			return SetMember (luaState, target, null, BindingFlags.Static);
 		}
 
 		/*

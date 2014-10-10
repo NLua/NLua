@@ -276,14 +276,18 @@ namespace NLua
 				Exception exception = null;
 
 				try {
+#if NETFX_CORE
+					assembly = Assembly.Load (new AssemblyName (assemblyName));
+#else
 					assembly = Assembly.Load (assemblyName);
+#endif
 				} catch (BadImageFormatException) {
 					// The assemblyName was invalid.  It is most likely a path.
 				} catch (FileNotFoundException e) {
 					exception = e;
 				}
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 				if (assembly == null) {
 					try {
 						assembly = Assembly.Load (AssemblyName.GetAssemblyName (assemblyName));
@@ -502,7 +506,7 @@ namespace NLua
 
 			try {
 				var method = klass.GetMethod (methodName, BindingFlags.Public | BindingFlags.Static |
-					BindingFlags.Instance | BindingFlags.FlattenHierarchy, signature);
+					BindingFlags.Instance, signature);
 				PushFunction (luaState, new LuaNativeFunction ((new LuaMethodWrapper (this, target, klass, method)).invokeFunction));
 			} catch (Exception e) {
 				ThrowError (luaState, e);
@@ -583,7 +587,11 @@ namespace NLua
 			}
 
 			// Object already in the list of Lua objects? Push the stored reference.
+#if NETFX_CORE
+			bool found = (!o.GetType().GetTypeInfo().IsValueType) && objectsBackMap.TryGetValue (o, out index);
+#else
 			bool found = (!o.GetType().IsValueType) && objectsBackMap.TryGetValue (o, out index);
+#endif
 
 			if (found) {
 				LuaLib.LuaLGetMetatable (luaState, "luaNet_objects");
@@ -740,7 +748,11 @@ namespace NLua
 		private void CollectObject (object o, int udata)
 		{
 			objects.Remove (udata);
+#if NETFX_CORE
+			if (!o.GetType ().GetTypeInfo ().IsValueType)
+#else
 			if (!o.GetType ().IsValueType)
+#endif
 				objectsBackMap.Remove (o);
 		}
 
@@ -749,8 +761,13 @@ namespace NLua
 			// New object: inserts it in the list
 			int index = nextObj++;
 			objects [index] = obj;
+#if NETFX_CORE
+			if (!obj.GetType ().GetTypeInfo().IsValueType)
+#else
 			if (!obj.GetType().IsValueType)
-				objectsBackMap [obj] = index;
+#endif
+
+			objectsBackMap [obj] = index;
 			return index;
 		}
 
@@ -896,7 +913,7 @@ namespace NLua
 		{
 			if (o is ILuaGeneratedType) {
 				// Make sure we are _really_ ILuaGenerated
-				var typ = o.GetType ();
+				var typ = o.GetType ().GetTypeInfo ();
 				return typ.GetInterface ("ILuaGeneratedType", true) != null;
 			} 
 			return false;
@@ -996,7 +1013,7 @@ namespace NLua
 		int EnumFromIntInternal (LuaState luaState)
 		{
 			Type t = TypeOf (luaState, 1);
-			if (t == null || !t.IsEnum)
+			if (t == null || !t.IsEnum ())
 				return PushError (luaState, "Not an Enum.");
 
 			object res = null;
