@@ -28,6 +28,9 @@ using System.Linq;
 using System.Threading;
 using System.Reflection;
 
+using NLua.Extensions;
+
+
 #if !MONOTOUCH
 using System.Reflection.Emit;
 #endif
@@ -299,7 +302,7 @@ namespace NLua
 			int i = 0;
 
 			foreach (var method in classMethods) {
-				if (klass.IsInterface) {
+				if (klass.IsInterface ()) {
 					GetReturnTypesFromMethod (method, out returnTypes [i]);
 					i++;
 				} else {

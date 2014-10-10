@@ -33,7 +33,6 @@ using NLua.Method;
 using NLua.Exceptions;
 using NLua.Extensions;
 
-
 namespace NLua
 {
 	#if USE_KOPILUA
@@ -914,7 +913,11 @@ namespace NLua
 			if (o is ILuaGeneratedType) {
 				// Make sure we are _really_ ILuaGenerated
 				var typ = o.GetType ();
+#if NETFX_CORE
+				return typ.ImplementInterface ("ILuaGeneratedType");
+#else
 				return typ.GetInterface ("ILuaGeneratedType", true) != null;
+#endif
 			} 
 			return false;
 		}

@@ -635,12 +635,12 @@ end
 				#endregion
 
 				#region Properties
-				foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
+				foreach (var property in type.GetProperties (BindingFlags.Public | BindingFlags.Instance)) {
 					if (
 						// Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
 						(!property.GetCustomAttributes (typeof(LuaHideAttribute), false).Any ()) &&
 						(!property.GetCustomAttributes (typeof(LuaGlobalAttribute), false).Any ())
-					// Exclude some generic .NET properties that wouldn't be very usefull in Lua
+					// Exclude some generic .NET properties that wouldn't be very useful in Lua
 						&& property.Name != "Item") {
 						// Go into recursion for members
 						RegisterGlobal (path + "." + property.Name, property.PropertyType, recursionCounter + 1);

@@ -366,13 +366,6 @@ namespace NLua.Extensions
 			return GetAllDeclaredFieldsRecursively (t);
 		}
 
-		public static FieldInfo GetPublicField (this Type t, string name)
-		{
-			return GetDeclaredFieldRecursively (t, name);
-		}
-
-
-
 		static IEnumerable<Type> GetTypes (this Assembly assembly)
 		{
 			return assembly.ExportedTypes;
@@ -383,7 +376,57 @@ namespace NLua.Extensions
 			return t.GetTypeInfo ().IsAssignableFrom (t2.GetTypeInfo ());
 		}
 
-		static IEnumerable<MethodInfo> GetMethods (this Type t, BindingFlags flags)
+		public static MethodInfo[] GetMethods (this Type t)
+		{
+			return null;
+		}
+
+		public static MethodInfo [] GetMethods (this Type t, BindingFlags flags)
+		{
+			return null;
+		}
+
+		public static MethodInfo GetMethod (this Type t, string name, BindingFlags flags)
+		{
+			return null;
+		}
+
+		public static MethodInfo GetMethod (this Type t, string name)
+		{
+			return null;
+		}
+
+		public static MethodInfo GetMethod (this Type t, string name, BindingFlags bindingAttr, Type[] signature)
+		{
+			return null;
+		}
+
+		public static ConstructorInfo [] GetConstructors (this Type t)
+		{
+			return null;
+		}
+
+		public static ConstructorInfo GetConstructor (this Type t, Type [] signature)
+		{
+			return null;
+		}
+
+		public static FieldInfo GetField (this Type t, string name)
+		{
+			return null;
+		}
+
+		public static FieldInfo [] GetFields (this Type t, BindingFlags bindingAttr)
+		{
+			return null;
+		}
+
+		public static bool ImplementInterface (this Type t, string name)
+		{
+			return false;
+		}
+
+		public static PropertyInfo [] GetProperties (this Type t, BindingFlags bindingAttr)
 		{
 			return null;
 		}

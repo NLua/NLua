@@ -27,6 +27,10 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
+#if NETFX_CORE
+using  NLua.Extensions;
+#endif
+
 namespace NLua
 {
 	/// <summary>
@@ -75,7 +79,11 @@ namespace NLua
 
 		public MethodInfo GetMethod (string name, BindingFlags bindingAttr, Type[] signature)
 		{
+#if NETFX_CORE
+			return proxy.GetMethod (name, bindingAttr, signature);
+#else			
 			return proxy.GetMethod (name, bindingAttr, null, signature, null);
+#endif
 		}
 	}
 }
