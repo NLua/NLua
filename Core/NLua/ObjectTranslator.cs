@@ -913,7 +913,7 @@ namespace NLua
 		{
 			if (o is ILuaGeneratedType) {
 				// Make sure we are _really_ ILuaGenerated
-				var typ = o.GetType ().GetTypeInfo ();
+				var typ = o.GetType ();
 				return typ.GetInterface ("ILuaGeneratedType", true) != null;
 			} 
 			return false;

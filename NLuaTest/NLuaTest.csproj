@@ -9,7 +9,7 @@
     <RootNamespace>NLuaTest</RootNamespace>
     <AssemblyName>NLuaTest</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <ReleaseVersion>2.x</ReleaseVersion>
+    <ReleaseVersion>1.3.1</ReleaseVersion>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -95,7 +95,7 @@
       <Name>KeraLua.Net45</Name>
     </ProjectReference>
     <ProjectReference Include="..\Core\KopiLua\KopiLua\KopiLua.Net45.csproj">
-      <Project>{e8ddbc21-ef74-4aba-9c49-bfc702be25d8}</Project>
+      <Project>{E8DDBC21-EF74-4ABA-9C49-BFC702BE25D8}</Project>
       <Name>KopiLua.Net45</Name>
     </ProjectReference>
     <ProjectReference Include="..\Core\NLua\NLua.Net45.csproj">
