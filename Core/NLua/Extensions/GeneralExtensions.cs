@@ -248,11 +248,7 @@ namespace NLua.Extensions
 #else
 			return t.IsInterface;
 #endif
-		}
-
-		
-		
-		
+		}		
 
 		public static Assembly GetAssembly (this Type t)
 		{
@@ -263,58 +259,36 @@ namespace NLua.Extensions
 #endif
 		}
 
+#if NETFX_CORE
 		public static IEnumerable<MethodInfo> GetStaticPublicMethods (this Type t, string name)
 		{
-#if NETFX_CORE
 			return GetAllDeclaredMethodsRecursively (t, name).Where (m => m.IsStatic);
-#else
-			return t.GetMethods (BindingFlags.Public | BindingFlags.Static);
-#endif
 		}
 
 		public static IEnumerable<MethodInfo> GetStaticPublicMethods (this Type t)
 		{
-#if NETFX_CORE
 			return GetAllDeclaredMethodsRecursively (t).Where (m => m.IsStatic);
-#else
-			return t.GetMethods (BindingFlags.Public | BindingFlags.Static);
-#endif
 		}
 
 		public static IEnumerable<MethodInfo> GetInstancePublicMethods (this Type t, string name)
 		{
-#if NETFX_CORE
 			return GetAllDeclaredMethodsRecursively (t, name).Where (m => !m.IsStatic);
-#else
-			return t.GetMethods (BindingFlags.Public | BindingFlags.Instance);
-#endif
+
 		}
 
 		public static IEnumerable<MethodInfo> GetInstancePublicMethods (this Type t)
 		{
-#if NETFX_CORE
 			return GetAllDeclaredMethodsRecursively (t).Where (m => !m.IsStatic);
-#else
-			return t.GetMethods (BindingFlags.Public | BindingFlags.Instance);
-#endif
 		}
 
 		public static IEnumerable<MethodInfo> GetPublicMethods (this Type t)
 		{
-#if NETFX_CORE
 			return GetAllDeclaredMethodsRecursively (t);
-#else
-			return t.GetMethods (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-#endif
 		}
 
 		public static IEnumerable<MethodInfo> GetPublicMethods (this Type t, string name)
 		{
-#if NETFX_CORE
 			return GetAllDeclaredMethodsRecursively (t, name);
-#else
-			return t.GetMethods (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static).Where ( m => m.Name == name);
-#endif
 		}
 
 		public static MethodInfo GetPublicMethod (this Type t, string name)
@@ -337,13 +311,8 @@ namespace NLua.Extensions
 
 		public static MethodInfo GetPublicMethod (this Type t, string name, Type[] signature)
 		{
-#if NETFX_CORE
 			var methods =  t.GetPublicMethods (name);
 			return methods.Where (m => Match (m.GetParameters (), signature)).FirstOrDefault ();
-#else
-			return t.GetMethod (name, BindingFlags.Public | BindingFlags.Static |
-					BindingFlags.Instance , null, signature, null);
-#endif
 		}
 
 		static IEnumerable<MethodInfo> GetAllDeclaredMethodsRecursively (Type t, string name)
@@ -392,27 +361,18 @@ namespace NLua.Extensions
 			return fields.Concat (GetAllDeclaredFieldsRecursively (baseType));
 		}
 
-
 		public static IEnumerable<FieldInfo> GetPublicFields (this Type t)
 		{
-#if NETFX_CORE
 			return GetAllDeclaredFieldsRecursively (t);
-#else
-			return t.GetFields ();
-#endif
 		}
 
 		public static FieldInfo GetPublicField (this Type t, string name)
 		{
-#if NETFX_CORE
 			return GetDeclaredFieldRecursively (t, name);
-#else
-			return t.GetField (name);
-#endif
 		}
 
 
-#if NETFX_CORE
+
 		static IEnumerable<Type> GetTypes (this Assembly assembly)
 		{
 			return assembly.ExportedTypes;
