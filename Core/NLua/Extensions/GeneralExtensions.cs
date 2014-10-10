@@ -116,7 +116,7 @@ namespace NLua.Extensions
 			if (t.IsPrimitive ())
 				return true;
 			// Unary - will always have only one version.
-			var op = t.GetPublicMethods ("op_UnaryNegation");
+			var op = t.GetMethod ("op_UnaryNegation", BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 			return op != null;
 		}
 
