@@ -594,7 +594,11 @@ namespace NLua
 			}
 
 			if (member != null) {
+#if NETFX_CORE
+				if (member is FieldInfo) {
+#else
 				if (member.MemberType == MemberTypes.Field) {
+#endif
 					var field = (FieldInfo)member;
 
 					if (cachedMember == null)
@@ -605,7 +609,11 @@ namespace NLua
 					} catch {
 						LuaLib.LuaPushNil (luaState);
 					}
+#if NETFX_CORE
+				} else if (member is PropertyInfo) {
+#else
 				} else if (member.MemberType == MemberTypes.Property) {
+#endif
 					var property = (PropertyInfo)member;
 					if (cachedMember == null)
 						SetMemberCache (memberCache, objType, methodName, member);
@@ -628,14 +636,24 @@ namespace NLua
 						ThrowError (luaState, e);
 						LuaLib.LuaPushNil (luaState);
 					}
+#if NETFX_CORE
+				} else if (member is EventInfo) {
+#else
 				} else if (member.MemberType == MemberTypes.Event) {
+#endif
 					var eventInfo = (EventInfo)member;
 					if (cachedMember == null)
 						SetMemberCache (memberCache, objType, methodName, member);
 
 					translator.Push (luaState, new RegisterEventHandler (translator.pendingEvents, obj, eventInfo));
 				} else if (!implicitStatic) {
+#if NETFX_CORE
+					var typeInfo = member as TypeInfo;
+					if (!typeInfo.IsPublic && !typeInfo.IsNotPublic) {
+#else
 					if (member.MemberType == MemberTypes.NestedType) {
+#endif
+
 						// kevinh - added support for finding nested types
 						// cache us
 						if (cachedMember == null)
@@ -842,8 +860,12 @@ namespace NLua
 					return false;
 				}
 			}
-
+#if NETFX_CORE
+			if (member is FieldInfo) {
+#else
 			if (member.MemberType == MemberTypes.Field) {
+#endif
+
 				var field = (FieldInfo)member;
 				object val = translator.GetAsType (luaState, 3, field.FieldType);
 
@@ -855,7 +877,11 @@ namespace NLua
 
 				// We did a call
 				return true;
+#if NETFX_CORE
+			} else if (member is PropertyInfo) {
+#else
 			} else if (member.MemberType == MemberTypes.Property) {
+#endif
 				var property = (PropertyInfo)member;
 				object val = translator.GetAsType (luaState, 3, property.PropertyType);
 

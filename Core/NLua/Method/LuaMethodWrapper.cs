@@ -94,7 +94,7 @@ namespace NLua.Method
 				_ExtractTarget = translator.typeChecker.GetExtractor (targetType);
 
 			_IsStatic = (bindingType & BindingFlags.Static) == BindingFlags.Static;
-			_Members  = targetType.UnderlyingSystemType.GetMember (methodName, MemberTypes.Method, bindingType | BindingFlags.Public);
+			_Members  = targetType.UnderlyingSystemType.GetMethods (methodName, bindingType | BindingFlags.Public);
 		}
 
 		/// <summary>

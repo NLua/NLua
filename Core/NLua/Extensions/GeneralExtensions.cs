@@ -142,9 +142,9 @@ namespace NLua.Extensions
 			return t.HasMethod ("op_LessThanOrEqual");
 		}
 
-		public static IEnumerable<MethodInfo> GetMethods (this Type t, string name, BindingFlags flags)
+		public static MethodInfo [] GetMethods (this Type t, string name, BindingFlags flags)
 		{
-			return t.GetMethods (flags).Where (m => m.Name == name);
+			return t.GetMethods (flags).Where (m => m.Name == name).ToArray ();
 		}
 
 		public static MethodInfo [] GetExtensionMethods (this Type type, IEnumerable<Assembly> assemblies = null)
@@ -374,6 +374,11 @@ namespace NLua.Extensions
 		public static bool IsAssignableFrom (this Type t, Type t2)
 		{
 			return t.GetTypeInfo ().IsAssignableFrom (t2.GetTypeInfo ());
+		}
+
+		public static MemberInfo [] GetMember (this Type t, string name, BindingFlags flags)
+		{
+			return null;
 		}
 
 		public static MethodInfo[] GetMethods (this Type t)
