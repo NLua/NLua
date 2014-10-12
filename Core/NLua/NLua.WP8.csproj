@@ -9,7 +9,7 @@
     <ProjectGuid>{1E72B073-2154-4329-BC8D-94F19F91C945}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NLua.WP8</RootNamespace>
+    <RootNamespace>NLua</RootNamespace>
     <AssemblyName>NLua.WP8</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>

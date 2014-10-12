@@ -649,12 +649,12 @@ namespace NLua
 				} else if (!implicitStatic) {
 #if NETFX_CORE
 					var typeInfo = member as TypeInfo;
-					if (!typeInfo.IsPublic && !typeInfo.IsNotPublic) {
+					if (typeInfo != null && !typeInfo.IsPublic && !typeInfo.IsNotPublic) {
 #else
 					if (member.MemberType == MemberTypes.NestedType) {
 #endif
 
-						// kevinh - added support for finding nested types
+						// kevinh - added support for finding nested types-
 						// cache us
 						if (cachedMember == null)
 							SetMemberCache (memberCache, objType, methodName, member);

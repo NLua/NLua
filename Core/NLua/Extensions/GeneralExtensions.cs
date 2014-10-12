@@ -169,7 +169,7 @@ namespace NLua.Extensions
 		/// Extends the System.Type-type to search for a given extended MethodeName.
 		/// </summary>
 		/// <param name="MethodeName">Name of the Methode</param>
-		/// <returns>the found Methode or null</returns>
+		/// <returns>the found Method or null</returns>
 		public static MethodInfo GetExtensionMethod (this Type t, string name, IEnumerable<Assembly> assemblies = null)
 		{
 			var mi = from methode in t.GetExtensionMethods (assemblies)
@@ -254,6 +254,7 @@ namespace NLua.Extensions
 		}
 
 #if NETFX_CORE
+		// Missing Reflection methods from WinRT
 
 		public const BindingFlags Default = BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
 
