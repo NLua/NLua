@@ -62,13 +62,8 @@ namespace NLua.Extensions
 	{
 		public static bool HasMethod (this Type t, string name)
 		{
-#if NETFX_CORE
-			var op = t.GetPublicMethods (name);
-			return op.Any ();
-#else
 			var op = t.GetMethods (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 			return op.Any (m => m.Name == name);
-#endif
 		}
 
 		public static bool HasAdditionOpertator (this Type t)
@@ -240,7 +235,6 @@ namespace NLua.Extensions
 #endif
 		}
 
-
 		public static bool IsInterface (this Type t)
 		{
 #if NETFX_CORE
@@ -260,112 +254,14 @@ namespace NLua.Extensions
 		}
 
 #if NETFX_CORE
-		public static IEnumerable<MethodInfo> GetStaticPublicMethods (this Type t, string name)
+
+		public const BindingFlags Default = BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
+
+		public static MethodInfo GetMethod (this Type type, string name, BindingFlags flags, Type [] signature)
 		{
-			return GetAllDeclaredMethodsRecursively (t, name).Where (m => m.IsStatic);
+			return GetMethods (type, flags).FirstOrDefault (c => c.Name == name && c.GetParameters ().Select (p => p.ParameterType).SequenceEqual (signature));
 		}
-
-		public static IEnumerable<MethodInfo> GetStaticPublicMethods (this Type t)
-		{
-			return GetAllDeclaredMethodsRecursively (t).Where (m => m.IsStatic);
-		}
-
-		public static IEnumerable<MethodInfo> GetInstancePublicMethods (this Type t, string name)
-		{
-			return GetAllDeclaredMethodsRecursively (t, name).Where (m => !m.IsStatic);
-
-		}
-
-		public static IEnumerable<MethodInfo> GetInstancePublicMethods (this Type t)
-		{
-			return GetAllDeclaredMethodsRecursively (t).Where (m => !m.IsStatic);
-		}
-
-		public static IEnumerable<MethodInfo> GetPublicMethods (this Type t)
-		{
-			return GetAllDeclaredMethodsRecursively (t);
-		}
-
-		public static IEnumerable<MethodInfo> GetPublicMethods (this Type t, string name)
-		{
-			return GetAllDeclaredMethodsRecursively (t, name);
-		}
-
-		public static MethodInfo GetPublicMethod (this Type t, string name)
-		{
-			return GetPublicMethods (t, name).First ();
-		}
-
-		static bool Match (IEnumerable<ParameterInfo> parameters, Type[] signature)
-		{
-			if (parameters.Count () != signature.Count ())
-				return false;
-			int i = 0;
-			foreach (var parameter in parameters) {
-				if (parameters.GetType () != signature [i])
-					return false;
-				i++;
-			}
-			return true;
-		}
-
-		public static MethodInfo GetPublicMethod (this Type t, string name, Type[] signature)
-		{
-			var methods =  t.GetPublicMethods (name);
-			return methods.Where (m => Match (m.GetParameters (), signature)).FirstOrDefault ();
-		}
-
-		static IEnumerable<MethodInfo> GetAllDeclaredMethodsRecursively (Type t, string name)
-		{
-			var methods = t.GetTypeInfo ().GetDeclaredMethods (name);
-			if (t == typeof (object))
-				return methods;
-			var baseType = t.GetTypeInfo ().BaseType;
-			return methods.Concat (GetAllDeclaredMethodsRecursively (baseType, name));
-		}
-
-		static IEnumerable<MemberInfo> GetAllDeclaredMembersRecursively (Type t)
-		{
-			var members = t.GetTypeInfo ().DeclaredMembers;
-			if (t == typeof (object))
-				return members;
-			var baseType = t.GetTypeInfo ().BaseType;
-			return members.Concat (GetAllDeclaredMembersRecursively (baseType));
-		}
-
-		static IEnumerable<MethodInfo> GetAllDeclaredMethodsRecursively (Type t)
-		{
-			var methods  = t.GetTypeInfo ().DeclaredMethods;
-			if (t == typeof (object))
-				return methods;
-			var baseType = t.GetTypeInfo ().BaseType;
-			return methods.Concat (GetAllDeclaredMethodsRecursively (baseType));
-		}
-
-		static FieldInfo GetDeclaredFieldRecursively (Type t, string name)
-		{
-			var field = t.GetTypeInfo ().GetDeclaredField (name);
-			if (field != null || t == typeof (object))
-				return field;
-			
-			var baseType = t.GetTypeInfo ().BaseType;
-			return GetDeclaredFieldRecursively (baseType, name);
-		}
-
-		static IEnumerable<FieldInfo> GetAllDeclaredFieldsRecursively (Type t)
-		{
-			var fields = t.GetTypeInfo ().DeclaredFields;
-			if (t == typeof (object))
-				return fields;
-			var baseType = t.GetTypeInfo ().BaseType;
-			return fields.Concat (GetAllDeclaredFieldsRecursively (baseType));
-		}
-
-		public static IEnumerable<FieldInfo> GetPublicFields (this Type t)
-		{
-			return GetAllDeclaredFieldsRecursively (t);
-		}
-
+		
 		static IEnumerable<Type> GetTypes (this Assembly assembly)
 		{
 			return assembly.ExportedTypes;
@@ -376,65 +272,116 @@ namespace NLua.Extensions
 			return t.GetTypeInfo ().IsAssignableFrom (t2.GetTypeInfo ());
 		}
 
-		public static MemberInfo [] GetMember (this Type t, string name, BindingFlags flags)
+		public static MemberInfo [] GetMember (this Type type, string name, BindingFlags flags)
 		{
-			return null;
+			return GetMembers (type, flags).Where (m => m.Name == name).ToArray ();
 		}
 
-		public static MethodInfo[] GetMethods (this Type t)
+		public static MemberInfo [] GetMembers (this Type type, BindingFlags flags)
 		{
-			return null;
+			// Metro does have DeclaredMembers but nothing otherwise
+			return GetEvents (type, flags).Cast<MemberInfo> ()
+			  .Concat (GetFields (type, flags).Cast<MemberInfo> ())
+			  .Concat (GetMethods (type, flags).Cast<MemberInfo> ())
+			  .Concat (GetProperties (type, flags).Cast<MemberInfo> ())
+			  .ToArray ();
 		}
 
-		public static MethodInfo [] GetMethods (this Type t, BindingFlags flags)
+		public static MethodInfo GetMethod (this Type type, string name)
 		{
-			return null;
+			return GetMethod (type, name, Default);
 		}
 
-		public static MethodInfo GetMethod (this Type t, string name, BindingFlags flags)
+		public static MethodInfo GetMethod (this Type type, string name, BindingFlags flags)
 		{
-			return null;
+			return GetMethods (type, flags).FirstOrDefault (m => m.Name == name);
 		}
 
-		public static MethodInfo GetMethod (this Type t, string name)
+		public static MethodInfo [] GetMethods (this Type type)
 		{
-			return null;
+			return GetMethods (type, Default);
 		}
 
-		public static MethodInfo GetMethod (this Type t, string name, BindingFlags bindingAttr, Type[] signature)
+		public static MethodInfo [] GetMethods (this Type type, BindingFlags flags)
 		{
-			return null;
+			var methods = type.GetRuntimeMethods ();
+			return methods.Where (m =>
+			  ((flags.HasFlag (BindingFlags.Static) == m.IsStatic) || (flags.HasFlag (BindingFlags.Instance) == !m.IsStatic)
+			  ) &&
+			  (flags.HasFlag (BindingFlags.Public) == m.IsPublic)
+			  ).ToArray ();
 		}
 
-		public static ConstructorInfo [] GetConstructors (this Type t)
+		public static PropertyInfo [] GetProperties (this Type type, BindingFlags flags)
 		{
-			return null;
+			var props = type.GetRuntimeProperties ();
+
+			return props.Where (p =>
+			  ((flags.HasFlag (BindingFlags.Static) == (p.GetMethod != null && p.GetMethod.IsStatic)) ||
+				(flags.HasFlag (BindingFlags.Instance) == (p.GetMethod != null && !p.GetMethod.IsStatic))
+			  ) &&
+			  (flags.HasFlag (BindingFlags.Public) == (p.GetMethod != null && p.GetMethod.IsPublic)
+			  )).ToArray ();
+		}
+		public static ConstructorInfo GetConstructor (this Type type, Type [] paramTypes)
+		{
+			return GetConstructors (type, Default).FirstOrDefault (c => c.GetParameters ().Select (p => p.ParameterType).SequenceEqual (paramTypes));
 		}
 
-		public static ConstructorInfo GetConstructor (this Type t, Type [] signature)
+		public static ConstructorInfo [] GetConstructors (this Type type)
 		{
-			return null;
+			return GetConstructors (type, Default);
 		}
 
-		public static FieldInfo GetField (this Type t, string name)
+		public static ConstructorInfo [] GetConstructors (this Type type, BindingFlags flags)
 		{
-			return null;
+			var props = type.GetTypeInfo ().DeclaredConstructors;
+			return props.Where (p =>
+			  ((flags.HasFlag (BindingFlags.Static) == p.IsStatic) ||
+			   (flags.HasFlag (BindingFlags.Instance) == !p.IsStatic)
+			  ) &&
+			  (flags.HasFlag (BindingFlags.Public) == p.IsPublic)
+			  ).ToArray ();
 		}
 
-		public static FieldInfo [] GetFields (this Type t, BindingFlags bindingAttr)
+		public static EventInfo [] GetEvents (this Type type, BindingFlags flags)
 		{
-			return null;
+			var props = type.GetRuntimeEvents ();
+
+			return props.Where (p =>
+			  ((flags.HasFlag (BindingFlags.Static) == p.AddMethod.IsStatic) ||
+			   (flags.HasFlag (BindingFlags.Instance) == !p.AddMethod.IsStatic)
+			  ) &&
+			  (flags.HasFlag (BindingFlags.Public) == p.AddMethod.IsPublic)
+			  ).ToArray ();
+		}
+
+		public static FieldInfo GetField (this Type type, string name)
+		{
+			return GetField (type, name, Default);
+		}
+
+		public static FieldInfo GetField (this Type type, string name, BindingFlags flags)
+		{
+			return GetFields (type, flags).FirstOrDefault (f => f.Name == name);
+		}
+
+		public static FieldInfo [] GetFields (this Type type, BindingFlags flags)
+		{
+			var fields = type.GetRuntimeFields ();
+
+			return fields.Where (p =>
+			  ((flags.HasFlag (BindingFlags.Static) == p.IsStatic) || (flags.HasFlag (BindingFlags.Instance) == !p.IsStatic)
+			  ) &&
+			  (flags.HasFlag (BindingFlags.Public) == p.IsPublic)
+			  ).ToArray ();
 		}
 
 		public static bool ImplementInterface (this Type t, string name)
 		{
-			return false;
+			return t.GetTypeInfo ().ImplementedInterfaces.Any (i => i.Name == name);
 		}
 
-		public static PropertyInfo [] GetProperties (this Type t, BindingFlags bindingAttr)
-		{
-			return null;
-		}
 #endif
 	}
 
