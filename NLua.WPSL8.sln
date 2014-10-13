@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeraLua.WPSL8", "Core\KeraL
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua52", "Core\KeraLua\external\lua\wpsl8_build\lua\lua52\lua52.vcxproj", "{ABD36435-56AD-4940-B51A-10AEECA46C01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.WPSL8", "NLuaTest.WPSL8\NLuaTest.WPSL8.csproj", "{0AF57940-43F8-492B-9684-0369259C990B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,34 +89,6 @@ Global
 		{ABD36435-56AD-4940-B51A-10AEECA46C01}.Release|x64.ActiveCfg = Release|Win32
 		{ABD36435-56AD-4940-B51A-10AEECA46C01}.Release|x86.ActiveCfg = Release|Win32
 		{ABD36435-56AD-4940-B51A-10AEECA46C01}.Release|x86.Build.0 = Release|Win32
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|ARM.ActiveCfg = Debug|ARM
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|ARM.Build.0 = Debug|ARM
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|ARM.Deploy.0 = Debug|ARM
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|Win32.ActiveCfg = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|Win32.Build.0 = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|Win32.Deploy.0 = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|x64.ActiveCfg = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|x86.ActiveCfg = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|x86.Build.0 = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Debug|x86.Deploy.0 = Debug|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|Any CPU.ActiveCfg = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|ARM.ActiveCfg = Release|ARM
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|ARM.Build.0 = Release|ARM
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|ARM.Deploy.0 = Release|ARM
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|Mixed Platforms.Build.0 = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|Mixed Platforms.Deploy.0 = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|Win32.ActiveCfg = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|Win32.Build.0 = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|Win32.Deploy.0 = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|x64.ActiveCfg = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|x86.ActiveCfg = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|x86.Build.0 = Release|x86
-		{0AF57940-43F8-492B-9684-0369259C990B}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
