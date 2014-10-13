@@ -16,7 +16,6 @@ NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Win
   [1]: https://www.dropbox.com/s/w99igtc12uocq4k/NLua.OSX.zip
   [2]: http://nvlabs.github.com/cub/download-icon.png (Download for OSX)
 
-
   [3]: https://www.dropbox.com/s/s3xte19719446lx/NLua.iOS.zip
   [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
 
@@ -29,15 +28,21 @@ NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Win
 
   [9]: https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip
   [10]: http://nvlabs.github.com/cub/download-icon.png (Download for Win64)
-
-  [11]: https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip
-  [12]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 7)
-
-  [13]: https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip?
-  [14]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (ARM+x86))
   
-  [15]: https://dl.dropboxusercontent.com/u/17523659/NLua.Unity3D.zip
-  [16]: http://nvlabs.github.com/cub/download-icon.png (Download for Unity3D)
+  [11]: https://www.dropbox.com/s/do8m3929mf0pwff/NLua.NoPInvoke.zip
+  [12]: http://nvlabs.github.com/cub/download-icon.png (Download Pure C# - No P/Invoke)
+
+  [13]: https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip
+  [14]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 7)
+
+  [15]: https://www.dropbox.com/s/2pva1tyxpnn7feb/NLua.WPSL8.zip
+  [16]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone Silverlight 8 (ARM+x86))
+  
+  [17]: https://www.dropbox.com/s/nonijkic8216f7l/NLua.WinRT.zip
+  [18]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (RT) (ARM+x86))
+  
+  [19]: https://dl.dropboxusercontent.com/u/17523659/NLua.Unity3D.zip
+  [20]: http://nvlabs.github.com/cub/download-icon.png (Download for Unity3D)
   
   
 |  | Build Status | Download |
@@ -48,15 +53,13 @@ NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Win
 | **Android** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android)](http://codefoco.zapto.org:8085/view/X/job/NLua_Android/) | [![dwn_android][6]][5] |
 | **Win32** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows)](http://codefoco.zapto.org:8085/view/X/job/NLua_Windows/) | [![dwn_w32][8]][7] |
 | **Win64** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Win64)](http://codefoco.zapto.org:8085/view/X/job/NLua_Win64/) | [![dwn_w64][10]][9] |
-| **Unity3D** | - | [![dwn_unity3d][16]][15] |
+| **.NET Pure C#** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_WinSafe)](http://codefoco.zapto.org:8085/view/X/job/NLua_WinSafe/) | [![dwn_winsafe][12]][11] |
+| **WP8 (Silverlight)** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_WPSL8)](http://codefoco.zapto.org:8085/view/X/job/NLua_WinSafe/) | [![dwn_wpsl8][16]][15] |
+| **WP8 (WinRT)** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_WPSL8)](http://codefoco.zapto.org:8085/view/X/job/NLua_WP8/) | [![dwn_wp8][18]][17] |
+| **Windows Phone 7** |  | [![dwn_wp7][14]][13] |
+| **Unity3D** |  | [![dwn_unity3d][20]][19] |
 
 Unity3D support branch:  [unity3d](https://github.com/NLua/NLua/tree/unity3d) by [miaodadao](https://github.com/miaodadao).
-
-
-[18]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS
-[19]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android
-[20]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows
-
 
 
 Windows: We don't have a CI Server for Windows yet. 
