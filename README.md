@@ -36,6 +36,10 @@ NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Win
   [13]: https://www.dropbox.com/s/47qqimfnux104a7/NLua.WP8.zip?
   [14]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (ARM+x86))
   
+  [15]: https://dl.dropboxusercontent.com/u/17523659/NLua.Unity3D.zip
+  [16]: http://nvlabs.github.com/cub/download-icon.png (Download for Unity3D)
+  
+  
 |  | Build Status | Download |
 | :------ | ------: | :------: |
 | **Linux** | [![Linux](https://travis-ci.org/NLua/NLua.svg?branch=master)](https://travis-ci.org/NLua/NLua) |
@@ -44,13 +48,16 @@ NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Win
 | **Android** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android)](http://codefoco.zapto.org:8085/view/X/job/NLua_Android/) | [![dwn_android][6]][5] |
 | **Win32** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows)](http://codefoco.zapto.org:8085/view/X/job/NLua_Windows/) | [![dwn_w32][8]][7] |
 | **Win64** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Win64)](http://codefoco.zapto.org:8085/view/X/job/NLua_Win64/) | [![dwn_w64][10]][9] |
+| **Unity3D** | - | [![dwn_unity3d][16]][15] |
 
 Unity3D support branch:  [unity3d](https://github.com/NLua/NLua/tree/unity3d) by [miaodadao](https://github.com/miaodadao).
 
-[15]: 
-[16]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS
-[17]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android
-[18]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows
+
+[18]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS
+[19]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android
+[20]: http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows
+
+
 
 Windows: We don't have a CI Server for Windows yet. 
 	 To build NLua you will need msysgit, CMake and NUnit http://screencast.com/t/rYuDtCdFG7
@@ -94,8 +101,16 @@ Copyright (c) 2014 Vinicius Jarina (viniciusjarina@gmail.com)
 
 NLua 1.3.1
 ----------
-
-Soon
+* Added support to WinRT (Windows Phone 8)
+* Added support to Unity3D
+* Update Lua 5.2.3 with latest patches
+* Fixed support to Unicode strings (UTF-8)
+* [Fixed x86/x64 issue](https://github.com/NLua/NLua/issues/67). 
+* [Fixed overload issue](https://github.com/NLua/NLua/issues/103)
+* [Fixed support to Debug and DebugHook APIs](https://github.com/NLua/NLua/issues/31)
+* [Added support to operators call](https://github.com/NLua/NLua/issues/57)
+* [Fixed access to keys with .](https://github.com/NLua/NLua/issues/68)
+* [Fixed issue with ValueTypes](https://github.com/NLua/NLua/issues/73)
 
 NLua 1.3.0
 ----------
