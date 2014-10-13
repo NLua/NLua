@@ -19,7 +19,7 @@ NLua 1.1.0
 Port to WP7 (Thanks to Mangatome)
 NLua now using Lua 5.2.2
 Bug fixes.</releaseNotes>
-        <copyright>Copyright (c) 2013 Vinicius Jarina (viniciusjarina@gmail.com)</copyright>
+        <copyright>Copyright (c) 2014 Vinicius Jarina (viniciusjarina@gmail.com)</copyright>
         <language />
         <tags>Lua Script NLua LuaInterface</tags>
     </metadata>
