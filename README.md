@@ -59,7 +59,7 @@ NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Win
 | **Windows Phone 7** |  | [![dwn_wp7][14]][13] |
 | **Unity3D** |  | [![dwn_unity3d][20]][19] |
 
-Unity3D support branch:  [unity3d](https://github.com/NLua/NLua/tree/unity3d) by [miaodadao](https://github.com/miaodadao).
+Unity3D support branch:  [unity3d](https://github.com/Mervill/Unity3D-NLua) by [Riley G](https://github.com/Mervill/Unity3D-NLua).
 
 
 Windows: We don't have a CI Server for Windows yet. 
