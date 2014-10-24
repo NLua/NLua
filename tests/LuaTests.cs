@@ -21,6 +21,29 @@ using NUnit.Framework;
 
 namespace NLuaTest
 {
+	#if MONOTOUCH
+	[Preserve (AllMembers = true)]
+	#endif
+	public class master
+	{
+		public static string read()
+		{
+			return "test-master";
+		}
+	}
+
+	#if MONOTOUCH
+	[Preserve (AllMembers = true)]
+	#endif
+	public class testClass : master 
+	{
+		public String strData;
+		public int intData;
+		public static string read2()
+		{
+			return "test";
+		}
+	}
    
 	#if MONOTOUCH
 	[Preserve (AllMembers = true)]
@@ -33,6 +56,8 @@ namespace NLuaTest
 			}
 		}
 	}
+
+
 
 #if MONOTOUCH
 	[Preserve (AllMembers = true)]
@@ -2200,6 +2225,18 @@ namespace NLuaTest
 			}
 			string x = sb.ToString ();
 			Assert.True (!string.IsNullOrEmpty(x));
+		}
+
+		[Test]
+		public void TestCallImplicitBaseMethod ()
+		{
+			using (var l = new Lua ()) {
+				l.LoadCLRPackage ();
+				l.DoString ("import ('NLuaTest')");
+				l.DoString ("res = testClass.read() ");
+				string res = (string)l ["res"];
+				Assert.AreEqual (testClass.read (), res);
+			}
 		}
 
 		static Lua m_lua;

@@ -684,6 +684,14 @@ namespace NLua
 					LuaLib.LuaPushNil (luaState);
 				}
 			} else {
+
+				if (objType.UnderlyingSystemType != typeof(object)) {
+					#if NETFX_CORE
+					return GetMember (luaState, new ProxyType(objType.UnderlyingSystemType.GetTypeInfo().BaseType), obj, methodName, bindingType);
+					#else
+					return GetMember (luaState, new ProxyType(objType.UnderlyingSystemType.BaseType), obj, methodName, bindingType);
+					#endif
+				}
 				// kevinh - we want to throw an exception because meerly returning 'nil' in this case
 				// is not sufficient.  valid data members may return nil and therefore there must be some
 				// way to know the member just doesn't exist.
