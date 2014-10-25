@@ -608,15 +608,7 @@ namespace NLua
 
 					try {
 						var value = field.GetValue (obj);
-						if (!(value is Delegate)) {
-							translator.Push (luaState, value);
-						} else {
-							Delegate del = (Delegate)value;
-							var wrapper = new LuaNativeFunction ((new LuaMethodWrapper (translator, del.Target, objType, del.Method)).invokeFunction);
-							translator.PushFunction (luaState, wrapper);
-							translator.Push (luaState, true);
-							return 2;
-						}						
+						translator.Push (luaState, value);							
 					} catch {
 						LuaLib.LuaPushNil (luaState);
 					}
@@ -631,15 +623,8 @@ namespace NLua
 
 					try {
 						object value = property.GetValue (obj, null);
-						if (!(value is Delegate)) {
-							translator.Push (luaState, value);
-						} else {
-							Delegate del = (Delegate)value;
-							var wrapper = new LuaNativeFunction ((new LuaMethodWrapper (translator, del.Target, objType, del.Method)).invokeFunction);
-							translator.PushFunction (luaState, wrapper);
-							translator.Push (luaState, true);
-							return 2;
-						}						
+						translator.Push (luaState, value);
+							
 					} catch (ArgumentException) {
 						// If we can't find the getter in our class, recurse up to the base class and see
 						// if they can help.
