@@ -44,6 +44,14 @@ namespace NLuaTest
 			return "test";
 		}
 	}
+
+	#if MONOTOUCH
+	[Preserve (AllMembers = true)]
+	#endif
+	public class DefaultElementModel
+	{  
+		public Action<double> DrawMe{ get; set; }  
+	}  
    
 	#if MONOTOUCH
 	[Preserve (AllMembers = true)]
@@ -2237,6 +2245,68 @@ namespace NLuaTest
 				string res = (string)l ["res"];
 				Assert.AreEqual (testClass.read (), res);
 			}
+		}
+
+		[Test]
+		public void TestPushLuaFunctionWhenReadingDelegateProperty ()
+		{
+			bool called = false;
+			var _model = new DefaultElementModel ();
+			_model.DrawMe = (x) => {
+				called = true;
+			};
+			using (var l = new Lua ()) {
+				l ["model"] = _model;
+				l.DoString (@" model.DrawMe (0) ");
+			}
+
+			Assert.True (called);
+		}
+
+		[Test]
+		public void TestCallDelegateWithParameters ()
+		{
+			string sval = "";
+			int nval = 0;
+			using (var l = new Lua ()) {
+				Action<string,int> c = (s, n) => { sval = s; nval = n; };
+				l ["d"] = c;
+				l.DoString (" d ('string', 10) ");
+			}
+
+			Assert.AreEqual ("string", sval, "#1");
+			Assert.AreEqual (10 , nval, "#2");
+		}
+
+		[Test]
+		public void TestCallSimpleDelegate ()
+		{
+			bool called = false;
+			using (var l = new Lua ()) {
+				Action c = () => { called = true; };
+				l ["d"] = c;
+				l.DoString (" d () ");
+			}
+
+			Assert.True (called);
+		}
+
+		[Test]
+		public void TestCallDelegateWithWrongParametersShouldFail ()
+		{
+			bool fail = false;
+			using (var l = new Lua ()) {
+				Action c = () => { fail = false; };
+				l ["d"] = c;
+				try {
+				l.DoString (" d (10) ");
+				}
+				catch (LuaScriptException e) {
+					fail = true;
+				}
+			}
+
+			Assert.True (fail);
 		}
 
 		static Lua m_lua;

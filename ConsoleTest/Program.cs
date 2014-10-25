@@ -10,14 +10,17 @@ using NLuaTest;
 namespace ConsoleTest
 {
 
+
 	public class Program
 	{
+
 		static void Main (string [] args)
 		{
-			Core c = new Core ();
-			c.Setup ();
-			c.Sieve ();
-
+			using (var l = new Lua ()) {
+				Action c = () => { Console.WriteLine ("Ola"); };
+				l ["d"] = c;
+				l.DoString (" d () ");
+			}
 		}
 	}
 }

@@ -571,6 +571,7 @@ namespace NLua
 			PushObject (luaState, func, "luaNet_function");
 		}
 
+
 		/*
 		 * Pushes a CLR object into the Lua stack as an userdata
 		 * with the provided metatable
@@ -651,6 +652,7 @@ namespace NLua
 					LuaLib.LuaRawSet (luaState, -3);
 					// Bind C# operator with Lua metamethods (__add, __sub, __mul)
 					RegisterOperatorsFunctions (luaState, o.GetType ());
+					RegisterCallMethodForDelegate (luaState, o);
 				}
 			} else
 				LuaLib.LuaLGetMetatable (luaState, metatable);
@@ -665,6 +667,16 @@ namespace NLua
 			LuaLib.LuaPushValue (luaState, -1);
 			LuaLib.LuaRawSetI (luaState, -3, index);
 			LuaLib.LuaRemove (luaState, -2);
+		}
+
+		void RegisterCallMethodForDelegate (LuaState luaState, object o)
+		{
+			if (!(o is Delegate))
+				return;
+
+			LuaLib.LuaPushString (luaState, "__call");
+			LuaLib.LuaPushStdCallCFunction (luaState, metaFunctions.CallDelegateFunction);
+			LuaLib.LuaRawSet (luaState, -3);
 		}
 
 		void RegisterOperatorsFunctions (LuaState luaState, Type type)
@@ -930,8 +942,8 @@ namespace NLua
 			if (o == null)
 				LuaLib.LuaPushNil (luaState);
 			else if (o is sbyte || o is byte || o is short || o is ushort ||
-				o is int || o is uint || o is long || o is float ||
-				o is ulong || o is decimal || o is double) {
+			         o is int || o is uint || o is long || o is float ||
+			         o is ulong || o is decimal || o is double) {
 				double d = Convert.ToDouble (o);
 				LuaLib.LuaPushNumber (luaState, d);
 			} else if (o is char) {

@@ -61,6 +61,7 @@ namespace NLua
 		public LuaNativeFunction ExecuteDelegateFunction { get; private set; }
 		public LuaNativeFunction CallConstructorFunction { get; private set; }
 		public LuaNativeFunction ToStringFunction { get; private set; }
+		public LuaNativeFunction CallDelegateFunction { get; private set; }
 		 
 		public LuaNativeFunction AddFunction { get; private set; }
 		public LuaNativeFunction SubtractFunction { get; private set; }
@@ -109,6 +110,7 @@ namespace NLua
 			ClassIndexFunction = new LuaNativeFunction (MetaFunctions.GetClassMethod);
 			ClassNewindexFunction = new LuaNativeFunction (MetaFunctions.SetClassFieldOrProperty);
 			ExecuteDelegateFunction = new LuaNativeFunction (MetaFunctions.RunFunctionDelegate);
+			CallDelegateFunction = new LuaNativeFunction (MetaFunctions.CallDelegate);
 			AddFunction = new LuaNativeFunction (MetaFunctions.AddLua);
 			SubtractFunction = new LuaNativeFunction (MetaFunctions.SubtractLua);
 			MultiplyFunction = new LuaNativeFunction (MetaFunctions.MultiplyLua);
@@ -605,7 +607,16 @@ namespace NLua
 						SetMemberCache (memberCache, objType, methodName, member);
 
 					try {
-						translator.Push (luaState, field.GetValue (obj));
+						var value = field.GetValue (obj);
+						if (!(value is Delegate)) {
+							translator.Push (luaState, value);
+						} else {
+							Delegate del = (Delegate)value;
+							var wrapper = new LuaNativeFunction ((new LuaMethodWrapper (translator, del.Target, objType, del.Method)).invokeFunction);
+							translator.PushFunction (luaState, wrapper);
+							translator.Push (luaState, true);
+							return 2;
+						}						
 					} catch {
 						LuaLib.LuaPushNil (luaState);
 					}
@@ -619,8 +630,16 @@ namespace NLua
 						SetMemberCache (memberCache, objType, methodName, member);
 
 					try {
-						object val = property.GetValue (obj, null);
-						translator.Push (luaState, val);
+						object value = property.GetValue (obj, null);
+						if (!(value is Delegate)) {
+							translator.Push (luaState, value);
+						} else {
+							Delegate del = (Delegate)value;
+							var wrapper = new LuaNativeFunction ((new LuaMethodWrapper (translator, del.Target, objType, del.Method)).invokeFunction);
+							translator.PushFunction (luaState, wrapper);
+							translator.Push (luaState, true);
+							return 2;
+						}						
 					} catch (ArgumentException) {
 						// If we can't find the getter in our class, recurse up to the base class and see
 						// if they can help.
@@ -1004,6 +1023,53 @@ namespace NLua
 				target = (ProxyType)obj;
 
 			return SetMember (luaState, target, null, BindingFlags.Static);
+		}
+
+		/*
+		 * __call metafunction of Delegates. 
+		 */
+		#if MONOTOUCH
+		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		#endif
+		static int CallDelegate (LuaState luaState)
+		{
+			var translator = ObjectTranslatorPool.Instance.Find (luaState);
+			var instance = translator.MetaFunctionsInstance;
+			return instance.CallDelegateInternal (luaState);
+		}
+
+		int CallDelegateInternal (LuaState luaState)
+		{
+			object objDelegate = translator.GetRawNetObject (luaState, 1);
+
+			if (objDelegate == null || !(objDelegate is Delegate)) {
+				translator.ThrowError (luaState, "trying to invoke a not delegate or callable value");
+				LuaLib.LuaPushNil (luaState);
+				return 1;
+			}
+
+			LuaLib.LuaRemove (luaState, 1);
+
+			var validDelegate = new MethodCache ();
+			Delegate del = (Delegate)objDelegate;
+			MethodBase methodDelegate = del.Method;
+			bool isOk = MatchParameters (luaState, methodDelegate, ref validDelegate);
+
+			if (isOk) {
+				object result;
+
+				if (methodDelegate.IsStatic)
+					result = methodDelegate.Invoke (null, validDelegate.args);
+				else
+					result = methodDelegate.Invoke (del.Target, validDelegate.args);
+
+				translator.Push (luaState, result);
+				return 1;
+			}
+
+			translator.ThrowError (luaState, "Cannot invoke delegate (invalid arguments for  " + methodDelegate.Name + ")");
+			LuaLib.LuaPushNil (luaState);
+			return 1;
 		}
 
 		/*
