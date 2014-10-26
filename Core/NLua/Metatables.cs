@@ -1037,7 +1037,11 @@ namespace NLua
 
 			var validDelegate = new MethodCache ();
 			Delegate del = (Delegate)objDelegate;
-			MethodBase methodDelegate = del.Method;
+#if NETFX_CORE || WP80 || NET45 || PCL
+			MethodBase methodDelegate = del.GetMethodInfo ();
+#else
+            MethodBase methodDelegate = del.Method;
+#endif
 			bool isOk = MatchParameters (luaState, methodDelegate, ref validDelegate);
 
 			if (isOk) {
