@@ -101,9 +101,9 @@ namespace NLua.Method
 		MethodInfo [] GetMethodsRecursively (Type type, string methodName, BindingFlags bindingType)
 		{
 			if (type == typeof(object))
-				return type.GetMethods (methodName, bindingType | BindingFlags.Public);
+				return type.GetMethods (methodName, bindingType);
 
-			var methods = type.GetMethods (methodName, bindingType | BindingFlags.Public);
+			var methods = type.GetMethods (methodName, bindingType);
 			var baseMethods = GetMethodsRecursively (type.BaseType, methodName, bindingType);
 
 			return methods.Concat (baseMethods).ToArray ();
