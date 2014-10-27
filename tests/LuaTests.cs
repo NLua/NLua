@@ -21,6 +21,11 @@ using NUnit.Framework;
 
 namespace NLuaTest
 {
+	public class parameter
+	{
+		public string field1 = "parameter-field1";
+	}
+
 	#if MONOTOUCH
 	[Preserve (AllMembers = true)]
 	#endif
@@ -29,6 +34,11 @@ namespace NLuaTest
 		public static string read()
 		{
 			return "test-master";
+		}
+
+		public static string read( parameter test )
+		{
+			return test.field1;
 		}
 	}
 
@@ -42,6 +52,11 @@ namespace NLuaTest
 		public static string read2()
 		{
 			return "test";
+		}
+
+		public static string read( int test )
+		{
+			return "int-test";
 		}
 	}
 
@@ -2301,12 +2316,30 @@ namespace NLuaTest
 				try {
 				l.DoString (" d (10) ");
 				}
-				catch (LuaScriptException e) {
+				catch (LuaScriptException ) {
 					fail = true;
 				}
 			}
 
 			Assert.True (fail);
+		}
+
+		[Test]
+		public void TestOverloadedMethodCallOnBase ()
+		{
+			using (var l = new Lua ()) {
+				l.LoadCLRPackage ();
+				l.DoString (" import ('NLuaTest') ");
+				l.DoString (@"
+					p=parameter()
+					r1 = testClass.read(p)     -- is not working. it is also not working if the method in base class has two parameters instead of one
+					r2 = testClass.read(1)     -- is working				
+				");
+				string r1 = (string) l ["r1"];
+				string r2 = (string) l ["r2"];
+				Assert.AreEqual ("parameter-field1", r1, "#1");
+				Assert.AreEqual ("int-test" , r2, "#2");
+			}
 		}
 
 		static Lua m_lua;
