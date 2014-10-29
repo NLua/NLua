@@ -104,7 +104,11 @@ namespace NLua.Method
 				return type.GetMethods (methodName, bindingType);
 
 			var methods = type.GetMethods (methodName, bindingType);
+#if NETFX_CORE
+			var baseMethods = GetMethodsRecursively (type.GetTypeInfo ().BaseType, methodName, bindingType);
+#else
 			var baseMethods = GetMethodsRecursively (type.BaseType, methodName, bindingType);
+#endif
 
 			return methods.Concat (baseMethods).ToArray ();
 		}
