@@ -1,0 +1,6 @@
+Name: NLua.Net40
+Description: NLua.Net40
+Version: 2.x
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/NLua.dll

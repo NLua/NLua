@@ -1,6 +1,6 @@
 #! /bin/sh
 
-PROJECT=NLua
+PROJECT=NLua.Net40
 FILE=
 CONFIGURE=configure.ac
 

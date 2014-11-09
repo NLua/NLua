@@ -4,47 +4,170 @@ EXTRA_DIST =
 # Warning: This is an automatically generated file, do not edit!
 
 if ENABLE_DEBUG
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
-ASSEMBLY = ../../Run/Debug/NLua.dll
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG" "-keyfile:key.snk"
+ASSEMBLY = ../../Run/Debug/net40/NLua.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../KeraLua/src/bin/Debug/KeraLua.dll \
-	../KopiLua/Bin/Debug/KopiLua.dll
-BUILD_DIR = ../../Run/Debug
+	../KeraLua/src/bin/Debug/net40/KeraLua.dll \
+	../KopiLua/Bin/Debug/net40/KopiLua.dll
+BUILD_DIR = ../../Run/Debug/net40/
 
-NLUA_DLL_MDB_SOURCE=../../Run/Debug/NLua.dll.mdb
+NLUA_DLL_MDB_SOURCE=../../Run/Debug/net40/NLua.dll.mdb
 NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
-KERALUA_DLL_SOURCE=../KeraLua/src/bin/Debug/KeraLua.dll
-KERALUA_DLL_MDB_SOURCE=../KeraLua/src/bin/Debug/KeraLua.dll.mdb
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/Debug/net40/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../KeraLua/src/bin/Debug/net40/KeraLua.dll.mdb
 KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
-KOPILUA_DLL_SOURCE=../KopiLua/Bin/Debug/KopiLua.dll
-KOPILUA_DLL_MDB_SOURCE=../KopiLua/Bin/Debug/KopiLua.dll.mdb
+KOPILUA_DLL_SOURCE=../KopiLua/Bin/Debug/net40/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../KopiLua/Bin/Debug/net40/KopiLua.dll.mdb
+KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
+
+endif
+
+if ENABLE_DEBUGKOPILUA
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG;USE_KOPILUA" "-keyfile:key.snk"
+ASSEMBLY = bin/DebugKopiLua/NLua.dll
+ASSEMBLY_MDB = $(ASSEMBLY).mdb
+COMPILE_TARGET = library
+PROJECT_REFERENCES =  \
+	../KeraLua/src/bin/DebugKopiLua/KeraLua.dll \
+	../KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll
+BUILD_DIR = bin/DebugKopiLua/
+
+NLUA_DLL_MDB_SOURCE=bin/DebugKopiLua/NLua.dll.mdb
+NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/DebugKopiLua/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../KeraLua/src/bin/DebugKopiLua/KeraLua.dll.mdb
+KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
+KOPILUA_DLL_SOURCE=../KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll.mdb
 KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
 
 endif
 
 if ENABLE_RELEASE
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:RELEASE"
-ASSEMBLY = ../../Run/Release/NLua.dll
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:RELEASE" "-keyfile:key.snk"
+ASSEMBLY = ../../Run/Release/net40/NLua.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../KeraLua/src/bin/Release/KeraLua.dll \
-	../KopiLua/Bin/Release/KopiLua.dll
-BUILD_DIR = ../../Run/Release
+	../KeraLua/src/bin/Release/net40/KeraLua.dll \
+	../KopiLua/Bin/Release/net40/KopiLua.dll
+BUILD_DIR = ../../Run/Release/net40/
 
 NLUA_DLL_MDB=
-KERALUA_DLL_SOURCE=../KeraLua/src/bin/Release/KeraLua.dll
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/Release/net40/KeraLua.dll
 KERALUA_DLL_MDB=
-KOPILUA_DLL_SOURCE=../KopiLua/Bin/Release/KopiLua.dll
+KOPILUA_DLL_SOURCE=../KopiLua/Bin/Release/net40/KopiLua.dll
 KOPILUA_DLL_MDB=
 
 endif
 
-AL=al2
+if ENABLE_RELEASEKOPILUA
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- "-define:USE_KOPILUA" "-keyfile:key.snk"
+ASSEMBLY = bin/ReleaseKopiLua/NLua.dll
+ASSEMBLY_MDB = 
+COMPILE_TARGET = library
+PROJECT_REFERENCES =  \
+	../KeraLua/src/bin/ReleaseKopiLua/KeraLua.dll \
+	../KopiLua/KopiLua/bin/ReleaseKopiLua/KopiLua.dll
+BUILD_DIR = bin/ReleaseKopiLua/
+
+NLUA_DLL_MDB=
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/ReleaseKopiLua/KeraLua.dll
+KERALUA_DLL_MDB=
+KOPILUA_DLL_SOURCE=../KopiLua/KopiLua/bin/ReleaseKopiLua/KopiLua.dll
+KOPILUA_DLL_MDB=
+
+endif
+
+if ENABLE_DEBUG_X64
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG" "-keyfile:key.snk"
+ASSEMBLY = ../../Run/Debug/net40/NLua.dll
+ASSEMBLY_MDB = $(ASSEMBLY).mdb
+COMPILE_TARGET = library
+PROJECT_REFERENCES =  \
+	../KeraLua/src/bin/Debug/net40/KeraLua.dll \
+	../KopiLua/Bin/Debug/net40/KopiLua.dll
+BUILD_DIR = ../../Run/Debug/net40/
+
+NLUA_DLL_MDB_SOURCE=../../Run/Debug/net40/NLua.dll.mdb
+NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/Debug/net40/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../KeraLua/src/bin/Debug/net40/KeraLua.dll.mdb
+KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
+KOPILUA_DLL_SOURCE=../KopiLua/Bin/Debug/net40/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../KopiLua/Bin/Debug/net40/KopiLua.dll.mdb
+KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
+
+endif
+
+if ENABLE_RELEASE_X64
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:RELEASE" "-keyfile:key.snk"
+ASSEMBLY = ../../Run/Release/net40/NLua.dll
+ASSEMBLY_MDB = 
+COMPILE_TARGET = library
+PROJECT_REFERENCES =  \
+	../KeraLua/src/bin/Release/net40/KeraLua.dll \
+	../KopiLua/Bin/Release/net40/KopiLua.dll
+BUILD_DIR = ../../Run/Release/net40/
+
+NLUA_DLL_MDB=
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/Release/net40/KeraLua.dll
+KERALUA_DLL_MDB=
+KOPILUA_DLL_SOURCE=../KopiLua/Bin/Release/net40/KopiLua.dll
+KOPILUA_DLL_MDB=
+
+endif
+
+if ENABLE_DEBUGKOPILUA_X64
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG;USE_KOPILUA" "-keyfile:key.snk"
+ASSEMBLY = bin/DebugKopiLua/NLua.dll
+ASSEMBLY_MDB = $(ASSEMBLY).mdb
+COMPILE_TARGET = library
+PROJECT_REFERENCES =  \
+	../KeraLua/src/bin/DebugKopiLua/KeraLua.dll \
+	../KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll
+BUILD_DIR = bin/DebugKopiLua/
+
+NLUA_DLL_MDB_SOURCE=bin/DebugKopiLua/NLua.dll.mdb
+NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/DebugKopiLua/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../KeraLua/src/bin/DebugKopiLua/KeraLua.dll.mdb
+KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
+KOPILUA_DLL_SOURCE=../KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll.mdb
+KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
+
+endif
+
+if ENABLE_RELEASEKOPILUA_X64
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- "-define:USE_KOPILUA" "-keyfile:key.snk"
+ASSEMBLY = bin/ReleaseKopiLua/NLua.dll
+ASSEMBLY_MDB = 
+COMPILE_TARGET = library
+PROJECT_REFERENCES =  \
+	../KeraLua/src/bin/ReleaseKopiLua/KeraLua.dll \
+	../KopiLua/KopiLua/bin/ReleaseKopiLua/KopiLua.dll
+BUILD_DIR = bin/ReleaseKopiLua/
+
+NLUA_DLL_MDB=
+KERALUA_DLL_SOURCE=../KeraLua/src/bin/ReleaseKopiLua/KeraLua.dll
+KERALUA_DLL_MDB=
+KOPILUA_DLL_SOURCE=../KopiLua/KopiLua/bin/ReleaseKopiLua/KopiLua.dll
+KOPILUA_DLL_MDB=
+
+endif
+
+AL=al
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
 
 PROGRAMFILES = \
@@ -55,7 +178,7 @@ PROGRAMFILES = \
 	$(KOPILUA_DLL_MDB)  
 
 LINUX_PKGCONFIG = \
-	$(NLUA_PC)  
+	$(NLUA_NET40_PC)  
 
 
 RESGEN=resgen2
@@ -103,14 +226,16 @@ FILES = \
 	LuaLib/GCOptions.cs \
 	LuaLib/LuaLib.cs \
 	Config/NLuaConfig.cs \
-	ObjectTranslatorPool.cs 
+	ObjectTranslatorPool.cs \
+	Platform/CLSCompliantAttribute.cs 
 
 DATA_FILES = 
 
 RESOURCES = 
 
 EXTRAS = \
-	nlua.pc.in 
+	key.snk \
+	nlua.net40.pc.in 
 
 REFERENCES =  \
 	System \
@@ -126,13 +251,13 @@ include $(top_srcdir)/Makefile.include
 
 KERALUA_DLL = $(BUILD_DIR)/KeraLua.dll
 KOPILUA_DLL = $(BUILD_DIR)/KopiLua.dll
-NLUA_PC = $(BUILD_DIR)/nlua.pc
+NLUA_NET40_PC = $(BUILD_DIR)/nlua.net40.pc
 
 $(eval $(call emit-deploy-target,KERALUA_DLL))
 $(eval $(call emit-deploy-target,KERALUA_DLL_MDB))
 $(eval $(call emit-deploy-target,KOPILUA_DLL))
 $(eval $(call emit-deploy-target,KOPILUA_DLL_MDB))
-$(eval $(call emit-deploy-wrapper,NLUA_PC,nlua.pc))
+$(eval $(call emit-deploy-wrapper,NLUA_NET40_PC,nlua.net40.pc))
 
 
 $(eval $(call emit_resgen_targets))
