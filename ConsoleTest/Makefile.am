@@ -6,25 +6,60 @@ EXTRA_DIST =
 if ENABLE_DEBUG
 ASSEMBLY_COMPILER_COMMAND = dmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG;TRACE"
-ASSEMBLY = bin/Debug/ConsoleTest.exe
+ASSEMBLY = ../tests/ConsoleTest.exe
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = exe
 PROJECT_REFERENCES =  \
-	../Run/Debug/NLua.dll
-BUILD_DIR = bin/Debug/
+	../Run/Debug/net40/NLua.dll \
+	../tests/NLuaTest.dll
+BUILD_DIR = ../tests/
 
-CONSOLETEST_EXE_MDB_SOURCE=bin/Debug/ConsoleTest.exe.mdb
+CONSOLETEST_EXE_MDB_SOURCE=../tests/ConsoleTest.exe.mdb
 CONSOLETEST_EXE_MDB=$(BUILD_DIR)/ConsoleTest.exe.mdb
 CONSOLETEST_EXE_CONFIG_SOURCE=App.config
-NLUA_DLL_SOURCE=../Run/Debug/NLua.dll
-NLUA_DLL_MDB_SOURCE=../Run/Debug/NLua.dll.mdb
+NLUA_DLL_SOURCE=../Run/Debug/net40/NLua.dll
+NLUA_DLL_MDB_SOURCE=../Run/Debug/net40/NLua.dll.mdb
 NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
-KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/Debug/KeraLua.dll
-KERALUA_DLL_MDB_SOURCE=../Core/KeraLua/src/bin/Debug/KeraLua.dll.mdb
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/Debug/net40/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../Core/KeraLua/src/bin/Debug/net40/KeraLua.dll.mdb
 KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
-KOPILUA_DLL_SOURCE=../Core/KopiLua/Bin/Debug/KopiLua.dll
-KOPILUA_DLL_MDB_SOURCE=../Core/KopiLua/Bin/Debug/KopiLua.dll.mdb
+KOPILUA_DLL_SOURCE=../Core/KopiLua/Bin/Debug/net40/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../Core/KopiLua/Bin/Debug/net40/KopiLua.dll.mdb
 KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
+NLUATEST_DLL_SOURCE=../tests/NLuaTest.dll
+NLUATEST_DLL_MDB_SOURCE=../tests/NLuaTest.dll.mdb
+NLUATEST_DLL_MDB=$(BUILD_DIR)/NLuaTest.dll.mdb
+NUNIT_FRAMEWORK_DLL_SOURCE=../packages/NUnit.2.6.2/lib/nunit.framework.dll
+
+endif
+
+if ENABLE_DEBUGKOPILUA
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG;TRACE"
+ASSEMBLY = bin/DebugKopiLua/ConsoleTest.exe
+ASSEMBLY_MDB = $(ASSEMBLY).mdb
+COMPILE_TARGET = exe
+PROJECT_REFERENCES =  \
+	../Core/NLua/bin/DebugKopiLua/NLua.dll \
+	../NLuaTest/bin/DebugKopiLua/NLuaTest.dll
+BUILD_DIR = bin/DebugKopiLua/
+
+CONSOLETEST_EXE_MDB_SOURCE=bin/DebugKopiLua/ConsoleTest.exe.mdb
+CONSOLETEST_EXE_MDB=$(BUILD_DIR)/ConsoleTest.exe.mdb
+CONSOLETEST_EXE_CONFIG_SOURCE=App.config
+NLUA_DLL_SOURCE=../Core/NLua/bin/DebugKopiLua/NLua.dll
+NLUA_DLL_MDB_SOURCE=../Core/NLua/bin/DebugKopiLua/NLua.dll.mdb
+NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/DebugKopiLua/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../Core/KeraLua/src/bin/DebugKopiLua/KeraLua.dll.mdb
+KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
+KOPILUA_DLL_SOURCE=../Core/KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../Core/KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll.mdb
+KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
+NLUATEST_DLL_SOURCE=../NLuaTest/bin/DebugKopiLua/NLuaTest.dll
+NLUATEST_DLL_MDB_SOURCE=../NLuaTest/bin/DebugKopiLua/NLuaTest.dll.mdb
+NLUATEST_DLL_MDB=$(BUILD_DIR)/NLuaTest.dll.mdb
+NUNIT_FRAMEWORK_DLL_SOURCE=../packages/NUnit.2.6.2/lib/nunit.framework.dll
 
 endif
 
@@ -35,17 +70,156 @@ ASSEMBLY = bin/Release/ConsoleTest.exe
 ASSEMBLY_MDB = 
 COMPILE_TARGET = exe
 PROJECT_REFERENCES =  \
-	../Run/Release/NLua.dll
+	../Run/Release/net40/NLua.dll \
+	../tests/NLuaTest.dll
 BUILD_DIR = bin/Release/
 
 CONSOLETEST_EXE_MDB=
 CONSOLETEST_EXE_CONFIG_SOURCE=App.config
-NLUA_DLL_SOURCE=../Run/Release/NLua.dll
+NLUA_DLL_SOURCE=../Run/Release/net40/NLua.dll
 NLUA_DLL_MDB=
-KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/Release/KeraLua.dll
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/Release/net40/KeraLua.dll
 KERALUA_DLL_MDB=
-KOPILUA_DLL_SOURCE=../Core/KopiLua/Bin/Release/KopiLua.dll
+KOPILUA_DLL_SOURCE=../Core/KopiLua/Bin/Release/net40/KopiLua.dll
 KOPILUA_DLL_MDB=
+NLUATEST_DLL_SOURCE=../tests/NLuaTest.dll
+NLUATEST_DLL_MDB=
+NUNIT_FRAMEWORK_DLL_SOURCE=../packages/NUnit.2.6.2/lib/nunit.framework.dll
+
+endif
+
+if ENABLE_RELEASEKOPILUA
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
+ASSEMBLY = bin/ReleaseKopiLua/ConsoleTest.exe
+ASSEMBLY_MDB = 
+COMPILE_TARGET = exe
+PROJECT_REFERENCES =  \
+	../Core/NLua/bin/ReleaseKopiLua/NLua.dll \
+	../tests/NLuaTest.dll
+BUILD_DIR = bin/ReleaseKopiLua/
+
+CONSOLETEST_EXE_MDB=
+CONSOLETEST_EXE_CONFIG_SOURCE=App.config
+NLUA_DLL_SOURCE=../Core/NLua/bin/ReleaseKopiLua/NLua.dll
+NLUA_DLL_MDB=
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/ReleaseKopiLua/KeraLua.dll
+KERALUA_DLL_MDB=
+KOPILUA_DLL_SOURCE=../Core/KopiLua/KopiLua/bin/ReleaseKopiLua/KopiLua.dll
+KOPILUA_DLL_MDB=
+NLUATEST_DLL_SOURCE=../tests/NLuaTest.dll
+NLUATEST_DLL_MDB=
+NUNIT_FRAMEWORK_DLL_SOURCE=../packages/NUnit.2.6.2/lib/nunit.framework.dll
+
+endif
+
+if ENABLE_DEBUG_X64
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG;TRACE"
+ASSEMBLY = ../tests/ConsoleTest.exe
+ASSEMBLY_MDB = $(ASSEMBLY).mdb
+COMPILE_TARGET = exe
+PROJECT_REFERENCES =  \
+	../Run/Debug/net40/NLua.dll \
+	../tests/NLuaTest.dll
+BUILD_DIR = ../tests/
+
+CONSOLETEST_EXE_MDB_SOURCE=../tests/ConsoleTest.exe.mdb
+CONSOLETEST_EXE_MDB=$(BUILD_DIR)/ConsoleTest.exe.mdb
+CONSOLETEST_EXE_CONFIG_SOURCE=App.config
+NLUA_DLL_SOURCE=../Run/Debug/net40/NLua.dll
+NLUA_DLL_MDB_SOURCE=../Run/Debug/net40/NLua.dll.mdb
+NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/Debug/net40/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../Core/KeraLua/src/bin/Debug/net40/KeraLua.dll.mdb
+KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
+KOPILUA_DLL_SOURCE=../Core/KopiLua/Bin/Debug/net40/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../Core/KopiLua/Bin/Debug/net40/KopiLua.dll.mdb
+KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
+NLUATEST_DLL_SOURCE=../tests/NLuaTest.dll
+NLUATEST_DLL_MDB_SOURCE=../tests/NLuaTest.dll.mdb
+NLUATEST_DLL_MDB=$(BUILD_DIR)/NLuaTest.dll.mdb
+NUNIT_FRAMEWORK_DLL_SOURCE=../packages/NUnit.2.6.2/lib/nunit.framework.dll
+
+endif
+
+if ENABLE_RELEASE_X64
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize+ "-define:TRACE"
+ASSEMBLY = bin/Release/ConsoleTest.exe
+ASSEMBLY_MDB = 
+COMPILE_TARGET = exe
+PROJECT_REFERENCES =  \
+	../Run/Release/net40/NLua.dll \
+	../tests/NLuaTest.dll
+BUILD_DIR = bin/Release/
+
+CONSOLETEST_EXE_MDB=
+CONSOLETEST_EXE_CONFIG_SOURCE=App.config
+NLUA_DLL_SOURCE=../Run/Release/net40/NLua.dll
+NLUA_DLL_MDB=
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/Release/net40/KeraLua.dll
+KERALUA_DLL_MDB=
+KOPILUA_DLL_SOURCE=../Core/KopiLua/Bin/Release/net40/KopiLua.dll
+KOPILUA_DLL_MDB=
+NLUATEST_DLL_SOURCE=../tests/NLuaTest.dll
+NLUATEST_DLL_MDB=
+NUNIT_FRAMEWORK_DLL_SOURCE=../packages/NUnit.2.6.2/lib/nunit.framework.dll
+
+endif
+
+if ENABLE_DEBUGKOPILUA_X64
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG;TRACE"
+ASSEMBLY = bin/DebugKopiLua/ConsoleTest.exe
+ASSEMBLY_MDB = $(ASSEMBLY).mdb
+COMPILE_TARGET = exe
+PROJECT_REFERENCES =  \
+	../Core/NLua/bin/DebugKopiLua/NLua.dll \
+	../NLuaTest/bin/DebugKopiLua/NLuaTest.dll
+BUILD_DIR = bin/DebugKopiLua/
+
+CONSOLETEST_EXE_MDB_SOURCE=bin/DebugKopiLua/ConsoleTest.exe.mdb
+CONSOLETEST_EXE_MDB=$(BUILD_DIR)/ConsoleTest.exe.mdb
+CONSOLETEST_EXE_CONFIG_SOURCE=App.config
+NLUA_DLL_SOURCE=../Core/NLua/bin/DebugKopiLua/NLua.dll
+NLUA_DLL_MDB_SOURCE=../Core/NLua/bin/DebugKopiLua/NLua.dll.mdb
+NLUA_DLL_MDB=$(BUILD_DIR)/NLua.dll.mdb
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/DebugKopiLua/KeraLua.dll
+KERALUA_DLL_MDB_SOURCE=../Core/KeraLua/src/bin/DebugKopiLua/KeraLua.dll.mdb
+KERALUA_DLL_MDB=$(BUILD_DIR)/KeraLua.dll.mdb
+KOPILUA_DLL_SOURCE=../Core/KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll
+KOPILUA_DLL_MDB_SOURCE=../Core/KopiLua/KopiLua/bin/DebugKopiLua/KopiLua.dll.mdb
+KOPILUA_DLL_MDB=$(BUILD_DIR)/KopiLua.dll.mdb
+NLUATEST_DLL_SOURCE=../NLuaTest/bin/DebugKopiLua/NLuaTest.dll
+NLUATEST_DLL_MDB_SOURCE=../NLuaTest/bin/DebugKopiLua/NLuaTest.dll.mdb
+NLUATEST_DLL_MDB=$(BUILD_DIR)/NLuaTest.dll.mdb
+NUNIT_FRAMEWORK_DLL_SOURCE=../packages/NUnit.2.6.2/lib/nunit.framework.dll
+
+endif
+
+if ENABLE_RELEASEKOPILUA_X64
+ASSEMBLY_COMPILER_COMMAND = dmcs
+ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
+ASSEMBLY = bin/ReleaseKopiLua/ConsoleTest.exe
+ASSEMBLY_MDB = 
+COMPILE_TARGET = exe
+PROJECT_REFERENCES =  \
+	../Core/NLua/bin/ReleaseKopiLua/NLua.dll \
+	../tests/NLuaTest.dll
+BUILD_DIR = bin/ReleaseKopiLua/
+
+CONSOLETEST_EXE_MDB=
+CONSOLETEST_EXE_CONFIG_SOURCE=App.config
+NLUA_DLL_SOURCE=../Core/NLua/bin/ReleaseKopiLua/NLua.dll
+NLUA_DLL_MDB=
+KERALUA_DLL_SOURCE=../Core/KeraLua/src/bin/ReleaseKopiLua/KeraLua.dll
+KERALUA_DLL_MDB=
+KOPILUA_DLL_SOURCE=../Core/KopiLua/KopiLua/bin/ReleaseKopiLua/KopiLua.dll
+KOPILUA_DLL_MDB=
+NLUATEST_DLL_SOURCE=../tests/NLuaTest.dll
+NLUATEST_DLL_MDB=
+NUNIT_FRAMEWORK_DLL_SOURCE=../packages/NUnit.2.6.2/lib/nunit.framework.dll
 
 endif
 
@@ -60,10 +234,13 @@ PROGRAMFILES = \
 	$(KERALUA_DLL) \
 	$(KERALUA_DLL_MDB) \
 	$(KOPILUA_DLL) \
-	$(KOPILUA_DLL_MDB)  
+	$(KOPILUA_DLL_MDB) \
+	$(NLUATEST_DLL) \
+	$(NLUATEST_DLL_MDB) \
+	$(NUNIT_FRAMEWORK_DLL)  
 
 BINARIES = \
-	$(CONSOLETEST)  
+	$(CONSOLETEST_40)  
 
 
 RESGEN=resgen2
@@ -82,11 +259,12 @@ RESOURCES =
 
 EXTRAS = \
 	App.config \
-	consoletest.in 
+	consoletest.40.in 
 
 REFERENCES =  \
 	System \
 	System.Core \
+	System.Numerics \
 	System.Xml.Linq \
 	System.Data \
 	System.Xml
@@ -101,7 +279,9 @@ CONSOLETEST_EXE_CONFIG = $(BUILD_DIR)/ConsoleTest.exe.config
 NLUA_DLL = $(BUILD_DIR)/NLua.dll
 KERALUA_DLL = $(BUILD_DIR)/KeraLua.dll
 KOPILUA_DLL = $(BUILD_DIR)/KopiLua.dll
-CONSOLETEST = $(BUILD_DIR)/consoletest
+NLUATEST_DLL = $(BUILD_DIR)/NLuaTest.dll
+NUNIT_FRAMEWORK_DLL = $(BUILD_DIR)/nunit.framework.dll
+CONSOLETEST_40 = $(BUILD_DIR)/consoletest.40
 
 $(eval $(call emit-deploy-target,CONSOLETEST_EXE_CONFIG))
 $(eval $(call emit-deploy-target,NLUA_DLL))
@@ -110,7 +290,10 @@ $(eval $(call emit-deploy-target,KERALUA_DLL))
 $(eval $(call emit-deploy-target,KERALUA_DLL_MDB))
 $(eval $(call emit-deploy-target,KOPILUA_DLL))
 $(eval $(call emit-deploy-target,KOPILUA_DLL_MDB))
-$(eval $(call emit-deploy-wrapper,CONSOLETEST,consoletest,x))
+$(eval $(call emit-deploy-target,NLUATEST_DLL))
+$(eval $(call emit-deploy-target,NLUATEST_DLL_MDB))
+$(eval $(call emit-deploy-target,NUNIT_FRAMEWORK_DLL))
+$(eval $(call emit-deploy-wrapper,CONSOLETEST_40,consoletest.40,x))
 
 
 $(eval $(call emit_resgen_targets))
