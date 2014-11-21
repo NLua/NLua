@@ -592,9 +592,9 @@ namespace NLua
 
 			// Object already in the list of Lua objects? Push the stored reference.
 #if NETFX_CORE
-			bool found = (!o.GetType().GetTypeInfo().IsValueType) && objectsBackMap.TryGetValue (o, out index);
+			bool found = (!o.GetType().GetTypeInfo().IsValueType || o.GetType().GetTypeInfo().IsEnum) && objectsBackMap.TryGetValue (o, out index);
 #else
-			bool found = (!o.GetType().IsValueType) && objectsBackMap.TryGetValue (o, out index);
+            bool found = (!o.GetType().IsValueType || o.GetType().IsEnum) && objectsBackMap.TryGetValue(o, out index);
 #endif
 
 			if (found) {
@@ -764,9 +764,9 @@ namespace NLua
 		{
 			objects.Remove (udata);
 #if NETFX_CORE
-			if (!o.GetType ().GetTypeInfo ().IsValueType)
+			if (!o.GetType ().GetTypeInfo ().IsValueType || o.GetType().GetTypeInfo().IsEnum)
 #else
-			if (!o.GetType ().IsValueType)
+			if (!o.GetType ().IsValueType || o.GetType().IsEnum)
 #endif
 				objectsBackMap.Remove (o);
 		}
@@ -777,9 +777,9 @@ namespace NLua
 			int index = nextObj++;
 			objects [index] = obj;
 #if NETFX_CORE
-			if (!obj.GetType ().GetTypeInfo().IsValueType)
+			if (!obj.GetType ().GetTypeInfo().IsValueType || obj.GetType ().GetTypeInfo().IsValueType)
 #else
-			if (!obj.GetType().IsValueType)
+            if (!obj.GetType().IsValueType || obj.GetType().IsValueType)
 #endif
 
 			objectsBackMap [obj] = index;
