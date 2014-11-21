@@ -39,7 +39,7 @@
         </div>
 
         <h1>
-<a name="nlua" class="anchor" href="#nlua"><span class="octicon octicon-link"></span></a>NLua</h1>
+<a id="nlua" class="anchor" href="#nlua" aria-hidden="true"><span class="octicon octicon-link"></span></a>NLua</h1>
 
 <p><a href=""><img src="https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150" alt="Logo"></a></p>
 
@@ -50,6 +50,8 @@
 <p>Example: using NLua from command line.</p>
 
 <p>NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Windows Phone 7 and 8.</p>
+
+<p>Unity3D support branch:  <a href="https://github.com/Mervill/Unity3D-NLua">unity3d</a> by <a href="https://github.com/Mervill/Unity3D-NLua">Riley G</a>.</p>
 
 <table>
 <thead>
@@ -118,50 +120,145 @@
 </tbody>
 </table>
 
-<p>Unity3D support branch:  <a href="https://github.com/NLua/NLua/tree/unity3d">unity3d</a> by <a href="https://github.com/miaodadao">miaodadao</a>.</p>
+<p>Example:
+You can use/instantiate any .NET class without any previous registration or annotation. </p>
 
-<p>Windows: We don't have a CI Server for Windows yet. 
-     To build NLua you will need msysgit, CMake and NUnit <a href="http://screencast.com/t/rYuDtCdFG7">http://screencast.com/t/rYuDtCdFG7</a></p>
+<div class="highlight highlight-csharp"><pre>    <span class="pl-s">public</span> <span class="pl-s">class</span> <span class="pl-en">SomeClass</span>
+    {
+        <span class="pl-s">public</span> <span class="pl-st">string</span> <span class="pl-en">MyProperty</span> {<span class="pl-k">get</span>; <span class="pl-s">private</span> <span class="pl-k">set</span>;}
 
-<div class="highlight highlight-csharp"><pre>
-            <span class="kt">string</span> <span class="n">script</span> <span class="p">=</span> <span class="s">@"</span>
+        <span class="pl-s">public</span> <span class="pl-en">SomeClass</span> (<span class="pl-st">string</span> <span class="pl-vpf">param1</span> <span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">"</span>defaulValue<span class="pl-pds">"</span></span>)
+        {
+            MyProperty = param1;
+        }
 
-<span class="s">            local s = Scriptable (""My String Parameter"")</span>
-<span class="s">            s:DoSomething ()</span>
+        <span class="pl-s">public</span> <span class="pl-st">int</span> <span class="pl-en">Func1</span> ()
+        {
+            <span class="pl-k">return</span> <span class="pl-c1">32</span>;
+        }
 
-<span class="s">            print (s.Param1)</span>
+        <span class="pl-s">public</span> <span class="pl-st">string</span> <span class="pl-en">AnotherFunc</span> (<span class="pl-st">int</span> <span class="pl-vpf">val1</span>, <span class="pl-st">string</span> <span class="pl-vpf">val2</span>)
+        {
+            <span class="pl-k">return</span> <span class="pl-s1"><span class="pl-pds">"</span>Some String<span class="pl-pds">"</span></span>;
+        }
 
-<span class="s">            local ret = s:SumOfLengths (""Name"", 10);</span>
-
-<span class="s">            print (tostring(ret))</span>
-
-<span class="s">            Scriptable.Print(""Hello NLua"")</span>
-
-<span class="s">            s.Param3 = 0.5;</span>
-
-<span class="s">            local p2 = tostring(s.Param3)</span>
-
-<span class="s">            print (p2)</span>
-<span class="s">            "</span><span class="p">;</span>
-
-            <span class="k">using</span> <span class="p">(</span><span class="n">Lua</span> <span class="n">lua</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Lua</span> <span class="p">())</span> <span class="p">{</span>
-
-                <span class="n">lua</span><span class="p">.</span><span class="n">LoadCLRPackage</span> <span class="p">();</span>
-
-                <span class="n">lua</span><span class="p">.</span><span class="n">DoString</span> <span class="p">(</span><span class="s">@" import ('NLuaSample') "</span><span class="p">);</span>
-
-                <span class="n">lua</span> <span class="p">[</span><span class="s">"gValue"</span><span class="p">]</span> <span class="p">=</span> <span class="s">"This is a global value"</span><span class="p">;</span> <span class="c1">// You can set a global value.</span>
-
-                <span class="kt">var</span> <span class="n">returns</span> <span class="p">=</span> <span class="n">lua</span><span class="p">.</span><span class="n">DoString</span> <span class="p">(</span><span class="n">script</span><span class="p">);</span>
-
-                <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span> <span class="p">(</span><span class="n">returns</span><span class="p">);</span>
-            <span class="p">}</span>
+        <span class="pl-s">public</span> <span class="pl-s">static</span> <span class="pl-st">string</span> <span class="pl-en">StaticMethod</span> (<span class="pl-st">int</span> <span class="pl-vpf">param</span>)
+        {
+            <span class="pl-k">return</span> <span class="pl-s1"><span class="pl-pds">"</span>Return of Static Method<span class="pl-pds">"</span></span>;
+        }
 </pre></div>
+
+<p>Creating Lua state:</p>
+
+<div class="highlight highlight-csharp"><pre>    <span class="pl-k">using</span> NLua;
+
+    Lua state = <span class="pl-s">new</span> Lua ()
+</pre></div>
+
+<p>Evaluating simple expressions:</p>
+
+<div class="highlight highlight-csharp"><pre>    <span class="pl-k">var</span> res = state.DoString (<span class="pl-s1"><span class="pl-pds">"</span>return 10 + 3*(5 + 2)<span class="pl-pds">"</span></span>)[<span class="pl-c1">0</span>] <span class="pl-k">as</span> <span class="pl-st">double</span>;
+    <span class="pl-c">// Lua can return multiple values, for this reason DoString return a array of objects</span></pre></div>
+
+<p>Passing raw values to the state:</p>
+
+<div class="highlight highlight-csharp"><pre>    <span class="pl-st">double</span> val = <span class="pl-c1">12.0</span>;
+    state [<span class="pl-s1"><span class="pl-pds">"</span>x<span class="pl-pds">"</span></span>] = val; <span class="pl-c">// Create a global value 'x' </span>
+    <span class="pl-k">var</span> res = state.DoString (<span class="pl-s1"><span class="pl-pds">"</span>return 10 + x*(5 + 2)<span class="pl-pds">"</span></span>)[<span class="pl-c1">0</span>] <span class="pl-k">as</span> <span class="pl-st">double</span>;</pre></div>
+
+<p>Retrieving global values:</p>
+
+<div class="highlight highlight-csharp"><pre>    state.DoString (<span class="pl-s1"><span class="pl-pds">"</span>y = 10 + x*(5 + 2)<span class="pl-pds">"</span></span>);
+    <span class="pl-k">var</span> y = state [<span class="pl-s1"><span class="pl-pds">"</span>y<span class="pl-pds">"</span></span>] <span class="pl-k">as</span> <span class="pl-st">double</span>; -- Retrieve the <span class="pl-k">value</span> of y</pre></div>
+
+<p>Retrieving Lua functions:</p>
+
+<div class="highlight highlight-csharp"><pre>    state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span></span>
+<span class="pl-s1">    function ScriptFunc (val1, val2)</span>
+<span class="pl-s1">        if val1 &gt; val2 then</span>
+<span class="pl-s1">            return val1 + 1</span>
+<span class="pl-s1">        else</span>
+<span class="pl-s1">            return val2 - 1</span>
+<span class="pl-s1">        end</span>
+<span class="pl-s1">    end</span>
+<span class="pl-s1">    <span class="pl-pds">"</span></span>);
+    <span class="pl-k">var</span> scriptFunc = state [<span class="pl-s1"><span class="pl-pds">"</span>ScriptFunc<span class="pl-pds">"</span></span>] <span class="pl-k">as</span> LuaFunction;
+    <span class="pl-k">var</span> res = (<span class="pl-st">int</span>)scriptFunc.Call (<span class="pl-c1">3</span>, <span class="pl-c1">5</span>).First ();
+    <span class="pl-c">// LuaFunction.Call will also return a array of objects, since a Lua function</span>
+    <span class="pl-c">// can return multiple values</span></pre></div>
+
+<h2>
+<a id="using-the-net-objects" class="anchor" href="#using-the-net-objects" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using the .NET objects.</h2>
+
+<p>Passing .NET objects to the state:</p>
+
+<div class="highlight highlight-csharp"><pre>    SomeClass obj = <span class="pl-s">new</span> SomeClass (<span class="pl-s1"><span class="pl-pds">"</span>Param<span class="pl-pds">"</span></span>);
+    state [<span class="pl-s1"><span class="pl-pds">"</span>obj<span class="pl-pds">"</span></span>] = obj; <span class="pl-c">// Create a global value 'obj' of .NET type SomeClass </span>
+    -- This could be any .NET <span class="pl-st">object</span>, <span class="pl-k">from</span> BCL or <span class="pl-k">from</span> your assemblies</pre></div>
+
+<p>Using .NET assemblies inside Lua:</p>
+
+<p>To acccess any .NET assembly to create objects, events etc inside Lua you need to ask NLua to use CLR as a Lua package.
+To do this just use the method <code>LoadCLRPackage</code> and use the <code>import</code> function inside your Lua script to load the Assembly.</p>
+
+<div class="highlight highlight-csharp"><pre>    state.LoadCLRPackage ();
+    state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span> import ('MyAssembly.exe', 'MyNamespace') </span>
+<span class="pl-s1">               import ('System.Web') <span class="pl-pds">"</span></span>);
+    <span class="pl-c">// import will load any .NET assembly and they will be available inside the Lua context.</span></pre></div>
+
+<p>Calling instance methods:
+To call instance methods you need to use the <code>:</code> notation, you can call methods from objects passed to Lua or to objects created inside the Lua context.</p>
+
+<div class="highlight highlight-csharp"><pre>    state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span></span>
+<span class="pl-s1">    local res1 = obj:Func1()</span>
+<span class="pl-s1">    local res2 = obj2:AnotherFunc (10, 'hello')</span>
+<span class="pl-s1">    local res3 = client:DownloadString('http://nlua.org')</span>
+<span class="pl-s1">    <span class="pl-pds">"</span></span>);</pre></div>
+
+<p>Calling static methods:
+You can call static methods using only the class name and the <code>.</code> notation from Lua.</p>
+
+<div class="highlight highlight-csharp"><pre>    state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span></span>
+<span class="pl-s1">    local res4 = SomeClass:StaticMethod(4)</span>
+<span class="pl-s1">    <span class="pl-pds">"</span></span>);</pre></div>
+
+<p>Calling properties:
+You can get (or set) any property using  <code>.</code> notation from Lua.</p>
+
+<div class="highlight highlight-csharp"><pre>    state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span></span>
+<span class="pl-s1">    local res5 = obj.MyProperty</span>
+<span class="pl-s1">    <span class="pl-pds">"</span></span>);</pre></div>
+
+<p>All methods, events or property need to be public available, NLua will fail to call non-public members.</p>
+
+<p>If you are using Xamarin.iOS you need to <a href="http://developer.xamarin.com/guides/ios/advanced_topics/linker/"><code>Preserve</code></a> the class you wan't use inside NLua, otherwise the Linker will remove the class from final binary if the class is not in use.</p>
+
+<h2>
+<a id="sendboxing" class="anchor" href="#sendboxing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sendboxing</h2>
+
+<p>There is many ways to sandbox scripts inside your application. I strongly recomend you to use plain Lua to do your sandbox.
+You can re-write the <code>import</code> function before load the user script and if the user try to import a .NET assembly nothing will happen.</p>
+
+<div class="highlight highlight-csharp"><pre>    state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span></span>
+<span class="pl-s1">        import = function () end</span>
+<span class="pl-s1">    <span class="pl-pds">"</span></span>);</pre></div>
+
+<p><a href="http://lua-users.org/wiki/SandBoxes">Lua-Sandbox user-list</a></p>
 
 <p>Copyright (c) 2014 Vinicius Jarina (<a href="mailto:viniciusjarina@gmail.com">viniciusjarina@gmail.com</a>)</p>
 
 <h2>
-<a name="nlua-131" class="anchor" href="#nlua-131"><span class="octicon octicon-link"></span></a>NLua 1.3.1</h2>
+<a id="nlua-132" class="anchor" href="#nlua-132" aria-hidden="true"><span class="octicon octicon-link"></span></a>NLua 1.3.2</h2>
+
+<ul>
+<li>Migration to unified Xamarin.iOS (iOS)</li>
+<li>Added __call method to call Actions/Funcs from Lua as Lua functions.</li>
+<li>Fixed <a href="https://github.com/NLua/NLua/issues/116">#116</a> problem accessing base class method</li>
+<li>Fixed <a href="https://github.com/NLua/NLua/issues/117">#117</a> problem with same method in class and base class</li>
+</ul>
+
+<h2>
+<a id="nlua-131" class="anchor" href="#nlua-131" aria-hidden="true"><span class="octicon octicon-link"></span></a>NLua 1.3.1</h2>
 
 <ul>
 <li>Added support to WinRT (Windows Phone 8)</li>
@@ -178,7 +275,7 @@
 </ul>
 
 <h2>
-<a name="nlua-130" class="anchor" href="#nlua-130"><span class="octicon octicon-link"></span></a>NLua 1.3.0</h2>
+<a id="nlua-130" class="anchor" href="#nlua-130" aria-hidden="true"><span class="octicon octicon-link"></span></a>NLua 1.3.0</h2>
 
 <ul>
 <li>Update Lua to 5.2.3</li>
@@ -186,7 +283,7 @@
 </ul>
 
 <h2>
-<a name="nlua-120" class="anchor" href="#nlua-120"><span class="octicon octicon-link"></span></a>NLua 1.2.0</h2>
+<a id="nlua-120" class="anchor" href="#nlua-120" aria-hidden="true"><span class="octicon octicon-link"></span></a>NLua 1.2.0</h2>
 
 <ul>
 <li>NuGet Package (<a href="https://www.nuget.org/packages/NLua/">https://www.nuget.org/packages/NLua/</a>)</li>
@@ -196,7 +293,7 @@
 </ul>
 
 <h2>
-<a name="nlua-110" class="anchor" href="#nlua-110"><span class="octicon octicon-link"></span></a>NLua 1.1.0</h2>
+<a id="nlua-110" class="anchor" href="#nlua-110" aria-hidden="true"><span class="octicon octicon-link"></span></a>NLua 1.1.0</h2>
 
 <ul>
 <li>Port to WP7 (Thanks to Mangatome)</li>
@@ -205,7 +302,7 @@
 </ul>
 
 <h2>
-<a name="nlua-100" class="anchor" href="#nlua-100"><span class="octicon octicon-link"></span></a>NLua 1.0.0</h2>
+<a id="nlua-100" class="anchor" href="#nlua-100" aria-hidden="true"><span class="octicon octicon-link"></span></a>NLua 1.0.0</h2>
 
 <ul>
 <li>Forked from LuaInterface 2.0.4</li>
@@ -214,24 +311,9 @@
 
 <blockquote>
 <h3>
-<a name="help-nlua" class="anchor" href="#help-nlua"><span class="octicon octicon-link"></span></a>Help NLua</h3>
-
-<p>If you are using NLua, consider helping with some easy todo items.</p>
-
-<h3>
-<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO:</h3>
+<a id="help-nlua" class="anchor" href="#help-nlua" aria-hidden="true"><span class="octicon octicon-link"></span></a>Help NLua</h3>
 
 <ul>
-<li>Windows CI server.</li>
-<li>Port to other platforms (using a csproj/sln for each platform like RestSharp/MonoGame/Cocos2d-XNA)
-
-<ul>
-<li>Unity Pro (using p/invoke)</li>
-<li>Port NLua to use LuaJIT</li>
-</ul>
-</li>
-<li><p>Create a NuGet package</p></li>
-<li><p>Fix warnings/Gendarme/FxCop issues.</p></li>
 <li>Contributing
 --------------</li>
 <li>NLua uses the Mono Code-Style <a href="http://www.mono-project.com/Coding_Guidelines">http://www.mono-project.com/Coding_Guidelines</a> .</li>
@@ -242,10 +324,10 @@
 </blockquote>
 
 <h2>
-<a name="old-history" class="anchor" href="#old-history"><span class="octicon octicon-link"></span></a>Old History</h2>
+<a id="old-history" class="anchor" href="#old-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Old History</h2>
 
 <h2>
-<a name="luainterface--" class="anchor" href="#luainterface--"><span class="octicon octicon-link"></span></a>LuaInterface  </h2>
+<a id="luainterface--" class="anchor" href="#luainterface--" aria-hidden="true"><span class="octicon octicon-link"></span></a>LuaInterface  </h2>
 
 <p>Copyright (c) 2003-2006 Fabio Mascarenhas de Queiroz</p>
 
@@ -254,7 +336,7 @@
 <p>lua51.dll and lua51.exe are Copyright (c) 2005 Tecgraf, PUC-Rio</p>
 
 <h2>
-<a name="getting-started-with-nlua" class="anchor" href="#getting-started-with-nlua"><span class="octicon octicon-link"></span></a>Getting started with NLua:</h2>
+<a id="getting-started-with-nlua" class="anchor" href="#getting-started-with-nlua" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting started with NLua:</h2>
 
 <ul>
 <li><p>Look at src/TestNLua/TestLua to see an example of usage from C# 
@@ -267,7 +349,7 @@ from within your .NET application.</p></li>
 </ul>
 
 <h2>
-<a name="whats-new-in-luainterface-203" class="anchor" href="#whats-new-in-luainterface-203"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 2.0.3</h2>
+<a id="whats-new-in-luainterface-203" class="anchor" href="#whats-new-in-luainterface-203" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 2.0.3</h2>
 
 <ul>
 <li>Fix: Private methods accessible via LuaInterface</li>
@@ -284,14 +366,14 @@ from within your .NET application.</p></li>
 </ul>
 
 <h2>
-<a name="whats-new-in-luainterface-201" class="anchor" href="#whats-new-in-luainterface-201"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 2.0.1</h2>
+<a id="whats-new-in-luainterface-201" class="anchor" href="#whats-new-in-luainterface-201" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 2.0.1</h2>
 
 <ul>
 <li>Apparently the 2.0 built binaries had an issue for some users, this is just a rebuild with the lua sources pulled into the LuaInterface.zip</li>
 </ul>
 
 <h2>
-<a name="whats-new-in-luainterface-20" class="anchor" href="#whats-new-in-luainterface-20"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 2.0</h2>
+<a id="whats-new-in-luainterface-20" class="anchor" href="#whats-new-in-luainterface-20" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 2.0</h2>
 
 <ul>
 <li>The base lua5.1.2 library is now built as entirely manged code.  LuaInterface is now pure CIL</li>
@@ -300,7 +382,7 @@ from within your .NET application.</p></li>
 </ul>
 
 <h2>
-<a name="whats-new-in-luainterface-153" class="anchor" href="#whats-new-in-luainterface-153"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5.3</h2>
+<a id="whats-new-in-luainterface-153" class="anchor" href="#whats-new-in-luainterface-153" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5.3</h2>
 
 <ul>
 <li>Internal lua panics (due to API violations) now throw LuaExceptions into .net</li>
@@ -311,7 +393,7 @@ only works with tables.</li>
 </ul>
 
 <h2>
-<a name="whats-new-in-luainterface-152" class="anchor" href="#whats-new-in-luainterface-152"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5.2</h2>
+<a id="whats-new-in-luainterface-152" class="anchor" href="#whats-new-in-luainterface-152" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5.2</h2>
 
 <ul>
 <li>Overriding C# methods from Lua is fixed (broken with .net 2.0!)</li>
@@ -321,7 +403,7 @@ only works with tables.</li>
 </ul>
 
 <h2>
-<a name="whats-new-in-luainterface-151" class="anchor" href="#whats-new-in-luainterface-151"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5.1</h2>
+<a id="whats-new-in-luainterface-151" class="anchor" href="#whats-new-in-luainterface-151" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5.1</h2>
 
 <p>Fix a serious bug w.r.t. garbage collection - made especially apparent 
 with the new lua5.1 switch: If you were <em>very</em> unlucky with timing 
@@ -337,7 +419,7 @@ course you can still use a colon if an <em>instance</em> is being used.</p>
 <p>Static method calls are now much faster (due to better caching).</p>
 
 <h2>
-<a name="whats-new-in-luainterface-15" class="anchor" href="#whats-new-in-luainterface-15"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5</h2>
+<a id="whats-new-in-luainterface-15" class="anchor" href="#whats-new-in-luainterface-15" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's new in LuaInterface 1.5</h2>
 
 <p>LuaInterface is now updated to be based on Lua5.1.1.  You can either use 
 your own build/binaries for Lua5.1.1 or use the version distributed here. 
@@ -363,7 +445,7 @@ modify Lua internals (a built version of lua51.dll is included in the
 regular LuaInterface distribution)</p>
 
 <h2>
-<a name="whats-new-in-luainterface-14" class="anchor" href="#whats-new-in-luainterface-14"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.4</h2>
+<a id="whats-new-in-luainterface-14" class="anchor" href="#whats-new-in-luainterface-14" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.4</h2>
 
 <p>Note: Fabio area of interest has moved off in other directions (hopefully only temporarily).
 I've talked with Fabio and he's said he's okay with me doing a new release with various fixes
@@ -397,7 +479,7 @@ download this file unless you want to modify Lua internals (a built version
 of lua50.dll is included in the regular LuaInterface distribution)</p>
 
 <h2>
-<a name="whats-new-in-luainterface-13" class="anchor" href="#whats-new-in-luainterface-13"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.3</h2>
+<a id="whats-new-in-luainterface-13" class="anchor" href="#whats-new-in-luainterface-13" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.3</h2>
 
 <p>LuaInterface now works with LuaBinaries Release 2 (<a href="http://luabinaries.luaforge.net">http://luabinaries.luaforge.net</a>)
 and Compat-5.1 Release 3 (<a href="http://luaforge.net/projects/compat">http://luaforge.net/projects/compat</a>). The loader DLL is now 
@@ -415,7 +497,7 @@ do require"luanet").</p>
 anonymous contribution in the Lua wiki). Check the _alt files in the samples folder.</p>
 
 <h2>
-<a name="whats-new-in-luainterface-121" class="anchor" href="#whats-new-in-luainterface-121"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.2.1</h2>
+<a id="whats-new-in-luainterface-121" class="anchor" href="#whats-new-in-luainterface-121" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.2.1</h2>
 
 <p>Now checks if two LuaInterface.Lua instances are trying to share the same Lua state,
 and throws an exception if this is the case. Also included readonly clauses in public
@@ -425,7 +507,7 @@ members of the Lua and ObjectTranslator classes.</p>
 files.</p>
 
 <h2>
-<a name="whats-new-in-luainterface-12" class="anchor" href="#whats-new-in-luainterface-12"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.2</h2>
+<a id="whats-new-in-luainterface-12" class="anchor" href="#whats-new-in-luainterface-12" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's New in LuaInterface 1.2</h2>
 
 <p>LuaInterface now can be loaded as a module, so you can use the lua standalone
 interpreter to run scripts. Thanks to Paul Winwood for this idea and sample code
