@@ -15,7 +15,7 @@ using NUnit.Framework;
 #endif
 
 #if MONOTOUCH
-using MonoTouch.Foundation;
+using Foundation;
 #endif
 
 namespace NLuaTest

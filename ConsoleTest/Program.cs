@@ -10,16 +10,19 @@ using NLuaTest;
 namespace ConsoleTest
 {
 
-
 	public class Program
 	{
 
 		static void Main (string [] args)
 		{
 			using (var l = new Lua ()) {
-				Action c = () => { Console.WriteLine ("Ola"); };
-				l ["d"] = c;
-				l.DoString (" d () ");
+				l.LoadCLRPackage ();
+				l.DoString (" import ('ConsoleTest') ");
+				l.DoString (@"
+					p=parameter()
+					r1 = testClass2.read(p)     -- is not working. it is also not working if the method in base class has two parameters instead of one
+					r2 = testClass2.read(1)     -- is working				
+				");
 			}
 		}
 	}

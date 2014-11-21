@@ -35,6 +35,7 @@ using NLua.Event;
 using NLua.Method;
 using NLua.Exceptions;
 using NLua.Extensions;
+using ObjCRuntime;
 
 namespace NLua
 {
@@ -331,7 +332,7 @@ end
 		}
 
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int PanicCallback (LuaState luaState)
 		{
@@ -962,7 +963,7 @@ end
 		/// <param name = "luaDebug">Pointer to LuaDebug (lua_debug) structure</param>
 		/// 
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaHook))]
+		[MonoPInvokeCallback (typeof (LuaHook))]
 #endif
 #if USE_KOPILUA
 		static void DebugHookCallback (LuaState luaState, LuaDebug debug)

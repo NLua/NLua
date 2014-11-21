@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using NLua.Method;
 using NLua.Exceptions;
 using NLua.Extensions;
+using ObjCRuntime;
 
 namespace NLua
 {
@@ -259,7 +260,7 @@ namespace NLua
 		 * if the assembly is not found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int LoadAssembly (LuaState luaState)
 		{
@@ -346,7 +347,7 @@ namespace NLua
 		 * type is not found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int ImportType (LuaState luaState)
 		{
@@ -373,7 +374,7 @@ namespace NLua
 		 * type passed as second argument in the stack.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int RegisterTable (LuaState luaState)
 		{
@@ -424,7 +425,7 @@ namespace NLua
 		 * base field, freeing the created object for garbage-collection
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int UnregisterTable (LuaState luaState)
 		{
@@ -468,7 +469,7 @@ namespace NLua
 		 * if no matching method is not found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int GetMethodSignature (LuaState luaState)
 		{
@@ -520,7 +521,7 @@ namespace NLua
 		 * if no matching constructor is found.
 		 */
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int GetConstructorSignature (LuaState luaState)
 		{
@@ -998,7 +999,7 @@ namespace NLua
 		}
 
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int CType (LuaState luaState)
 		{
@@ -1017,7 +1018,7 @@ namespace NLua
 		}
 
 #if MONOTOUCH
-		[MonoTouch.MonoPInvokeCallback (typeof (LuaNativeFunction))]
+		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int EnumFromInt (LuaState luaState)
 		{

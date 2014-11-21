@@ -135,7 +135,7 @@ Global
 		{47153754-10F5-44D8-B578-F5A32B69061A} = {B8664957-CB71-4F11-A4DB-59E7514BC5F3}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Applications\LuaRunner\NLua.csproj
+		StartupItem = ConsoleTest\ConsoleTest.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
 		$1.FileWidth = 120

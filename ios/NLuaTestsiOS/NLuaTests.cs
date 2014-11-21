@@ -5,7 +5,7 @@ using NLua;
 using NLuaTest.Mock;
 
 #if MONOTOUCH
-using MonoTouch.Foundation;
+using Foundation;
 using MonoTouch;
 #endif
 
@@ -42,7 +42,7 @@ namespace NLuaTest
 			using (Lua lua = new Lua ()) {
 				lua.LoadCLRPackage ();
 
-				lua.DoString ("import ('monotouch', 'MonoTouch.Foundation') ");
+				lua.DoString ("import ('Xamarin.iOS', 'Foundation') ");
 				lua.DoString ("testURL = NSUrl('http://nlua.org/?query=param')");
 				lua.DoString ("host = testURL.Host");
 
