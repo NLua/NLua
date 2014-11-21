@@ -12,6 +12,7 @@ Example: using NLua from command line.
 
 NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Windows Phone 7 and 8.
 
+Unity3D support branch:  [unity3d](https://github.com/Mervill/Unity3D-NLua) by [Riley G](https://github.com/Mervill/Unity3D-NLua).
 
   [1]: https://www.dropbox.com/s/w99igtc12uocq4k/NLua.OSX.zip
   [2]: http://nvlabs.github.com/cub/download-icon.png (Download for OSX)
@@ -59,48 +60,160 @@ NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Win
 | **Windows Phone 7** |  | [![dwn_wp7][14]][13] |
 | **Unity3D** |  | [![dwn_unity3d][20]][19] |
 
-Unity3D support branch:  [unity3d](https://github.com/Mervill/Unity3D-NLua) by [Riley G](https://github.com/Mervill/Unity3D-NLua).
-
-
-Windows: We don't have a CI Server for Windows yet. 
-	 To build NLua you will need msysgit, CMake and NUnit http://screencast.com/t/rYuDtCdFG7
+Example:
+You can use/instantiate any .NET class without any previous registration or annotation. 
 ```csharp
+	public class SomeClass
+	{
+		public string MyProperty {get; private set;}
+		
+		public SomeClass (string param1 = "defaulValue")
+		{
+			MyProperty = param1;
+		}
+		
+		public int Func1 ()
+		{
+			return 32;
+		}
+		
+		public string AnotherFunc (int val1, string val2)
+		{
+			return "Some String";
+		}
+		
+		public static string StaticMethod (int param)
+		{
+			return "Return of Static Method";
+		}
 
-			string script = @"
-				
-			local s = Scriptable (""My String Parameter"")
-			s:DoSomething ()
-			
-			print (s.Param1)
-			
-			local ret = s:SumOfLengths (""Name"", 10);
-			
-			print (tostring(ret))
-			
-			Scriptable.Print(""Hello NLua"")
-			
-			s.Param3 = 0.5;
-			
-			local p2 = tostring(s.Param3)
-			
-			print (p2)
-			";
-
-			using (Lua lua = new Lua ()) {
-
-				lua.LoadCLRPackage ();
-
-				lua.DoString (@" import ('NLuaSample') ");
-				
-				lua ["gValue"] = "This is a global value"; // You can set a global value.
-
-				var returns = lua.DoString (script);
-
-				Console.WriteLine (returns);
-			}
 ```
 
+Creating Lua state:
+
+```csharp
+	using NLua;
+	
+	Lua state = new Lua ()
+
+```
+
+Evaluating simple expressions:
+```csharp
+	var res = state.DoString ("return 10 + 3*(5 + 2)")[0] as double;
+	// Lua can return multiple values, for this reason DoString return a array of objects
+```
+
+Passing raw values to the state:
+
+```csharp
+	double val = 12.0;
+	state ["x"] = val; // Create a global value 'x' 
+	var res = state.DoString ("return 10 + x*(5 + 2)")[0] as double;
+```
+
+
+Retrieving global values:
+
+```csharp
+	state.DoString ("y = 10 + x*(5 + 2)");
+	var y = state ["y"] as double; -- Retrieve the value of y
+```
+
+Retrieving Lua functions:
+
+```csharp
+	state.DoString (@"
+	function ScriptFunc (val1, val2)
+		if val1 > val2 then
+			return val1 + 1
+		else
+			return val2 - 1
+		end
+	end
+	");
+	var scriptFunc = state ["ScriptFunc"] as LuaFunction;
+	var res = (int)scriptFunc.Call (3, 5).First ();
+	// LuaFunction.Call will also return a array of objects, since a Lua function
+	// can return multiple values
+```
+
+##Using the .NET objects.##
+
+Passing .NET objects to the state:
+
+```csharp
+	SomeClass obj = new SomeClass ("Param");
+	state ["obj"] = obj; // Create a global value 'obj' of .NET type SomeClass 
+	-- This could be any .NET object, from BCL or from your assemblies
+```
+
+Using .NET assemblies inside Lua:
+
+To acccess any .NET assembly to create objects, events etc inside Lua you need to ask NLua to use CLR as a Lua package.
+To do this just use the method `LoadCLRPackage` and use the `import` function inside your Lua script to load the Assembly.
+
+```csharp
+	state.LoadCLRPackage ();
+	state.DoString (@" import ('MyAssembly.exe', 'MyNamespace') 
+			   import ('System.Web') ");
+	// import will load any .NET assembly and they will be available inside the Lua context.
+```
+
+Calling instance methods:
+To call instance methods you need to use the `:` notation, you can call methods from objects passed to Lua or to objects created inside the Lua context.
+
+```csharp
+	state.DoString (@"
+	local res1 = obj:Func1()
+	local res2 = obj2:AnotherFunc (10, 'hello')
+	local res3 = client:DownloadString('http://nlua.org')
+	");
+```
+
+Calling static methods:
+You can call static methods using only the class name and the `.` notation from Lua.
+
+```csharp
+	state.DoString (@"
+	local res4 = SomeClass:StaticMethod(4)
+	");
+```
+
+Calling properties:
+You can get (or set) any property using  `.` notation from Lua.
+
+```csharp
+	state.DoString (@"
+	local res5 = obj.MyProperty
+	");
+```
+
+All methods, events or property need to be public available, NLua will fail to call non-public members.
+
+If you are using Xamarin.iOS you need to [`Preserve`](http://developer.xamarin.com/guides/ios/advanced_topics/linker/) the class you wan't use inside NLua, otherwise the Linker will remove the class from final binary if the class is not in use.
+
+##Sendboxing##
+
+There is many ways to sandbox scripts inside your application. I strongly recomend you to use plain Lua to do your sandbox.
+You can re-write the `import` function before load the user script and if the user try to import a .NET assembly nothing will happen.
+
+```csharp
+	state.DoString (@"
+		import = function () end
+	");
+```
+[Lua-Sandbox user-list](http://lua-users.org/wiki/SandBoxes)
+
+
 Copyright (c) 2014 Vinicius Jarina (viniciusjarina@gmail.com)
+
+NLua 1.3.2
+----------
+* Migration to unified Xamarin.iOS (iOS)
+* Added __call method to call Actions/Funcs from Lua as Lua functions.
+* Fixed [#116](https://github.com/NLua/NLua/issues/116) problem accessing base class method
+* Fixed [#117](https://github.com/NLua/NLua/issues/117) problem with same method in class and base class
 
 NLua 1.3.1
 ----------
@@ -141,25 +254,12 @@ NLua 1.0.0
 
 
 >###Help NLua###
-> If you are using NLua, consider helping with some easy todo items.
->
->### TODO: ###
-> * Windows CI server.
-> * Port to other platforms (using a csproj/sln for each platform like RestSharp/MonoGame/Cocos2d-XNA)
->	 	* Unity Pro (using p/invoke)
->		* Port NLua to use LuaJIT
-> * Create a NuGet package
-
-
-> * Fix warnings/Gendarme/FxCop issues.
 >* Contributing
 >  --------------
 > * NLua uses the Mono Code-Style http://www.mono-project.com/Coding_Guidelines .
 > * Please, do not change the line-end or re-indent the code.
 > * Run the tests before you push.
 > * Avoid pushing style changes (unless they are really needed), renaming and move code.
-
-
 
 Old History
 -----------
