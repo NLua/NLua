@@ -32,7 +32,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using NLua.Method;
 using NLua.Extensions;
-using ObjCRuntime;
+
+#if MONOTOUCH
+	using ObjCRuntime;
+#endif
 
 namespace NLua
 {

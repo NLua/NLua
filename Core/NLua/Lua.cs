@@ -35,7 +35,10 @@ using NLua.Event;
 using NLua.Method;
 using NLua.Exceptions;
 using NLua.Extensions;
-using ObjCRuntime;
+
+#if MONOTOUCH
+	using ObjCRuntime;
+#endif
 
 namespace NLua
 {
