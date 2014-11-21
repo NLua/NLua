@@ -145,12 +145,12 @@ Passing .NET objects to the state:
 ```csharp
 	SomeClass obj = new SomeClass ("Param");
 	state ["obj"] = obj; // Create a global value 'obj' of .NET type SomeClass 
-	-- This could be any .NET object, from BCL or from your assemblies
+	// This could be any .NET object, from BCL or from your assemblies
 ```
 
 Using .NET assemblies inside Lua:
 
-To acccess any .NET assembly to create objects, events etc inside Lua you need to ask NLua to use CLR as a Lua package.
+To access any .NET assembly to create objects, events etc inside Lua you need to ask NLua to use CLR as a Lua package.
 To do this just use the method `LoadCLRPackage` and use the `import` function inside your Lua script to load the Assembly.
 
 ```csharp
@@ -158,6 +158,16 @@ To do this just use the method `LoadCLRPackage` and use the `import` function in
 	state.DoString (@" import ('MyAssembly.exe', 'MyNamespace') 
 			   import ('System.Web') ");
 	// import will load any .NET assembly and they will be available inside the Lua context.
+```
+
+Creating .NET objects:
+To create object you only need to use the class name with the `()`.
+
+```csharp
+state.DoString (@"
+	 obj2 = SomeClass() -- you can suppress default values.
+	 client = WebClient()
+	");
 ```
 
 Calling instance methods:
