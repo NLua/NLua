@@ -201,9 +201,9 @@ You can get (or set) any property using  `.` notation from Lua.
 
 All methods, events or property need to be public available, NLua will fail to call non-public members.
 
-If you are using Xamarin.iOS you need to [`Preserve`](http://developer.xamarin.com/guides/ios/advanced_topics/linker/) the class you wan't use inside NLua, otherwise the Linker will remove the class from final binary if the class is not in use.
+If you are using Xamarin.iOS you need to [`Preserve`](http://developer.xamarin.com/guides/ios/advanced_topics/linker/) the class you want to use inside NLua, otherwise the Linker will remove the class from final binary if the class is not in use.
 
-##Sendboxing##
+##Sandboxing##
 
 There is many ways to sandbox scripts inside your application. I strongly recomend you to use plain Lua to do your sandbox.
 You can re-write the `import` function before load the user script and if the user try to import a .NET assembly nothing will happen.
