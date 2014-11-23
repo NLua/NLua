@@ -238,8 +238,8 @@ namespace NLuaTest
                 lua.DoString("TestEnum=luanet.import_type('NLuaTest.Mock.TestEnum')");
                 lua.DoString("enum1=TestEnum.ValueA");
                 lua.DoString("enum2=TestEnum.ValueB");
-                Assert.AreEqual(true, (bool)lua.DoString("return enum1 == enum2")[0]);
-                Assert.AreEqual(false, (bool)lua.DoString("return enum1 ~= enum2")[0]);
+                Assert.AreEqual(true, (bool)lua.DoString("return enum1 ~= enum2")[0]);
+                Assert.AreEqual(false, (bool)lua.DoString("return enum1 == enum2")[0]);
             }
         }
 
