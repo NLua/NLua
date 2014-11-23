@@ -7,7 +7,7 @@ using System.Threading;
 using NLua;
 using NLua.Exceptions;
 #if MONOTOUCH
-using Foundation;
+using MonoTouch.Foundation;
 #endif
 
 #if WINDOWS_PHONE
@@ -215,19 +215,33 @@ namespace NLuaTest
 			}
 		}
 
-		[Test]
-		public void TestStructHashesEqual()
-		{
-			using (Lua lua = new Lua())
-			{
-				lua.DoString("luanet.load_assembly('NLuaTest')");
-				lua.DoString("TestStruct=luanet.import_type('NLuaTest.Mock.TestStruct')");
-				lua.DoString("struct1=TestStruct(0)");
-				lua.DoString("struct2=TestStruct(0)");
-				lua.DoString("struct2.val=1");
-				Assert.AreEqual(0, (double)lua["struct1.val"]);
-			}
-		}
+        [Test]
+        public void TestStructHashesEqual()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('NLuaTest')");
+                lua.DoString("TestStruct=luanet.import_type('NLuaTest.Mock.TestStruct')");
+                lua.DoString("struct1=TestStruct(0)");
+                lua.DoString("struct2=TestStruct(0)");
+                lua.DoString("struct2.val=1");
+                Assert.AreEqual(0, (double)lua["struct1.val"]);
+            }
+        }
+
+        [Test]
+        public void TestEnumEqual()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('NLuaTest')");
+                lua.DoString("TestEnum=luanet.import_type('NLuaTest.Mock.TestEnum')");
+                lua.DoString("enum1=TestEnum.ValueA");
+                lua.DoString("enum2=TestEnum.ValueB");
+                Assert.AreEqual(true, (bool)lua.DoString("return enum1 ~= enum2")[0]);
+                Assert.AreEqual(false, (bool)lua.DoString("return enum1 == enum2")[0]);
+            }
+        }
 
 		[Test]
 		public void TestMethodOverloads ()

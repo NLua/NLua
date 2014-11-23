@@ -192,23 +192,33 @@ namespace NLuaTest.Mock
 		}
 	}
 
-	/// <summary>
-	/// test structure passing
-	/// </summary>
-	public struct TestStruct
-	{
-		public TestStruct (float val)
-		{
-			v = val;
-		}
+    /// <summary>
+    /// test structure passing
+    /// </summary>
+    public struct TestStruct
+    {
+        public TestStruct(float val)
+        {
+            v = val;
+        }
 
-		public float v;
+        public float v;
 
-		public float val {
-			get { return v; }
-			set { v = value; }
-		}
-	}
+        public float val
+        {
+            get { return v; }
+            set { v = value; }
+        }
+    }
+
+    /// <summary>
+    /// test enum
+    /// </summary>
+    public enum TestEnum
+    {
+        ValueA,
+        ValueB
+    }
 
 	/// <summary>
 	/// Generic class with generic and non-generic methods
