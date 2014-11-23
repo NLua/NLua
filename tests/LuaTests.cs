@@ -7,7 +7,7 @@ using System.Threading;
 using NLua;
 using NLua.Exceptions;
 #if MONOTOUCH
-using MonoTouch.Foundation;
+using Foundation;
 #endif
 
 #if WINDOWS_PHONE
