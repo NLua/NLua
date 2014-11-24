@@ -186,7 +186,7 @@ You can call static methods using only the class name and the `.` notation from 
 
 ```csharp
 	state.DoString (@"
-	local res4 = SomeClass:StaticMethod(4)
+	local res4 = SomeClass.StaticMethod(4)
 	");
 ```
 
