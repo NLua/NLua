@@ -2356,6 +2356,20 @@ namespace NLuaTest
 			}
 		}
 
+		[Test]
+		public void TestCallMethodWithParams2 ()
+		{
+			using (var l = new Lua ()) {
+				l.LoadCLRPackage ();
+				l.DoString (" import ('NLuaTest','NLuaTest.Mock') ");
+				l.DoString (@"					
+					r = TestClass.MethodWithParams(2)			
+				");
+				int r =  (int)l.GetNumber ("r");
+				Assert.AreEqual (0, r, "#1");
+			}
+		}
+
 		static Lua m_lua;
 					
 	}

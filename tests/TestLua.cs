@@ -586,6 +586,16 @@ namespace NLuaTest.Mock
 			}
 			Console.WriteLine(output);
 		}
+
+		static public int MethodWithParams (int a, params int[] others) {
+			Console.WriteLine (a);
+			int i = 0;
+			foreach (int val in others) {
+				Console.WriteLine (val);
+				i++;
+			}
+			return i;
+		}
 	}
 
 	public class TestClassWithOverloadedMethod

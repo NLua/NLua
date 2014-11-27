@@ -1267,17 +1267,17 @@ namespace NLua
 
 					currentLuaParam++;
 				}  // Type does not match, ignore if the parameter is optional
-				else if (IsParamsArray (luaState, currentLuaParam, currentNetParam, out extractValue)) {
+				else if (IsParamsArray (luaState, nLuaParams, currentLuaParam, currentNetParam, out extractValue)) {
 
-					var paramArrayType = currentNetParam.ParameterType.GetElementType ();
+					int count = (nLuaParams - currentLuaParam) + 1;
+					Type paramArrayType = currentNetParam.ParameterType.GetElementType ();
 
 					Func<int, object> extractDelegate = (currentParam) => {
-						currentLuaParam ++;
+						currentLuaParam++;
 						return extractValue (luaState, currentParam);
 					};
-					int count = (nLuaParams - currentLuaParam) + 1;
+					
 					Array paramArray = TableToArray (extractDelegate, paramArrayType, currentLuaParam, count);
-
 					paramList.Add (paramArray);
 					int index = paramList.LastIndexOf (paramArray);
 					var methodArg = new MethodArgs ();
@@ -1286,6 +1286,7 @@ namespace NLua
 					methodArg.isParamsArray = true;
 					methodArg.paramsArrayType = paramArrayType;
 					argTypes.Add (methodArg);
+					 
 
 				} else if (currentLuaParam > nLuaParams) { // Adds optional parameters
 					if (currentNetParam.IsOptional)
@@ -1333,11 +1334,14 @@ namespace NLua
 			}
 		}
 
-		private bool IsParamsArray (LuaState luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
+		private bool IsParamsArray (LuaState luaState, int nLuaParams, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
 		{
 			extractValue = null;
+			bool isParamArray = false;
 
 			if (currentNetParam.GetCustomAttributes (typeof(ParamArrayAttribute), false).Any ()) {
+
+				isParamArray = nLuaParams < currentLuaParam;
 				LuaTypes luaType;
 
 				try {
@@ -1374,8 +1378,7 @@ namespace NLua
 				}
 			}
 
-			Debug.WriteLine ("Type wasn't Params object.");
-			return false;
+			return isParamArray;
 		}
 	}
 }
