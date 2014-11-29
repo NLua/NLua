@@ -164,7 +164,7 @@ Global
 		$5.inheritsScope = text/plain
 		$5.scope = text/plain
 		description = NLua
-		version = 1.3.1
+		version = 1.3.2
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -38,7 +38,7 @@ namespace NLua.Config
 		public const string NLuaProduct = "NLua";
 		public const string NLuaCopyright = "Copyright 2003-2014 Vinicius Jarina , Fabio Mascarenhas, Kevin Hesterm and Megax";
 		public const string NLuaTrademark = "MIT license";
-		public const string NLuaVersion = "1.3.1";
-		public const string NLuaFileVersion = "1.3.1";
+		public const string NLuaVersion = "1.3.2";
+		public const string NLuaFileVersion = "1.3.2";
 	}
 }

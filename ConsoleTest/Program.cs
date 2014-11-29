@@ -12,6 +12,11 @@ namespace ConsoleTest
 
 	public class Program
 	{
+		static public void Method(int a, params int[] others) {
+			Console.WriteLine (a);
+			foreach (int val in others)
+				Console.WriteLine (val);
+		}
 
 		static void Main (string [] args)
 		{
@@ -19,9 +24,7 @@ namespace ConsoleTest
 				l.LoadCLRPackage ();
 				l.DoString (" import ('ConsoleTest') ");
 				l.DoString (@"
-					p=parameter()
-					r1 = testClass2.read(p)     -- is not working. it is also not working if the method in base class has two parameters instead of one
-					r2 = testClass2.read(1)     -- is working				
+						Program.Method (1)
 				");
 			}
 		}

@@ -220,10 +220,12 @@ Copyright (c) 2014 Vinicius Jarina (viniciusjarina@gmail.com)
 
 NLua 1.3.2
 ----------
+
 * Migration to unified Xamarin.iOS (iOS)
 * Added __call method to call Actions/Funcs from Lua as Lua functions.
 * Fixed [#116](https://github.com/NLua/NLua/issues/116) problem accessing base class method
 * Fixed [#117](https://github.com/NLua/NLua/issues/117) problem with same method in class and base class
+* Fixed [#125](https://github.com/NLua/NLua/issues/125) calling methods with params keyword.
 
 NLua 1.3.1
 ----------
