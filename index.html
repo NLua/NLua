@@ -194,17 +194,25 @@ You can use/instantiate any .NET class without any previous registration or anno
 
 <div class="highlight highlight-csharp"><pre>    SomeClass obj = <span class="pl-s">new</span> SomeClass (<span class="pl-s1"><span class="pl-pds">"</span>Param<span class="pl-pds">"</span></span>);
     state [<span class="pl-s1"><span class="pl-pds">"</span>obj<span class="pl-pds">"</span></span>] = obj; <span class="pl-c">// Create a global value 'obj' of .NET type SomeClass </span>
-    -- This could be any .NET <span class="pl-st">object</span>, <span class="pl-k">from</span> BCL or <span class="pl-k">from</span> your assemblies</pre></div>
+    <span class="pl-c">// This could be any .NET object, from BCL or from your assemblies</span></pre></div>
 
 <p>Using .NET assemblies inside Lua:</p>
 
-<p>To acccess any .NET assembly to create objects, events etc inside Lua you need to ask NLua to use CLR as a Lua package.
+<p>To access any .NET assembly to create objects, events etc inside Lua you need to ask NLua to use CLR as a Lua package.
 To do this just use the method <code>LoadCLRPackage</code> and use the <code>import</code> function inside your Lua script to load the Assembly.</p>
 
 <div class="highlight highlight-csharp"><pre>    state.LoadCLRPackage ();
     state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span> import ('MyAssembly.exe', 'MyNamespace') </span>
 <span class="pl-s1">               import ('System.Web') <span class="pl-pds">"</span></span>);
     <span class="pl-c">// import will load any .NET assembly and they will be available inside the Lua context.</span></pre></div>
+
+<p>Creating .NET objects:
+To create object you only need to use the class name with the <code>()</code>.</p>
+
+<div class="highlight highlight-csharp"><pre>state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span></span>
+<span class="pl-s1">     obj2 = SomeClass() -- you can suppress default values.</span>
+<span class="pl-s1">     client = WebClient()</span>
+<span class="pl-s1">    <span class="pl-pds">"</span></span>);</pre></div>
 
 <p>Calling instance methods:
 To call instance methods you need to use the <code>:</code> notation, you can call methods from objects passed to Lua or to objects created inside the Lua context.</p>
@@ -219,7 +227,7 @@ To call instance methods you need to use the <code>:</code> notation, you can ca
 You can call static methods using only the class name and the <code>.</code> notation from Lua.</p>
 
 <div class="highlight highlight-csharp"><pre>    state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span></span>
-<span class="pl-s1">    local res4 = SomeClass:StaticMethod(4)</span>
+<span class="pl-s1">    local res4 = SomeClass.StaticMethod(4)</span>
 <span class="pl-s1">    <span class="pl-pds">"</span></span>);</pre></div>
 
 <p>Calling properties:
@@ -231,10 +239,10 @@ You can get (or set) any property using  <code>.</code> notation from Lua.</p>
 
 <p>All methods, events or property need to be public available, NLua will fail to call non-public members.</p>
 
-<p>If you are using Xamarin.iOS you need to <a href="http://developer.xamarin.com/guides/ios/advanced_topics/linker/"><code>Preserve</code></a> the class you wan't use inside NLua, otherwise the Linker will remove the class from final binary if the class is not in use.</p>
+<p>If you are using Xamarin.iOS you need to <a href="http://developer.xamarin.com/guides/ios/advanced_topics/linker/"><code>Preserve</code></a> the class you want to use inside NLua, otherwise the Linker will remove the class from final binary if the class is not in use.</p>
 
 <h2>
-<a id="sendboxing" class="anchor" href="#sendboxing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sendboxing</h2>
+<a id="sandboxing" class="anchor" href="#sandboxing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sandboxing</h2>
 
 <p>There is many ways to sandbox scripts inside your application. I strongly recomend you to use plain Lua to do your sandbox.
 You can re-write the <code>import</code> function before load the user script and if the user try to import a .NET assembly nothing will happen.</p>
@@ -255,6 +263,7 @@ You can re-write the <code>import</code> function before load the user script an
 <li>Added __call method to call Actions/Funcs from Lua as Lua functions.</li>
 <li>Fixed <a href="https://github.com/NLua/NLua/issues/116">#116</a> problem accessing base class method</li>
 <li>Fixed <a href="https://github.com/NLua/NLua/issues/117">#117</a> problem with same method in class and base class</li>
+<li>Fixed <a href="https://github.com/NLua/NLua/issues/125">#125</a> calling methods with params keyword.</li>
 </ul>
 
 <h2>
