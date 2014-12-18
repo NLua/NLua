@@ -117,7 +117,7 @@ Retrieving global values:
 
 ```csharp
 	state.DoString ("y = 10 + x*(5 + 2)");
-	var y = state ["y"] as double; -- Retrieve the value of y
+	var y = state ["y"] as double; // Retrieve the value of y
 ```
 
 Retrieving Lua functions:
