@@ -7,7 +7,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>org.nlua.nluatest</string>
 	<key>MinimumOSVersion</key>
-	<string>3.2</string>
+	<string>6.1</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
