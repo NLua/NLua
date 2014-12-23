@@ -214,9 +214,9 @@ namespace NLuaTest
 			}
 		}
 
-        /*
-        * Tests structure creation via the default constructor
-        */
+		/*
+		* Tests structure creation via the default constructor
+		*/
 		[Test]
 		public void TestStructDefaultConstructor ()
 		{
@@ -225,6 +225,7 @@ namespace NLuaTest
 				lua.DoString ("luanet.load_assembly('NLuaTest')");
 				lua.DoString ("TestStruct=luanet.import_type('NLuaTest.Mock.TestStruct')");
 				lua.DoString ("struct=TestStruct()");
+				Assert.AreEqual (new TestStruct(), (TestStruct)lua ["struct"]);
 			}
 		}
 

@@ -1114,11 +1114,9 @@ namespace NLua
 				}
 			}
 
-			if (klass.UnderlyingSystemType.IsValueType)
-			{
+			if (klass.UnderlyingSystemType.IsValueType) {
 				int numLuaParams = LuaLib.LuaGetTop (luaState);
-				if (numLuaParams == 0)
-				{
+				if (numLuaParams == 0) {
 					translator.Push (luaState, Activator.CreateInstance (klass.UnderlyingSystemType));
 					return 1;
 				}
