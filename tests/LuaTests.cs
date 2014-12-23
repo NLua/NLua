@@ -196,7 +196,6 @@ namespace NLuaTest
 			}
 		}
 
-
 		/*
         * Tests structure assignment
         */
@@ -212,6 +211,21 @@ namespace NLuaTest
 				lua.DoString ("test.Struct = struct");
 				lua.DoString ("val=test.Struct.val");
 				Assert.AreEqual (2.0d, (double)lua ["val"]);
+			}
+		}
+
+		/*
+		* Tests structure creation via the default constructor
+		*/
+		[Test]
+		public void TestStructDefaultConstructor ()
+		{
+			using (Lua lua = new Lua ())
+			{
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestStruct=luanet.import_type('NLuaTest.Mock.TestStruct')");
+				lua.DoString ("struct=TestStruct()");
+				Assert.AreEqual (new TestStruct(), (TestStruct)lua ["struct"]);
 			}
 		}
 
