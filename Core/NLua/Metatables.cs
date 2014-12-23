@@ -1096,7 +1096,7 @@ namespace NLua
 
 			LuaLib.LuaRemove (luaState, 1);
 			var constructors = klass.UnderlyingSystemType.GetConstructors ();
-
+            
 			foreach (var constructor in constructors) {
 				bool isConstructor = MatchParameters (luaState, constructor, ref validConstructor);
 
@@ -1113,6 +1113,16 @@ namespace NLua
 					return 1;
 				}
 			}
+            
+            if (klass.UnderlyingSystemType.IsValueType)
+            {
+                int numLuaParams = LuaLib.LuaGetTop (luaState);
+                if (numLuaParams == 0)
+                {
+                    translator.Push (luaState, Activator.CreateInstance (klass.UnderlyingSystemType));
+                    return 1;
+                }
+            }
 
 			string constructorName = (constructors.Length == 0) ? "unknown" : constructors [0].Name;
 			translator.ThrowError (luaState, String.Format ("{0} does not contain constructor({1}) argument match",
