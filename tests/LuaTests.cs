@@ -210,7 +210,7 @@ namespace NLuaTest
 				lua.DoString ("struct=TestStruct(2)");
 				lua.DoString ("test.Struct = struct");
 				lua.DoString ("val=test.Struct.val");
-                Assert.AreEqual (2.0d, (double)lua ["val"]);
+				Assert.AreEqual (2.0d, (double)lua ["val"]);
 			}
 		}
 
