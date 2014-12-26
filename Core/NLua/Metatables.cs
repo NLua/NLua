@@ -1114,7 +1114,11 @@ namespace NLua
 				}
 			}
 
+#if NETFX_CORE
+			if (klass.UnderlyingSystemType.GetTypeInfo ().IsValueType) {
+#else
 			if (klass.UnderlyingSystemType.IsValueType) {
+#endif
 				int numLuaParams = LuaLib.LuaGetTop (luaState);
 				if (numLuaParams == 0) {
 					translator.Push (luaState, Activator.CreateInstance (klass.UnderlyingSystemType));
