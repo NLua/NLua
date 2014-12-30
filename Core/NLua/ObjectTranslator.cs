@@ -830,7 +830,10 @@ namespace NLua
 		internal LuaTable GetTable (LuaState luaState, int index)
 		{
 			LuaLib.LuaPushValue (luaState, index);
-			return new LuaTable (LuaLib.LuaRef (luaState, 1), interpreter);
+			int reference = LuaLib.LuaRef (luaState, 1);
+			if (reference == -1)
+				return null;
+			return new LuaTable (reference, interpreter);
 		}
 
 		/*
@@ -839,7 +842,10 @@ namespace NLua
 		internal LuaUserData GetUserData (LuaState luaState, int index)
 		{
 			LuaLib.LuaPushValue (luaState, index);
-			return new LuaUserData (LuaLib.LuaRef (luaState, 1), interpreter);
+			int reference = LuaLib.LuaRef (luaState, 1);
+			if (reference == -1)
+				return null;
+			return new LuaUserData(reference, interpreter);
 		}
 
 		/*
@@ -848,7 +854,10 @@ namespace NLua
 		internal LuaFunction GetFunction (LuaState luaState, int index)
 		{
 			LuaLib.LuaPushValue (luaState, index);
-			return new LuaFunction (LuaLib.LuaRef (luaState, 1), interpreter);
+			int reference = LuaLib.LuaRef (luaState, 1);
+			if (reference == -1)
+				return null;
+			return new LuaFunction (reference, interpreter);
 		}
 
 		/*

@@ -154,6 +154,26 @@ namespace NLuaTest
 		}
 
 		/*
+		* Tests passing a LuaFunction
+		*/
+		[Test]
+		public void CallLuaFunction()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.DoString ("function someFunc(v1,v2) return v1 + v2 end");
+				lua ["funcObject"] = lua.GetFunction ("someFunc");
+
+				lua.DoString ("luanet.load_assembly('mscorlib')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+				lua.DoString ("b = TestClass():TestLuaFunction(funcObject)[0]");
+				Assert.AreEqual (3, lua ["b"]);
+				lua.DoString ("a = TestClass():TestLuaFunction(nil)");
+				Assert.AreEqual (null, lua ["a"]);
+			}
+		}
+
+		/*
         * Tests capturing an exception
         */
 		[Test]
@@ -618,6 +638,29 @@ namespace NLuaTest
 				lua.RegisterFunction ("func2", obj, typeof(TestClass2).GetMethod ("funcInstance"));
 				vals1 = lua.GetFunction ("func2").Call (2, 3);
 				Assert.AreEqual (5.0f, Convert.ToSingle (vals1 [0]));
+			}
+		}
+	
+		/*
+		 * Tests passing a null object as a parameter to a
+		 * method that accepts a nullable.
+		 */
+		[Test]
+		public void TestNullableParameter ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+				lua.DoString ("test=TestClass()");
+				lua.DoString ("a = test:NullableMethod(nil)");
+				Assert.AreEqual (null, lua ["a"]);
+				lua ["timeVal"] = TimeSpan.FromSeconds (5);
+				lua.DoString ("b = test:NullableMethod(timeVal)");
+				Assert.AreEqual (TimeSpan.FromSeconds (5), lua ["b"]);
+				lua.DoString ("d = test:NullableMethod2(2)");
+				Assert.AreEqual (2, lua ["d"]);
+				lua.DoString ("c = test:NullableMethod2(nil)");
+				Assert.AreEqual (null, lua ["c"]);
 			}
 		}
 

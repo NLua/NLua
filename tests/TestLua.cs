@@ -374,6 +374,24 @@ namespace NLuaTest.Mock
 			set { }
 		}
 
+		public TimeSpan? NullableMethod (TimeSpan? input)
+		{
+			return input;
+		}
+
+		public int? NullableMethod2 (int? input)
+		{
+			return input;
+		}
+
+		public object[] TestLuaFunction (LuaFunction func)
+		{
+			if (func != null) {
+				return func.Call (1, 2);
+			}
+			return null;
+		}
+
 		public int sum (int x, int y)
 		{
  return x + y;

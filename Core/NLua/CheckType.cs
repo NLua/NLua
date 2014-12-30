@@ -102,11 +102,34 @@ namespace NLua
 				paramType = paramType.GetElementType ();
 
 			var underlyingType = Nullable.GetUnderlyingType (paramType);
-
-			if (underlyingType != null)
+			
+			if (underlyingType != null) {
 				paramType = underlyingType;	 // Silently convert nullable types to their non null requics
+			}
 
 			var extractKey = GetExtractDictionaryKey (paramType);
+			
+			bool netParamIsNumeric = paramType == typeof (int) ||
+									 paramType == typeof (uint) ||
+									 paramType == typeof (long) ||
+									 paramType == typeof (ulong) ||
+									 paramType == typeof (short) ||
+									 paramType == typeof (ushort) ||
+									 paramType == typeof (float) ||
+									 paramType == typeof (double) ||
+									 paramType == typeof (decimal) ||
+									 paramType == typeof (byte);
+
+			// If it is a nullable
+			if (underlyingType != null) {
+				// null can always be assigned to nullable
+				if (luatype == LuaTypes.Nil) {
+					// Return the correct extractor anyways
+					if (netParamIsNumeric || paramType == typeof (bool))
+						return extractValues [extractKey];
+					return extractNetObject;
+				}
+			}
 
 			if (paramType.Equals (typeof(object)))
 				return extractValues [extractKey];
@@ -127,15 +150,6 @@ namespace NLua
 					return extractValues [GetExtractDictionaryKey (typeof(double))];
 			}
 			bool netParamIsString = paramType == typeof (string) || paramType == typeof (char []);
-			bool netParamIsNumeric = paramType == typeof (int) ||
-									 paramType == typeof (uint) ||
-									 paramType == typeof (long) ||
-									 paramType == typeof (ulong) ||
-									 paramType == typeof (short) ||
-									 paramType == typeof (float) ||
-									 paramType == typeof (double) ||
-									 paramType == typeof (decimal) ||
-									 paramType == typeof (byte);
 
 			if (netParamIsNumeric) {
 				if (LuaLib.LuaIsNumber (luaState, stackPos) && !netParamIsString)
@@ -149,13 +163,13 @@ namespace NLua
 				else if (luatype == LuaTypes.Nil)
 					return extractNetObject; // kevinh - silently convert nil to a null string pointer
 			} else if (paramType == typeof(LuaTable)) {
-				if (luatype == LuaTypes.Table)
+				if (luatype == LuaTypes.Table || luatype == LuaTypes.Nil)
 					return extractValues [extractKey];
 			} else if (paramType == typeof(LuaUserData)) {
-				if (luatype == LuaTypes.UserData)
+				if (luatype == LuaTypes.UserData || luatype == LuaTypes.Nil)
 					return extractValues [extractKey];
 			} else if (paramType == typeof(LuaFunction)) {
-				if (luatype == LuaTypes.Function)
+				if (luatype == LuaTypes.Function || luatype == LuaTypes.Nil)
 					return extractValues [extractKey];
 			} else if (typeof(Delegate).IsAssignableFrom (paramType) && luatype == LuaTypes.Function)
 				return new ExtractValue (new DelegateGenerator (translator, paramType).ExtractGenerated);
