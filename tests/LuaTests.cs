@@ -154,6 +154,26 @@ namespace NLuaTest
 		}
 
 		/*
+		* Tests passing a LuaFunction
+		*/
+		[Test]
+		public void CallLuaFunction()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.DoString ("function someFunc(v1,v2) return v1 + v2 end");
+				lua ["funcObject"] = lua.GetFunction ("someFunc");
+
+				lua.DoString ("luanet.load_assembly('mscorlib')");
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+				lua.DoString ("b = TestClass():TestLuaFunction(funcObject)[0]");
+				Assert.AreEqual (3, lua ["b"]);
+				lua.DoString ("a = TestClass():TestLuaFunction(nil)");
+				Assert.AreEqual (null, lua ["a"]);
+			}
+		}
+
+		/*
         * Tests capturing an exception
         */
 		[Test]

@@ -154,13 +154,13 @@ namespace NLua
 				else if (luatype == LuaTypes.Nil)
 					return extractNetObject; // kevinh - silently convert nil to a null string pointer
 			} else if (paramType == typeof(LuaTable)) {
-				if (luatype == LuaTypes.Table)
+				if (luatype == LuaTypes.Table || luatype == LuaTypes.Nil)
 					return extractValues [extractKey];
 			} else if (paramType == typeof(LuaUserData)) {
-				if (luatype == LuaTypes.UserData)
+				if (luatype == LuaTypes.UserData || luatype == LuaTypes.Nil)
 					return extractValues [extractKey];
 			} else if (paramType == typeof(LuaFunction)) {
-				if (luatype == LuaTypes.Function)
+				if (luatype == LuaTypes.Function || luatype == LuaTypes.Nil)
 					return extractValues [extractKey];
 			} else if (typeof(Delegate).IsAssignableFrom (paramType) && luatype == LuaTypes.Function)
 				return new ExtractValue (new DelegateGenerator (translator, paramType).ExtractGenerated);
