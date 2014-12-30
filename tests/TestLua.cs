@@ -379,6 +379,11 @@ namespace NLuaTest.Mock
 			return input;
 		}
 
+		public int? NullableMethod2 (int? input)
+		{
+			return input;
+		}
+
 		public object[] TestLuaFunction (LuaFunction func)
 		{
 			if (func != null) {

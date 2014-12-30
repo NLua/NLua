@@ -102,16 +102,34 @@ namespace NLua
 				paramType = paramType.GetElementType ();
 
 			var underlyingType = Nullable.GetUnderlyingType (paramType);
-
+			
 			if (underlyingType != null) {
-				// null can always be assigned to nullable
-				if (luatype == LuaTypes.Nil)
-					return extractNetObject;
-
 				paramType = underlyingType;	 // Silently convert nullable types to their non null requics
 			}
 
 			var extractKey = GetExtractDictionaryKey (paramType);
+			
+			bool netParamIsNumeric = paramType == typeof (int) ||
+									 paramType == typeof (uint) ||
+									 paramType == typeof (long) ||
+									 paramType == typeof (ulong) ||
+									 paramType == typeof (short) ||
+									 paramType == typeof (ushort) ||
+									 paramType == typeof (float) ||
+									 paramType == typeof (double) ||
+									 paramType == typeof (decimal) ||
+									 paramType == typeof (byte);
+
+			// If it is a nullable
+			if (underlyingType != null) {
+				// null can always be assigned to nullable
+				if (luatype == LuaTypes.Nil) {
+					// Return the correct extractor anyways
+					if (netParamIsNumeric)
+						return extractValues [extractKey];
+					return extractNetObject;
+				}
+			}
 
 			if (paramType.Equals (typeof(object)))
 				return extractValues [extractKey];
@@ -132,15 +150,6 @@ namespace NLua
 					return extractValues [GetExtractDictionaryKey (typeof(double))];
 			}
 			bool netParamIsString = paramType == typeof (string) || paramType == typeof (char []);
-			bool netParamIsNumeric = paramType == typeof (int) ||
-									 paramType == typeof (uint) ||
-									 paramType == typeof (long) ||
-									 paramType == typeof (ulong) ||
-									 paramType == typeof (short) ||
-									 paramType == typeof (float) ||
-									 paramType == typeof (double) ||
-									 paramType == typeof (decimal) ||
-									 paramType == typeof (byte);
 
 			if (netParamIsNumeric) {
 				if (LuaLib.LuaIsNumber (luaState, stackPos) && !netParamIsString)

@@ -653,10 +653,14 @@ namespace NLuaTest
 				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
 				lua.DoString ("test=TestClass()");
 				lua.DoString ("a = test:NullableMethod(nil)");
+				Assert.AreEqual (null, lua ["a"]);
 				lua ["timeVal"] = TimeSpan.FromSeconds (5);
 				lua.DoString ("b = test:NullableMethod(timeVal)");
-				Assert.AreEqual (null, lua ["a"]);
 				Assert.AreEqual (TimeSpan.FromSeconds (5), lua ["b"]);
+				lua.DoString ("d = test:NullableMethod2(2)");
+				Assert.AreEqual (2, lua ["d"]);
+				lua.DoString ("c = test:NullableMethod2(nil)");
+				Assert.AreEqual (null, lua ["c"]);
 			}
 		}
 
