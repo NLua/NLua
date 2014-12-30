@@ -620,6 +620,25 @@ namespace NLuaTest
 				Assert.AreEqual (5.0f, Convert.ToSingle (vals1 [0]));
 			}
 		}
+	
+		/*
+		 * Tests passing a null object as a parameter to a
+		 * method that accepts a nullable.
+		 */
+		[Test]
+		public void TestNullableParameter ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.DoString ("luanet.load_assembly('NLuaTest')");
+				lua.DoString ("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+				lua.DoString ("test=TestClass()");
+				lua.DoString ("a = test:NullableMethod(nil)");
+				lua ["timeVal"] = TimeSpan.FromSeconds (5);
+				lua.DoString ("b = test:NullableMethod(timeVal)");
+				Assert.AreEqual (null, lua ["a"]);
+				Assert.AreEqual (TimeSpan.FromSeconds (5), lua ["b"]);
+			}
+		}
 
 		/*
         * Tests if DoString is correctly returning values

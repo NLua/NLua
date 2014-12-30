@@ -374,6 +374,11 @@ namespace NLuaTest.Mock
 			set { }
 		}
 
+		public TimeSpan? NullableMethod(TimeSpan? input)
+		{
+			return input;
+		}
+
 		public int sum (int x, int y)
 		{
  return x + y;

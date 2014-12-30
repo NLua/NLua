@@ -103,8 +103,13 @@ namespace NLua
 
 			var underlyingType = Nullable.GetUnderlyingType (paramType);
 
-			if (underlyingType != null)
+			if (underlyingType != null) {
+				// null can always be assigned to nullable
+				if (luatype == LuaTypes.Nil)
+					return extractNetObject;
+
 				paramType = underlyingType;	 // Silently convert nullable types to their non null requics
+			}
 
 			var extractKey = GetExtractDictionaryKey (paramType);
 
