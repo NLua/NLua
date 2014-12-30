@@ -125,7 +125,7 @@ namespace NLua
 				// null can always be assigned to nullable
 				if (luatype == LuaTypes.Nil) {
 					// Return the correct extractor anyways
-					if (netParamIsNumeric)
+					if (netParamIsNumeric || paramType == typeof (bool))
 						return extractValues [extractKey];
 					return extractNetObject;
 				}
