@@ -599,6 +599,18 @@ namespace NLua
 				}
 			}
 
+			// check if we have permission or not
+			object[] attributes = member.GetCustomAttributes (typeof (LuaPermissionAttribute), true);
+			bool blocked = false;
+			foreach (LuaPermissionAttribute attr in attributes) {
+				if (!attr.Allowed (obj)) {
+					member = null;
+					blocked = true;
+					ThrowError (luaState, new Exception (attr.Message));
+					break;
+				}
+			}
+
 			if (member != null) {
 #if NETFX_CORE
 				if (member is FieldInfo) {
@@ -691,7 +703,7 @@ namespace NLua
 					translator.ThrowError (luaState, "can't pass instance to static method " + methodName);
 					LuaLib.LuaPushNil (luaState);
 				}
-			} else {
+			} else if (!blocked) {
 
 				if (objType.UnderlyingSystemType != typeof(object)) {
 					#if NETFX_CORE
