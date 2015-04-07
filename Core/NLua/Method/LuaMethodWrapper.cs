@@ -141,10 +141,16 @@ namespace NLua.Method
 			SetPendingException (null);
 
 			if (methodToCall == null) { // Method from name
-				if (isStatic)
+				if (isStatic) {
 					targetObject = null;
-				else
+				} else {
 					targetObject = _ExtractTarget (luaState, 1);
+					if (targetObject == null || targetObject.Equals(null)) {
+						_Translator.ThrowError (luaState, String.Format ("instance method '{0}' requires a non null target object", _MethodName));
+						LuaLib.LuaPushNil (luaState);
+						return 1;
+					}
+				}
 
 				if (_LastCalledMethod.cachedMethod != null) { // Cached?
 					int numStackToSkip = isStatic ? 0 : 1; // If this is an instance invoe we will have an extra arg on the stack for the targetObject
@@ -207,12 +213,6 @@ namespace NLua.Method
 					// System.Diagnostics.Debug.WriteLine("cache miss on " + methodName);
 					// If we are running an instance variable, we can now pop the targetObject from the stack
 					if (!isStatic) {
-						if (targetObject == null) {
-							_Translator.ThrowError (luaState, String.Format ("instance method '{0}' requires a non null target object", _MethodName));
-							LuaLib.LuaPushNil (luaState);
-							return 1;
-						}
-
 						LuaLib.LuaRemove (luaState, 1); // Pops the receiver
 					}
 
@@ -264,6 +264,11 @@ namespace NLua.Method
 				} else {
 					if (!methodToCall.IsStatic && !methodToCall.IsConstructor && targetObject == null) {
 						targetObject = _ExtractTarget (luaState, 1);
+						if (targetObject == null || targetObject.Equals(null)) {
+							_Translator.ThrowError (luaState, String.Format ("instance method '{0}' requires a non null target object", _MethodName));
+							LuaLib.LuaPushNil (luaState);
+							return 1;
+						}
 						LuaLib.LuaRemove (luaState, 1); // Pops the receiver
 					}
 
