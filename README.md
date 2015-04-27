@@ -155,7 +155,7 @@ To do this just use the method `LoadCLRPackage` and use the `import` function in
 
 ```csharp
 	state.LoadCLRPackage ();
-	state.DoString (@" import ('MyAssembly.exe', 'MyNamespace') 
+	state.DoString (@" import ('MyAssembly', 'MyNamespace') 
 			   import ('System.Web') ");
 	// import will load any .NET assembly and they will be available inside the Lua context.
 ```
