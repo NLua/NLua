@@ -1167,7 +1167,7 @@ namespace NLua
 			}
 
 			Type type = target.GetType ();
-			var operators = type.GetMethods (operation, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+			var operators = type.GetMethods (operation, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
 			foreach (var op in operators) {
 				bool isOk = translator.MatchParameters (luaState, op, ref validOperator);

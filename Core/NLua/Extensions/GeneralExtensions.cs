@@ -62,8 +62,8 @@ namespace NLua.Extensions
 	{
 		public static bool HasMethod (this Type t, string name)
 		{
-			var op = t.GetMethods (name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-			return op != null;
+			var op = t.GetMethods (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+			return op.Any (m => m.Name == name);
 		}
 
 		public static bool HasAdditionOpertator (this Type t)
