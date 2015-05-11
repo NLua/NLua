@@ -25,7 +25,9 @@
     <MtouchLink>None</MtouchLink>
     <MtouchI18n>
     </MtouchI18n>
-    <MtouchArch>i386</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchUseRefCounting>true</MtouchUseRefCounting>
+    <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -36,7 +38,7 @@
     <ConsolePause>False</ConsolePause>
     <MtouchI18n>
     </MtouchI18n>
-    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchUseSGen>True</MtouchUseSGen>
     <MtouchUseRefCounting>True</MtouchUseRefCounting>
