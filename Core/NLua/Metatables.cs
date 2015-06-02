@@ -80,6 +80,13 @@ namespace NLua
 		Dictionary<object, object> memberCache = new Dictionary<object, object> ();
 		ObjectTranslator translator;
 
+		/// <summary>
+		/// Key used to confirm whether the extension methods of a particular data type have
+		/// already been added to the cache. If so, then there is no need to do reflection
+		/// again, which is very expensive.
+		/// </summary>
+		const string allExtensionsInCacheKey = "-extensions-";
+
 		/*
 		 * __index metafunction for CLR objects. Implemented in Lua.
 		 */
@@ -430,8 +437,6 @@ namespace NLua
 					return GetExtensionMethod (luaState, objType, obj, methodName);
 				}
 
-				SetMemberCache (memberCache, objType, methodName, null);
-
 				#if true
 				bool found = false;
 
@@ -446,7 +451,7 @@ namespace NLua
 
 								if (IsTypeCorrect(luaState, 2, parameters[0], out extractor)) {
 									found = true;
-									//SetMemberCache (memberCache, objType, "Item", propInfo);
+									//SetMemberCache (memberCache, objType, "Item" + parameters[0].GetType().Name, propInfo);
 
 									index = extractor (luaState, 2);
 									object[] indices = new object[1];
@@ -580,34 +585,60 @@ namespace NLua
 		/// <returns></returns>
 		bool IsMemberPresent (ProxyType objType, string methodName)
 		{
-			object cachedMember;
-			if (CheckMemberCache (memberCache, objType, methodName, out cachedMember))
-				return (cachedMember != null);
-
+			object cachedMember = CheckMemberCache (memberCache, objType, methodName);
+			if (cachedMember != null)
+				return true;
+			
 			var members = objType.GetMember (methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
 			return (members.Length > 0);
 		}
 
 		bool IsExtensionMethodPresent (Type type, string name)
 		{
-			object cachedMember;
-			if (CheckMemberCache (memberCache, type, name, out cachedMember))
-				return (cachedMember != null);
+			object cachedMember = CheckMemberCache (memberCache, type, name);
+			if (cachedMember != null)
+				return true;
 
-			return translator.IsExtensionMethodPresent (type, name);
+			// Determine whether extension methods have already been searched for this data type.
+			cachedMember = CheckMemberCache (memberCache, type, allExtensionsInCacheKey);
+			if (cachedMember != null)
+				return false;
+			
+			// drmadill: Checking for extension methods is very expensive and requires finding all the MethodInfo's
+			// regardless. Hence, add the MethodInfo's to the cache so that we can immediately skip the
+			// check for an extension method if the name does not match. There is no need to create a
+			// LuaNativeFunction, however, for each cache entry because that can be deferred until the
+			// cache member is actually referenced. This is particularly important for indexers, which are
+			// accessed after methods and extension methods have been ruled out.
+			MethodInfo[] methods = translator.GetExtensionMethods (type);
+			foreach (var method in methods) {
+				// Cache the MethodInfo, which will be translated into a LuaNativeFunction, if
+				// necessary, in GetMember.
+				SetMemberCache (memberCache, type, method.Name, method);
+			}
+
+			// Mark the extension methods as having been added to the cache for this data type.
+			SetMemberCache (memberCache, type, allExtensionsInCacheKey, string.Empty);
+
+			var mi = from methode in methods where methode.Name == name select methode;
+			return mi.Any<MethodInfo> ();
 		}
 
 		int GetExtensionMethod (LuaState luaState, Type type, object obj, string name)
 		{
-			object cachedMember;
+			MethodInfo methodInfo;
 
-			if (CheckMemberCache (memberCache, type, name, out cachedMember) == true && cachedMember != null && cachedMember is LuaNativeFunction) {
-				translator.PushFunction (luaState, (LuaNativeFunction)cachedMember);
-				translator.Push (luaState, true);
-				return 2;
-			}
-
-			MethodInfo methodInfo = translator.GetExtensionMethod (type, name);
+			object cachedMember = CheckMemberCache (memberCache, type, name);
+			if (cachedMember != null) {
+				if (cachedMember is LuaNativeFunction) {
+					translator.PushFunction (luaState, (LuaNativeFunction)cachedMember);
+					translator.Push (luaState, true);
+					return 2;
+				} else
+					methodInfo = cachedMember as MethodInfo;
+			} else
+				methodInfo = translator.GetExtensionMethod (type, name);
+			
 			var wrapper = new LuaNativeFunction ((new LuaMethodWrapper (translator, obj,new ProxyType(type), methodInfo)).invokeFunction);
 
 			SetMemberCache (memberCache, type, name, wrapper);
@@ -628,14 +659,7 @@ namespace NLua
 			bool implicitStatic = false;
 			MemberInfo member = null;
 
-			object cachedMember;
-			if (CheckMemberCache (memberCache, objType, methodName, out cachedMember) == true && cachedMember == null) {
-				translator.ThrowError (luaState, "unknown member name " + methodName);
-				LuaLib.LuaPushNil (luaState);
-				translator.Push (luaState, false);
-				return 2;
-			}
-
+			object cachedMember = CheckMemberCache (memberCache, objType, methodName);
 			if (cachedMember is LuaNativeFunction) {
 				translator.PushFunction (luaState, (LuaNativeFunction)cachedMember);
 				translator.Push (luaState, true);
@@ -772,33 +796,27 @@ namespace NLua
 		}
 
 		/*
-		 * Checks if a MemberInfo object is cached. Returns true if cached, false otherwise. Sets memberValue
-		 * to cached value. Check this against null. If null then a search was already done for the member but
-		 * the member was not present. Putting it in the cache prevents the search from being redone resulting
-		 * in large performance gains for indexers.
+		 * Checks if a MemberInfo object is cached. Returns the object or null if the object is not found.
 		 */
-		bool CheckMemberCache (Dictionary<object, object> memberCache, Type objType, string memberName, out object memberValue)
+		object CheckMemberCache (Dictionary<object, object> memberCache, Type objType, string memberName)
 		{
-			return CheckMemberCache (memberCache, new ProxyType (objType), memberName, out memberValue);
+			return CheckMemberCache (memberCache, new ProxyType (objType), memberName);
 		}
 
-		bool CheckMemberCache (Dictionary<object, object> memberCache, ProxyType objType, string memberName, out object memberValue)
+		object CheckMemberCache (Dictionary<object, object> memberCache, ProxyType objType, string memberName)
 		{
 			object members = null;
-
-			memberValue = null;
 
 			if (memberCache.TryGetValue(objType, out members))
 			{
 				var membersDict = members as Dictionary<object, object>;
 
-				if (members != null && membersDict.TryGetValue(memberName, out memberValue))
-				{
-					return true;
-				}
+				object memberValue;
+				if (members != null && membersDict.TryGetValue (memberName, out memberValue))
+					return memberValue;
 			}
 
-			return false;
+			return null;
 		}
 
 		/*
@@ -926,16 +944,8 @@ namespace NLua
 			}
 
 			// Find our member via reflection or the cache
-			object cachedMember;
-			MemberInfo member;
-			if (CheckMemberCache (memberCache, targetType, fieldName, out cachedMember)) {
-				if (cachedMember == null) {
-					detailMessage = "field or property '" + fieldName + "' does not exist";
-					return false;
-				}
-
-				member = (MemberInfo)cachedMember;
-			} else {
+			var member = CheckMemberCache (memberCache, targetType, fieldName) as MemberInfo;
+			if (member == null) {
 				var members = targetType.GetMember (fieldName, bindingType | BindingFlags.Public);
 
 				if (members.Length > 0) {
