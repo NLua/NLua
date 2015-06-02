@@ -426,10 +426,61 @@ namespace NLua
 					translator.Push (luaState, arr [intIndex]);
 				}
 			} else {
-
 				if (!string.IsNullOrEmpty (methodName) && IsExtensionMethodPresent (objType, methodName)) {
 					return GetExtensionMethod (luaState, objType, obj, methodName);
 				}
+
+				SetMemberCache (memberCache, objType, methodName, null);
+
+				#if true
+				bool found = false;
+
+				var items = objType.GetMember ("Item");
+				if (items != null) {
+					foreach (var item in items) {
+						var propInfo = item as PropertyInfo;
+						if (propInfo != null) {
+							var parameters = propInfo.GetIndexParameters ();
+							if (parameters != null && parameters.Length == 1) {
+								ExtractValue extractor;
+
+								if (IsTypeCorrect(luaState, 2, parameters[0], out extractor)) {
+									found = true;
+									//SetMemberCache (memberCache, objType, "Item", propInfo);
+
+									index = extractor (luaState, 2);
+									object[] indices = new object[1];
+
+									// Just call the indexer - if out of bounds an exception will happen
+									indices [0] = index;
+
+									try {
+										object result = propInfo.GetValue (obj, indices);
+										translator.Push (luaState, result);
+
+									} catch (TargetInvocationException e) {
+										// Provide a more readable description for the common case of key not found
+										if (e.InnerException is KeyNotFoundException)
+											translator.ThrowError (luaState, "key '" + index + "' not found ");
+										else
+											translator.ThrowError (luaState, "exception indexing '" + index + "' " + e.Message);
+
+										LuaLib.LuaPushNil (luaState);
+									}
+									break;
+								}
+							}
+						}
+					}
+				}
+
+				if (!found) {
+					translator.ThrowError (luaState, "method not found (or no indexer): " + index);
+					LuaLib.LuaPushNil (luaState);
+				}
+
+				#else
+
 				// Try to use get_Item to index into this .net object
 				var methods = objType.GetMethods ();
 
@@ -454,6 +505,7 @@ namespace NLua
 								try {
 									object result = getter.Invoke (obj, args);
 									translator.Push (luaState, result);
+
 								} catch (TargetInvocationException e) {
 									// Provide a more readable description for the common case of key not found
 									if (e.InnerException is KeyNotFoundException)
@@ -467,6 +519,8 @@ namespace NLua
 						}
 					}
 				}
+
+				#endif
 			}
 
 			LuaLib.LuaPushBoolean (luaState, false);
@@ -526,10 +580,9 @@ namespace NLua
 		/// <returns></returns>
 		bool IsMemberPresent (ProxyType objType, string methodName)
 		{
-			object cachedMember = CheckMemberCache (memberCache, objType, methodName);
-
-			if (cachedMember != null)
-				return true;
+			object cachedMember;
+			if (CheckMemberCache (memberCache, objType, methodName, out cachedMember))
+				return (cachedMember != null);
 
 			var members = objType.GetMember (methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
 			return (members.Length > 0);
@@ -537,22 +590,21 @@ namespace NLua
 
 		bool IsExtensionMethodPresent (Type type, string name)
 		{
-			object cachedMember = CheckMemberCache (memberCache, type, name);
-
-			if (cachedMember != null)
-				return true;
+			object cachedMember;
+			if (CheckMemberCache (memberCache, type, name, out cachedMember))
+				return (cachedMember != null);
 
 			return translator.IsExtensionMethodPresent (type, name);
 		}
 
 		int GetExtensionMethod (LuaState luaState, Type type, object obj, string name)
 		{
-			object cachedMember = CheckMemberCache (memberCache, type, name);
+			object cachedMember;
 
-			if (cachedMember != null && cachedMember is LuaNativeFunction) {
-					translator.PushFunction (luaState, (LuaNativeFunction)cachedMember);
-					translator.Push (luaState, true);
-					return 2;
+			if (CheckMemberCache (memberCache, type, name, out cachedMember) == true && cachedMember != null && cachedMember is LuaNativeFunction) {
+				translator.PushFunction (luaState, (LuaNativeFunction)cachedMember);
+				translator.Push (luaState, true);
+				return 2;
 			}
 
 			MethodInfo methodInfo = translator.GetExtensionMethod (type, name);
@@ -575,7 +627,14 @@ namespace NLua
 		{
 			bool implicitStatic = false;
 			MemberInfo member = null;
-			object cachedMember = CheckMemberCache (memberCache, objType, methodName);
+
+			object cachedMember;
+			if (CheckMemberCache (memberCache, objType, methodName, out cachedMember) == true && cachedMember == null) {
+				translator.ThrowError (luaState, "unknown member name " + methodName);
+				LuaLib.LuaPushNil (luaState);
+				translator.Push (luaState, false);
+				return 2;
+			}
 
 			if (cachedMember is LuaNativeFunction) {
 				translator.PushFunction (luaState, (LuaNativeFunction)cachedMember);
@@ -713,30 +772,33 @@ namespace NLua
 		}
 
 		/*
-		 * Checks if a MemberInfo object is cached, returning it or null.
+		 * Checks if a MemberInfo object is cached. Returns true if cached, false otherwise. Sets memberValue
+		 * to cached value. Check this against null. If null then a search was already done for the member but
+		 * the member was not present. Putting it in the cache prevents the search from being redone resulting
+		 * in large performance gains for indexers.
 		 */
-		object CheckMemberCache (Dictionary<object, object> memberCache, Type objType, string memberName)
+		bool CheckMemberCache (Dictionary<object, object> memberCache, Type objType, string memberName, out object memberValue)
 		{
-			return CheckMemberCache (memberCache, new ProxyType (objType), memberName);
+			return CheckMemberCache (memberCache, new ProxyType (objType), memberName, out memberValue);
 		}
 
-		object CheckMemberCache (Dictionary<object, object> memberCache, ProxyType objType, string memberName)
+		bool CheckMemberCache (Dictionary<object, object> memberCache, ProxyType objType, string memberName, out object memberValue)
 		{
 			object members = null;
+
+			memberValue = null;
 
 			if (memberCache.TryGetValue(objType, out members))
 			{
 				var membersDict = members as Dictionary<object, object>;
 
-				object memberValue = null;
-
 				if (members != null && membersDict.TryGetValue(memberName, out memberValue))
 				{
-					return memberValue;
+					return true;
 				}
 			}
 
-			return null;
+			return false;
 		}
 
 		/*
@@ -864,8 +926,16 @@ namespace NLua
 			}
 
 			// Find our member via reflection or the cache
-			var member = (MemberInfo)CheckMemberCache (memberCache, targetType, fieldName);
-			if (member == null) {
+			object cachedMember;
+			MemberInfo member;
+			if (CheckMemberCache (memberCache, targetType, fieldName, out cachedMember)) {
+				if (cachedMember == null) {
+					detailMessage = "field or property '" + fieldName + "' does not exist";
+					return false;
+				}
+
+				member = (MemberInfo)cachedMember;
+			} else {
 				var members = targetType.GetMember (fieldName, bindingType | BindingFlags.Public);
 
 				if (members.Length > 0) {
