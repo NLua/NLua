@@ -85,7 +85,7 @@ namespace NLua
 		/// already been added to the cache. If so, then there is no need to do reflection
 		/// again, which is very expensive.
 		/// </summary>
-		const string allExtensionsInCacheKey = "-extensions-";
+        static readonly object allExtensionsInCacheKey = new object();
 
 		/*
 		 * __index metafunction for CLR objects. Implemented in Lua.
@@ -437,7 +437,7 @@ namespace NLua
 					return GetExtensionMethod (luaState, objType, obj, methodName);
 				}
 
-				#if true
+				// drmadill: Locate the indexer with a type that is compatible with the index.
 				bool found = false;
 
 				var items = objType.GetMember ("Item");
@@ -451,7 +451,10 @@ namespace NLua
 
 								if (IsTypeCorrect(luaState, 2, parameters[0], out extractor)) {
 									found = true;
-									//SetMemberCache (memberCache, objType, "Item" + parameters[0].GetType().Name, propInfo);
+
+									// Consider caching using GUID (if available) or FullName (may need assembly name)
+									// or cache an additional dictionary keyed by the parameter type.
+									//SetMemberCache (memberCache, objType, "Item" + parameters[0].GetType().GUID, propInfo);
 
 									index = extractor (luaState, 2);
 									object[] indices = new object[1];
@@ -483,49 +486,6 @@ namespace NLua
 					translator.ThrowError (luaState, "method not found (or no indexer): " + index);
 					LuaLib.LuaPushNil (luaState);
 				}
-
-				#else
-
-				// Try to use get_Item to index into this .net object
-				var methods = objType.GetMethods ();
-
-				foreach (var mInfo in methods) {
-					if (mInfo.Name == "get_Item") {
-						//check if the signature matches the input
-						if (mInfo.GetParameters ().Length == 1) {
-							var getter = mInfo;
-							var actualParms = (getter != null) ? getter.GetParameters () : null;
-
-							if (actualParms == null || actualParms.Length != 1) {
-								translator.ThrowError (luaState, "method not found (or no indexer): " + index);
-								LuaLib.LuaPushNil (luaState);
-							} else {
-								// Get the index in a form acceptable to the getter
-								index = translator.GetAsType (luaState, 2, actualParms [0].ParameterType);
-								object[] args = new object[1];
-
-								// Just call the indexer - if out of bounds an exception will happen
-								args [0] = index;
-
-								try {
-									object result = getter.Invoke (obj, args);
-									translator.Push (luaState, result);
-
-								} catch (TargetInvocationException e) {
-									// Provide a more readable description for the common case of key not found
-									if (e.InnerException is KeyNotFoundException)
-										translator.ThrowError (luaState, "key '" + index + "' not found ");
-									else
-										translator.ThrowError (luaState, "exception indexing '" + index + "' " + e.Message);
-
-									LuaLib.LuaPushNil (luaState);
-								}
-							}
-						}
-					}
-				}
-
-				#endif
 			}
 
 			LuaLib.LuaPushBoolean (luaState, false);
@@ -798,12 +758,12 @@ namespace NLua
 		/*
 		 * Checks if a MemberInfo object is cached. Returns the object or null if the object is not found.
 		 */
-		object CheckMemberCache (Dictionary<object, object> memberCache, Type objType, string memberName)
+		object CheckMemberCache (Dictionary<object, object> memberCache, Type objType, object memberName)
 		{
 			return CheckMemberCache (memberCache, new ProxyType (objType), memberName);
 		}
 
-		object CheckMemberCache (Dictionary<object, object> memberCache, ProxyType objType, string memberName)
+		object CheckMemberCache (Dictionary<object, object> memberCache, ProxyType objType, object memberName)
 		{
 			object members = null;
 
@@ -822,12 +782,12 @@ namespace NLua
 		/*
 		 * Stores a MemberInfo object in the member cache.
 		 */
-		void SetMemberCache (Dictionary<object, object> memberCache, Type objType, string memberName, object member)
+		void SetMemberCache (Dictionary<object, object> memberCache, Type objType, object memberName, object member)
 		{
 			SetMemberCache (memberCache, new ProxyType (objType), memberName, member);
 		}
 
-		void SetMemberCache (Dictionary<object, object> memberCache, ProxyType objType, string memberName, object member)
+		void SetMemberCache (Dictionary<object, object> memberCache, ProxyType objType, object memberName, object member)
 		{
 			Dictionary<object, object> members = null;
 			object memberCacheValue = null;
