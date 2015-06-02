@@ -756,7 +756,7 @@ namespace NLua
 		}
 
 		/*
-		 * Checks if a MemberInfo object is cached. Returns the object or null if the object is not found.
+		 * Checks if a MemberInfo object is cached, returning it or null.
 		 */
 		object CheckMemberCache (Dictionary<object, object> memberCache, Type objType, object memberName)
 		{
@@ -771,8 +771,9 @@ namespace NLua
 			{
 				var membersDict = members as Dictionary<object, object>;
 
-				object memberValue;
-				if (members != null && membersDict.TryGetValue (memberName, out memberValue))
+				object memberValue = null;
+
+				if (members != null && membersDict.TryGetValue(memberName, out memberValue))
 					return memberValue;
 			}
 
@@ -904,7 +905,7 @@ namespace NLua
 			}
 
 			// Find our member via reflection or the cache
-			var member = CheckMemberCache (memberCache, targetType, fieldName) as MemberInfo;
+			var member = (MemberInfo)CheckMemberCache (memberCache, targetType, fieldName);
 			if (member == null) {
 				var members = targetType.GetMember (fieldName, bindingType | BindingFlags.Public);
 
