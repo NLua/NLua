@@ -444,7 +444,7 @@ namespace NLua
 				if (items != null) {
 					foreach (var item in items) {
 						var propInfo = item as PropertyInfo;
-						if (propInfo != null) {
+						if (propInfo != null && propInfo.CanRead == true) {
 							var parameters = propInfo.GetIndexParameters ();
 							if (parameters != null && parameters.Length == 1) {
 								ExtractValue extractor;
