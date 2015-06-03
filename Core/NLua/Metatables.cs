@@ -440,43 +440,39 @@ namespace NLua
 				// drmadill: Locate the indexer with a type that is compatible with the index.
 				bool found = false;
 
-				var items = objType.GetMember ("Item");
-				if (items != null) {
-					foreach (var item in items) {
-						var propInfo = item as PropertyInfo;
-						if (propInfo != null && propInfo.CanRead == true) {
-							var parameters = propInfo.GetIndexParameters ();
-							if (parameters != null && parameters.Length == 1) {
-								ExtractValue extractor;
+				// Try to use get_Item to index into this .net object
+				var methods = objType.GetMethods ();
 
-								if (IsTypeCorrect(luaState, 2, parameters[0], out extractor)) {
-									found = true;
+				foreach (var mInfo in methods) {
+					if (mInfo.Name == "get_Item") {
+						//check if the signature matches the input
+						var actualParms = mInfo.GetParameters ();
+						if (actualParms != null && actualParms.Length == 1) {
+							ExtractValue extractor;
 
-									// Consider caching using GUID (if available) or FullName (may need assembly name)
-									// or cache an additional dictionary keyed by the parameter type.
-									//SetMemberCache (memberCache, objType, "Item" + parameters[0].GetType().GUID, propInfo);
+							if (IsTypeCorrect(luaState, 2, actualParms[0], out extractor)) {
+								found = true;
 
-									index = extractor (luaState, 2);
-									object[] indices = new object[1];
+								// Get the index in a form acceptable to the getter
+								index = extractor (luaState, 2);
+								object[] args = new object[1];
 
-									// Just call the indexer - if out of bounds an exception will happen
-									indices [0] = index;
+								// Just call the indexer - if out of bounds an exception will happen
+								args [0] = index;
 
-									try {
-										object result = propInfo.GetValue (obj, indices);
-										translator.Push (luaState, result);
+								try {
+									object result = mInfo.Invoke (obj, args);
+									translator.Push (luaState, result);
+								} catch (TargetInvocationException e) {
+									// Provide a more readable description for the common case of key not found
+									if (e.InnerException is KeyNotFoundException)
+										translator.ThrowError (luaState, "key '" + index + "' not found ");
+									else
+										translator.ThrowError (luaState, "exception indexing '" + index + "' " + e.Message);
 
-									} catch (TargetInvocationException e) {
-										// Provide a more readable description for the common case of key not found
-										if (e.InnerException is KeyNotFoundException)
-											translator.ThrowError (luaState, "key '" + index + "' not found ");
-										else
-											translator.ThrowError (luaState, "exception indexing '" + index + "' " + e.Message);
-
-										LuaLib.LuaPushNil (luaState);
-									}
-									break;
+									LuaLib.LuaPushNil (luaState);
 								}
+								break;
 							}
 						}
 					}
