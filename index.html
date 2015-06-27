@@ -157,19 +157,19 @@ You can use/instantiate any .NET class without any previous registration or anno
 
 <p>Evaluating simple expressions:</p>
 
-<div class="highlight highlight-csharp"><pre>    <span class="pl-k">var</span> res = state.DoString (<span class="pl-s1"><span class="pl-pds">"</span>return 10 + 3*(5 + 2)<span class="pl-pds">"</span></span>)[<span class="pl-c1">0</span>] <span class="pl-k">as</span> <span class="pl-st">double</span>;
+<div class="highlight highlight-csharp"><pre>    <span class="pl-k">var</span> res = state.DoString (<span class="pl-s1"><span class="pl-pds">"</span>return 10 + 3*(5 + 2)<span class="pl-pds">"</span></span>)[<span class="pl-c1">0</span>] <span class="pl-k">as</span> <span class="pl-st">double?</span>;
     <span class="pl-c">// Lua can return multiple values, for this reason DoString return a array of objects</span></pre></div>
 
 <p>Passing raw values to the state:</p>
 
 <div class="highlight highlight-csharp"><pre>    <span class="pl-st">double</span> val = <span class="pl-c1">12.0</span>;
     state [<span class="pl-s1"><span class="pl-pds">"</span>x<span class="pl-pds">"</span></span>] = val; <span class="pl-c">// Create a global value 'x' </span>
-    <span class="pl-k">var</span> res = state.DoString (<span class="pl-s1"><span class="pl-pds">"</span>return 10 + x*(5 + 2)<span class="pl-pds">"</span></span>)[<span class="pl-c1">0</span>] <span class="pl-k">as</span> <span class="pl-st">double</span>;</pre></div>
+    <span class="pl-k">var</span> res = state.DoString (<span class="pl-s1"><span class="pl-pds">"</span>return 10 + x*(5 + 2)<span class="pl-pds">"</span></span>)[<span class="pl-c1">0</span>] <span class="pl-k">as</span> <span class="pl-st">double?</span>;</pre></div>
 
 <p>Retrieving global values:</p>
 
 <div class="highlight highlight-csharp"><pre>    state.DoString (<span class="pl-s1"><span class="pl-pds">"</span>y = 10 + x*(5 + 2)<span class="pl-pds">"</span></span>);
-    <span class="pl-k">var</span> y = state [<span class="pl-s1"><span class="pl-pds">"</span>y<span class="pl-pds">"</span></span>] <span class="pl-k">as</span> <span class="pl-st">double</span>; -- Retrieve the <span class="pl-k">value</span> of y</pre></div>
+    <span class="pl-k">var</span> y = state [<span class="pl-s1"><span class="pl-pds">"</span>y<span class="pl-pds">"</span></span>] <span class="pl-k">as</span> <span class="pl-st">double?</span>; -- Retrieve the <span class="pl-k">value</span> of y</pre></div>
 
 <p>Retrieving Lua functions:</p>
 
