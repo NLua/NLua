@@ -82,6 +82,10 @@ namespace NLua
 		/// Is only raised if SetDebugHook is called before.
 		/// </remarks>
 		public event EventHandler<DebugHookEventArgs> DebugHook;
+        /// <summary>
+        /// Event that is raised when the script has finished exceution.
+        /// </summary>
+        public event EventHandler FinishExceution;
 		/// <summary>
 		/// lua hook calback delegate
 		/// </summary>
@@ -398,7 +402,10 @@ end
 					ThrowExceptionFromError (oldTop);
 			} finally {
 				executing = false;
-			}
+
+                if (FinishExceution != null)
+                    FinishExceution(this, new EventArgs());
+            }
 
 			var result = translator.GetFunction (luaState, -1);
 			translator.PopValues (luaState, oldTop);
@@ -421,7 +428,10 @@ end
 					ThrowExceptionFromError (oldTop);
 			} finally {
 				executing = false;
-			}
+
+                if (FinishExceution != null)
+                    FinishExceution(this, new EventArgs());
+            }
 			
 			var result = translator.GetFunction (luaState, -1);
 			translator.PopValues (luaState, oldTop);
@@ -468,7 +478,10 @@ end
 				finally
 				{
 					executing = false;
-				}
+
+                    if (FinishExceution != null)
+                        FinishExceution(this, new EventArgs());
+                }
 			}
 			else
 				ThrowExceptionFromError(oldTop);
@@ -499,7 +512,10 @@ end
 				finally
 				{
 					executing = false;
-				}
+
+                    if (FinishExceution != null)
+                        FinishExceution(this, new EventArgs());
+                }
 			}
 			else
 				ThrowExceptionFromError(oldTop);
@@ -525,6 +541,9 @@ end
 						ThrowExceptionFromError (oldTop);
 				} finally {
 					executing = false;
+
+                    if (FinishExceution != null)
+                        FinishExceution(this, new EventArgs());
 				}
 			} else
 				ThrowExceptionFromError (oldTop);
