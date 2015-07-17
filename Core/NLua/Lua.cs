@@ -83,9 +83,9 @@ namespace NLua
 		/// </remarks>
 		public event EventHandler<DebugHookEventArgs> DebugHook;
         /// <summary>
-        /// Event that is raised when the script has finished exceution.
+        /// Event that is raised when the script has finished execution.
         /// </summary>
-        public event EventHandler FinishExceution;
+        public event EventHandler FinishExecution;
 		/// <summary>
 		/// lua hook calback delegate
 		/// </summary>
@@ -403,8 +403,8 @@ end
 			} finally {
 				executing = false;
 
-                if (FinishExceution != null)
-                    FinishExceution(this, new EventArgs());
+                if (FinishExecution != null)
+                    FinishExecution(this, new EventArgs());
             }
 
 			var result = translator.GetFunction (luaState, -1);
@@ -429,8 +429,8 @@ end
 			} finally {
 				executing = false;
 
-                if (FinishExceution != null)
-                    FinishExceution(this, new EventArgs());
+                if (FinishExecution != null)
+                    FinishExecution(this, new EventArgs());
             }
 			
 			var result = translator.GetFunction (luaState, -1);
@@ -479,8 +479,8 @@ end
 				{
 					executing = false;
 
-                    if (FinishExceution != null)
-                        FinishExceution(this, new EventArgs());
+                    if (FinishExecution != null)
+                        FinishExecution(this, new EventArgs());
                 }
 			}
 			else
@@ -513,8 +513,8 @@ end
 				{
 					executing = false;
 
-                    if (FinishExceution != null)
-                        FinishExceution(this, new EventArgs());
+                    if (FinishExecution != null)
+                        FinishExecution(this, new EventArgs());
                 }
 			}
 			else
@@ -542,8 +542,8 @@ end
 				} finally {
 					executing = false;
 
-                    if (FinishExceution != null)
-                        FinishExceution(this, new EventArgs());
+                    if (FinishExecution != null)
+                        FinishExecution(this, new EventArgs());
 				}
 			} else
 				ThrowExceptionFromError (oldTop);
