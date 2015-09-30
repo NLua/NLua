@@ -360,7 +360,7 @@ your own build/binaries for Lua5.1.1 or use the version distributed here.
 (Lots of thanks to Steffen Itterheim for this work!)
 
 LuaInterface.Lua no longer has OpenLibs etc... The base mechanism for 
-library loading for Lua has changed, and we haven't yet broken appart 
+library loading for Lua has changed, and we haven't yet broken apart 
 the library loading for LuaInterface.  Instead, all standard Lua libraries
 are automatically loaded at start up.
 
