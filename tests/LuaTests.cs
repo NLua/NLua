@@ -113,9 +113,33 @@ namespace NLuaTest
 
 	public static class VectorExtension
 	{
-		public static double Lenght (this Vector v)
+		public static double Length (this Vector v)
 		{
 			return v.x * v.x + v.y * v.y;
+		}
+	}
+	
+#if MONOTOUCH
+	[Preserve (AllMembers = true)]
+#endif
+	public class Person
+	{
+		public string firstName;
+	}
+	
+#if MONOTOUCH
+	[Preserve (AllMembers = true)]
+#endif
+	public class Employee : Person
+	{
+		public string occupation;
+	}
+	
+	public static class PersonExentsions
+	{
+		public static string GetFirstName (this Person argPerson)
+		{
+			return argPerson.firstName;
 		}
 	}
 
@@ -2242,11 +2266,32 @@ namespace NLuaTest
 
 				var v = (Vector)lua ["v"];
 
-				double len = v.Lenght ();
-				lua.DoString (" v:Lenght() ");
-				lua.DoString (@" len2 = v:Lenght()");
+				double len = v.Length ();
+				lua.DoString (" v:Length() ");
+				lua.DoString (@" len2 = v:Length()");
 				double len2 = (double)lua ["len2"];
 				Assert.AreEqual (len, len2, "#1");
+			}
+		}
+		
+		[Test]
+		public void TestBaseClassExtensionMethods ()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.LoadCLRPackage ();
+
+				lua.DoString (@" import ('NLuaTest')
+							  p = Employee()
+							  p.firstName = 'Paulo'
+							  p.occupation = 'Programmer'");
+
+				var p = (Person)lua ["p"];
+
+				string name = p.GetFirstName();
+				lua.DoString (" p:GetFirstName() ");
+				lua.DoString (@" name2 = p:GetFirstName()");
+				string name2 = (string)lua ["name2"];
+				Assert.AreEqual (name, name2, "#1");
 			}
 		}
 
