@@ -14,7 +14,7 @@ before_install:
 install: ./CI/travis.${TRAVIS_OS_NAME}.install.deps.sh
 
 script:
-  - git submodule update --init
+  - git submodule update --init --recursive
   - ./run_all.linux64.sh
 
 # Execute additional tests or commands
