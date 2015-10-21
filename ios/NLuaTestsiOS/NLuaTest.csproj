@@ -126,6 +126,9 @@
       <Link>Resources\test_32.luac</Link>
     </BundleResource>
     <None Include="Info.plist" />
+    <BundleResource Include="..\..\tests\test_64.luac">
+      <Link>Resources\test_64.luac</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />

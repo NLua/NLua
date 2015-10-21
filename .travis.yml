@@ -3,16 +3,19 @@
 #
 
 # Travis language: c(sharp) :-P
-language: c
+language: csharp
 
-# We need CMake, Mono and NUnit
-install:
-  - sudo apt-get install cmake mono-devel nunit >/dev/null 2>&1
+before_install:
+ - date -u
+ - uname -a
+ - export PATH=/opt/mono/bin:$PATH
+ - env | sort
+
+install: ./CI/travis.${TRAVIS_OS_NAME}.install.deps.sh
 
 script:
-  - uname --all
-  - git submodule update --init --recursive
-  - ./run_all.linux.sh
+  - git submodule update --init
+  - ./run_all.linux64.sh
 
 # Execute additional tests or commands
 #after_script:
