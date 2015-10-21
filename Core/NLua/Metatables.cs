@@ -1,6 +1,6 @@
 /*
  * This file is part of NLua.
- * Copyright (C) 2014 Vinicius Jarina.
+ * Copyright (C) 2015 Vinicius Jarina.
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
  * 

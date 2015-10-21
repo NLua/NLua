@@ -1,7 +1,7 @@
 /*
  * This file is part of NLua.
  * 
- * Copyright (c) 2014 Vinicius Jarina (viniciusjarina@gmail.com)
+ * Copyright (c) 2015 Vinicius Jarina (viniciusjarina@gmail.com)
  * Copyright (C) 2003-2005 Fabio Mascarenhas de Queiroz.
  * Copyright (C) 2009 Joshua Simmons <simmons.44@gmail.com>
  * Copyright (C) 2012 Megax <http://megax.yeahunter.hu/>
