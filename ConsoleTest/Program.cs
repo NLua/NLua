@@ -22,9 +22,11 @@ namespace ConsoleTest
 		{
 			using (var l = new Lua ()) {
 				l.LoadCLRPackage ();
-				l.DoString (" import ('ConsoleTest') ");
+				l.DoString (" import ('ConsoleTest', 'NLuaTest.Mock') ");
 				l.DoString (@"
-						Program.Method (1)
+						e1 = Entity()
+						e2 = Entity ('Another world')
+						e3 = Entity (10)
 				");
 			}
 		}

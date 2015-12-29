@@ -18,9 +18,26 @@ namespace NLuaTest.Mock
 			}
 		}
 
+		public string Property {
+			get;
+			set;
+		}
+
+		// default ctor
 		public Entity ()
 		{
+			Property = "Default";
+		}
+		// string ctor
+		public Entity (string param)
+		{
+			Property = "String";
 
+		}
+
+		public Entity (int param)
+		{
+			Property = "Int";
 		}
 
 		public void Click ()

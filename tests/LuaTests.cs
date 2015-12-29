@@ -2472,6 +2472,29 @@ namespace NLuaTest
 			}
 		}
 
+		[Test]
+		public void TestConstructorOverload ()
+		{
+			using (var l = new Lua ()) {
+				l.LoadCLRPackage ();
+				l.DoString (" import ('NLuaTest','NLuaTest.Mock') ");
+				l.DoString (@"					
+					e1 = Entity()
+					e2 = Entity ('str_param')
+					e3 = Entity (10)
+					p1 = e1.Property
+					p2 = e2.Property
+					p3 = e3.Property
+				");
+				string p1 = l.GetString ("p1");
+				string p2 = l.GetString ("p2");
+				string p3 = l.GetString ("p3");
+				Assert.AreEqual ("Default", p1, "#1");
+				Assert.AreEqual ("String", p2, "#1");
+				Assert.AreEqual ("Int", p3, "#1");
+			}
+		}
+
 		static Lua m_lua;
 					
 	}
