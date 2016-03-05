@@ -31,21 +31,21 @@ using System.Collections.Concurrent;
 
 namespace NLua
 {
-#if USE_KOPILUA
+	#if USE_KOPILUA
 	using LuaCore  = KopiLua.Lua;
 	using LuaState = KopiLua.LuaState;
-#else
+	#else
 	using LuaCore  = KeraLua.Lua;
 	using LuaState = KeraLua.LuaState;
-#endif
+	#endif
 
 	internal class ObjectTranslatorPool
 	{
-		private static volatile ObjectTranslatorPool instance = new ObjectTranslatorPool ();
+		private static volatile ObjectTranslatorPool instance = new ObjectTranslatorPool ();		
 #if WINDOWS_PHONE || NET_3_5
 		private Dictionary<LuaState, ObjectTranslator> translators = new Dictionary<LuaState, ObjectTranslator>();
 #else
-        private ConcurrentDictionary<LuaState, ObjectTranslator> translators = new ConcurrentDictionary<LuaState, ObjectTranslator>();
+		private ConcurrentDictionary<LuaState, ObjectTranslator> translators = new ConcurrentDictionary<LuaState, ObjectTranslator>();
 #endif
 
 		public static ObjectTranslatorPool Instance
