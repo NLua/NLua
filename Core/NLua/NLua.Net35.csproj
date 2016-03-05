@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>..\..\Run\Debug\net35\</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;NET_3_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -27,7 +27,7 @@
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>..\..\Run\Release\net35\</OutputPath>
-    <DefineConstants>RELEASE</DefineConstants>
+    <DefineConstants>RELEASE;NET_3_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,7 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugKopiLua|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugKopiLua\</OutputPath>
-    <DefineConstants>DEBUG;USE_KOPILUA</DefineConstants>
+    <DefineConstants>DEBUG;NET_3_5;USE_KOPILUA</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseKopiLua|AnyCPU'">
     <OutputPath>bin\ReleaseKopiLua\</OutputPath>
-    <DefineConstants>USE_KOPILUA</DefineConstants>
+    <DefineConstants>NET_3_5;USE_KOPILUA</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
