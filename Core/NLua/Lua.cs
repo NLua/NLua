@@ -100,6 +100,11 @@ namespace NLua
 		private LuaNativeFunction panicCallback;
 		private ObjectTranslator translator;
 		/// <summary>
+		/// Used to protect the (global) object translator pool during add/remove
+		/// </summary>
+		private static readonly object translatorPoolLock = new object();
+
+		/// <summary>
 		/// Used to ensure multiple .net threads all get serialized by this single lock for access to the lua stack/objects
 		/// </summary>
 		//private object luaLock = new object();
@@ -318,7 +323,10 @@ end
 			LuaLib.LuaSetTable (luaState, -3);
 			LuaLib.LuaNetPopGlobalTable (luaState);
 			translator = new ObjectTranslator (this, luaState);
-			ObjectTranslatorPool.Instance.Add (luaState, translator);
+			lock (translatorPoolLock)
+			{
+				ObjectTranslatorPool.Instance.Add (luaState, translator);
+			}
 			LuaLib.LuaNetPopGlobalTable (luaState);
 			LuaLib.LuaLDoString (luaState, Lua.initLuanet);
 		}
@@ -329,8 +337,11 @@ end
 				return;
 
 			if (! CheckNull.IsNull(luaState)) {
-				ObjectTranslatorPool.Instance.Remove (luaState);
-				LuaCore.LuaClose (luaState);
+				lock (translatorPoolLock)
+				{
+					LuaCore.LuaClose (luaState);
+					ObjectTranslatorPool.Instance.Remove (luaState);
+				}
 			}
 		}
 
