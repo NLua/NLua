@@ -329,8 +329,8 @@ end
 				return;
 
 			if (! CheckNull.IsNull(luaState)) {
-				LuaCore.LuaClose (luaState);
 				ObjectTranslatorPool.Instance.Remove (luaState);
+				LuaCore.LuaClose (luaState);
 			}
 		}
 
