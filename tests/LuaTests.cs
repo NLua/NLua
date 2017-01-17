@@ -157,6 +157,13 @@ namespace NLuaTest
 				return Convert.ToString (UnicodeChar);
 			}
 		}
+		public static string UnicodeStringRussian
+		{
+			get
+			{
+				return "Файл";
+			}
+		}
 		/*
         * Tests capturing an exception
         */
@@ -2062,6 +2069,17 @@ namespace NLuaTest
 				string res = (string)lua ["res"];
 
 				Assert.AreEqual (LuaTests.UnicodeString, res);
+			}
+		}
+
+		[Test]
+		public void TestUnicodeCharsInDoString()
+		{
+			using (Lua lua = new Lua ()) {
+				lua.DoString("res = 'Файл'");
+				string res = (string)lua["res"];
+
+				Assert.AreEqual(LuaTests.UnicodeStringRussian, res);
 			}
 		}
 
