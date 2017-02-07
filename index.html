@@ -202,7 +202,7 @@ You can use/instantiate any .NET class without any previous registration or anno
 To do this just use the method <code>LoadCLRPackage</code> and use the <code>import</code> function inside your Lua script to load the Assembly.</p>
 
 <div class="highlight highlight-csharp"><pre>    state.LoadCLRPackage ();
-    state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span> import ('MyAssembly.exe', 'MyNamespace') </span>
+    state.DoString (@<span class="pl-s1"><span class="pl-pds">"</span> import ('MyAssembly', 'MyNamespace') </span>
 <span class="pl-s1">               import ('System.Web') <span class="pl-pds">"</span></span>);
     <span class="pl-c">// import will load any .NET assembly and they will be available inside the Lua context.</span></pre></div>
 
