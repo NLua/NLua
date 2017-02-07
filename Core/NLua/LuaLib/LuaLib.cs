@@ -26,6 +26,7 @@
  */
 using System;
 using System.IO;
+using System.Text;
 using NLua.Extensions;
 
 namespace NLua
@@ -384,7 +385,8 @@ namespace NLua
 
 		public static int LuaLLoadBuffer (LuaState luaState, string buff, string name)
 		{
-			return LuaCore.LuaNetLoadBuffer (luaState, buff, (uint)0, name);
+			var bytes = Encoding.UTF8.GetBytes(buff);
+			return LuaCore.LuaNetLoadBuffer (luaState, bytes, (uint)bytes.Length, name);
 		}
 
 		public static int LuaLLoadBuffer (LuaState luaState, byte [] buff, string name)
