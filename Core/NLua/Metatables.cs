@@ -85,20 +85,20 @@ namespace NLua
 		 */
 		static string luaIndexFunction =
 			@"local function index(obj,name)
-			    local meta = getmetatable(obj)
-			    local cached = meta.cache[name]
-			    if cached ~= nil then
-			       return cached
-			    else
-			       local value,isFunc = get_object_member(obj,name)
-			       
-			       if isFunc then
+				local meta = getmetatable(obj)
+				local cached = meta.cache[name]
+				if cached ~= nil then
+				   return cached
+				else
+				   local value,isFunc = get_object_member(obj,name)
+				   
+				   if isFunc then
 					meta.cache[name]=value
-			       end
-			       return value
-			     end
-		    end
-		    return index";
+				   end
+				   return value
+				 end
+			end
+			return index";
 		public static string LuaIndexFunction {
 			get { return luaIndexFunction; }
 		}
@@ -352,7 +352,7 @@ namespace NLua
 				}
 
 #if WINDOWS_PHONE || NETFX_CORE
-                Debug.WriteLine("{0}: ({1}) {2}", i, typestr, strrep);
+				Debug.WriteLine("{0}: ({1}) {2}", i, typestr, strrep);
 #elif UNITY_3D
 			UnityEngine.Debug.Log(string.Format("{0}: ({1}) {2}", i, typestr, strrep));
 #elif !SILVERLIGHT
@@ -432,40 +432,38 @@ namespace NLua
 				}
 				// Try to use get_Item to index into this .net object
 				var methods = objType.GetMethods ();
+				var valuePushed = false;
 
-				foreach (var mInfo in methods) {
-					if (mInfo.Name == "get_Item") {
-						//check if the signature matches the input
-						if (mInfo.GetParameters ().Length == 1) {
-							var getter = mInfo;
-							var actualParms = (getter != null) ? getter.GetParameters () : null;
+				// Find the getter with input matching the signature
+				var getter = methods.FirstOrDefault(mInfo => mInfo.Name == "get_Item" && mInfo.GetParameters ().Length == 1);
+				if (getter != null)
+				{
+					var actualParms = getter.GetParameters ();
 
-							if (actualParms == null || actualParms.Length != 1) {
-								translator.ThrowError (luaState, "method not found (or no indexer): " + index);
-								LuaLib.LuaPushNil (luaState);
-							} else {
-								// Get the index in a form acceptable to the getter
-								index = translator.GetAsType (luaState, 2, actualParms [0].ParameterType);
-								object[] args = new object[1];
+					// Get the index in a form acceptable to the getter
+					index = translator.GetAsType (luaState, 2, actualParms [0].ParameterType);
+					var args = new object[1];
 
-								// Just call the indexer - if out of bounds an exception will happen
-								args [0] = index;
+					// Just call the indexer - if out of bounds an exception will happen
+					args [0] = index;
 
-								try {
-									object result = getter.Invoke (obj, args);
-									translator.Push (luaState, result);
-								} catch (TargetInvocationException e) {
-									// Provide a more readable description for the common case of key not found
-									if (e.InnerException is KeyNotFoundException)
-										translator.ThrowError (luaState, "key '" + index + "' not found ");
-									else
-										translator.ThrowError (luaState, "exception indexing '" + index + "' " + e.Message);
-
-									LuaLib.LuaPushNil (luaState);
-								}
-							}
-						}
+					try {
+						object result = getter.Invoke (obj, args);
+						translator.Push (luaState, result);
+						valuePushed = true;
+					} catch (TargetInvocationException e) {
+						// Provide a more readable description for the common case of key not found
+						if (e.InnerException is KeyNotFoundException)
+							translator.ThrowError (luaState, "key '" + index + "' not found ");
+						else
+							translator.ThrowError (luaState, "exception indexing '" + index + "' " + e.Message);
 					}
+				} else {
+					translator.ThrowError (luaState, "method not found (or no indexer): " + index);
+				}
+
+				if (!valuePushed) {
+					LuaLib.LuaPushNil (luaState);
 				}
 			}
 
@@ -778,7 +776,7 @@ namespace NLua
 		}
 
 		private int SetFieldOrPropertyInternal (LuaState luaState)
- 		{
+		{
 			object target = translator.GetRawNetObject (luaState, 1);
 
 			if (target == null) {
@@ -1044,7 +1042,7 @@ namespace NLua
 #if NETFX_CORE || WP80 || NET45 || PCL
 			MethodBase methodDelegate = del.GetMethodInfo ();
 #else
-            MethodBase methodDelegate = del.Method;
+			MethodBase methodDelegate = del.Method;
 #endif
 			bool isOk = MatchParameters (luaState, methodDelegate, ref validDelegate);
 
