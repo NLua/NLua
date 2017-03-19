@@ -97,6 +97,12 @@ namespace NLua
 		/// </summary>
 		public bool IsExecuting { get { return executing; } }
 
+		private bool _AllowReflection = true;
+		/// <summary>
+		/// Whether to allow or deny access to the GetType() function on .Net objects
+		/// </summary>
+		public bool AllowReflection { get { return _AllowReflection; } set { _AllowReflection = value; } }
+
 		private LuaNativeFunction panicCallback;
 		private ObjectTranslator translator;
 		/// <summary>

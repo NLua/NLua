@@ -276,8 +276,13 @@ namespace NLua.Method
 			}
 
 			if (failedCall) {
-				if (!LuaLib.LuaCheckStack (luaState, _LastCalledMethod.outList.Length + 6))
+				if (!LuaLib.LuaCheckStack (luaState, _LastCalledMethod.outList.Length + 6))	
 					throw new LuaException ("Lua stack overflow");
+
+				if (!_Translator.interpreter.AllowReflection) {
+					if (_LastCalledMethod.cachedMethod.MethodHandle == typeof (Object).GetMethod ("GetType").MethodHandle)
+						throw new LuaException ("Reflection is not supported");
+				}
 
 				try {
 					if (isStatic)
