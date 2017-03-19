@@ -72,6 +72,7 @@
     <Compile Include="LuaFunction.cs" />
     <Compile Include="LuaGlobalAttribute.cs" />
     <Compile Include="LuaHideAttribute.cs" />
+    <Compile Include="LuaPermissionAttribute.cs" />
     <Compile Include="LuaRegistrationHelper.cs" />
     <Compile Include="LuaTable.cs" />
     <Compile Include="LuaUserData.cs" />
