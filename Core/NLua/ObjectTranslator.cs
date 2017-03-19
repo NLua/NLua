@@ -345,6 +345,11 @@ namespace NLua
 			return type.GetExtensionMethod (name, assemblies);
 		}
 
+		public MethodInfo[] GetExtensionMethods (Type type)
+		{
+			return type.GetExtensionMethods (assemblies);
+		}
+
 		/*
 		 * Implementation of import_type. Returns nil if the
 		 * type is not found.
