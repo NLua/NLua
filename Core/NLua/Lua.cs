@@ -259,6 +259,7 @@ function luanet.each(o)
    end
 end
 ";
+		public bool use_traceback = false;
 
 		#region Globals auto-complete
 		/// <summary>
@@ -377,6 +378,19 @@ end
 		}
 
 		/// <summary>
+		/// Push a debug.traceback reference onto the stack, for a pcall function to use as error handler. (Remember to increment any top-of-stack markers!)
+		/// </summary>
+		private int PushDebugTraceback(LuaState luaState, int argcount)
+		{
+			LuaLib.LuaGetGlobal(luaState, "debug");
+			LuaLib.LuaGetField(luaState, -1, "traceback");
+			LuaLib.LuaRemove(luaState, -2);
+			int errindex = -argcount -2;
+			LuaLib.LuaInsert(luaState, errindex);
+			return errindex;
+		}
+
+		/// <summary>
 		/// Convert C# exceptions into Lua errors
 		/// </summary>
 		/// <returns>num of things on stack</returns>
@@ -469,9 +483,15 @@ end
 
 			if (LuaLib.LuaLLoadBuffer(luaState, chunk, chunkName) == 0)
 			{
+				int errfunction=0;
+				if (use_traceback) {
+					errfunction=PushDebugTraceback(luaState, 0);
+					oldTop++;
+				}
+
 				try
 				{
-					if (LuaLib.LuaPCall(luaState, 0, -1, 0) == 0)
+					if (LuaLib.LuaPCall(luaState, 0, -1, errfunction) == 0)
 						return translator.PopValues(luaState, oldTop);
 					else
 						ThrowExceptionFromError(oldTop);
@@ -500,9 +520,16 @@ end
 
 			if (LuaLib.LuaLLoadBuffer(luaState, chunk, chunkName) == 0)
 			{
+				int errfunction = 0;
+				if (use_traceback)
+				{
+					errfunction = PushDebugTraceback(luaState, 0);
+					oldTop++;
+				}
+
 				try
 				{
-					if (LuaLib.LuaPCall(luaState, 0, -1, 0) == 0)
+					if (LuaLib.LuaPCall(luaState, 0, -1, errfunction) == 0)
 						return translator.PopValues(luaState, oldTop);
 					else
 						ThrowExceptionFromError(oldTop);
@@ -529,8 +556,15 @@ end
 			if (LuaLib.LuaLLoadFile (luaState, fileName) == 0) {
 				executing = true;
 
+				int errfunction = 0;
+				if (use_traceback)
+				{
+					errfunction = PushDebugTraceback(luaState, 0);
+					oldTop++;
+				}
+
 				try {
-					if (LuaLib.LuaPCall (luaState, 0, -1, 0) == 0)
+					if (LuaLib.LuaPCall(luaState, 0, -1, errfunction) == 0)
 						return translator.PopValues (luaState, oldTop);
 					else
 						ThrowExceptionFromError (oldTop);
@@ -793,7 +827,14 @@ end
 			executing = true;
 
 			try {
-				int error = LuaLib.LuaPCall (luaState, nArgs, -1, 0);
+				int errfunction = 0;
+				if (use_traceback)
+				{
+					errfunction = PushDebugTraceback(luaState, nArgs);
+					oldTop++;
+				}
+
+				int error = LuaLib.LuaPCall (luaState, nArgs, -1, errfunction);
 				if (error != 0)
 					ThrowExceptionFromError (oldTop);
 			} finally {
