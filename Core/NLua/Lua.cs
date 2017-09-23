@@ -391,6 +391,18 @@ end
 		}
 
 		/// <summary>
+		/// </summary>
+		public string GetDebugTraceback()
+		{
+			int oldTop = LuaLib.LuaGetTop(luaState);
+			LuaLib.LuaGetGlobal(luaState, "debug"); // stack: debug
+			LuaLib.LuaGetField(luaState, -1, "traceback"); // stack: debug,traceback
+			LuaLib.LuaRemove(luaState, -2); // stack: traceback
+			LuaLib.LuaPCall(luaState, 0, -1, 0);
+			return translator.PopValues(luaState, oldTop)[0] as string;
+		}
+
+		/// <summary>
 		/// Convert C# exceptions into Lua errors
 		/// </summary>
 		/// <returns>num of things on stack</returns>
@@ -483,9 +495,10 @@ end
 
 			if (LuaLib.LuaLLoadBuffer(luaState, chunk, chunkName) == 0)
 			{
-				int errfunction=0;
-				if (use_traceback) {
-					errfunction=PushDebugTraceback(luaState, 0);
+				int errfunction = 0;
+				if (use_traceback)
+				{
+					errfunction = PushDebugTraceback(luaState, 0);
 					oldTop++;
 				}
 
@@ -530,7 +543,7 @@ end
 				try
 				{
 					if (LuaLib.LuaPCall(luaState, 0, -1, errfunction) == 0)
-						return translator.PopValues(luaState, oldTop);
+						return translator.PopValues (luaState, oldTop);
 					else
 						ThrowExceptionFromError(oldTop);
 				}
@@ -563,12 +576,15 @@ end
 					oldTop++;
 				}
 
-				try {
+				try
+				{
 					if (LuaLib.LuaPCall(luaState, 0, -1, errfunction) == 0)
 						return translator.PopValues (luaState, oldTop);
 					else
-						ThrowExceptionFromError (oldTop);
-				} finally {
+						ThrowExceptionFromError(oldTop);
+				}
+				finally
+				{
 					executing = false;
 				}
 			} else
