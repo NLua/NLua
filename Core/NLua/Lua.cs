@@ -391,6 +391,20 @@ end
 		}
 
 		/// <summary>
+		/// <para>Return a debug.traceback() call result (a multi-line string, containing a full stack trace, including C calls.</para>
+		/// <para>Note: it won't return anything unless the interpreter is in the middle of execution - that is, it only makes sense to call it from a method called from Lua, or during a coroutine yield.</para>
+		/// </summary>
+		public string GetDebugTraceback()
+		{
+			int oldTop = LuaLib.LuaGetTop(luaState);
+			LuaLib.LuaGetGlobal(luaState, "debug"); // stack: debug
+			LuaLib.LuaGetField(luaState, -1, "traceback"); // stack: debug,traceback
+			LuaLib.LuaRemove(luaState, -2); // stack: traceback
+			LuaLib.LuaPCall(luaState, 0, -1, 0);
+			return translator.PopValues(luaState, oldTop)[0] as string;
+		}
+
+		/// <summary>
 		/// Convert C# exceptions into Lua errors
 		/// </summary>
 		/// <returns>num of things on stack</returns>

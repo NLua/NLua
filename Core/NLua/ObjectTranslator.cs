@@ -244,12 +244,14 @@ namespace NLua
 
 			if (message != null) {
 				// Wrap Lua error (just a string) and store the error location
+				if (interpreter.use_traceback) message += "\r\n"+interpreter.GetDebugTraceback() as string;
 				e = new LuaScriptException (message, errLocation);
 			} else {
 				var ex = e as Exception;
 
 				if (ex != null) {
 					// Wrap generic .NET exception as an InnerException and store the error location
+					if (interpreter.use_traceback) ex.Data["Traceback"] = interpreter.GetDebugTraceback() as string;
 					e = new LuaScriptException (ex, errLocation);
 				}
 			}
