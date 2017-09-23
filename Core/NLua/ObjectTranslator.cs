@@ -226,6 +226,7 @@ namespace NLua
 		 */
 		internal void ThrowError (LuaState luaState, object e)
 		{
+
 			// We use this to remove anything pushed by luaL_where
 			int oldTop = LuaLib.LuaGetTop (luaState);
 
