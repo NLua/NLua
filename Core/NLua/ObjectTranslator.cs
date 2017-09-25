@@ -57,10 +57,26 @@ namespace NLua
 	 */
 	public class ObjectTranslator
 	{
+		// Compare cache entries by exact reference to avoid unwanted aliases
+		private class ReferenceComparer : IEqualityComparer<object>
+		{
+			public new bool Equals(object x, object y)
+			{
+				if (x != null && y != null && x.GetType() == y.GetType() && x.GetType().IsValueType && y.GetType().IsValueType)
+					return x.Equals(y); // Special case for boxed value types
+				return Object.ReferenceEquals(x, y);
+			}
+
+			public int GetHashCode(object obj)
+			{
+				return obj.GetHashCode();
+			}
+		}
+
 		LuaNativeFunction registerTableFunction, unregisterTableFunction, getMethodSigFunction, 
 			getConstructorSigFunction, importTypeFunction, loadAssemblyFunction, ctypeFunction, enumFromIntFunction;
 		// object to object #
-		readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int> ();
+		readonly Dictionary<object, int> objectsBackMap = new Dictionary<object, int> (new ReferenceComparer());
 		// object # to object (FIXME - it should be possible to get object address as an object #)
 		readonly Dictionary<int, object> objects = new Dictionary<int, object> ();
 		internal EventHandlerContainer pendingEvents = new EventHandlerContainer ();
@@ -777,9 +793,9 @@ namespace NLua
 			int index = nextObj++;
 			objects [index] = obj;
 #if NETFX_CORE
-			if (!obj.GetType ().GetTypeInfo().IsValueType || obj.GetType ().GetTypeInfo().IsValueType)
+			if (!obj.GetType ().GetTypeInfo().IsValueType || obj.GetType ().GetTypeInfo().IsEnum)
 #else
-            if (!obj.GetType().IsValueType || obj.GetType().IsValueType)
+            if (!obj.GetType().IsValueType || obj.GetType().IsEnum)
 #endif
 
 			objectsBackMap [obj] = index;
