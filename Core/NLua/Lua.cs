@@ -259,7 +259,7 @@ function luanet.each(o)
    end
 end
 ";
-		public bool use_traceback = false;
+		public bool UseTraceback { get; set; } = false;
 
 		#region Globals auto-complete
 		/// <summary>
@@ -497,9 +497,9 @@ end
 
 			if (LuaLib.LuaLLoadBuffer(luaState, chunk, chunkName) == 0)
 			{
-				int errfunction=0;
-				if (use_traceback) {
-					errfunction=PushDebugTraceback(luaState, 0);
+				int errfunction = 0;
+				if (UseTraceback) {
+					errfunction = PushDebugTraceback(luaState, 0);
 					oldTop++;
 				}
 
@@ -535,8 +535,7 @@ end
 			if (LuaLib.LuaLLoadBuffer(luaState, chunk, chunkName) == 0)
 			{
 				int errfunction = 0;
-				if (use_traceback)
-				{
+				if (UseTraceback) {
 					errfunction = PushDebugTraceback(luaState, 0);
 					oldTop++;
 				}
@@ -571,8 +570,7 @@ end
 				executing = true;
 
 				int errfunction = 0;
-				if (use_traceback)
-				{
+				if (UseTraceback) {
 					errfunction = PushDebugTraceback(luaState, 0);
 					oldTop++;
 				}
@@ -842,8 +840,7 @@ end
 
 			try {
 				int errfunction = 0;
-				if (use_traceback)
-				{
+				if (UseTraceback) {
 					errfunction = PushDebugTraceback(luaState, nArgs);
 					oldTop++;
 				}

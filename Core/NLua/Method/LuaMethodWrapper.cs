@@ -193,7 +193,7 @@ namespace NLua.Method
 							failedCall = false;
 						} catch (TargetInvocationException e) {
 							// Failure of method invocation
-							if (_Translator.interpreter.use_traceback) e.GetBaseException().Data["Traceback"] = _Translator.interpreter.GetDebugTraceback() as string;
+							if (_Translator.interpreter.UseTraceback) e.GetBaseException().Data["Traceback"] = _Translator.interpreter.GetDebugTraceback();
 							return SetPendingException (e.GetBaseException ());
 						} catch (Exception e) {
 							if (_Members.Length == 1) // Is the method overloaded?
@@ -290,7 +290,7 @@ namespace NLua.Method
 							_Translator.Push (luaState, _LastCalledMethod.cachedMethod.Invoke (targetObject, _LastCalledMethod.args));
 					}
 				} catch (TargetInvocationException e) {
-					if (_Translator.interpreter.use_traceback) e.GetBaseException().Data["Traceback"] = _Translator.interpreter.GetDebugTraceback() as string;
+					if (_Translator.interpreter.UseTraceback) e.GetBaseException().Data["Traceback"] = _Translator.interpreter.GetDebugTraceback();
 					return SetPendingException (e.GetBaseException ());
 				} catch (Exception e) {
 					return SetPendingException (e);
