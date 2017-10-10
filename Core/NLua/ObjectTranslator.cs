@@ -242,6 +242,7 @@ namespace NLua
 		 */
 		internal void ThrowError (LuaState luaState, object e)
 		{
+
 			// We use this to remove anything pushed by luaL_where
 			int oldTop = LuaLib.LuaGetTop (luaState);
 
@@ -260,12 +261,14 @@ namespace NLua
 
 			if (message != null) {
 				// Wrap Lua error (just a string) and store the error location
+				if (interpreter.UseTraceback) message += Environment.NewLine + interpreter.GetDebugTraceback();
 				e = new LuaScriptException (message, errLocation);
 			} else {
 				var ex = e as Exception;
 
 				if (ex != null) {
 					// Wrap generic .NET exception as an InnerException and store the error location
+					if (interpreter.UseTraceback) ex.Data["Traceback"] = interpreter.GetDebugTraceback();
 					e = new LuaScriptException (ex, errLocation);
 				}
 			}
