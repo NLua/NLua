@@ -160,8 +160,10 @@ namespace NLua.Extensions
 						where extensionType.IsSealed() && !extensionType.IsGenericType() && !extensionType.IsNested
 						from method in extensionType.GetMethods (BindingFlags.Static | BindingFlags.Public)
 						where method.IsDefined (typeof (ExtensionAttribute), false)
-						where (method.GetParameters () [0].ParameterType == type || type.IsSubclassOf(method.GetParameters()[0].ParameterType))
-						select method;
+                        where (method.GetParameters()[0].ParameterType == type
+                            || type.IsSubclassOf(method.GetParameters()[0].ParameterType)
+                            || type.GetInterfaces().Contains(method.GetParameters()[0].ParameterType))
+                        select method;
 			return query.ToArray<MethodInfo> ();
 		}
 
