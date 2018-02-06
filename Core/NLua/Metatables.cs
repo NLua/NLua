@@ -1265,19 +1265,7 @@ namespace NLua
 				{					
 					paramList.Add (null);
 					outList.Add (paramList.LastIndexOf (null));
-				}  else if (IsTypeCorrect (luaState, currentLuaParam, currentNetParam, out extractValue)) {  // Type checking
-					var value = extractValue (luaState, currentLuaParam);
-					paramList.Add (value);
-					int index = paramList.LastIndexOf (value);
-					var methodArg = new MethodArgs ();
-					methodArg.index = index;
-					methodArg.extractValue = extractValue;
-					argTypes.Add (methodArg);
 
-					if (currentNetParam.ParameterType.IsByRef)
-						outList.Add (index);
-
-					currentLuaParam++;
 				}  // Type does not match, ignore if the parameter is optional
 				else if (IsParamsArray (luaState, nLuaParams, currentLuaParam, currentNetParam, out extractValue)) {
 
@@ -1298,9 +1286,23 @@ namespace NLua
 					methodArg.isParamsArray = true;
 					methodArg.paramsArrayType = paramArrayType;
 					argTypes.Add (methodArg);
-					 
 
-				} else if (currentLuaParam > nLuaParams) { // Adds optional parameters
+                }
+				else if (IsTypeCorrect(luaState, currentLuaParam, currentNetParam, out extractValue))
+				{  // Type checking
+				    var value = extractValue(luaState, currentLuaParam);
+				    paramList.Add(value);
+				    int index = paramList.LastIndexOf(value);
+				    var methodArg = new MethodArgs();
+				    methodArg.index = index;
+				    methodArg.extractValue = extractValue;
+				    argTypes.Add(methodArg);
+
+				    if (currentNetParam.ParameterType.IsByRef)
+				        outList.Add(index);
+
+				    currentLuaParam++;
+                } else if (currentLuaParam > nLuaParams) { // Adds optional parameters
 					if (currentNetParam.IsOptional)
 						paramList.Add (currentNetParam.DefaultValue);
 					else {
