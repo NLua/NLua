@@ -205,7 +205,7 @@ If you are using Xamarin.iOS you need to [`Preserve`](http://developer.xamarin.c
 
 ##Sandboxing##
 
-There is many ways to sandbox scripts inside your application. I strongly recomend you to use plain Lua to do your sandbox.
+There is many ways to sandbox scripts inside your application. I strongly recommend you to use plain Lua to do your sandbox.
 You can re-write the `import` function before load the user script and if the user try to import a .NET assembly nothing will happen.
 
 ```csharp
