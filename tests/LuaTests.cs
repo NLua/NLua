@@ -2490,7 +2490,52 @@ namespace NLuaTest
 			}
 		}
 
-		[Test]
+	    [Test]
+	    public void TestCallMethodWithParamsOptional()
+	    {
+	        using (var l = new Lua())
+	        {
+	            l.LoadCLRPackage();
+	            l.DoString(" import ('NLuaTest','NLuaTest.Mock') ");
+	            l.DoString(@"					
+					r = TestClass.MethodWithParams(2, 7, 4)			
+				");
+	            int r = (int)l.GetNumber("r");
+	            Assert.AreEqual(2, r, "#1");
+	        }
+	    }
+
+	    [Test]
+	    public void TestCallMethodWithObjectParams()
+	    {
+	        using (var l = new Lua())
+	        {
+	            l.LoadCLRPackage();
+	            l.DoString(" import ('NLuaTest','NLuaTest.Mock') ");
+	            l.DoString(@"					
+					r = TestClass.MethodWithObjectParams(2, nil, 4, 'abc')			
+				");
+	            int r = (int)l.GetNumber("r");
+	            Assert.AreEqual(4, r, "#1");
+	        }
+	    }
+
+	    [Test]
+	    public void TestCallMethodWithObjectParamsAndNilAsFirstArgument()
+	    {
+	        using (var l = new Lua())
+	        {
+	            l.LoadCLRPackage();
+	            l.DoString(" import ('NLuaTest','NLuaTest.Mock') ");
+	            l.DoString(@"					
+					r = TestClass.MethodWithObjectParams(nil, 4, 'abc')			
+				");
+	            int r = (int)l.GetNumber("r");
+	            Assert.AreEqual(3, r, "#1");
+	        }
+	    }
+
+        [Test]
 		public void TestConstructorOverload ()
 		{
 			using (var l = new Lua ()) {
