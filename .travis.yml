@@ -1,21 +1,20 @@
 #
-# lua Travis-CI Hook
+# NLua Travis-CI Hook
 #
 
-# Travis language: c(sharp) :-P
 language: csharp
 
 before_install:
- - date -u
- - uname -a
- - export PATH=/opt/mono/bin:$PATH
- - env | sort
+  - export PATH=/opt/mono/bin:$PATH
 
-install: ./CI/travis.${TRAVIS_OS_NAME}.install.deps.sh
+install:
+  - sudo apt-get install mono-devel nunit nuget
 
 script:
-  - git submodule update --init --recursive
-  - ./run_all.linux64.sh
+  - nuget restore
+  - msbuild /p:Configuration=Release /t:Restore
+  - msbuild /p:Configuration=Release
+  - nunit-console ./tests/build/net45/bin/Release/NLuaTest.dll
 
 # Execute additional tests or commands
 #after_script:

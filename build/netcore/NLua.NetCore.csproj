@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>NLua</RootNamespace>
+    <AssemblyName>NLua</AssemblyName>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>..\..\lib\Release\netcore\NLua.xml</DocumentationFile>
+    <OutputPath>..\..\lib\Release\netcore\</OutputPath>
+    <DefineConstants>TRACE;NETCOREAPP</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\lib\Debug\netcore\</OutputPath>
+    <DefineConstants>TRACE;NETCOREAPP</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+  <Import Project="..\..\src\NLua.Core.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Core.projitems')" />
+  <ItemGroup>
+    <PackageReference Include="KeraLua" Version="0.1.12" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
+  </ItemGroup>
+</Project>
