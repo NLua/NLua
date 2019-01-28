@@ -59,4 +59,5 @@
   </ItemGroup>
   <Import Project="..\..\src\NLua.Core.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Core.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
+  <Import Project="..\targets\NLua.Sign.targets" />
 </Project>

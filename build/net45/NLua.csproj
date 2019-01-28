@@ -49,4 +49,5 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\KeraLua.0.1.14\build\net45\KeraLua.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\KeraLua.0.1.14\build\net45\KeraLua.targets'))" />
   </Target>
+  <Import Project="..\targets\NLua.Sign.targets" />
 </Project>

@@ -26,5 +26,6 @@
   <ItemGroup>
     <PackageReference Include="KeraLua" Version="0.1.14" />
   </ItemGroup>
-
+  
+  <Import Project="..\targets\NLua.Sign.targets" />
 </Project>
