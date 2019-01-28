@@ -1,0 +1,8 @@
+title: Nlua
+description: NLua is the bind between Lua world and the .NET world.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-tactile
+
+gems:
+  - jekyll-mentions
