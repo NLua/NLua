@@ -6,7 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>..\..\lib\Release\netcore\NLua.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
     <OutputPath>..\..\lib\Release\netcore\</OutputPath>
     <DefineConstants>TRACE;NETCOREAPP</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
