@@ -1,8 +1,8 @@
-[![Logo](https://raw.githubusercontent.com/NLua/NLua/master/NLua.png)]()
+
+[![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
 
 NLua
 =======
-
 
 | NuGet | NuGet (Pre-Release) |
 | ------|------|
@@ -24,7 +24,7 @@ Building
 	msbuild
 
 
-=============================
+***
 
 NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android.
 
