@@ -14,6 +14,9 @@
     <releaseNotes>Release: 2bffe65</releaseNotes>
     <copyright>Copyright © NLua 2019</copyright>
     <tags>lua nlua</tags>
+    <dependencies>
+      <dependency id="KeraLua" version="0.1.14" />
+    </dependencies>
   </metadata>
   <files>
   <file src="lib\Release\net45\*.dll" target="lib\net45" />
@@ -34,7 +37,5 @@
     <file src="lib\Release\net45\*.xml" target="lib\xamarinwatchos" /> -->
     <file src="LICENSE" />
   </files>
-  <dependencies>
-    <dependency id="KeraLua" version="0.1.14" />
-  </dependencies>
+
 </package>
