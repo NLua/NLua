@@ -44,8 +44,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KeraLua, Version=0.1.12.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\KeraLua.0.1.12\lib\xamarinwatchos\KeraLua.dll</HintPath>
+    <Reference Include="KeraLua, Version=0.1.14.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\KeraLua.0.1.14\lib\xamarinwatchos\KeraLua.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />

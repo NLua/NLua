@@ -35,6 +35,6 @@
     <file src="LICENSE" />
   </files>
   <dependencies>
-    <dependency id="KeraLua" version="0.1.12" />
+    <dependency id="KeraLua" version="0.1.14" />
   </dependencies>
 </package>

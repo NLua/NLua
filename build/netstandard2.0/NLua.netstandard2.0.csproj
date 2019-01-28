@@ -24,7 +24,7 @@
   <Import Project="..\..\src\NLua.Core.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="KeraLua" Version="0.1.12" />
+    <PackageReference Include="KeraLua" Version="0.1.14" />
   </ItemGroup>
 
 </Project>
