@@ -209,6 +209,7 @@ function Get-Next-Version-String ($PackageId)
 
 	$prefix = Get-Prefix-Name
 	$prefix = $prefix.Replace("-", "")
+	$prefix = $prefix.Replace("_", "")
 	$prefix = $prefix.Replace(".", "")
 	$nextVersion = ""
 	
