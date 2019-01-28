@@ -1,9 +1,0 @@
-PROJECT=NLua.Android.sln
-MDTOOL=/Applications/Xamarin\ Studio.app/Contents/MacOS/mdtool
-
-all: build
-
-run run-test: run-device
-
-build:
-	$(MDTOOL) -v build -t:Build "-c:Release" $(PROJECT)

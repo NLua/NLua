@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{BD205AD6-760E-48F3-BAB2-21447396BD17}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>NLua</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CheckType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Event\DebugHookEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Event\HookExceptionEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\LuaException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\LuaScriptException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\GeneralExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\LuaExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GenerateEventAssembly\ClassGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GenerateEventAssembly\CodeGeneration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GenerateEventAssembly\DelegateGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GenerateEventAssembly\ILuaGeneratedType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GenerateEventAssembly\LuaClassType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Lua.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LuaBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LuaFunction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LuaGlobalAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LuaHideAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LuaRegistrationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LuaTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LuaUserData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Metatables.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Method\EventHandlerContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Method\LuaClassHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Method\LuaDelegate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Method\LuaEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Method\LuaMethodWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Method\MethodArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Method\MethodCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Method\RegisterEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ObjectTranslator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ObjectTranslatorPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProxyType.cs" />
+  </ItemGroup>
+</Project>

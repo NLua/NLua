@@ -1,64 +1,37 @@
+[![Logo](https://raw.githubusercontent.com/NLua/NLua/master/NLua.png)]()
+
 NLua
-========
+=======
 
 
-[![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
+| NuGet | NuGet (Pre-Release) |
+| ------|------|
+|[![nuget](https://img.shields.io/nuget/v/NLua.svg)](https://www.nuget.org/packages/NLua)|[![nuget](https://img.shields.io/nuget/vpre/NLua.svg)](https://www.nuget.org/packages/NLua)|
+
+|  | Status | 
+| :------ | :------: | 
+| **Linux**   | [![Linux](https://travis-ci.org/NLua/NLua.svg?branch=master)](https://travis-ci.org/NLua/NLua) |
+| **AppVeyor** | [![Build status](https://ci.appveyor.com/api/projects/status/jkqcy9m9k35jwolx?svg=true)](https://ci.appveyor.com/project/viniciusjarina/NLua)|
+|**Mac (Azure Pipelines)** | [![Build Status](https://dev.azure.com/NLua/NLua/_apis/build/status/NLua-NLua.Mac?branchName=master)](https://dev.azure.com/NLua/NLua/_build/latest?definitionId=2&branchName=master) |
+|**Windows (Azure Pipelines)** | [![Build Status](https://dev.azure.com/NLua/NLua/_apis/build/status/NLua-NLua.Windows?branchName=master)](https://dev.azure.com/NLua/NLua/_build/latest?definitionId=4&branchName=master) |
+
+
+Bridge between Lua world and the .NET (compatible with Xamarin.iOS/Mac/Android/.NET/.NET Core) 
+
+Building
+---------
+
+	msbuild
+
+
+=============================
+
+NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android.
+
+[![Cmd](https://raw.github.com/NLua/NLua/master/extras/screenshot/NLuaCommand.gif)]()
+
 
 NLua is a fork project of LuaInterface (from Fábio Mascarenhas/Craig Presti).
-
-[![Cmd](https://raw.github.com/NLua/NLua/master/NLuaCommand.gif)]()
-
-Example: using NLua from command line.
-
-NLua allows the usage of Lua from C#, on Windows, Linux, Mac, iOS , Android, Windows Phone 7 and 8.
-
-Unity3D support branch:  [unity3d](https://github.com/Mervill/Unity3D-NLua) by [Riley G](https://github.com/Mervill/Unity3D-NLua).
-
-  [1]: https://www.dropbox.com/s/w99igtc12uocq4k/NLua.OSX.zip
-  [2]: http://nvlabs.github.com/cub/download-icon.png (Download for OSX)
-
-  [3]: https://www.dropbox.com/s/s3xte19719446lx/NLua.iOS.zip
-  [4]: http://nvlabs.github.com/cub/download-icon.png (Download for iOS)
-
-
-  [5]: https://www.dropbox.com/s/mjet2sh67e7y6xo/NLua.Android.zip
-  [6]: http://nvlabs.github.com/cub/download-icon.png (Download for Android)
-
-  [7]: https://www.dropbox.com/s/jkr1pnwvqw6w0r8/NLua.Win32.zip
-  [8]: http://nvlabs.github.com/cub/download-icon.png (Download for Win32)
-
-  [9]: https://www.dropbox.com/s/xraxkgi2kuwbu4a/NLua.Win64.zip
-  [10]: http://nvlabs.github.com/cub/download-icon.png (Download for Win64)
-  
-  [11]: https://www.dropbox.com/s/do8m3929mf0pwff/NLua.NoPInvoke.zip
-  [12]: http://nvlabs.github.com/cub/download-icon.png (Download Pure C# - No P/Invoke)
-
-  [13]: https://www.dropbox.com/s/c08wphdmk5o7tdx/NLua.WP7.zip
-  [14]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 7)
-
-  [15]: https://www.dropbox.com/s/2pva1tyxpnn7feb/NLua.WPSL8.zip
-  [16]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone Silverlight 8 (ARM+x86))
-  
-  [17]: https://www.dropbox.com/s/nonijkic8216f7l/NLua.WinRT.zip
-  [18]: http://nvlabs.github.com/cub/download-icon.png (Download for Windows Phone 8 (RT) (ARM+x86))
-  
-  [19]: https://dl.dropboxusercontent.com/u/17523659/NLua.Unity3D.zip
-  [20]: http://nvlabs.github.com/cub/download-icon.png (Download for Unity3D)
-  
-  
-|  | Build Status | Download |
-| :------ | ------: | :------: |
-| **Linux** | [![Linux](https://travis-ci.org/NLua/NLua.svg?branch=master)](https://travis-ci.org/NLua/NLua) |
-| **OSX**   | [![OSX](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_OSX)](http://codefoco.zapto.org:8085/job/NLua_OSX/) | [![dwn_osx][2]][1] |
-| **iOS** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_iOS)](http://codefoco.zapto.org:8085/view/X/job/NLua_iOS/) | [![dwn_ios][4]][3] |
-| **Android** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Android)](http://codefoco.zapto.org:8085/view/X/job/NLua_Android/) | [![dwn_android][6]][5] |
-| **Win32** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Windows)](http://codefoco.zapto.org:8085/view/X/job/NLua_Windows/) | [![dwn_w32][8]][7] |
-| **Win64** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_Win64)](http://codefoco.zapto.org:8085/view/X/job/NLua_Win64/) | [![dwn_w64][10]][9] |
-| **.NET Pure C#** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_WinSafe)](http://codefoco.zapto.org:8085/view/X/job/NLua_WinSafe/) | [![dwn_winsafe][12]][11] |
-| **WP8 (Silverlight)** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_WPSL8)](http://codefoco.zapto.org:8085/view/X/job/NLua_WinSafe/) | [![dwn_wpsl8][16]][15] |
-| **WP8 (WinRT)** | [![Build Status](http://codefoco.zapto.org:8085/buildStatus/icon?job=NLua_WPSL8)](http://codefoco.zapto.org:8085/view/X/job/NLua_WP8/) | [![dwn_wp8][18]][17] |
-| **Windows Phone 7** |  | [![dwn_wp7][14]][13] |
-| **Unity3D** |  | [![dwn_unity3d][20]][19] |
 
 Example:
 You can use/instantiate any .NET class without any previous registration or annotation. 
@@ -216,7 +189,17 @@ You can re-write the `import` function before load the user script and if the us
 [Lua-Sandbox user-list](http://lua-users.org/wiki/SandBoxes)
 
 
-Copyright (c) 2014 Vinicius Jarina (viniciusjarina@gmail.com)
+Copyright (c) 2019 Vinicius Jarina (viniciusjarina@gmail.com)
+
+NLua 1.4.x
+----------
+
+NLua huge cleanup and refactor after a few years.
+
+* Moved to .NET C# style.
+* Using KeraLua as nuget dependencie.
+* Droped support for KopiLua/Silverlight/Windows Phone
+
 
 NLua 1.3.2
 ----------
@@ -464,3 +447,6 @@ instead of
 Make sure the assemblies of the types you are passing have been loaded, or the call
 will fail. The test cases in src/TestLuaInterface/TestLua.cs have examples of the new
 functions.
+
+
+

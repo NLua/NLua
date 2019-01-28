@@ -1,0 +1,164 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NLua", "NLua", "{4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLua.Shared", "src\NLua.Shared.shproj", "{BD205AD6-760E-48F3-BAB2-21447396BD17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BDBA9844-3BD3-436C-AB8A-8E78C810A710}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua", "build\net45\NLua.csproj", "{C45805A8-6436-4738-BD9F-4632EEA63BBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest", "tests\build\net45\NLuaTest.csproj", "{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLua.NetCore", "build\netcore\NLua.NetCore.csproj", "{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLua.netstandard2.0", "build\netstandard2.0\NLua.netstandard2.0.csproj", "{6784E262-4845-4B08-8AD1-6319E76AF579}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.Android", "build\Android\NLua.Android.csproj", "{4B766E88-5872-4437-882D-C887A3C0CDF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.XamariniOS", "build\XamariniOS\NLua.XamariniOS.csproj", "{8FAFDF62-E07E-487A-863C-74F308AE7BA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.TVOS", "build\TVOS\NLua.TVOS.csproj", "{9238F6AA-2D63-4804-99D1-C279871F5669}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.WatchOS", "build\WatchOS\NLua.WatchOS.csproj", "{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.XamarinMac", "build\XamarinMac\NLua.XamarinMac.csproj", "{CFE2185E-C344-4503-9B94-9046744CEF37}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\NLua.Core.projitems*{4b766e88-5872-4437-882d-c887a3c0cdf7}*SharedItemsImports = 4
+		src\NLua.Core.projitems*{8fafdf62-e07e-487a-863c-74f308ae7ba6}*SharedItemsImports = 4
+		src\NLua.Core.projitems*{9238f6aa-2d63-4804-99d1-c279871f5669}*SharedItemsImports = 4
+		src\NLua.Core.projitems*{bd205ad6-760e-48f3-bab2-21447396bd17}*SharedItemsImports = 13
+		src\NLua.Core.projitems*{bf6a650f-aa7a-4a08-8ada-08d9e73e1238}*SharedItemsImports = 4
+		src\NLua.Core.projitems*{c45805a8-6436-4738-bd9f-4632eea63bbc}*SharedItemsImports = 4
+		src\NLua.Core.projitems*{cfe2185e-c344-4503-9b94-9046744cef37}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		DebugAndroid|Any CPU = DebugAndroid|Any CPU
+		DebugCore|Any CPU = DebugCore|Any CPU
+		DebugMac|Any CPU = DebugMac|Any CPU
+		Release|Any CPU = Release|Any CPU
+		ReleaseAndroid|Any CPU = ReleaseAndroid|Any CPU
+		ReleaseCore|Any CPU = ReleaseCore|Any CPU
+		ReleaseMac|Any CPU = ReleaseMac|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.DebugCore|Any CPU.Build.0 = Debug|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.ReleaseCore|Any CPU.Build.0 = Release|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.DebugCore|Any CPU.Build.0 = Debug|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.ReleaseCore|Any CPU.Build.0 = Release|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.DebugAndroid|Any CPU.Build.0 = Debug|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.ReleaseAndroid|Any CPU.Build.0 = Release|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD205AD6-760E-48F3-BAB2-21447396BD17} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{C45805A8-6436-4738-BD9F-4632EEA63BBC} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{6784E262-4845-4B08-8AD1-6319E76AF579} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{4B766E88-5872-4437-882D-C887A3C0CDF7} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{9238F6AA-2D63-4804-99D1-C279871F5669} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{CFE2185E-C344-4503-9B94-9046744CEF37} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4720E610-698B-48DD-BBD7-03AC99E9BC90}
+	EndGlobalSection
+EndGlobal
