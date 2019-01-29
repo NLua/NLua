@@ -24,7 +24,7 @@
   <Import Project="..\..\src\NLua.Core.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="KeraLua" Version="1.0.1" />
+    <PackageReference Include="KeraLua" Version="1.0.2" />
   </ItemGroup>
   
   <Import Project="..\targets\NLua.Sign.targets" />
