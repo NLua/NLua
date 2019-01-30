@@ -1223,6 +1223,8 @@ end
             if (translator != null)
             {
                 translator.pendingEvents.Dispose();
+                if (translator.Tag != IntPtr.Zero)
+                    Marshal.FreeHGlobal(translator.Tag);
                 translator = null;
             }
 
