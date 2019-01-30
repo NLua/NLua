@@ -54,8 +54,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KeraLua, Version=1.0.2.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\KeraLua.1.0.2\lib\xamarinmac\KeraLua.dll</HintPath>
+    <Reference Include="KeraLua, Version=1.0.3.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\KeraLua.1.0.3\lib\xamarinmac\KeraLua.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
