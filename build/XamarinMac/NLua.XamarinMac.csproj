@@ -32,6 +32,7 @@
     <XamMacArch>
     </XamMacArch>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AOTMode>None</AOTMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -52,6 +53,7 @@
     <XamMacArch>
     </XamMacArch>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AOTMode>None</AOTMode>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="KeraLua, Version=1.0.3.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">

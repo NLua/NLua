@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BDBA9844
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua", "build\net45\NLua.csproj", "{C45805A8-6436-4738-BD9F-4632EEA63BBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest", "tests\build\net45\NLuaTest.csproj", "{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLua.NetCore", "build\netcore\NLua.NetCore.csproj", "{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLua.netstandard2.0", "build\netstandard2.0\NLua.netstandard2.0.csproj", "{6784E262-4845-4B08-8AD1-6319E76AF579}"
@@ -26,6 +24,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.WatchOS", "build\WatchOS\NLua.WatchOS.csproj", "{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.XamarinMac", "build\XamarinMac\NLua.XamarinMac.csproj", "{CFE2185E-C344-4503-9B94-9046744CEF37}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLuaTest.Shared", "tests\src\NLuaTest.Shared.shproj", "{7279D001-6F21-4FF3-A0EE-3A1D12004BA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.XamariniOS", "tests\build\xamarinios\NLuaTest.XamariniOS.csproj", "{20225B34-18F0-477B-AE89-1C95B788C55D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest", "tests\build\net45\NLuaTest.csproj", "{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -46,6 +50,10 @@ Global
 		ReleaseAndroid|Any CPU = ReleaseAndroid|Any CPU
 		ReleaseCore|Any CPU = ReleaseCore|Any CPU
 		ReleaseMac|Any CPU = ReleaseMac|Any CPU
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -60,18 +68,6 @@ Global
 		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
 		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
 		{C45805A8-6436-4738-BD9F-4632EEA63BBC}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
 		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
@@ -142,6 +138,32 @@ Global
 		{CFE2185E-C344-4503-9B94-9046744CEF37}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
 		{CFE2185E-C344-4503-9B94-9046744CEF37}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
 		{CFE2185E-C344-4503-9B94-9046744CEF37}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.DebugAndroid|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.DebugCore|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.DebugMac|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.DebugMac|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.Release|Any CPU.ActiveCfg = Release|iPhone
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.ReleaseAndroid|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.ReleaseCore|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.ReleaseMac|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.ReleaseMac|Any CPU.Build.0 = Release|iPhoneSimulator
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugAndroid|Any CPU.Build.0 = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugCore|Any CPU.Build.0 = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.DebugMac|Any CPU.Build.0 = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseAndroid|Any CPU.Build.0 = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseCore|Any CPU.Build.0 = Debug|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,7 +171,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BD205AD6-760E-48F3-BAB2-21447396BD17} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
 		{C45805A8-6436-4738-BD9F-4632EEA63BBC} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
-		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
 		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
 		{6784E262-4845-4B08-8AD1-6319E76AF579} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
 		{4B766E88-5872-4437-882D-C887A3C0CDF7} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
@@ -157,6 +178,9 @@ Global
 		{9238F6AA-2D63-4804-99D1-C279871F5669} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
 		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
 		{CFE2185E-C344-4503-9B94-9046744CEF37} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{7279D001-6F21-4FF3-A0EE-3A1D12004BA3} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
+		{20225B34-18F0-477B-AE89-1C95B788C55D} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
+		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4720E610-698B-48DD-BBD7-03AC99E9BC90}
