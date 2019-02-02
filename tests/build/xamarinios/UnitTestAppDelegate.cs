@@ -6,7 +6,7 @@ using Foundation;
 using UIKit;
 using MonoTouch.NUnit.UI;
 
-namespace NLuaTest.XamariniOS
+namespace NLuaTest
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
     // User Interface of the application, as well as listening (and optionally responding) to 
@@ -29,7 +29,12 @@ namespace NLuaTest.XamariniOS
         {
             // create a new window instance based on the screen size
             window = new UIWindow(UIScreen.MainScreen.Bounds);
-            runner = new TouchRunner(window);
+            runner = new TouchRunner(window)
+            {
+                AutoStart = true,
+                TerminateAfterExecution = true
+            };
+
 
             // register every tests included in the main application/assembly
             runner.Add(System.Reflection.Assembly.GetExecutingAssembly());

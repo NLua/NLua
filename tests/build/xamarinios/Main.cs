@@ -1,11 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using UIKit;
 
-using Foundation;
-using UIKit;
-
-namespace NLuaTest.XamariniOS
+namespace NLuaTest
 {
     public class Application
     {
