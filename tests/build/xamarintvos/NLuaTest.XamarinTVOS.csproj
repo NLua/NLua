@@ -123,6 +123,7 @@
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <None Include="packages.config" />
+    <None Include="tools\Touch.Server.exe" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\build\TVOS\NLua.TVOS.csproj">
@@ -178,4 +179,5 @@
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
+  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.7\build\RunSimulatorTests.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.7\build\RunSimulatorTests.targets')" />
 </Project>
