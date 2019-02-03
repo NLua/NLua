@@ -28,6 +28,7 @@
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <DeviceSpecificBuild>false</DeviceSpecificBuild>
     <MtouchVerbosity></MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <Optimize>true</Optimize>
@@ -43,9 +44,9 @@
     <MtouchArch>ARM64</MtouchArch>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <MtouchVerbosity></MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
     <DefineConstants></DefineConstants>
@@ -57,6 +58,7 @@
     <MtouchArch>x86_64</MtouchArch>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <MtouchVerbosity></MtouchVerbosity>
+<MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,6 +80,7 @@
     <MtouchArch>ARM64</MtouchArch>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <MtouchVerbosity></MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -151,4 +154,5 @@
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.6\build\RunSimulatorTests.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.6\build\RunSimulatorTests.targets')" />
 </Project>

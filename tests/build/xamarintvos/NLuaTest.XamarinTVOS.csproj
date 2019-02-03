@@ -28,6 +28,7 @@
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <DeviceSpecificBuild>false</DeviceSpecificBuild>
     <MtouchVerbosity></MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>pdbonly</DebugType>
@@ -45,6 +46,7 @@
     <MtouchArch>ARM64</MtouchArch>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <MtouchVerbosity></MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <Optimize>true</Optimize>
@@ -58,6 +60,7 @@
     <MtouchArch>x86_64</MtouchArch>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <MtouchVerbosity></MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,6 +82,7 @@
     <MtouchArch>ARM64</MtouchArch>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <MtouchVerbosity></MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
