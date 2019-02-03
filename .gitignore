@@ -29,3 +29,6 @@ tests/build/net45/bin/
 tests/build/net45/obj/
 tests/build/netcore/bin/
 tests/build/netcore/obj/
+*.user
+tests/build/xamarinios/obj/
+tests/build/xamarintvos/obj/

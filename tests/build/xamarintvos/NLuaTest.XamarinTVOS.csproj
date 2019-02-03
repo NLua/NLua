@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProjectGuid>{73AA14F8-8A24-4011-8030-3FB3248044C3}</ProjectGuid>
+    <ProjectTypeGuids>{06FA79CB-D6CD-4721-BB4B-1BD202089C55};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>NLuaTest.XamarinTVOS</RootNamespace>
+    <AssemblyName>NLuaTest</AssemblyName>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchFastDev>true</MtouchFastDev>
+    <IOSDebuggerPort>51576</IOSDebuggerPort>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+    <DeviceSpecificBuild>false</DeviceSpecificBuild>
+    <MtouchVerbosity>
+    </MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchFloat32>true</MtouchFloat32>
+    <MtouchEnableBitcode>true</MtouchEnableBitcode>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+    <MtouchVerbosity>
+    </MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+    <MtouchVerbosity>
+    </MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <DeviceSpecificBuild>true</DeviceSpecificBuild>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchFastDev>true</MtouchFastDev>
+    <MtouchFloat32>true</MtouchFloat32>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <IOSDebuggerPort>16987</IOSDebuggerPort>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+    <MtouchVerbosity>
+    </MtouchVerbosity>
+    <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.TVOS" />
+    <Reference Include="MonoTouch.NUnitLite" />
+    <Reference Include="KeraLua">
+      <HintPath>..\..\..\packages\KeraLua.1.0.3\lib\xamarintvos\KeraLua.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Back.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Back.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Front.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Front.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Middle.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Middle.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Back.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Back.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Front.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Front.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Middle.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Middle.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\Top Shelf Image Wide.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\Top Shelf Image.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <None Include="Entitlements.plist" />
+    <None Include="packages.config" />
+    <None Include="tools\Touch.Server.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\build\TVOS\NLua.TVOS.csproj">
+      <Project>{9238F6AA-2D63-4804-99D1-C279871F5669}</Project>
+      <Name>NLua.TVOS</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\xamarinios\Main.cs">
+      <Link>Main.cs</Link>
+    </Compile>
+    <Compile Include="..\xamarinios\UnitTestAppDelegate.cs">
+      <Link>UnitTestAppDelegate.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="..\..\scripts\test.lua">
+      <Link>Resources\scripts\test.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\test_32.luac">
+      <Link>Resources\scripts\test_32.luac</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\test_64.luac">
+      <Link>Resources\scripts\test_64.luac</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\core\bisect.lua">
+      <Link>Resources\scripts\core\bisect.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\core\cf.lua">
+      <Link>Resources\scripts\core\cf.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\core\factorial.lua">
+      <Link>Resources\scripts\core\factorial.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\core\fib.lua">
+      <Link>Resources\scripts\core\fib.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\core\fibfor.lua">
+      <Link>Resources\scripts\core\fibfor.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\core\life.lua">
+      <Link>Resources\scripts\core\life.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\core\printf.lua">
+      <Link>Resources\scripts\core\printf.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\core\sieve.lua">
+      <Link>Resources\scripts\core\sieve.lua</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\scripts\core\sort.lua">
+      <Link>Resources\scripts\core\sort.lua</Link>
+    </BundleResource>
+  </ItemGroup>
+  <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
+  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.9\build\RunSimulatorTests.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.9\build\RunSimulatorTests.targets')" />
+</Project>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <TouchServerExe Condition=" '$(TouchServerExe)' == '' ">$(MSBuildProjectDirectory)/tools/Touch.Server.exe</TouchServerExe>
+        <MLaunch Condition=" '$(MLaunch)' == '' ">/Developer/MonoTouch/usr/bin/mlaunch</MLaunch>
+        <TargetFrameworkIdentifier Condition=" '$(TargetFrameworkIdentifier)' == ''">Xamarin.iOS</TargetFrameworkIdentifier>
+        <DeviceKind Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">iPhone</DeviceKind>
+        <DeviceKind Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">Apple TV</DeviceKind>
+        <DevicesXmlFile>$(OutputPath)/DevicesXmlFile.xml</DevicesXmlFile>
+        <TestResultName Condition=" '$(TestResultName)' == '' ">TEST-Result-$(TargetFrameworkIdentifier)</TestResultName>
+        <TestResult Condition=" '$(TestResult)' == '' ">$(TestResultName).xml</TestResult>
+    </PropertyGroup>
+    <Target Name="FetchDeviceSpecs"  Condition="'$(OS)'=='Unix' and Exists('/usr/lib/libc.dylib')" DependsOnTargets="_DetectSdkLocations;GetAppBundleDir" >
+        <Message Text="Reading available devices" />
+        <Exec Command="$(MLaunch) --listsim=$(DevicesXmlFile)" Condition="!Exists('$(DevicesXmlFile)')" />
+        <XmlPeek 
+                XmlInputPath="$(DevicesXmlFile)" 
+                Query="//MTouch/Simulator/AvailableDevices/SimDevice[contains(@Name,&quot;$(DeviceKind)&quot;)][last()]/SimRuntime/text()">
+        <Output TaskParameter="Result" ItemName="SimRuntime" />
+        </XmlPeek>
+        <XmlPeek 
+                XmlInputPath="$(DevicesXmlFile)" 
+                Query="//MTouch/Simulator/AvailableDevices/SimDevice[contains(@Name,&quot;$(DeviceKind)&quot;)][last()]/SimDeviceType/text()">
+        <Output TaskParameter="Result" ItemName="SimDeviceType" />
+        </XmlPeek>
+    </Target>
+    <Target Name="RunSimulatorTests"  Condition="'$(OS)'=='Unix' and Exists('/usr/lib/libc.dylib')" DependsOnTargets="FetchDeviceSpecs" >
+        <Message Text="Running Simulator tests [@(SimRuntime):@(SimDeviceType)]" />
+        <Exec Command="mono $(TouchServerExe) --launchsim &quot;$(AppBundleDir)&quot; --logfile=result.xml  -autoexit -skipheader --verbose --mtouch-argument=&quot;--sdkroot=$(_SdkDevPath) --sdk=$(MtouchSdkVersion)&quot; --device=&quot;:v2:runtime=@(SimRuntime),devicetype=@(SimDeviceType)&quot;" />
+        <!-- This deserver some explanation:
+        
+         There are two bug on NUnitLite.
+         =============================
+
+        * Even if you set NUNIT_ENABLE_XML_OUTPUT and NUNIT_SKIP_LOG_HEADER NUnitLite will print to log header in the XML
+        * Sometimes NUnitLite write some gibberish in the last line "test-results"ffff
+        * The following bash commands will remove the header and the gibberish from the end of the file
+
+         -->
+        <Exec Command="tail -n +2 result.xml | tail -n +2 | sed -e &apos;$ d&apos; > $(TestResult)" />
+        <Exec Command="echo &quot;&lt;/test-results&gt;&quot;  >> $(TestResult)" />
+        <XmlPoke
+            XmlInputPath="$(TestResult)"
+            Value="$(TestResultName)"
+            Query="/test-results/@name" 
+        />
+    </Target>
+</Project>

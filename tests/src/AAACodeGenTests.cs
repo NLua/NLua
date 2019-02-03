@@ -8,6 +8,8 @@ using System.Threading;
 using NLua;
 using NLua.Exceptions;
 
+#if !__TVOS__ && !__IOS__ && !__WATCHOS__
+
 
 namespace NLuaTest
 {
@@ -199,3 +201,4 @@ namespace NLuaTest
     }
 }
 
+#endif // !__TVOS__ && !__IOS__ && !__WATCHOS__

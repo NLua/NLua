@@ -188,7 +188,7 @@ namespace NLuaTest
                 lua.DoString("function someFunc(v1,v2) return v1 + v2 end");
                 lua["funcObject"] = lua.GetFunction("someFunc");
 
-                lua.DoString("luanet.load_assembly('mscorlib')");
+                //lua.DoString("luanet.load_assembly('mscorlib')");
                 lua.DoString("luanet.load_assembly('NLuaTest')");
                 lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
                 lua.DoString("b = TestClass():TestLuaFunction(funcObject)[0]");
@@ -2347,7 +2347,8 @@ namespace NLuaTest
                               c = Complex (10, 5) 
                               c = -c ");
 
-                var expected = new System.Numerics.Complex(-10, -5);
+                var expected = new System.Numerics.Complex(10, 5);
+                expected = -expected;
 
                 var res = lua["c"];
                 Assert.AreEqual(expected, res);
