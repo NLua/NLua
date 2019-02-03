@@ -179,5 +179,5 @@
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
-  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.7\build\RunSimulatorTests.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.7\build\RunSimulatorTests.targets')" />
+  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.8\build\RunSimulatorTests.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.8\build\RunSimulatorTests.targets')" />
 </Project>

@@ -14,12 +14,12 @@
         <Exec Command="$(MLaunch) --listsim=$(DevicesXmlFile)" Condition="!Exists('$(DevicesXmlFile)')" />
         <XmlPeek 
                 XmlInputPath="$(DevicesXmlFile)" 
-                Query="//MTouch/Simulator/AvailableDevices/SimDevice[contains(@Name,&quot;$(DeviceKind)&quot;)][1]/SimRuntime/text()">
+                Query="//MTouch/Simulator/AvailableDevices/SimDevice[contains(@Name,&quot;$(DeviceKind)&quot;)][last()]/SimRuntime/text()">
         <Output TaskParameter="Result" ItemName="SimRuntime" />
         </XmlPeek>
         <XmlPeek 
                 XmlInputPath="$(DevicesXmlFile)" 
-                Query="//MTouch/Simulator/AvailableDevices/SimDevice[contains(@Name,&quot;$(DeviceKind)&quot;)][1]/SimDeviceType/text()">
+                Query="//MTouch/Simulator/AvailableDevices/SimDevice[contains(@Name,&quot;$(DeviceKind)&quot;)][last()]/SimDeviceType/text()">
         <Output TaskParameter="Result" ItemName="SimDeviceType" />
         </XmlPeek>
     </Target>

@@ -7,7 +7,7 @@
 	<key>CFBundleName</key>
 	<string>NLuaTest.XamarinTVOS</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.nlua.test.NLuaTest-XamarinTVOS</string>
+	<string>org.nlua.test.NLuaTest</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

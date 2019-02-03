@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>NLuaTest.XamariniOS</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.nlua.test.NLuaTest-XamariniOS</string>
+	<string>org.nlua.test.NLuaTest</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
