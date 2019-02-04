@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.XamarinTVOS", "tes
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLuaTest.Shared.Scripts", "tests\src\NLuaTest.Shared.Scripts.shproj", "{9E2A0BC0-5C10-4A85-9CA1-2BEB751128B7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLuaTest.Core", "tests\build\netcore\NLuaTest.Core.csproj", "{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		tests\src\NLuaTest.Shared.projitems*{20225b34-18f0-477b-ae89-1c95b788c55d}*SharedItemsImports = 4
@@ -176,6 +178,16 @@ Global
 		{73AA14F8-8A24-4011-8030-3FB3248044C3}.ReleaseCore|Any CPU.ActiveCfg = Release|iPhoneSimulator
 		{73AA14F8-8A24-4011-8030-3FB3248044C3}.ReleaseMac|Any CPU.ActiveCfg = Release|iPhoneSimulator
 		{73AA14F8-8A24-4011-8030-3FB3248044C3}.ReleaseMac|Any CPU.Build.0 = Release|iPhoneSimulator
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.DebugAndroid|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.DebugCore|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.DebugCore|Any CPU.Build.0 = Debug|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.DebugMac|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.ReleaseAndroid|Any CPU.ActiveCfg = Release|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.ReleaseCore|Any CPU.ActiveCfg = Release|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.ReleaseCore|Any CPU.Build.0 = Release|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -195,6 +207,7 @@ Global
 		{20AE709C-FB97-48E3-89B0-A34A5C3DA1DB} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
 		{73AA14F8-8A24-4011-8030-3FB3248044C3} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
 		{9E2A0BC0-5C10-4A85-9CA1-2BEB751128B7} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4720E610-698B-48DD-BBD7-03AC99E9BC90}
