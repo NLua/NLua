@@ -32,3 +32,5 @@ tests/build/netcore/obj/
 *.user
 tests/build/xamarinios/obj/
 tests/build/xamarintvos/obj/
+tests/build/xamarintvos/bin/
+tests/build/xamarinios/bin/
