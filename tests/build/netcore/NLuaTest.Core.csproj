@@ -12,6 +12,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <IsPackable>false</IsPackable>
+    <AssemblyName>NLuaTest</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -24,76 +25,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.DotMemoryUnit" Version="3.0.20171219.105559" />
+    <PackageReference Include="KeraLua" Version="1.0.4" />
     <PackageReference Include="nunit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.12.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
   </ItemGroup>
-<ItemGroup>
-    <Compile Include="..\..\Properties\AssemblyInfo.cs" />
-    <Compile Include="..\..\Tests\Core.cs" />
-    <Compile Include="..\..\Tests\Interop.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\LuaTests\core\bisect.lua" Link="LuaTests\core\bisect.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\core\cf.lua" Link="LuaTests\core\cf.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\core\factorial.lua" Link="LuaTests\core\factorial.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\core\fib.lua" Link="LuaTests\core\fib.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\core\fibfor.lua" Link="LuaTests\core\fibfor.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\core\life.lua" Link="LuaTests\core\life.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\core\printf.lua" Link="LuaTests\core\printf.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\core\sieve.lua" Link="LuaTests\core\sieve.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\core\sort.lua" Link="LuaTests\core\sort.lua">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\scripts\foo.lua">
-      <Link>foo.lua</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\scripts\main.lua">
-      <Link>main.lua</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\LuaTests\scripts\module1.lua">
-      <Link>module1.lua</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\..\..\runtimes\win-x64\native\lua53.dll" Condition="'$(Os)'=='Windows_NT'">
-      <Link>lua53.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\runtimes\osx\native\liblua53.dylib" Condition="'$(OS)'=='Unix' and Exists('/usr/lib/libc.dylib')">
-      <Link>liblua53.dylib</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\runtimes\linux-x64\native\liblua53.so" Condition="'$(OS)'=='Unix' and !Exists('/usr/lib/libc.dylib')">
-      <Link>liblua53.so</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="LuaTests\core\" />
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\build\netcore\NLua.NetCore.csproj" />
   </ItemGroup>
 
+  <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\src\NLuaTest.Shared.Scripts.projitems" Label="Shared" />
 </Project>
