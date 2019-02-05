@@ -2702,6 +2702,52 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void TestDefaultParameter()
+        {
+            using (var l = new Lua())
+            {
+                var obj = new TestClassWithMethodDefaultParameter();
+                l["obj"] = obj;
+
+                // Use both functions to avoid linker to remove.
+                obj.Func("param1");
+                obj.Func2("param1");
+
+                obj.x = 0;
+
+                l.DoString("obj:Func('param1')");
+                Assert.AreEqual(1, obj.x, "#1");
+
+                l.DoString("obj:Func('param1', 0, 0,'foo')");
+                Assert.AreEqual(3, obj.x, "#2");
+
+                l.DoString("obj:Func('param1', 0, 0,'')");
+                Assert.AreEqual(7, obj.x, "#3");
+
+                obj.x = 0;
+
+                l.DoString("obj:Func('param1', 0, 0,nil)");
+                Assert.AreEqual(1, obj.x, "#4");
+
+                obj.x = 0;
+
+                l.DoString("obj:Func2('param1')");
+                Assert.AreEqual(4, obj.x, "#2.1");
+
+                l.DoString("obj:Func2('param1', 0, 0,'foo')");
+                Assert.AreEqual(6, obj.x, "#2.2");
+
+                l.DoString("obj:Func2('param1', 0, 0,'')");
+                Assert.AreEqual(14, obj.x, "#2.3");
+
+                l.DoString("obj:Func2('param1', 0, 0,nil)");
+                Assert.AreEqual(15, obj.x, "#2.4");
+            }
+        }
+
+        
+
         static Lua m_lua;
 
     }

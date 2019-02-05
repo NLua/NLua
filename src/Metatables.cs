@@ -1314,6 +1314,16 @@ namespace NLua
                     argTypes.Add(methodArg);
 
                 }
+                else if (currentLuaParam > nLuaParams)
+                {   // Adds optional parameters
+                    if (currentNetParam.IsOptional)
+                        paramList.Add(currentNetParam.DefaultValue);
+                    else
+                    {
+                        isMethod = false;
+                        break;
+                    }
+                }
                 else if (IsTypeCorrect(luaState, currentLuaParam, currentNetParam, out extractValue))
                 {  // Type checking
                     var value = extractValue(luaState, currentLuaParam);
@@ -1328,16 +1338,6 @@ namespace NLua
                         outList.Add(index);
 
                     currentLuaParam++;
-                }
-                else if (currentLuaParam > nLuaParams)
-                {   // Adds optional parameters
-                    if (currentNetParam.IsOptional)
-                        paramList.Add(currentNetParam.DefaultValue);
-                    else
-                    {
-                        isMethod = false;
-                        break;
-                    }
                 }
                 else if (currentNetParam.IsOptional)
                     paramList.Add(currentNetParam.DefaultValue);
