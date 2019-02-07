@@ -8,10 +8,10 @@ namespace NLua.Method
 	struct MethodArgs
 	{
 		// Position of parameter
-		public int index;
+		public int Index;
 		// Type-conversion function
-		public ExtractValue extractValue;
-		public bool isParamsArray;
-		public Type paramsArrayType;
+		public ExtractValue ExtractValue;
+		public bool IsParamsArray;
+		public Type ParamsArrayType;
 	}
 }

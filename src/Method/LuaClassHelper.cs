@@ -2,12 +2,6 @@ using System;
 
 namespace NLua.Method
 {
-    /*
-     * Static helper methods for Lua tables acting as CLR objects.
-     * 
-     * Author: Fabio Mascarenhas
-     * Version: 1.0
-     */
     public class LuaClassHelper
     {
         /*
@@ -19,12 +13,11 @@ namespace NLua.Method
             if (luaTable == null)
                 return null;
 
-            object funcObj = luaTable.RawGet(name);
+            var funcObj = luaTable.RawGet(name) as LuaFunction;
 
-            if (funcObj is LuaFunction)
-                return (LuaFunction)funcObj;
-            else
-                return null;
+            if (funcObj != null)
+                return funcObj;
+            return null;
         }
 
         /*

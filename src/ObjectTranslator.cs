@@ -527,7 +527,7 @@ namespace NLua
                 var method = klass.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static |
                     BindingFlags.Instance, signature);
                 var wrapper = new LuaMethodWrapper(this, target, klass, method);
-                LuaNativeFunction invokeDelegate = wrapper.invokeFunction;
+                LuaNativeFunction invokeDelegate = wrapper.InvokeFunction;
                 PushFunction(luaState, invokeDelegate);
             }
             catch (Exception e)
@@ -573,7 +573,7 @@ namespace NLua
             {
                 ConstructorInfo constructor = klass.UnderlyingSystemType.GetConstructor(signature);
                 var wrapper = new LuaMethodWrapper(this, null, klass, constructor);
-                var invokeDelegate = wrapper.invokeFunction;
+                var invokeDelegate = wrapper.InvokeFunction;
                 PushFunction(luaState, invokeDelegate);
             }
             catch (Exception e)
@@ -1030,9 +1030,9 @@ namespace NLua
             return metaFunctions.MatchParameters(luaState, method, ref methodCache);
         }
 
-        internal Array TableToArray(Func<int, object> luaParamValue, Type paramArrayType, int startIndex, int count)
+        internal Array TableToArray(LuaState luaState, ExtractValue extractValue, Type paramArrayType, int startIndex, int count)
         {
-            return metaFunctions.TableToArray(luaParamValue, paramArrayType, startIndex, count);
+            return metaFunctions.TableToArray(luaState, extractValue, paramArrayType, ref startIndex, count);
         }
 
         private Type TypeOf(LuaState luaState, int idx)

@@ -6,18 +6,16 @@ namespace NLua.Event
     /// <summary>
     /// Event args for hook callback event
     /// </summary>
-    /// <author>Reinhard Ostermeier</author>
     public class DebugHookEventArgs : EventArgs
     {
-        readonly LuaDebug luaDebug;
-
         public DebugHookEventArgs(LuaDebug luaDebug)
         {
-            this.luaDebug = luaDebug;
+            LuaDebug = luaDebug;
         }
 
-        public LuaDebug LuaDebug {
-            get { return luaDebug; }
-        }
+        /// <summary>
+        /// Lua Debug Information
+        /// </summary>
+        public LuaDebug LuaDebug { get; }
     }
 }

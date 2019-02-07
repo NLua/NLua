@@ -5,19 +5,18 @@ namespace NLua
 {
     class DelegateGenerator
     {
-        private ObjectTranslator translator;
-        private Type delegateType;
-
+        private readonly ObjectTranslator _translator;
+        private readonly Type _delegateType;
 
         public DelegateGenerator(ObjectTranslator objectTranslator, Type type)
         {
-            translator = objectTranslator;
-            delegateType = type;
+            _translator = objectTranslator;
+            _delegateType = type;
         }
 
         public object ExtractGenerated(LuaState luaState, int stackPos)
         {
-            return CodeGeneration.Instance.GetDelegate(delegateType, translator.GetFunction(luaState, stackPos));
+            return CodeGeneration.Instance.GetDelegate(_delegateType, _translator.GetFunction(luaState, stackPos));
         }
     }
 }

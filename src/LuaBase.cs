@@ -7,11 +7,14 @@ namespace NLua
     /// </summary>
     public abstract class LuaBase : IDisposable
     {
-        private bool _Disposed;
-        protected int
-            _Reference;
-        protected Lua
-            _Interpreter;
+        private bool _disposed;
+        protected readonly int _Reference;
+        protected Lua _Interpreter;
+
+        protected LuaBase(int reference)
+        {
+            _Reference = reference;
+        }
 
         ~LuaBase()
         {
@@ -26,28 +29,23 @@ namespace NLua
 
         public virtual void Dispose(bool disposeManagedResources)
         {
-            if (!_Disposed)
-            {
-                if (disposeManagedResources)
-                {
-                    if (_Reference != 0)
-                        _Interpreter.DisposeInternal(_Reference);
-                }
+            if (_disposed)
+                return;
 
-                _Interpreter = null;
-                _Disposed = true;
-            }
+            if (_Reference != 0)
+                _Interpreter.DisposeInternal(_Reference);
+
+            _Interpreter = null;
+            _disposed = true;
         }
 
         public override bool Equals(object o)
         {
-            if (o is LuaBase)
-            {
-                var l = (LuaBase)o;
-                return _Interpreter.CompareRef(l._Reference, _Reference);
-            }
-            else
+            var reference = o as LuaBase;
+            if (reference == null)
                 return false;
+
+            return _Interpreter.CompareRef(reference._Reference, _Reference);
         }
 
         public override int GetHashCode()

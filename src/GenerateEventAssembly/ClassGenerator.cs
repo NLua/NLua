@@ -5,18 +5,18 @@ namespace NLua
 {
     class ClassGenerator
     {
-        private ObjectTranslator translator;
-        private Type klass;
+        private readonly ObjectTranslator _translator;
+        private readonly Type _klass;
 
         public ClassGenerator(ObjectTranslator objTranslator, Type typeClass)
         {
-            translator = objTranslator;
-            klass = typeClass;
+            _translator = objTranslator;
+            _klass = typeClass;
         }
 
         public object ExtractGenerated(LuaState luaState, int stackPos)
         {
-            return CodeGeneration.Instance.GetClassInstance(klass, translator.GetTable(luaState, stackPos));
+            return CodeGeneration.Instance.GetClassInstance(_klass, _translator.GetTable(luaState, stackPos));
         }
     }
 }

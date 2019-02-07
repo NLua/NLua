@@ -9,16 +9,16 @@ namespace NLua.Method
     /// </summary>
     class EventHandlerContainer : IDisposable
     {
-        private Dictionary<Delegate, RegisterEventHandler> dict = new Dictionary<Delegate, RegisterEventHandler>();
+        private readonly Dictionary<Delegate, RegisterEventHandler> _dict = new Dictionary<Delegate, RegisterEventHandler>();
 
         public void Add(Delegate handler, RegisterEventHandler eventInfo)
         {
-            dict.Add(handler, eventInfo);
+            _dict.Add(handler, eventInfo);
         }
 
         public void Remove(Delegate handler)
         {
-            bool found = dict.Remove(handler);
+            bool found = _dict.Remove(handler);
             Debug.Assert(found);
         }
 
@@ -27,10 +27,10 @@ namespace NLua.Method
         /// </summary>
         public void Dispose()
         {
-            foreach (KeyValuePair<Delegate, RegisterEventHandler> pair in dict)
+            foreach (KeyValuePair<Delegate, RegisterEventHandler> pair in _dict)
                 pair.Value.RemovePending(pair.Key);
 
-            dict.Clear();
+            _dict.Clear();
         }
     }
 }
