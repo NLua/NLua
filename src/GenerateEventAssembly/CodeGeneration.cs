@@ -54,8 +54,6 @@ namespace NLua
         {
 #if __IOS__ || __TVOS__ || __WATCHOS__
             throw new NotImplementedException (" Emit not available on Xamarin.iOS ");
-#elif SILVERLIGHT
-            throw new NotImplementedException(" Emit not available on Silverlight ");
 #elif NETSTANDARD
             throw new NotImplementedException(" Emit not available on .NET Standard ");
 #else
@@ -99,8 +97,6 @@ namespace NLua
         {
 #if __IOS__ || __TVOS__ || __WATCHOS__
             throw new NotImplementedException ("GenerateDelegate is not available on iOS, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
-#elif SILVERLIGHT
-            throw new NotImplementedException("GenerateDelegate is not available on Silverlight, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
 #elif NETSTANDARD
             throw new NotImplementedException("GenerateDelegate is not available on Windows Store, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
 #else
@@ -307,8 +303,6 @@ namespace NLua
         {
 #if __IOS__ || __TVOS__ || __WATCHOS__
             throw new NotImplementedException (" Emit not available on Xamarin.iOS ");
-#elif SILVERLIGHT
-            throw new NotImplementedException (" Emit not available on Silverlight ");
 #elif NETSTANDARD
             throw new NotImplementedException (" Emit not available on .NET Standard ");
 #else
@@ -421,7 +415,7 @@ namespace NLua
             returnTypes = returnTypesList.ToArray();
         }
 
-#if !(__IOS__ || __TVOS__ || __WATCHOS__) && !SILVERLIGHT && !NETSTANDARD
+#if !(__IOS__ || __TVOS__ || __WATCHOS__) && !NETSTANDARD
 
         /*
          * Generates an overriden implementation of method inside myType that delegates
@@ -672,8 +666,6 @@ namespace NLua
         {
 #if __IOS__ || __TVOS__ || __WATCHOS__
             throw new NotImplementedException (" Emit not available on Xamarin.iOS ");
-#elif SILVERLIGHT
-            throw new NotImplementedException (" Emit not available on Silverlight ");
 #elif NETSTANDARD
             throw new NotImplementedException (" Emit not available on .NET Standard ");
 #else

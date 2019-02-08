@@ -644,7 +644,7 @@ namespace NLua
                     if (cachedMember == null)
                         SetMemberCache(objType, methodName, member);
 
-                    translator.Push(luaState, new RegisterEventHandler(translator.pendingEvents, obj, eventInfo));
+                    translator.Push(luaState, new RegisterEventHandler(translator.PendingEvents, obj, eventInfo));
                 }
                 else if (!implicitStatic)
                 {

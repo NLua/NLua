@@ -1202,7 +1202,7 @@ end
         {
             if (_translator != null)
             {
-                _translator.pendingEvents.Dispose();
+                _translator.PendingEvents.Dispose();
                 if (_translator.Tag != IntPtr.Zero)
                     Marshal.FreeHGlobal(_translator.Tag);
                 _translator = null;
