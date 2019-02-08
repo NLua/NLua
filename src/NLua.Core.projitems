@@ -14,8 +14,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Event\HookExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\LuaException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\LuaScriptException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\GeneralExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\LuaExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\TypeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenerateEventAssembly\ClassGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenerateEventAssembly\CodeGeneration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenerateEventAssembly\DelegateGenerator.cs" />

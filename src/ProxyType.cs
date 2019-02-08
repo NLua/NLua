@@ -8,11 +8,11 @@ namespace NLua
     /// </summary>
     public class ProxyType
     {
-        private Type proxy;
+        private readonly Type _proxy;
 
         public ProxyType(Type proxy)
         {
-            this.proxy = proxy;
+            _proxy = proxy;
         }
 
         /// <summary>
@@ -24,36 +24,30 @@ namespace NLua
             return "ProxyType(" + UnderlyingSystemType + ")";
         }
 
-        public Type UnderlyingSystemType {
-            get { return proxy; }
-        }
+        public Type UnderlyingSystemType => _proxy;
 
         public override bool Equals(object obj)
         {
             if (obj is Type)
-                return proxy.Equals((Type)obj);
+                return _proxy == (Type)obj;
             if (obj is ProxyType)
-                return proxy.Equals(((ProxyType)obj).UnderlyingSystemType);
-            return proxy.Equals(obj);
+                return _proxy == ((ProxyType)obj).UnderlyingSystemType;
+            return _proxy.Equals(obj);
         }
 
         public override int GetHashCode()
         {
-            return proxy.GetHashCode();
+            return _proxy.GetHashCode();
         }
 
         public MemberInfo[] GetMember(string name, BindingFlags bindingAttr)
         {
-            return proxy.GetMember(name, bindingAttr);
+            return _proxy.GetMember(name, bindingAttr);
         }
 
         public MethodInfo GetMethod(string name, BindingFlags bindingAttr, Type[] signature)
         {
-#if NETFX_CORE
-            return proxy.GetMethod (name, bindingAttr, signature);
-#else
-            return proxy.GetMethod(name, bindingAttr, null, signature, null);
-#endif
+            return _proxy.GetMethod(name, bindingAttr, null, signature, null);
         }
     }
 }

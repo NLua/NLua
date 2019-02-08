@@ -2,9 +2,7 @@ using System;
 using System.Threading;
 using System.Reflection;
 
-using NLua.Extensions;
 using System.Reflection.Emit;
-using System.Collections;
 using System.Collections.Generic;
 using NLua.Method;
 
@@ -12,12 +10,10 @@ namespace NLua
 {
     class CodeGeneration
     {
-        private Dictionary<Type, LuaClassType> classCollection = new Dictionary<Type, LuaClassType>();
-        private Dictionary<Type, Type> delegateCollection = new Dictionary<Type, Type>();
-        private static readonly CodeGeneration instance = new CodeGeneration();
-        private AssemblyName assemblyName;
+        private readonly Dictionary<Type, LuaClassType> _classCollection = new Dictionary<Type, LuaClassType>();
+        private readonly Dictionary<Type, Type> _delegateCollection = new Dictionary<Type, Type>();
 
-#if !(__IOS__ || __TVOS__ || __WATCHOS__) && !SILVERLIGHT && !NETSTANDARD
+#if !(__IOS__ || __TVOS__ || __WATCHOS__) && !NETSTANDARD
         private Dictionary<Type, Type> eventHandlerCollection = new Dictionary<Type, Type>();
         private Type eventHandlerParent = typeof(LuaEventHandler);
         private Type delegateParent = typeof(LuaDelegate);
@@ -34,7 +30,7 @@ namespace NLua
         private CodeGeneration()
         {
             // Create an assembly name
-            assemblyName = new AssemblyName();
+            var assemblyName = new AssemblyName();
             assemblyName.Name = "NLua_generatedcode";
             // Create a new assembly with one module.
 #if NETCOREAPP
@@ -49,9 +45,7 @@ namespace NLua
         /*
          * Singleton instance of the class
          */
-        public static CodeGeneration Instance {
-            get { return instance; }
-        }
+        public static CodeGeneration Instance { get; } = new CodeGeneration();
 
         /*
          *  Generates an event handler that calls a Lua function
@@ -60,15 +54,13 @@ namespace NLua
         {
 #if __IOS__ || __TVOS__ || __WATCHOS__
             throw new NotImplementedException (" Emit not available on Xamarin.iOS ");
-#elif SILVERLIGHT
-            throw new NotImplementedException(" Emit not available on Silverlight ");
 #elif NETSTANDARD
             throw new NotImplementedException(" Emit not available on .NET Standard ");
 #else
             string typeName;
             lock (this)
             {
-                typeName = "LuaGeneratedClass" + luaClassNumber.ToString();
+                typeName = "LuaGeneratedClass" + luaClassNumber;
                 luaClassNumber++;
             }
 
@@ -105,15 +97,13 @@ namespace NLua
         {
 #if __IOS__ || __TVOS__ || __WATCHOS__
             throw new NotImplementedException ("GenerateDelegate is not available on iOS, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
-#elif SILVERLIGHT
-            throw new NotImplementedException("GenerateDelegate is not available on Silverlight, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
 #elif NETSTANDARD
             throw new NotImplementedException("GenerateDelegate is not available on Windows Store, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
 #else
             string typeName;
             lock (this)
             {
-                typeName = "LuaGeneratedClass" + luaClassNumber.ToString();
+                typeName = "LuaGeneratedClass" + luaClassNumber;
                 luaClassNumber++;
             }
 
@@ -297,13 +287,10 @@ namespace NLua
                     GetReturnTypesFromMethod(method, out returnTypes[i]);
                     i++;
                 }
-                else
+                else if (!method.IsPrivate && !method.IsFinal && method.IsVirtual)
                 {
-                    if (!method.IsPrivate && !method.IsFinal && method.IsVirtual)
-                    {
-                        GetReturnTypesFromMethod(method, out returnTypes[i]);
-                        i++;
-                    }
+                    GetReturnTypesFromMethod(method, out returnTypes[i]);
+                    i++;
                 }
             }
         }
@@ -316,15 +303,13 @@ namespace NLua
         {
 #if __IOS__ || __TVOS__ || __WATCHOS__
             throw new NotImplementedException (" Emit not available on Xamarin.iOS ");
-#elif SILVERLIGHT
-            throw new NotImplementedException (" Emit not available on Silverlight ");
 #elif NETSTANDARD
             throw new NotImplementedException (" Emit not available on .NET Standard ");
 #else
             string typeName;
             lock (this)
             {
-                typeName = "LuaGeneratedClass" + luaClassNumber.ToString();
+                typeName = "LuaGeneratedClass" + luaClassNumber;
                 luaClassNumber++;
             }
 
@@ -414,12 +399,9 @@ namespace NLua
             for (int i = 0; i < paramTypes.Length; i++)
             {
                 paramTypes[i] = paramInfo[i].ParameterType;
-#if SILVERLIGHT
-                if (paramInfo[i].IsOut) {
-#else
-                if ((!paramInfo[i].IsIn) && paramInfo[i].IsOut)
+
+                if (!paramInfo[i].IsIn && paramInfo[i].IsOut)
                 {
-#endif
                     nOutParams++;
                 }
 
@@ -433,7 +415,7 @@ namespace NLua
             returnTypes = returnTypesList.ToArray();
         }
 
-#if !(__IOS__ || __TVOS__ || __WATCHOS__) && !SILVERLIGHT && !NETSTANDARD
+#if !(__IOS__ || __TVOS__ || __WATCHOS__) && !NETSTANDARD
 
         /*
          * Generates an overriden implementation of method inside myType that delegates
@@ -458,7 +440,7 @@ namespace NLua
             for (int i = 0; i < paramTypes.Length; i++)
             {
                 paramTypes[i] = paramInfo[i].ParameterType;
-                if ((!paramInfo[i].IsIn) && paramInfo[i].IsOut)
+                if (!paramInfo[i].IsIn && paramInfo[i].IsOut)
                     nOutParams++;
 
                 if (paramTypes[i].IsByRef)
@@ -684,8 +666,6 @@ namespace NLua
         {
 #if __IOS__ || __TVOS__ || __WATCHOS__
             throw new NotImplementedException (" Emit not available on Xamarin.iOS ");
-#elif SILVERLIGHT
-            throw new NotImplementedException (" Emit not available on Silverlight ");
 #elif NETSTANDARD
             throw new NotImplementedException (" Emit not available on .NET Standard ");
 #else
@@ -700,22 +680,22 @@ namespace NLua
             }
 
             var luaEventHandler = (LuaEventHandler)Activator.CreateInstance(eventConsumerType);
-            luaEventHandler.handler = eventHandler;
+            luaEventHandler.Handler = eventHandler;
             return luaEventHandler;
 #endif
         }
 
         public void RegisterLuaDelegateType(Type delegateType, Type luaDelegateType)
         {
-            delegateCollection[delegateType] = luaDelegateType;
+            _delegateCollection[delegateType] = luaDelegateType;
         }
 
         public void RegisterLuaClassType(Type klass, Type luaClass)
         {
-            LuaClassType luaClassType = new LuaClassType();
+            var luaClassType = new LuaClassType();
             luaClassType.klass = luaClass;
             GetReturnTypesFromClass(klass, out luaClassType.returnTypes);
-            classCollection[klass] = luaClassType;
+            _classCollection[klass] = luaClassType;
         }
         /*
          * Gets a delegate with delegateType that calls the luaFunc Lua function
@@ -726,12 +706,14 @@ namespace NLua
             var returnTypes = new List<Type>();
             Type luaDelegateType;
 
-            if (delegateCollection.ContainsKey(delegateType))
-                luaDelegateType = delegateCollection[delegateType];
+            if (_delegateCollection.ContainsKey(delegateType))
+            {
+                luaDelegateType = _delegateCollection[delegateType];
+            }
             else
             {
                 luaDelegateType = GenerateDelegate(delegateType);
-                delegateCollection[delegateType] = luaDelegateType;
+                _delegateCollection[delegateType] = luaDelegateType;
             }
 
             var methodInfo = delegateType.GetMethod("Invoke");
@@ -746,12 +728,7 @@ namespace NLua
             var luaDelegate = (LuaDelegate)Activator.CreateInstance(luaDelegateType);
             luaDelegate.function = luaFunc;
             luaDelegate.returnTypes = returnTypes.ToArray();
-#if NETFX_CORE
-            var mi = luaDelegate.GetType ().GetTypeInfo ().GetDeclaredMethod ("CallFunction");
-            return mi.CreateDelegate (delegateType, luaDelegate);
-#else
             return Delegate.CreateDelegate(delegateType, luaDelegate, "CallFunction");
-#endif
         }
 
         /*
@@ -764,13 +741,13 @@ namespace NLua
         {
             LuaClassType luaClassType;
 
-            if (classCollection.ContainsKey(klass))
-                luaClassType = classCollection[klass];
+            if (_classCollection.ContainsKey(klass))
+                luaClassType = _classCollection[klass];
             else
             {
                 luaClassType = new LuaClassType();
                 GenerateClass(klass, out luaClassType.klass, out luaClassType.returnTypes);
-                classCollection[klass] = luaClassType;
+                _classCollection[klass] = luaClassType;
             }
 
             return Activator.CreateInstance(luaClassType.klass, new object[] {

@@ -5,15 +5,15 @@ namespace NLua.Method
 {
     class RegisterEventHandler
     {
-        private EventHandlerContainer pendingEvents;
-        private EventInfo eventInfo;
-        private object target;
+        private readonly EventHandlerContainer _pendingEvents;
+        private readonly EventInfo _eventInfo;
+        private readonly object _target;
 
         public RegisterEventHandler(EventHandlerContainer pendingEvents, object target, EventInfo eventInfo)
         {
-            this.target = target;
-            this.eventInfo = eventInfo;
-            this.pendingEvents = pendingEvents;
+            _target = target;
+            _eventInfo = eventInfo;
+            _pendingEvents = pendingEvents;
         }
 
         /*
@@ -23,9 +23,9 @@ namespace NLua.Method
         {
             //CP: Fix by Ben Bryant for event handling with one parameter
             //link: http://luaforge.net/forum/message.php?msg_id=9266
-            Delegate handlerDelegate = CodeGeneration.Instance.GetDelegate(eventInfo.EventHandlerType, function);
-            eventInfo.AddEventHandler(target, handlerDelegate);
-            pendingEvents.Add(handlerDelegate, this);
+            Delegate handlerDelegate = CodeGeneration.Instance.GetDelegate(_eventInfo.EventHandlerType, function);
+            _eventInfo.AddEventHandler(_target, handlerDelegate);
+            _pendingEvents.Add(handlerDelegate, this);
 
             return handlerDelegate;
         }
@@ -36,7 +36,7 @@ namespace NLua.Method
         public void Remove(Delegate handlerDelegate)
         {
             RemovePending(handlerDelegate);
-            pendingEvents.Remove(handlerDelegate);
+            _pendingEvents.Remove(handlerDelegate);
         }
 
         /*
@@ -44,7 +44,7 @@ namespace NLua.Method
          */
         internal void RemovePending(Delegate handlerDelegate)
         {
-            eventInfo.RemoveEventHandler(target, handlerDelegate);
+            _eventInfo.RemoveEventHandler(_target, handlerDelegate);
         }
     }
 }

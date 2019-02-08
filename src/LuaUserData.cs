@@ -3,9 +3,8 @@ namespace NLua
 {
     public class LuaUserData : LuaBase
     {
-        public LuaUserData(int reference, Lua interpreter)
+        public LuaUserData(int reference, Lua interpreter):base(reference)
         {
-            _Reference = reference;
             _Interpreter = interpreter;
         }
 

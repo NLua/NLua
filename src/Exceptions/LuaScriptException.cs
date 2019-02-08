@@ -12,18 +12,14 @@ namespace NLua.Exceptions
         /// <summary>
         /// Returns true if the exception has occured as the result of a .NET exception in user code
         /// </summary>
-        public bool IsNetException { get; private set; }
+        public bool IsNetException { get;  }
 
-        private readonly string source;
+        private readonly string _source;
 
         /// <summary>
         /// The position in the script where the exception was triggered.
         /// </summary>
-#if SILVERLIGHT && !WINDOWS_PHONE
-        public string Source { get { return source; } }
-#else
-        public override string Source { get { return source; } }
-#endif
+        public override string Source => _source;
 
         /// <summary>
         /// Creates a new Lua-only exception.
@@ -32,7 +28,7 @@ namespace NLua.Exceptions
         /// <param name="source">The position in the script where the exception was triggered.</param>
         public LuaScriptException(string message, string source) : base(message)
         {
-            this.source = source;
+            _source = source;
         }
 
         /// <summary>
@@ -43,14 +39,14 @@ namespace NLua.Exceptions
         public LuaScriptException(Exception innerException, string source)
             : base("A .NET exception occured in user-code", innerException)
         {
-            this.source = source;
-            this.IsNetException = true;
+            _source = source;
+            IsNetException = true;
         }
 
         public override string ToString()
         {
             // Prepend the error source
-            return GetType().FullName + ": " + source + Message;
+            return GetType().FullName + ": " + _source + Message;
         }
     }
 }

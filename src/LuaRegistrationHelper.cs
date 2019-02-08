@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
-using NLua.Extensions;
-
 
 namespace NLua
 {
@@ -18,10 +16,10 @@ namespace NLua
         {
             #region Sanity checks
             if (lua == null)
-                throw new ArgumentNullException("lua");
+                throw new ArgumentNullException(nameof(lua));
 
             if (o == null)
-                throw new ArgumentNullException("o");
+                throw new ArgumentNullException(nameof(o));
             #endregion
 
             foreach (var method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
@@ -47,13 +45,13 @@ namespace NLua
         {
             #region Sanity checks
             if (lua == null)
-                throw new ArgumentNullException("lua");
+                throw new ArgumentNullException(nameof(lua));
 
             if (type == null)
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException(nameof(type));
 
             if (!type.IsClass)
-                throw new ArgumentException("The type must be a class!", "type");
+                throw new ArgumentException("The type must be a class!", nameof(type));
             #endregion
 
             foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
@@ -78,7 +76,7 @@ namespace NLua
         public static void Enumeration<T>(Lua lua)
         {
             if (lua == null)
-                throw new ArgumentNullException("lua");
+                throw new ArgumentNullException(nameof(lua));
 
             var type = typeof(T);
 

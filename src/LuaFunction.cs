@@ -8,18 +8,16 @@ namespace NLua
 {
     public class LuaFunction : LuaBase
     {
-        internal LuaNativeFunction function;
+        internal readonly LuaNativeFunction function;
 
-        public LuaFunction(int reference, Lua interpreter)
+        public LuaFunction(int reference, Lua interpreter):base(reference)
         {
-            _Reference = reference;
             function = null;
             _Interpreter = interpreter;
         }
 
-        public LuaFunction(LuaNativeFunction nativeFunction, Lua interpreter)
+        public LuaFunction(LuaNativeFunction nativeFunction, Lua interpreter):base (0)
         {
-            _Reference = 0;
             function = nativeFunction;
             _Interpreter = interpreter;
         }
@@ -60,17 +58,15 @@ namespace NLua
 
         public override bool Equals(object o)
         {
-            if (o is LuaFunction)
-            {
-                var l = (LuaFunction)o;
+            var l = o as LuaFunction;
 
-                if (this._Reference != 0 && l._Reference != 0)
-                    return _Interpreter.CompareRef(l._Reference, this._Reference);
-                else
-                    return this.function == l.function;
-            }
-            else
+            if (l == null)
                 return false;
+
+            if (_Reference != 0 && l._Reference != 0)
+                return _Interpreter.CompareRef(l._Reference, _Reference);
+
+            return function == l.function;
         }
 
         public override int GetHashCode()

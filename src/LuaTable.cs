@@ -9,9 +9,8 @@ namespace NLua
 {
     public class LuaTable : LuaBase
     {
-        public LuaTable(int reference, Lua interpreter)
+        public LuaTable(int reference, Lua interpreter):base(reference)
         {
-            _Reference = reference;
             _Interpreter = interpreter;
         }
 
@@ -48,13 +47,11 @@ namespace NLua
             return _Interpreter.GetTableDict(this).GetEnumerator();
         }
 
-        public ICollection Keys {
-            get { return _Interpreter.GetTableDict(this).Keys; }
-        }
+        public ICollection Keys => _Interpreter.GetTableDict(this).Keys;
 
-        public ICollection Values {
-            get { return _Interpreter.GetTableDict(this).Values; }
-        }
+
+        public ICollection Values => _Interpreter.GetTableDict(this).Values;
+
 
         /*
          * Gets an string fields of a table ignoring its metatable,

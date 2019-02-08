@@ -8,10 +8,6 @@ namespace NLua.Exceptions
 	[Serializable]
 	public class LuaException : Exception
 	{
-		public LuaException ()
-		{
-		}
-
 		public LuaException (string message) : base(message)
 		{
 		}
