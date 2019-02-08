@@ -32,7 +32,7 @@ namespace NLua
             if (_disposed)
                 return;
 
-            if (_Reference != 0)
+            if (_Reference != 0 && disposeManagedResources)
                 _Interpreter.DisposeInternal(_Reference);
 
             _Interpreter = null;
