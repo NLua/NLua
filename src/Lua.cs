@@ -309,7 +309,7 @@ namespace NLua
         static int PanicCallback(IntPtr state)
         {
             var luaState = LuaState.FromIntPtr(state);
-            string reason = string.Format("Unprotected error in call to Lua API ({0})", luaState.ToString(-1));
+            string reason = string.Format("Unprotected error in call to Lua API ({0})", luaState.ToString(-1, false));
             throw new LuaException(reason);
         }
 

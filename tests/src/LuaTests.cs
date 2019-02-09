@@ -2048,8 +2048,24 @@ namespace NLuaTest
                                 ");
                 Assert.AreEqual(3, obj.CallsToIntFunc, "#integer");
                 Assert.AreEqual(2, obj.CallsToStringFunc, "#string");
+
+                obj.CallsToIntFunc = 0;
+                obj.CallsToStringFunc = 0;
+
+                lua.DoString(@" 
+                                obj:Func2('foo','10')
+                                obj:Func2('foo', 10)
+                                obj:Func2('foo','10')
+                                obj:Func2('foo',10)
+                                obj:Func2('foo','10')
+                                ");
+
+                Assert.AreEqual(2, obj.CallsToIntFunc, "#integer");
+                Assert.AreEqual(3, obj.CallsToStringFunc, "#string");
             }
         }
+
+
 
         [Test]
         public void TestGetStack()

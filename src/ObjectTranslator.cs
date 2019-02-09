@@ -265,7 +265,7 @@ namespace NLua
         {
             try
             {
-                string assemblyName = luaState.ToString(1);
+                string assemblyName = luaState.ToString(1, false);
                 Assembly assembly = null;
                 Exception exception = null;
 
@@ -357,7 +357,7 @@ namespace NLua
 
         private int ImportTypeInternal(LuaState luaState)
         {
-            string className = luaState.ToString(1);
+            string className = luaState.ToString(1, false);
             var klass = FindType(className);
 
             if (klass != null)
@@ -392,7 +392,7 @@ namespace NLua
             }
 
             LuaTable luaTable = GetTable(luaState, 1);
-            string superclassName = luaState.ToString(2);
+            string superclassName = luaState.ToString(2, false);
 
             if (string.IsNullOrEmpty(superclassName))
             {
@@ -567,7 +567,7 @@ namespace NLua
             var signature = new Type[luaState.GetTop() - 1];
 
             for (int i = 0; i < signature.Length; i++)
-                signature[i] = FindType(luaState.ToString(i + 2));
+                signature[i] = FindType(luaState.ToString(i + 2, false));
 
             try
             {
@@ -828,7 +828,7 @@ namespace NLua
                 case LuaType.Number:
                         return luaState.ToNumber(index);
                 case LuaType.String:
-                        return luaState.ToString(index);
+                        return luaState.ToString(index, false);
                 case LuaType.Boolean:
                         return luaState.ToBoolean(index);
                 case LuaType.Table:
@@ -1081,7 +1081,7 @@ namespace NLua
             }
             else if (lt == LuaType.String)
             {
-                string sflags = luaState.ToString(2);
+                string sflags = luaState.ToString(2, false);
                 string err = null;
                 try
                 {
