@@ -90,7 +90,7 @@ namespace NLua.Extensions
             return t.GetMethods(flags).Where(m => m.Name == name).ToArray();
         }
 
-        public static MethodInfo[] GetExtensionMethods(this Type type, IEnumerable<Assembly> assemblies = null)
+        public static MethodInfo[] GetExtensionMethods(this Type type, string name, IEnumerable<Assembly> assemblies = null)
         {
             var types = new List<Type>();
 
@@ -102,14 +102,12 @@ namespace NLua.Extensions
                 {
                     if (item == type.Assembly)
                         continue;
-                    types.AddRange(item.GetTypes().Where(t => t.IsPublic));
+                    types.AddRange(item.GetTypes().Where(t => t.IsPublic && t.IsClass && t.IsSealed && t.IsAbstract && !t.IsNested));
                 }
             }
 
             var query = types
-                .Where(extensionType =>
-                    extensionType.IsSealed && !extensionType.IsGenericType && !extensionType.IsNested)
-                .SelectMany(extensionType => extensionType.GetMethods(BindingFlags.Static | BindingFlags.Public),
+                .SelectMany(extensionType => extensionType.GetMethods(name, BindingFlags.Static | BindingFlags.Public),
                     (extensionType, method) => new {extensionType, method})
                 .Where(t => t.method.IsDefined(typeof(ExtensionAttribute), false))
                 .Where(t =>
@@ -130,7 +128,7 @@ namespace NLua.Extensions
         /// <returns></returns>
         public static MethodInfo GetExtensionMethod(this Type t, string name, IEnumerable<Assembly> assemblies = null)
         {
-            var mi = t.GetExtensionMethods(assemblies).Where(method => method.Name == name).ToArray();
+            var mi = t.GetExtensionMethods(name, assemblies).ToArray();
             if (mi.Length == 0)
                 return null;
             return mi[0];

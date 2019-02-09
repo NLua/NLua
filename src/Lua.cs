@@ -901,6 +901,9 @@ namespace NLua
 
         public Dictionary<object, object> GetTableDict(LuaTable table)
         {
+            if (table == null)
+                throw new ArgumentNullException(nameof(table));
+
             var dict = new Dictionary<object, object>();
             int oldTop = _luaState.GetTop();
             _translator.Push(_luaState, table);
