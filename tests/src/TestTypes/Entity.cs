@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace NLuaTest.Mock
+namespace NLuaTest.TestTypes
 {
     public class Entity
     {

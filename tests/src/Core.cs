@@ -17,7 +17,7 @@ namespace NLuaTest
 #endif
     public class Core
     {
-        Lua lua = null;
+        Lua _lua;
 
         string GetTestPath(string name)
         {
@@ -27,7 +27,7 @@ namespace NLuaTest
 
         void AssertFile(string path)
         {
-            lua.DoFile(path);
+            _lua.DoFile(path);
         }
 
         void TestLuaFile(string name)
@@ -39,10 +39,10 @@ namespace NLuaTest
         [SetUp]
         public void Setup()
         {
-            lua = new Lua();
-            lua.RegisterFunction("WriteLineString", typeof(Console).GetMethod("WriteLine", new Type[] { typeof(String) }));
+            _lua = new Lua();
+            _lua.RegisterFunction("WriteLineString", typeof(Console).GetMethod("WriteLine", new Type[] { typeof(String) }));
 
-            lua.DoString(@"
+            _lua.DoString(@"
             function print (param)
                 WriteLineString (tostring(param))
             end
@@ -52,8 +52,8 @@ namespace NLuaTest
         [TearDown]
         public void TearDown()
         {
-            lua.Dispose();
-            lua = null;
+            _lua.Dispose();
+            _lua = null;
         }
 
         [Test]
@@ -105,6 +105,5 @@ namespace NLuaTest
         {
             TestLuaFile("sort");
         }
-
     }
 }
