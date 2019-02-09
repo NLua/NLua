@@ -355,27 +355,37 @@ namespace NLua
             }
 
             object index = translator.GetObject(luaState, 2);
-            string methodName = index as string;        // will be null if not a string arg
+            string methodName = index as string; // will be null if not a string arg
             var objType = obj.GetType();
             var proxyType = new ProxyType(objType);
 
             // Handle the most common case, looking up the method by name. 
             // CP: This will fail when using indexers and attempting to get a value with the same name as a property of the object, 
             // ie: xmlelement['item'] <- item is a property of xmlelement
-            try
-            {
-                if (!string.IsNullOrEmpty(methodName) && IsMemberPresent(proxyType, methodName))
-                    return GetMember(luaState, proxyType, obj, methodName, BindingFlags.Instance);
-            }
-            catch
-            {
-                Debug.WriteLine("[Exception] Fail to fetch Member: {0}", methodName);
-            }
 
+            if (!string.IsNullOrEmpty(methodName) && IsMemberPresent(proxyType, methodName))
+                return GetMember(luaState, proxyType, obj, methodName, BindingFlags.Instance);
+
+            int fallback = GetMethodFallback(luaState, objType, obj, index, methodName);
+            if (fallback != 0)
+                return fallback;
+
+            luaState.PushBoolean(false);
+            return 2;
+        }
+
+
+        private int GetMethodFallback
+        (LuaState luaState,
+         Type objType,
+         object obj,
+         object index,
+         string methodName)
+        {
             // Try to access by array if the type is right and index is an int (lua numbers always come across as double)
             if (objType.IsArray && index is double)
             {
-                int intIndex = (int)((double)index);
+                int intIndex = (int)(double)index;
 
                 Type type = objType.UnderlyingSystemType;
 
@@ -383,77 +393,78 @@ namespace NLua
                 {
                     float[] arr = (float[])obj;
                     translator.Push(luaState, arr[intIndex]);
+                    return 0;
                 }
-                else if (type == typeof(double[]))
+                if (type == typeof(double[]))
                 {
                     double[] arr = (double[])obj;
                     translator.Push(luaState, arr[intIndex]);
+                    return 0;
                 }
-                else if (type == typeof(int[]))
+                if (type == typeof(int[]))
                 {
                     int[] arr = (int[])obj;
                     translator.Push(luaState, arr[intIndex]);
+                    return 0;
+                }
+
+                object[] arrObj = (object[])obj;
+                translator.Push(luaState, arrObj[intIndex]);
+                return 0;
+            }
+
+            object method;
+            if (!string.IsNullOrEmpty(methodName) && TryGetExtensionMethod(objType, methodName, out method))
+            {
+                return PushExtensionMethod(luaState, objType, obj, methodName, method);
+            }
+            // Try to use get_Item to index into this .net object
+            var methods = objType.GetMethods();
+
+            foreach (var methodInfo in methods)
+            {
+                if (methodInfo.Name != "get_Item")
+                    continue;
+
+                // Check if the signature matches the input
+                if (methodInfo.GetParameters().Length != 1)
+                    continue;
+
+                var actualParams = methodInfo.GetParameters();
+
+                if (actualParams.Length != 1)
+                {
+                    translator.ThrowError(luaState, "method not found (or no indexer): " + index);
+                    luaState.PushNil();
                 }
                 else
                 {
-                    object[] arr = (object[])obj;
-                    translator.Push(luaState, arr[intIndex]);
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(methodName) && IsExtensionMethodPresent(objType, methodName))
-                {
-                    return GetExtensionMethod(luaState, objType, obj, methodName);
-                }
-                // Try to use get_Item to index into this .net object
-                var methods = objType.GetMethods();
+                    // Get the index in a form acceptable to the getter
+                    index = translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
+                    object[] args = new object[1];
 
-                foreach (var methodInfo in methods)
-                {
-                    if (methodInfo.Name != "get_Item")
-                        continue;
+                    // Just call the indexer - if out of bounds an exception will happen
+                    args[0] = index;
 
-                    // Check if the signature matches the input
-                    if (methodInfo.GetParameters().Length != 1)
-                        continue;
-
-                    var actualParams = methodInfo.GetParameters();
-
-                    if (actualParams.Length != 1)
+                    try
                     {
-                        translator.ThrowError(luaState, "method not found (or no indexer): " + index);
+                        object result = methodInfo.Invoke(obj, args);
+                        translator.Push(luaState, result);
+                    }
+                    catch (TargetInvocationException e)
+                    {
+                        // Provide a more readable description for the common case of key not found
+                        if (e.InnerException is KeyNotFoundException)
+                            translator.ThrowError(luaState, "key '" + index + "' not found ");
+                        else
+                            translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
+
                         luaState.PushNil();
                     }
-                    else
-                    {
-                        // Get the index in a form acceptable to the getter
-                        index = translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
-                        object[] args = new object[1];
-
-                        // Just call the indexer - if out of bounds an exception will happen
-                        args[0] = index;
-
-                        try
-                        {
-                            object result = methodInfo.Invoke(obj, args);
-                            translator.Push(luaState, result);
-                        }
-                        catch (TargetInvocationException e)
-                        {
-                            // Provide a more readable description for the common case of key not found
-                            if (e.InnerException is KeyNotFoundException)
-                                translator.ThrowError(luaState, "key '" + index + "' not found ");
-                            else
-                                translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
-
-                            luaState.PushNil();
-                        }
-                    }
                 }
             }
-            luaState.PushBoolean(false);
-            return 2;
+
+            return 0;
         }
 
         /*
@@ -522,19 +533,25 @@ namespace NLua
             return members.Length > 0;
         }
 
-        bool IsExtensionMethodPresent(Type type, string name)
+        bool TryGetExtensionMethod(Type type, string name, out object method)
         {
             object cachedMember = CheckMemberCache(type, name);
 
             if (cachedMember != null)
+            {
+                method = cachedMember;
                 return true;
+            }
 
-            return translator.IsExtensionMethodPresent(type, name);
+            MethodInfo methodInfo;
+            bool found = translator.TryGetExtensionMethod(type, name, out methodInfo);
+            method = methodInfo;
+            return found;
         }
 
-        int GetExtensionMethod(LuaState luaState, Type type, object obj, string name)
+        int PushExtensionMethod(LuaState luaState, Type type, object obj, string name, object method)
         {
-            var cachedMember = CheckMemberCache(type, name) as LuaNativeFunction;
+            var cachedMember = method as LuaNativeFunction;
 
             if (cachedMember != null)
             {
@@ -543,7 +560,7 @@ namespace NLua
                 return 2;
             }
 
-            MethodInfo methodInfo = translator.GetExtensionMethod(type, name);
+            var methodInfo = (MethodInfo)method;
             var methodWrapper = new LuaMethodWrapper(translator, obj, new ProxyType(type), methodInfo);
             var invokeDelegate = new LuaNativeFunction(methodWrapper.InvokeFunction);
 

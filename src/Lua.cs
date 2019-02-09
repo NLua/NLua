@@ -776,6 +776,7 @@ namespace NLua
             CodeGeneration.Instance.RegisterLuaClassType(klass, luaClass);
         }
 
+        // ReSharper disable once InconsistentNaming
         public void LoadCLRPackage()
         {
             _luaState.DoString(clr_package);
@@ -934,7 +935,7 @@ namespace NLua
         {
             if (_hookCallback == null)
             {
-                _hookCallback = new LuaHookFunction(Lua.DebugHookCallback);
+                _hookCallback = DebugHookCallback;
                 _luaState.SetHook(_hookCallback, mask, count);
             }
 

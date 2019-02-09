@@ -331,9 +331,10 @@ namespace NLua
             return null;
         }
 
-        public bool IsExtensionMethodPresent(Type type, string name)
+        public bool TryGetExtensionMethod(Type type, string name, out MethodInfo method)
         {
-            return GetExtensionMethod(type, name) != null;
+            method = GetExtensionMethod(type, name);
+            return method != null;
         }
 
         public MethodInfo GetExtensionMethod(Type type, string name)
