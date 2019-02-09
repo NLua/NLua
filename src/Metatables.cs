@@ -313,7 +313,7 @@ namespace NLua
                 var type = luaState.Type(i);
                 // we dump stacks when deep in calls, calling typename while the stack is in flux can fail sometimes, so manually check for key types
                 string typestr = (type == LuaType.Table) ? "table" : luaState.TypeName(type);
-                string strrep = luaState.ToString(i);
+                string strrep = luaState.ToString(i, false);
 
                 if (type == LuaType.UserData)
                 {
@@ -483,7 +483,7 @@ namespace NLua
                 return 2;
             }
 
-            string methodName = luaState.ToString(2);
+            string methodName = luaState.ToString(2, false);
 
             if (string.IsNullOrEmpty(methodName))
             {
@@ -855,7 +855,7 @@ namespace NLua
             }
 
             // We only look up property names by string
-            string fieldName = luaState.ToString(2);
+            string fieldName = luaState.ToString(2, false);
             if (string.IsNullOrEmpty(fieldName) || !(char.IsLetter(fieldName[0]) || fieldName[0] == '_'))
             {
                 detailMessage = "Invalid property name";
@@ -978,7 +978,7 @@ namespace NLua
                 return 1;
             }
 
-            string methodName = luaState.ToString(2);
+            string methodName = luaState.ToString(2, false);
 
             if (string.IsNullOrEmpty(methodName))
             {
@@ -1305,7 +1305,7 @@ namespace NLua
                 {  // Type checking
                     var value = extractValue(luaState, currentLuaParam);
                     paramList.Add(value);
-                    int index = paramList.LastIndexOf(value);
+                    int index = paramList.Count - 1;
                     var methodArg = new MethodArgs();
                     methodArg.Index = index;
                     methodArg.ExtractValue = extractValue;
@@ -1348,16 +1348,8 @@ namespace NLua
         /// <returns></returns>
         private bool IsTypeCorrect(LuaState luaState, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)
         {
-            try
-            {
-                return (extractValue = translator.typeChecker.CheckLuaType(luaState, currentLuaParam, currentNetParam.ParameterType)) != null;
-            }
-            catch
-            {
-                extractValue = null;
-                Debug.WriteLine("Type wasn't correct");
-                return false;
-            }
+            extractValue = translator.typeChecker.CheckLuaType(luaState, currentLuaParam, currentNetParam.ParameterType);
+            return extractValue != null;
         }
 
         private bool IsParamsArray(LuaState luaState, int nLuaParams, int currentLuaParam, ParameterInfo currentNetParam, out ExtractValue extractValue)

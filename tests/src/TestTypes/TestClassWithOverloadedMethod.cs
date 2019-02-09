@@ -14,5 +14,15 @@
             CallsToIntFunc++;
         }
 
+        public void Func2(string param, string param2)
+        {
+            CallsToStringFunc++;
+        }
+
+        public void Func2(string param, int param2)
+        {
+            CallsToIntFunc++;
+        }
+
     }
 }

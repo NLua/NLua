@@ -205,8 +205,7 @@ namespace NLua.Method
                     foreach (var member in _members)
                     {
                         candidateName = member.ReflectedType.Name + "." + member.Name;
-                        var m = (MethodInfo)member;
-                        bool isMethod = _translator.MatchParameters(luaState, m, ref _lastCalledMethod);
+                        bool isMethod = _translator.MatchParameters(luaState, member, ref _lastCalledMethod);
 
                         if (isMethod)
                         {

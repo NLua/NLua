@@ -16,25 +16,25 @@ namespace NLua
         public CheckType(ObjectTranslator translator)
         {
             _translator = translator;
-            _extractValues.Add(GetExtractDictionaryKey(typeof(object)), GetAsObject);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(sbyte)), GetAsSbyte);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(byte)), GetAsByte);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(short)), GetAsShort);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(ushort)), GetAsUshort);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(int)), GetAsInt);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(uint)), GetAsUint);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(long)), GetAsLong);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(ulong)), GetAsUlong);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(double)), GetAsDouble);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(char)), GetAsChar);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(float)), GetAsFloat);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(decimal)), GetAsDecimal);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(bool)), GetAsBoolean);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(string)), GetAsString);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(char[])), GetAsCharArray);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(LuaFunction)), GetAsFunction);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(LuaTable)), GetAsTable);
-            _extractValues.Add(GetExtractDictionaryKey(typeof(LuaUserData)), GetAsUserdata);
+            _extractValues.Add(typeof(object), GetAsObject);
+            _extractValues.Add(typeof(sbyte), GetAsSbyte);
+            _extractValues.Add(typeof(byte), GetAsByte);
+            _extractValues.Add(typeof(short), GetAsShort);
+            _extractValues.Add(typeof(ushort), GetAsUshort);
+            _extractValues.Add(typeof(int), GetAsInt);
+            _extractValues.Add(typeof(uint), GetAsUint);
+            _extractValues.Add(typeof(long), GetAsLong);
+            _extractValues.Add(typeof(ulong), GetAsUlong);
+            _extractValues.Add(typeof(double), GetAsDouble);
+            _extractValues.Add(typeof(char), GetAsChar);
+            _extractValues.Add(typeof(float), GetAsFloat);
+            _extractValues.Add(typeof(decimal), GetAsDecimal);
+            _extractValues.Add(typeof(bool), GetAsBoolean);
+            _extractValues.Add(typeof(string), GetAsString);
+            _extractValues.Add(typeof(char[]), GetAsCharArray);
+            _extractValues.Add(typeof(LuaFunction), GetAsFunction);
+            _extractValues.Add(typeof(LuaTable), GetAsTable);
+            _extractValues.Add(typeof(LuaUserData), GetAsUserdata);
             _extractNetObject = GetAsNetObject;
         }
 
@@ -52,8 +52,7 @@ namespace NLua
             if (paramType.IsByRef)
                 paramType = paramType.GetElementType();
 
-            var extractKey = GetExtractDictionaryKey(paramType);
-            return _extractValues.ContainsKey(extractKey) ? _extractValues[extractKey] : _extractNetObject;
+            return _extractValues.ContainsKey(paramType) ? _extractValues[paramType] : _extractNetObject;
         }
 
         internal ExtractValue CheckLuaType(LuaState luaState, int stackPos, Type paramType)
@@ -70,7 +69,6 @@ namespace NLua
                 paramType = underlyingType;  // Silently convert nullable types to their non null requics
             }
 
-            var extractKey = GetExtractDictionaryKey(paramType);
 
             bool netParamIsNumeric = paramType == typeof(int) ||
                                      paramType == typeof(uint) ||
@@ -91,63 +89,63 @@ namespace NLua
                 {
                     // Return the correct extractor anyways
                     if (netParamIsNumeric || paramType == typeof(bool))
-                        return _extractValues[extractKey];
+                        return _extractValues[paramType];
                     return _extractNetObject;
                 }
             }
 
-            if (paramType.Equals(typeof(object)))
-                return _extractValues[extractKey];
+            if (paramType == typeof(object))
+                return _extractValues[paramType];
 
             //CP: Added support for generic parameters
             if (paramType.IsGenericParameter)
             {
                 if (luatype == LuaType.Boolean)
-                    return _extractValues[GetExtractDictionaryKey(typeof(bool))];
+                    return _extractValues[typeof(bool)];
                 if (luatype == LuaType.String)
-                    return _extractValues[GetExtractDictionaryKey(typeof(string))];
+                    return _extractValues[typeof(string)];
                 if (luatype == LuaType.Table)
-                    return _extractValues[GetExtractDictionaryKey(typeof(LuaTable))];
+                    return _extractValues[typeof(LuaTable)];
                 if (luatype == LuaType.UserData)
-                    return _extractValues[GetExtractDictionaryKey(typeof(object))];
+                    return _extractValues[typeof(object)];
                 if (luatype == LuaType.Function)
-                    return _extractValues[GetExtractDictionaryKey(typeof(LuaFunction))];
+                    return _extractValues[typeof(LuaFunction)];
                 if (luatype == LuaType.Number)
-                    return _extractValues[GetExtractDictionaryKey(typeof(double))];
+                    return _extractValues[typeof(double)];
             }
             bool netParamIsString = paramType == typeof(string) || paramType == typeof(char[]);
 
             if (netParamIsNumeric)
             {
                 if (luaState.IsNumber(stackPos) && !netParamIsString)
-                    return _extractValues[extractKey];
+                    return _extractValues[paramType];
             }
             else if (paramType == typeof(bool))
             {
                 if (luaState.IsBoolean(stackPos))
-                    return _extractValues[extractKey];
+                    return _extractValues[paramType];
             }
             else if (netParamIsString)
             {
                 if (luaState.IsString(stackPos))
-                    return _extractValues[extractKey];
+                    return _extractValues[paramType];
                 if (luatype == LuaType.Nil)
                     return _extractNetObject; // kevinh - silently convert nil to a null string pointer
             }
             else if (paramType == typeof(LuaTable))
             {
                 if (luatype == LuaType.Table || luatype == LuaType.Nil)
-                    return _extractValues[extractKey];
+                    return _extractValues[paramType];
             }
             else if (paramType == typeof(LuaUserData))
             {
                 if (luatype == LuaType.UserData || luatype == LuaType.Nil)
-                    return _extractValues[extractKey];
+                    return _extractValues[paramType];
             }
             else if (paramType == typeof(LuaFunction))
             {
                 if (luatype == LuaType.Function || luatype == LuaType.Nil)
-                    return _extractValues[extractKey];
+                    return _extractValues[paramType];
             }
             else if (typeof(Delegate).IsAssignableFrom(paramType) && luatype == LuaType.Function)
                 return new DelegateGenerator(_translator, paramType).ExtractGenerated;
@@ -164,7 +162,7 @@ namespace NLua
                 {
                     object obj = _translator.GetNetObject(luaState, -1);
                     luaState.SetTop(-2);
-                    if (obj != null && paramType.IsAssignableFrom(obj.GetType()))
+                    if (obj != null && paramType.IsInstanceOfType(obj))
                         return _extractNetObject;
                 }
                 else
@@ -173,17 +171,13 @@ namespace NLua
             else
             {
                 object obj = _translator.GetNetObject(luaState, stackPos);
-                if (obj != null && paramType.IsAssignableFrom(obj.GetType()))
+                if (obj != null && paramType.IsInstanceOfType(obj))
                     return _extractNetObject;
             }
 
             return null;
         }
 
-        Type GetExtractDictionaryKey(Type targetType)
-        {
-            return targetType;
-        }
 
         /*
          * The following functions return the value in the Lua stack
@@ -309,7 +303,7 @@ namespace NLua
         {
             if (!luaState.IsString(stackPos))
                 return null;
-            string retVal = luaState.ToString(stackPos);
+            string retVal = luaState.ToString(stackPos, false);
             return retVal.ToCharArray();
         }
 
@@ -317,7 +311,7 @@ namespace NLua
         {
             if (!luaState.IsString(stackPos))
                 return null;
-            string retVal = luaState.ToString(stackPos);
+            string retVal = luaState.ToString(stackPos, false);
             return retVal;
         }
 
