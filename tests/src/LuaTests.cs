@@ -1,161 +1,29 @@
 ﻿using System;
-using System.IO;
 using System.Text;
-using NLuaTest.Mock;
 using System.Reflection;
 using System.Threading;
-using LoadFileTests;
+
+
 using NLua;
 using NLua.Exceptions;
 
-#if __IOS__ || __TVOS__ || __WATCHOS__
-using Foundation;
-#endif
+using LoadFileTests;
+using NLuaTest.TestTypes;
+
+
 
 using NUnit.Framework;
+// ReSharper disable StringLiteralTypo
 
 namespace NLuaTest
 {
-    public class parameter
-    {
-        public string field1 = "parameter-field1";
-    }
-
-#if __IOS__ || __TVOS__ || __WATCHOS__
-    [Preserve (AllMembers = true)]
-#endif
-    public class master
-    {
-        public static string read()
-        {
-            return "test-master";
-        }
-
-        public static string read(parameter test)
-        {
-            return test.field1;
-        }
-    }
-
-#if __IOS__ || __TVOS__ || __WATCHOS__
-    [Preserve (AllMembers = true)]
-#endif
-    public class testClass : master
-    {
-        public String strData;
-        public int intData;
-        public static string read2()
-        {
-            return "test";
-        }
-
-        public static string read(int test)
-        {
-            return "int-test";
-        }
-    }
-
-#if __IOS__ || __TVOS__ || __WATCHOS__
-    [Preserve (AllMembers = true)]
-#endif
-    public class DefaultElementModel
-    {
-        public Action<double> DrawMe { get; set; }
-    }
-
-#if __IOS__ || __TVOS__ || __WATCHOS__
-    [Preserve (AllMembers = true)]
-#endif
-    public class TestCaseName
-    {
-        public string name = "name";
-        public string Name => "**" + name + "**";
-    }
-
-
-
-#if __IOS__ || __TVOS__ || __WATCHOS__
-    [Preserve (AllMembers = true)]
-#endif
-    public class Vector
-    {
-        public double x;
-        public double y;
-        public static Vector operator *(float k, Vector v)
-        {
-            var r = new Vector();
-            r.x = v.x * k;
-            r.y = v.y * k;
-            return r;
-        }
-
-        public static Vector operator *(Vector v, float k)
-        {
-            var r = new Vector();
-            r.x = v.x * k;
-            r.y = v.y * k;
-            return r;
-        }
-
-        public void Func()
-        {
-            Console.WriteLine("Func");
-        }
-    }
-
-    public static class VectorExtension
-    {
-        public static double Length(this Vector v)
-        {
-            return v.x * v.x + v.y * v.y;
-        }
-    }
-
-#if __IOS__ || __TVOS__ || __WATCHOS__
-    [Preserve (AllMembers = true)]
-#endif
-    public class Person
-    {
-        public string firstName;
-    }
-
-#if __IOS__ || __TVOS__ || __WATCHOS__
-    [Preserve (AllMembers = true)]
-#endif
-    public class Employee : Person
-    {
-        public string occupation;
-    }
-
-    public static class PersonExentsions
-    {
-        public static string GetFirstName(this Person argPerson)
-        {
-            return argPerson.firstName;
-        }
-    }
-
     [TestFixture]
-#if __IOS__ || __TVOS__ || __WATCHOS__
-    [Preserve (AllMembers = true)]
-#endif
     public class LuaTests
     {
         public static readonly char UnicodeChar = '\uE007';
-        public static string UnicodeString
-        {
-            get
-            {
-                return Convert.ToString(UnicodeChar);
-            }
-        }
-        public static string UnicodeStringRussian
-        {
-            get
-            {
-                return "Файл";
-            }
-        }
+        public static string UnicodeString => Convert.ToString(UnicodeChar);
+        public static string UnicodeStringRussian => "Файл";
+
         /*
         * Tests capturing an exception
         */
@@ -165,12 +33,13 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
-                lua.DoString("test=TestClass()");
-                lua.DoString("err,errMsg=pcall(test.exceptionMethod,test)");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass = luanet.import_type('NLuaTest.TestTypes.TestClass')");
+                lua.DoString("test = TestClass()");
+                lua.DoString("err,errMsg = pcall(test.exceptionMethod,test)");
                 bool err = (bool)lua["err"];
-                Exception errMsg = (Exception)lua["errMsg"];
+
+                var errMsg = (Exception)lua["errMsg"];
                 Assert.AreEqual(false, err);
                 Assert.AreNotEqual(null, errMsg.InnerException);
                 Assert.AreEqual("exception test", errMsg.InnerException.Message);
@@ -189,8 +58,8 @@ namespace NLuaTest
                 lua["funcObject"] = lua.GetFunction("someFunc");
 
                 //lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("b = TestClass():TestLuaFunction(funcObject)[0]");
                 Assert.AreEqual(3, lua["b"]);
                 lua.DoString("a = TestClass():TestLuaFunction(nil)");
@@ -207,8 +76,8 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
 
                 try
@@ -235,8 +104,8 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("val=test.NullableBool");
                 Assert.AreEqual(null, (object)lua["val"]);
@@ -254,10 +123,10 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
-                lua.DoString("TestStruct=luanet.import_type('NLuaTest.Mock.TestStruct')");
+                lua.DoString("TestStruct=luanet.import_type('NLuaTest.TestTypes.TestStruct')");
                 lua.DoString("struct=TestStruct(2)");
                 lua.DoString("test.Struct = struct");
                 lua.DoString("val=test.Struct.val");
@@ -273,8 +142,8 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestStruct=luanet.import_type('NLuaTest.Mock.TestStruct')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestStruct=luanet.import_type('NLuaTest.TestTypes.TestStruct')");
                 lua.DoString("struct=TestStruct()");
                 Assert.AreEqual(new TestStruct(), (TestStruct)lua["struct"]);
             }
@@ -285,8 +154,8 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestStruct=luanet.import_type('NLuaTest.Mock.TestStruct')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestStruct=luanet.import_type('NLuaTest.TestTypes.TestStruct')");
                 lua.DoString("struct1=TestStruct(0)");
                 lua.DoString("struct2=TestStruct(0)");
                 lua.DoString("struct2.val=1");
@@ -299,8 +168,8 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestEnum=luanet.import_type('NLuaTest.Mock.TestEnum')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestEnum=luanet.import_type('NLuaTest.TestTypes.TestEnum')");
                 lua.DoString("enum1=TestEnum.ValueA");
                 lua.DoString("enum2=TestEnum.ValueB");
                 Assert.AreEqual(true, (bool)lua.DoString("return enum1 ~= enum2")[0]);
@@ -314,8 +183,8 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("test:MethodOverload()");
                 lua.DoString("test:MethodOverload(test)");
@@ -356,8 +225,6 @@ namespace NLuaTest
                 "abs = math.abs;"
             );
             lua.DoString("function calcVP(a,b) return a+b end");
-            //LuaFunction lf = lua.GetFunction("calcVP");
-            //lf.Call(i, 20);
         }
 
         [Test]
@@ -406,8 +273,8 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
 
                 try
@@ -433,7 +300,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
                 lua.RegisterFunction("p", null, typeof(Console).GetMethod("WriteLine", new [] { typeof(string) }));
                 lua.DoString("p('Foo')");
                 // Yet this works...
@@ -451,11 +318,11 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test={}");
                 lua.DoString("function test:overridableMethod(x,y) return x*y; end");
-                lua.DoString("luanet.make_object(test,'NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.make_object(test,'NLuaTest.TestTypes.TestClass')");
                 lua.DoString("a=TestClass.callOverridable(test,2,3)");
                 int a = (int)lua.GetNumber("a");
                 lua.DoString("luanet.free_object(test)");
@@ -473,17 +340,16 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test={}");
                 lua.DoString("function test:overridableMethod(x,y) return x*y; end");
-                lua.DoString("luanet.make_object(test,'NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.make_object(test,'NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test:setVal(3)");
                 lua.DoString("a=test.testval");
                 int a = (int)lua.GetNumber("a");
                 lua.DoString("luanet.free_object(test)");
                 Assert.AreEqual(3, a);
-                //Console.WriteLine("interface returned: "+a);
             }
         }
 
@@ -499,16 +365,7 @@ namespace NLuaTest
             return val * val2;
         }
 
-        class LuaEventArgsHandler : NLua.Method.LuaDelegate
-        {
-            void CallFunction(object sender, EventArgs eventArgs)
-            {
-                object[] args = new object[] { sender, eventArgs };
-                object[] inArgs = new object[] { sender, eventArgs };
-                int[] outArgs = new int[] { };
-                base.CallFunction(args, inArgs, outArgs);
-            }
-        }
+        
 
         [Test]
         public void TestEventException()
@@ -516,7 +373,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 //Register a C# function
-                MethodInfo testException = this.GetType().GetMethod("_TestException", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance, null, new Type[] {
+                MethodInfo testException = GetType().GetMethod("_TestException", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance, null, new Type[] {
                                 typeof(float),
                                 typeof(float)
                         }, null);
@@ -540,7 +397,7 @@ namespace NLuaTest
                 Entity entity = new Entity();
                 //Register the entity object with the event handler inside lua
                 LuaFunction lf = lua.GetFunction("SubscribeEntity");
-                lf.Call(new object[1] { entity });
+                lf.Call(entity);
 
                 try
                 {
@@ -609,8 +466,8 @@ namespace NLuaTest
 
                 try
                 {
-                    lua.DoString("luanet.load_assembly('NLuaTest')");
-                    lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                    lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                    lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                     lua.DoString("test=TestClass(56)");
                     lua.DoString("genericMethod2(test)");
                 }
@@ -619,7 +476,7 @@ namespace NLuaTest
                 }
 
                 Assert.AreEqual(true, classWithGenericMethod.GenericMethodSuccess);
-                Assert.AreEqual(56, (classWithGenericMethod.PassedValue as TestClass).val);
+                Assert.AreEqual(56, (classWithGenericMethod.PassedValue as TestTypes.TestClass).val);
             }
         }
 
@@ -646,12 +503,13 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                TestTypes.TestClass t1 = new TestTypes.TestClass();
                 lua["netobj"] = t1;
                 lua.DoString("a,b,c=netobj:outValMutiple(2)");
                 int a = (int)lua.GetNumber("a");
-                string b = (string)lua.GetString("b");
-                string c = (string)lua.GetString("c");
+                string b = lua.GetString("b");
+                string c = lua.GetString("c");
+
                 Assert.AreEqual(2, a);
                 Assert.AreNotEqual(null, b);
                 Assert.AreNotEqual(null, c);
@@ -720,8 +578,8 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a = test:NullableMethod(nil)");
                 Assert.AreEqual(null, lua["a"]);
@@ -774,7 +632,7 @@ namespace NLuaTest
                 lua.DoString("a=2");
                 lua["a"] = 3;
                 double num = lua.GetNumber("a");
-                //Console.WriteLine("a="+num);
+
                 Assert.AreEqual(num, 3d);
             }
         }
@@ -849,7 +707,6 @@ namespace NLuaTest
             {
                 lua.DoString("a={b={c=\"test\"}}");
                 string str = lua.GetString("a.b.c");
-                //Console.WriteLine("a.b.c="+str);
                 Assert.AreEqual(str, "test");
             }
         }
@@ -865,7 +722,6 @@ namespace NLuaTest
                 lua.DoString("a={b={c=\"test\"}}");
                 lua["a.b.c"] = "new test";
                 string str = lua.GetString("a.b.c");
-                //Console.WriteLine("a.b.c="+str);
                 Assert.AreEqual(str, "new test");
             }
         }
@@ -881,7 +737,6 @@ namespace NLuaTest
                 LuaTable tab = lua.GetTable("b");
                 lua["a.b"] = tab;
                 double num = lua.GetNumber("a.b.c");
-                //Console.WriteLine("a.b.c="+num);
                 Assert.AreEqual(num, 3d);
             }
         }
@@ -896,7 +751,6 @@ namespace NLuaTest
                 lua.DoString("a={b={c=2}}");
                 LuaTable tab = lua.GetTable("a.b");
                 double num = (double)tab["c"];
-                //Console.WriteLine("a.b.c="+num);
                 Assert.AreEqual(num, 2d);
             }
         }
@@ -912,7 +766,6 @@ namespace NLuaTest
                 lua.DoString("a={b={c=2}}");
                 LuaTable tab = lua.GetTable("a");
                 double num = (double)tab["b.c"];
-                //Console.WriteLine("a.b.c="+num);
                 Assert.AreEqual(num, 2d);
             }
         }
@@ -928,7 +781,6 @@ namespace NLuaTest
                 LuaTable tab = lua.GetTable("a.b");
                 tab["c"] = 3;
                 double num = lua.GetNumber("a.b.c");
-                //Console.WriteLine("a.b.c="+num);
                 Assert.AreEqual(num, 3d);
             }
         }
@@ -945,7 +797,6 @@ namespace NLuaTest
                 LuaTable tab = lua.GetTable("a");
                 tab["b.c"] = 3;
                 double num = lua.GetNumber("a.b.c");
-                //Console.WriteLine("a.b.c="+num);
                 Assert.AreEqual(num, 3d);
             }
         }
@@ -960,7 +811,6 @@ namespace NLuaTest
                 lua.DoString("a={b={c=\"test\"}}");
                 LuaTable tab = lua.GetTable("a.b");
                 string str = (string)tab["c"];
-                //Console.WriteLine("a.b.c="+str);
                 Assert.AreEqual(str, "test");
             }
         }
@@ -976,7 +826,6 @@ namespace NLuaTest
                 lua.DoString("a={b={c=\"test\"}}");
                 LuaTable tab = lua.GetTable("a");
                 string str = (string)tab["b.c"];
-                //Console.WriteLine("a.b.c="+str);
                 Assert.AreEqual(str, "test");
             }
         }
@@ -992,7 +841,6 @@ namespace NLuaTest
                 LuaTable tab = lua.GetTable("a.b");
                 tab["c"] = "new test";
                 string str = lua.GetString("a.b.c");
-                //Console.WriteLine("a.b.c="+str);
                 Assert.AreEqual(str, "new test");
             }
         }
@@ -1009,7 +857,6 @@ namespace NLuaTest
                 LuaTable tab = lua.GetTable("a");
                 tab["b.c"] = "new test";
                 string str = lua.GetString("a.b.c");
-                //Console.WriteLine("a.b.c="+str);
                 Assert.AreEqual(str, "new test");
             }
         }
@@ -1024,7 +871,6 @@ namespace NLuaTest
                 lua.DoString("a=2\nfunction f()\na=3\nend");
                 lua.GetFunction("f").Call();
                 double num = lua.GetNumber("a");
-                //Console.WriteLine("a="+num);
                 Assert.AreEqual(num, 3d);
             }
         }
@@ -1039,7 +885,6 @@ namespace NLuaTest
                 lua.DoString("a=2\nfunction f(x)\na=a+x\nend");
                 lua.GetFunction("f").Call(1);
                 double num = lua.GetNumber("a");
-                //Console.WriteLine("a="+num);
                 Assert.AreEqual(num, 3d);
             }
         }
@@ -1054,7 +899,6 @@ namespace NLuaTest
                 lua.DoString("a=2\nfunction f(x,y)\na=x+y\nend");
                 lua.GetFunction("f").Call(1, 3);
                 double num = lua.GetNumber("a");
-                //Console.WriteLine("a="+num);
                 Assert.AreEqual(num, 4d);
             }
         }
@@ -1068,7 +912,7 @@ namespace NLuaTest
             {
                 lua.DoString("function f(x)\nreturn x+2\nend");
                 object[] ret = lua.GetFunction("f").Call(3);
-                //Console.WriteLine("ret="+ret[0]);
+
                 Assert.AreEqual(1, ret.Length);
                 Assert.AreEqual(5, (double)ret[0]);
             }
@@ -1083,7 +927,7 @@ namespace NLuaTest
             {
                 lua.DoString("function f(x,y)\nreturn x,x+y\nend");
                 object[] ret = lua.GetFunction("f").Call(3, 2);
-                //Console.WriteLine("ret="+ret[0]+","+ret[1]);
+
                 Assert.AreEqual(2, ret.Length);
                 Assert.AreEqual(3, (double)ret[0]);
                 Assert.AreEqual(5, (double)ret[1]);
@@ -1099,7 +943,7 @@ namespace NLuaTest
             {
                 lua.DoString("a={}\nfunction a.f(x,y)\nreturn x,x+y\nend");
                 object[] ret = lua.GetFunction("a.f").Call(3, 2);
-                //Console.WriteLine("ret="+ret[0]+","+ret[1]);
+
                 Assert.AreEqual(2, ret.Length);
                 Assert.AreEqual(3, (double)ret[0]);
                 Assert.AreEqual(5, (double)ret[1]);
@@ -1113,12 +957,12 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                var t1 = new TestTypes.TestClass();
                 t1.testval = 4;
                 lua["netobj"] = t1;
                 object o = lua["netobj"];
-                Assert.AreEqual(true, o is TestClass);
-                TestClass t2 = (TestClass)lua["netobj"];
+                Assert.AreEqual(true, o is TestTypes.TestClass);
+                var t2 = (TestTypes.TestClass)lua["netobj"];
                 Assert.AreEqual(t2.testval, 4);
                 Assert.AreEqual(t1, t2);
             }
@@ -1126,20 +970,20 @@ namespace NLuaTest
         ///*
         // * Tests if CLR object is being correctly collected by Lua
         // */
-        //[Test]
-        //public void GarbageCollection()
-        //{
-        //    using (Lua lua = new Lua())
-        //    {
-        //        TestClass t1 = new TestClass();
-        //        t1.testval = 4;
-        //        lua["netobj"] = t1;
-        //        TestClass t2 = (TestClass)lua["netobj"];
-        //        Assert.True(lua[0] != null);
-        //        lua.DoString("netobj=nil;collectgarbage();");
-        //        Assert.True(lua.translator.objects[0] == null);
-        //    }
-        //}
+        [Test]
+        public void GarbageCollection()
+        {
+            using (Lua lua = new Lua())
+            {
+                TestClass t1 = new TestClass();
+                lua["netobj"] = t1;
+                TestClass t2 = (TestClass)lua["netobj"];
+                Assert.IsNotNull(t2);
+                lua.DoString("netobj=nil;collectgarbage();");
+                t2 = (TestClass)lua["netobj"];
+                Assert.IsNull(t2);
+            }
+        }
         /*
         * Tests setting of a table field to a CLR object value
         */
@@ -1150,11 +994,11 @@ namespace NLuaTest
             {
                 lua.DoString("a={b={c=\"test\"}}");
                 LuaTable tab = lua.GetTable("a.b");
-                TestClass t1 = new TestClass();
+                var t1 = new TestTypes.TestClass();
                 t1.testval = 4;
                 tab["c"] = t1;
-                TestClass t2 = (TestClass)lua["a.b.c"];
-                //Console.WriteLine("a.b.c="+t2.testval);
+                var t2 = (TestTypes.TestClass)lua["a.b.c"];
+
                 Assert.AreEqual(4, t2.testval);
                 Assert.AreEqual(t1, t2);
             }
@@ -1167,16 +1011,15 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                var t1 = new TestTypes.TestClass();
                 t1.val = 4;
                 lua["netobj"] = t1;
                 lua.DoString("var=netobj.val");
                 double var = (double)lua["var"];
-                //Console.WriteLine("value from Lua="+var);
+
                 Assert.AreEqual(4, var);
                 lua.DoString("netobj.val=3");
                 Assert.AreEqual(3, t1.val);
-                //Console.WriteLine("new val (from Lua)="+t1.val);
             }
         }
         /*
@@ -1188,16 +1031,15 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                var t1 = new TestTypes.TestClass();
                 t1.testval = 4;
                 lua["netobj"] = t1;
                 lua.DoString("var=netobj.testval");
                 double var = (double)lua["var"];
-                //Console.WriteLine("value from Lua="+var);
+
                 Assert.AreEqual(4, var);
                 lua.DoString("netobj.testval=3");
                 Assert.AreEqual(3, t1.testval);
-                //Console.WriteLine("new val (from Lua)="+t1.testval);
             }
         }
 
@@ -1206,7 +1048,7 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                var t1 = new TestTypes.TestClass();
                 t1.teststrval = "This is a string test";
                 lua["netobj"] = t1;
                 lua.DoString("var=netobj.teststrval");
@@ -1215,7 +1057,6 @@ namespace NLuaTest
                 Assert.AreEqual("This is a string test", var);
                 lua.DoString("netobj.teststrval='Another String'");
                 Assert.AreEqual("Another String", t1.teststrval);
-                //Console.WriteLine("new val (from Lua)="+t1.testval);
             }
         }
         /*
@@ -1226,16 +1067,15 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                TestTypes.TestClass t1 = new TestTypes.TestClass();
                 t1.testval = 4;
                 lua["netobj"] = t1;
                 lua.DoString("netobj:setVal(3)");
                 Assert.AreEqual(3, t1.testval);
-                //Console.WriteLine("new val(from C#)="+t1.testval);
+
                 lua.DoString("val=netobj:getVal()");
                 int val = (int)lua.GetNumber("val");
                 Assert.AreEqual(3, val);
-                //Console.WriteLine("new val(from Lua)="+val);
             }
         }
         /*
@@ -1246,11 +1086,10 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                var t1 = new TestTypes.TestClass();
                 lua["netobj"] = t1;
                 lua.DoString("netobj:setVal('str')");
                 Assert.AreEqual("str", t1.getStrVal());
-                //Console.WriteLine("new val(from C#)="+t1.getStrVal());
             }
         }
         /*
@@ -1262,14 +1101,14 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                TestTypes.TestClass t1 = new TestTypes.TestClass();
                 lua["netobj"] = t1;
                 lua.DoString("a,b=netobj:outVal()");
                 int a = (int)lua.GetNumber("a");
                 int b = (int)lua.GetNumber("b");
+
                 Assert.AreEqual(3, a);
                 Assert.AreEqual(5, b);
-                //Console.WriteLine("function returned (from lua)="+a+","+b);
             }
         }
         /*
@@ -1281,14 +1120,13 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                var t1 = new TestTypes.TestClass();
                 lua["netobj"] = t1;
                 lua.DoString("a,b=netobj:outVal(2)");
                 int a = (int)lua.GetNumber("a");
                 int b = (int)lua.GetNumber("b");
                 Assert.AreEqual(2, a);
                 Assert.AreEqual(5, b);
-                //Console.WriteLine("function returned (from lua)="+a+","+b);
             }
         }
         /*
@@ -1299,14 +1137,14 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                var t1 = new TestTypes.TestClass();
                 lua["netobj"] = t1;
                 lua.DoString("a,b=netobj:outVal(2,3)");
                 int a = (int)lua.GetNumber("a");
                 int b = (int)lua.GetNumber("b");
+
                 Assert.AreEqual(2, a);
                 Assert.AreEqual(5, b);
-                //Console.WriteLine("function returned (from lua)="+a+","+b);
             }
         }
         /*
@@ -1318,15 +1156,15 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                TestClass t1 = new TestClass();
+                var t1 = new TestTypes.TestClass();
                 lua["netobj"] = t1;
                 lua.DoString("a=netobj:foo()");
-                lua.DoString("b=netobj['NLuaTest.Mock.IFoo1.foo']");
+                lua.DoString("b=netobj['NLuaTest.TestTypes.IFoo1.foo']");
                 int a = (int)lua.GetNumber("a");
                 int b = (int)lua.GetNumber("b");
+
                 Assert.AreEqual(5, a);
                 Assert.AreEqual(1, b);
-                //Console.WriteLine("function returned (from lua)="+a+","+b);
             }
         }
         /*
@@ -1338,12 +1176,12 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly(\"NLuaTest\")");
-                lua.DoString("TestClass=luanet.import_type(\"NLuaTest.Mock.TestClass\")");
+                lua.DoString("TestClass=luanet.import_type(\"NLuaTest.TestTypes.TestClass\")");
                 lua.DoString("test=TestClass()");
                 lua.DoString("test:setVal(3)");
                 object[] res = lua.DoString("return test");
-                TestClass test = (TestClass)res[0];
-                //Console.WriteLine("returned: "+test.testval);
+                var test = (TestTypes.TestClass)res[0];
+
                 Assert.AreEqual(3, test.testval);
             }
         }
@@ -1356,11 +1194,11 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly(\"NLuaTest\")");
-                lua.DoString("TestClass=luanet.import_type(\"NLuaTest.Mock.TestClass\")");
+                lua.DoString("TestClass=luanet.import_type(\"NLuaTest.TestTypes.TestClass\")");
                 lua.DoString("test=TestClass(3)");
                 object[] res = lua.DoString("return test");
-                TestClass test = (TestClass)res[0];
-                //Console.WriteLine("returned: "+test.testval);
+                var test = (TestTypes.TestClass)res[0];
+
                 Assert.AreEqual(3, test.testval);
             }
         }
@@ -1373,11 +1211,11 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly(\"NLuaTest\")");
-                lua.DoString("TestClass=luanet.import_type(\"NLuaTest.Mock.TestClass\")");
+                lua.DoString("TestClass=luanet.import_type(\"NLuaTest.TestTypes.TestClass\")");
                 lua.DoString("test=TestClass('str')");
                 object[] res = lua.DoString("return test");
-                TestClass test = (TestClass)res[0];
-                //Console.WriteLine("returned: "+test.getStrVal());
+                var test = (TestTypes.TestClass)res[0];
+
                 Assert.AreEqual("str", test.getStrVal());
             }
         }
@@ -1389,12 +1227,12 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                string[] arr = new string[] { "str1", "str2", "str3" };
+                string[] arr = { "str1", "str2", "str3" };
                 lua["netobj"] = arr;
                 lua.DoString("val=netobj[1]");
                 string val = lua.GetString("val");
+
                 Assert.AreEqual("str2", val);
-                //Console.WriteLine("new val(from array to Lua)="+val);
             }
         }
         /*G
@@ -1405,11 +1243,10 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                string[] arr = new string[] { "str1", "str2", "str3" };
+                string[] arr = { "str1", "str2", "str3" };
                 lua["netobj"] = arr;
                 lua.DoString("netobj[1]='test'");
                 Assert.AreEqual("test", arr[1]);
-                //Console.WriteLine("new val(from Lua to array)="+arr[1]);
             }
         }
         /*
@@ -1421,10 +1258,10 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly(\"NLuaTest\")");
-                lua.DoString("TestClass=luanet.import_type(\"NLuaTest.Mock.TestClass\")");
+                lua.DoString("TestClass=luanet.import_type(\"NLuaTest.TestTypes.TestClass\")");
                 lua.DoString("arr=TestClass[3]");
                 lua.DoString("for i=0,2 do arr[i]=TestClass(i+1) end");
-                TestClass[] arr = (TestClass[])lua["arr"];
+                TestTypes.TestClass[] arr = (TestTypes.TestClass[])lua["arr"];
                 Assert.AreEqual(arr[1].testval, 2);
             }
         }
@@ -1438,15 +1275,15 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.RegisterLuaDelegateType(typeof(TestDelegate1), typeof(LuaTestDelegate1Handler));
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return x+y; end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callDelegate1(func)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(5, a);
-                //Console.WriteLine("delegate returned: "+a);
             }
         }
         /*
@@ -1459,15 +1296,15 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.RegisterLuaDelegateType(typeof(TestDelegate2), typeof(LuaTestDelegate2Handler));
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x) return x,x*2; end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callDelegate2(func)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(6, a);
-                //Console.WriteLine("delegate returned: "+a);
             }
         }
         /*
@@ -1480,15 +1317,15 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.RegisterLuaDelegateType(typeof(TestDelegate3), typeof(LuaTestDelegate3Handler));
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return x+y; end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callDelegate3(func)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(5, a);
-                //Console.WriteLine("delegate returned: "+a);
             }
         }
         /*
@@ -1501,15 +1338,15 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.RegisterLuaDelegateType(typeof(TestDelegate4), typeof(LuaTestDelegate4Handler));
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return TestClass(x+y); end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callDelegate4(func)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(5, a);
-                //Console.WriteLine("delegate returned: "+a);
             }
         }
         /*
@@ -1522,14 +1359,14 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.RegisterLuaDelegateType(typeof(TestDelegate5), typeof(LuaTestDelegate5Handler));
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return x.testval+y.testval; end");
                 lua.DoString("a=test:callDelegate5(func)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(5, a);
-                //Console.WriteLine("delegate returned: "+a);
             }
         }
         /*
@@ -1542,15 +1379,15 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.RegisterLuaDelegateType(typeof(TestDelegate6), typeof(LuaTestDelegate6Handler));
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x) return x,TestClass(x*2); end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callDelegate6(func)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(6, a);
-                //Console.WriteLine("delegate returned: "+a);
             }
         }
         /*
@@ -1563,14 +1400,14 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.RegisterLuaDelegateType(typeof(TestDelegate7), typeof(LuaTestDelegate7Handler));
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return TestClass(x+y.testval); end");
                 lua.DoString("a=test:callDelegate7(func)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(5, a);
-                //Console.WriteLine("delegate returned: "+a);
             }
         }
 
@@ -1585,16 +1422,16 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.RegisterLuaClassType(typeof(ITest), typeof(LuaITestClassHandler));
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:test1(x,y) return x+y; end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callInterface1(itest)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(5, a);
-                //Console.WriteLine("interface returned: "+a);
             }
         }
         /*
@@ -1607,16 +1444,16 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:test2(x) return x,x*2; end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callInterface2(itest)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(6, a);
-                //Console.WriteLine("interface returned: "+a);
             }
         }
         /*
@@ -1629,16 +1466,16 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:test3(x,y) return x+y; end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callInterface3(itest)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(5, a);
-                //Console.WriteLine("interface returned: "+a);
             }
         }
         /*
@@ -1651,16 +1488,16 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:test4(x,y) return TestClass(x+y); end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callInterface4(itest)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(5, a);
-                //Console.WriteLine("interface returned: "+a);
             }
         }
         /*
@@ -1672,16 +1509,16 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:test5(x,y) return x.testval+y.testval; end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callInterface5(itest)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(5, a);
-                //Console.WriteLine("interface returned: "+a);
             }
         }
         /*
@@ -1694,16 +1531,16 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:test6(x) return x,TestClass(x*2); end");
                 lua.DoString("test=TestClass()");
                 lua.DoString("a=test:callInterface6(itest)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(6, a);
-                //Console.WriteLine("interface returned: "+a);
             }
         }
         /*
@@ -1716,8 +1553,8 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:test7(x,y) return TestClass(x+y.testval); end");
@@ -1729,259 +1566,7 @@ namespace NLuaTest
         }
 
 
-        #region LUA_BOILERPLATE_CLASS
-        /*** This class is used to bind the .NET world with the Lua world, this boilerplate code is pratically the same, get values call Lua function return value back,
-        * this class is usually dynamic generated using System.Reflection.Emit, but this will not work on iOS. */
-
-        class LuaTestClassHandler : TestClass, ILuaGeneratedType
-        {
-            public LuaTable __luaInterface_luaTable;
-            public Type[][] __luaInterface_returnTypes;
-
-            public LuaTestClassHandler(LuaTable luaTable, Type[][] returnTypes)
-            {
-                __luaInterface_luaTable = luaTable;
-                __luaInterface_returnTypes = returnTypes;
-            }
-
-            public LuaTable LuaInterfaceGetLuaTable()
-            {
-                return __luaInterface_luaTable;
-            }
-
-            public override int overridableMethod(int x, int y)
-            {
-                object[] args = new object[] {
-                                        __luaInterface_luaTable,
-                                        x,
-                                        y
-                                };
-                object[] inArgs = new object[] {
-                                        __luaInterface_luaTable,
-                                        x,
-                                        y
-                                };
-                int[] outArgs = new int[] { };
-                Type[] returnTypes = __luaInterface_returnTypes[0];
-                LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "overridableMethod");
-                object ret = NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                return (int)ret;
-            }
-        }
-
-        class LuaITestClassHandler : ILuaGeneratedType, ITest
-        {
-            public LuaTable __luaInterface_luaTable;
-            public Type[][] __luaInterface_returnTypes;
-
-            public LuaITestClassHandler(LuaTable luaTable, Type[][] returnTypes)
-            {
-                __luaInterface_luaTable = luaTable;
-                __luaInterface_returnTypes = returnTypes;
-            }
-
-            public LuaTable LuaInterfaceGetLuaTable()
-            {
-                return __luaInterface_luaTable;
-            }
-
-            public int intProp
-            {
-                get
-                {
-                    object[] args = new object[] { __luaInterface_luaTable };
-                    object[] inArgs = new object[] { __luaInterface_luaTable };
-                    int[] outArgs = new int[] { };
-                    Type[] returnTypes = __luaInterface_returnTypes[0];
-                    LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "get_intProp");
-                    object ret = NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                    return (int)ret;
-                }
-                set
-                {
-                    int i = value;
-                    object[] args = new object[] {
-                        __luaInterface_luaTable ,
-                        i
-                    };
-                    object[] inArgs = new object[] {
-                        __luaInterface_luaTable,
-                        i
-                    };
-                    int[] outArgs = new int[] { };
-                    Type[] returnTypes = __luaInterface_returnTypes[1];
-                    LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "set_intProp");
-                    NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                }
-            }
-
-            public TestClass refProp
-            {
-                get
-                {
-                    object[] args = new object[] { __luaInterface_luaTable };
-                    object[] inArgs = new object[] { __luaInterface_luaTable };
-                    int[] outArgs = new int[] { };
-                    Type[] returnTypes = __luaInterface_returnTypes[2];
-                    LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "get_refProp");
-                    object ret = NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                    return (TestClass)ret;
-                }
-                set
-                {
-                    TestClass test = value;
-                    object[] args = new object[] {
-                        __luaInterface_luaTable ,
-                        test
-                    };
-                    object[] inArgs = new object[] {
-                        __luaInterface_luaTable,
-                        test
-                    };
-                    int[] outArgs = new int[] { };
-                    Type[] returnTypes = __luaInterface_returnTypes[3];
-                    LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "set_refProp");
-                    NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                }
-            }
-
-            public int test1(int a, int b)
-            {
-                object[] args = new object[] {
-                                __luaInterface_luaTable,
-                                a,
-                                b
-                        };
-                object[] inArgs = new object[] {
-                                __luaInterface_luaTable,
-                                a,
-                                b
-                        };
-                int[] outArgs = new int[] { };
-                Type[] returnTypes = __luaInterface_returnTypes[4];
-                LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "test1");
-                object ret = NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                return (int)ret;
-            }
-
-            public int test2(int a, out int b)
-            {
-                object[] args = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        0
-                                };
-                object[] inArgs = new object[] {
-                                        __luaInterface_luaTable,
-                                        a
-                                };
-                int[] outArgs = new int[] { 1 };
-                Type[] returnTypes = __luaInterface_returnTypes[5];
-                LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "test2");
-                object ret = NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                b = (int)args[1];
-                return (int)ret;
-            }
-
-            public void test3(int a, ref int b)
-            {
-                object[] args = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        b
-                                };
-                object[] inArgs = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        b
-                                };
-                int[] outArgs = new int[] { 1 };
-                Type[] returnTypes = __luaInterface_returnTypes[6];
-                LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "test3");
-                NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                b = (int)args[1];
-            }
-
-            public TestClass test4(int a, int b)
-            {
-                object[] args = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        b
-                                };
-                object[] inArgs = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        b
-                                };
-                int[] outArgs = new int[] { };
-                Type[] returnTypes = __luaInterface_returnTypes[7];
-                LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "test4");
-                object ret = NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                return (TestClass)ret;
-            }
-
-            public int test5(TestClass a, TestClass b)
-            {
-                object[] args = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        b
-                                };
-                object[] inArgs = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        b
-                                };
-                int[] outArgs = new int[] { };
-                Type[] returnTypes = __luaInterface_returnTypes[8];
-                LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "test5");
-                object ret = NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                return (int)ret;
-            }
-
-            public int test6(int a, out TestClass b)
-            {
-                object[] args = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        null
-                                };
-                object[] inArgs = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                };
-                int[] outArgs = new int[] { 1 };
-                Type[] returnTypes = __luaInterface_returnTypes[9];
-                LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "test6");
-                object ret = NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                b = (TestClass)args[1];
-
-                return (int)ret;
-            }
-
-            public void test7(int a, ref TestClass b)
-            {
-                object[] args = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        b
-                                };
-                object[] inArgs = new object[] {
-                                        __luaInterface_luaTable,
-                                        a,
-                                        b
-                                };
-                int[] outArgs = new int[] { 1 };
-                Type[] returnTypes = __luaInterface_returnTypes[10];
-                LuaFunction function = NLua.Method.LuaClassHelper.GetTableFunction(__luaInterface_luaTable, "test7");
-                NLua.Method.LuaClassHelper.CallFunction(function, args, returnTypes, inArgs, outArgs);
-                b = (TestClass)args[1];
-            }
-        }
-        #endregion
-
-        /*
+       /*
         * Tests passing a Lua table as an interface and
         * accessing one of its value-type properties
         */
@@ -1990,16 +1575,16 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:get_intProp() return itest.int_prop; end");
                 lua.DoString("function itest:set_intProp(val) itest.int_prop=val; end");
                 lua.DoString("a=test:callInterface8(itest)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(3, a);
-                //Console.WriteLine("interface returned: "+a);
             }
         }
         /*
@@ -2011,16 +1596,16 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:get_refProp() return TestClass(itest.int_prop); end");
                 lua.DoString("function itest:set_refProp(val) itest.int_prop=val.testval; end");
                 lua.DoString("a=test:callInterface9(itest)");
                 int a = (int)lua.GetNumber("a");
+
                 Assert.AreEqual(3, a);
-                //Console.WriteLine("interface returned: "+a);
             }
         }
 
@@ -2034,21 +1619,21 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterLuaClassType(typeof(TestClass), typeof(LuaTestClassHandler));
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.RegisterLuaClassType(typeof(TestTypes.TestClass), typeof(LuaTestClassHandler));
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test={}");
                 lua.DoString("function test:overridableMethod(x,y) print(self[base]); return 6 end");
-                lua.DoString("luanet.make_object(test,'NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.make_object(test,'NLuaTest.TestTypes.TestClass')");
                 lua.DoString("a=TestClass.callOverridable(test,2,3)");
                 int a = (int)lua.GetNumber("a");
                 lua.DoString("luanet.free_object(test)");
                 Assert.AreEqual(6, a);
-                //                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                //                 lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                //                 lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                //                 lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 //                 lua.DoString("test={}");
                 //
-                //                 lua.DoString("luanet.make_object(test,'NLuaTest.Mock.TestClass')");
+                //                 lua.DoString("luanet.make_object(test,'NLuaTest.TestTypes.TestClass')");
                 //                              lua.DoString ("function test.overridableMethod(test,x,y) return 2*test.base.overridableMethod(test,x,y); end");
                 //                 lua.DoString("a=TestClass.callOverridable(test,2,3)");
                 //                 int a = (int)lua.GetNumber("a");
@@ -2067,14 +1652,14 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("setMethod=luanet.get_method_bysig(test,'setVal','System.String')");
                 lua.DoString("setMethod('test')");
-                TestClass test = (TestClass)lua["test"];
+                TestTypes.TestClass test = (TestTypes.TestClass)lua["test"];
+
                 Assert.AreEqual("test", test.getStrVal());
-                //Console.WriteLine("interface returned: "+test.getStrVal());
             }
         }
         /*
@@ -2087,14 +1672,14 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("setMethod=luanet.get_method_bysig(TestClass,'setVal','System.String')");
                 lua.DoString("setMethod(test,'test')");
-                TestClass test = (TestClass)lua["test"];
+                TestTypes.TestClass test = (TestTypes.TestClass)lua["test"];
+
                 Assert.AreEqual("test", test.getStrVal());
-                //Console.WriteLine("interface returned: "+test.getStrVal());
             }
         }
         /*
@@ -2106,13 +1691,13 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("make_method=luanet.get_method_bysig(TestClass,'makeFromString','System.String')");
                 lua.DoString("test=make_method('test')");
-                TestClass test = (TestClass)lua["test"];
+                TestTypes.TestClass test = (TestTypes.TestClass)lua["test"];
+
                 Assert.AreEqual("test", test.getStrVal());
-                //Console.WriteLine("interface returned: "+test.getStrVal());
             }
         }
         /*
@@ -2124,13 +1709,13 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test_cons=luanet.get_constructor_bysig(TestClass,'System.String')");
                 lua.DoString("test=test_cons('test')");
-                TestClass test = (TestClass)lua["test"];
+                TestTypes.TestClass test = (TestTypes.TestClass)lua["test"];
+
                 Assert.AreEqual("test", test.getStrVal());
-                //Console.WriteLine("interface returned: "+test.getStrVal());
             }
         }
 
@@ -2140,8 +1725,8 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('mscorlib')");
-                lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("test:Print('this will pass')");
                 lua.DoString("test:Print('this will ','fail')");
@@ -2255,7 +1840,7 @@ namespace NLuaTest
                 Assert.AreEqual(42, (int)(double)lua["g_dot.key\\.with\\.dot"]);
             }
         }
-#if !WINDOWS_PHONE && !NET_3_5
+
         [Test]
         public void TestOperatorAdd()
         {
@@ -2354,7 +1939,7 @@ namespace NLuaTest
                 Assert.AreEqual(expected, res);
             }
         }
-#endif
+
         [Test]
         public void TestCaseFields()
         {
@@ -2362,7 +1947,7 @@ namespace NLuaTest
             {
                 lua.LoadCLRPackage();
 
-                lua.DoString(@" import ('NLuaTest')
+                lua.DoString(@" import ('NLuaTest', 'NLuaTest.TestTypes')
                               x = TestCaseName()
                               name  = x.name;
                               name2 = x.Name;
@@ -2383,7 +1968,7 @@ namespace NLuaTest
             {
                 lua.LoadCLRPackage();
 
-                lua.DoString(@" import ('NLuaTest')
+                lua.DoString(@" import ('NLuaTest', 'NLuaTest.TestTypes')
                               v = Vector()
                               v.x = 10
                               v.y = 3
@@ -2409,7 +1994,7 @@ namespace NLuaTest
             {
                 lua.LoadCLRPackage();
 
-                lua.DoString(@" import ('NLuaTest')
+                lua.DoString(@" import ('NLuaTest', 'NLuaTest.TestTypes')
                               v = Vector()
                               v.x = 10
                               v.y = 3
@@ -2432,7 +2017,7 @@ namespace NLuaTest
             {
                 lua.LoadCLRPackage();
 
-                lua.DoString(@" import ('NLuaTest')
+                lua.DoString(@" import ('NLuaTest', 'NLuaTest.TestTypes')
                               p = Employee()
                               p.firstName = 'Paulo'
                               p.occupation = 'Programmer'");
@@ -2484,7 +2069,7 @@ namespace NLuaTest
                                 end
 
                                 function f3()
-                                    LuaTests.func()
+                                    LuaTests.Func()
                                 end
                                 
                                 f1 ()
@@ -2493,7 +2078,7 @@ namespace NLuaTest
             m_lua = null;
         }
 
-        public static void func()
+        public static void Func()
         {
 
             //string expected = "[0] func:-1 -- <unknown> [func]\n[1] f3:12 -- <unknown> [f3]\n[2] f2:8 -- <unknown> [f2]\n[3] f1:4 -- <unknown> [f1]\n[4] :15 --  []\n";
@@ -2523,7 +2108,7 @@ namespace NLuaTest
             using (var l = new Lua())
             {
                 l.LoadCLRPackage();
-                l.DoString("import ('NLuaTest')");
+                l.DoString("import ('NLuaTest', 'NLuaTest.TestTypes')");
                 l.DoString("res = testClass.read() ");
                 string res = (string)l["res"];
                 Assert.AreEqual(testClass.read(), res);
@@ -2605,9 +2190,9 @@ namespace NLuaTest
             using (var l = new Lua())
             {
                 l.LoadCLRPackage();
-                l.DoString(" import ('NLuaTest') ");
+                l.DoString(" import ('NLuaTest', 'NLuaTest.TestTypes') ");
                 l.DoString(@"
-                    p=parameter()
+                    p=Parameter()
                     r1 = testClass.read(p)     -- is not working. it is also not working if the method in base class has two parameters instead of one
                     r2 = testClass.read(1)     -- is working				
                 ");
@@ -2624,7 +2209,7 @@ namespace NLuaTest
             using (var l = new Lua())
             {
                 l.LoadCLRPackage();
-                l.DoString(" import ('NLuaTest','NLuaTest.Mock') ");
+                l.DoString(" import ('NLuaTest','NLuaTest.TestTypes') ");
                 l.DoString(@"					
                     r = TestClass.MethodWithParams(2)			
                 ");
@@ -2639,7 +2224,7 @@ namespace NLuaTest
             using (var l = new Lua())
             {
                 l.LoadCLRPackage();
-                l.DoString(" import ('NLuaTest','NLuaTest.Mock') ");
+                l.DoString(" import ('NLuaTest','NLuaTest.TestTypes') ");
                 l.DoString(@"					
                     r = TestClass.MethodWithParams(2, 7, 4)			
                 ");
@@ -2654,7 +2239,7 @@ namespace NLuaTest
             using (var l = new Lua())
             {
                 l.LoadCLRPackage();
-                l.DoString(" import ('NLuaTest','NLuaTest.Mock') ");
+                l.DoString(" import ('NLuaTest','NLuaTest.TestTypes') ");
                 l.DoString(@"					
                     r = TestClass.MethodWithObjectParams(2, nil, 4, 'abc')			
                 ");
@@ -2669,7 +2254,7 @@ namespace NLuaTest
             using (var l = new Lua())
             {
                 l.LoadCLRPackage();
-                l.DoString(" import ('NLuaTest','NLuaTest.Mock') ");
+                l.DoString(" import ('NLuaTest','NLuaTest.TestTypes') ");
                 l.DoString(@"					
                     r = TestClass.MethodWithObjectParams(nil, 4, 'abc')			
                 ");
@@ -2684,7 +2269,7 @@ namespace NLuaTest
             using (var l = new Lua())
             {
                 l.LoadCLRPackage();
-                l.DoString(" import ('NLuaTest','NLuaTest.Mock') ");
+                l.DoString(" import ('NLuaTest','NLuaTest.TestTypes') ");
                 l.DoString(@"					
                     e1 = Entity()
                     e2 = Entity ('str_param')
@@ -2746,9 +2331,7 @@ namespace NLuaTest
             }
         }
 
-        
 
         static Lua m_lua;
-
     }
 }

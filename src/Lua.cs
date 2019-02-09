@@ -778,7 +778,7 @@ namespace NLua
 
         public void LoadCLRPackage()
         {
-            _luaState.DoString(Lua.clr_package);
+            _luaState.DoString(clr_package);
         }
         /*
             * Gets a function global variable as a delegate of

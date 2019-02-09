@@ -1,20 +1,23 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+
 using NUnit.Framework;
-using NLuaTest.Mock;
+
 using System.Reflection;
 using System.Threading;
+
 using NLua;
 using NLua.Exceptions;
 
-#if !__TVOS__ && !__IOS__ && !__WATCHOS__
+using NLuaTest.TestTypes;
 
+#if !__TVOS__ && !__IOS__ && !__WATCHOS__
 
 namespace NLuaTest
 {
     [TestFixture]
-    public class AAACodeGenTests
+    public class CodeGenTests
     {
         /*
         * Tests passing a Lua function to a delegate
@@ -26,7 +29,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return x+y; end");
                 lua.DoString("test=TestClass()");
@@ -46,7 +49,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x) return x,x*2; end");
                 lua.DoString("test=TestClass()");
@@ -66,7 +69,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return x+y; end");
                 lua.DoString("test=TestClass()");
@@ -86,7 +89,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return TestClass(x+y); end");
                 lua.DoString("test=TestClass()");
@@ -106,7 +109,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return x.testval+y.testval; end");
                 lua.DoString("a=test:callDelegate5(func)");
@@ -125,7 +128,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x) return x,TestClass(x*2); end");
                 lua.DoString("test=TestClass()");
@@ -145,7 +148,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("function func(x,y) return TestClass(x+y.testval); end");
                 lua.DoString("a=test:callDelegate7(func)");
@@ -166,7 +169,7 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test=TestClass()");
                 lua.DoString("itest={}");
                 lua.DoString("function itest:test1(x,y) return x+y; end");
@@ -188,10 +191,10 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("luanet.load_assembly('NLuaTest')");
-                lua.DoString("TestClass=luanet.import_type('NLuaTest.Mock.TestClass')");
+                lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test={}");
                 lua.DoString("function test:overridableMethod(x,y) print(self[base]); return 6 end");
-                lua.DoString("luanet.make_object(test,'NLuaTest.Mock.TestClass')");
+                lua.DoString("luanet.make_object(test,'NLuaTest.TestTypes.TestClass')");
                 lua.DoString("a=TestClass.callOverridable(test,2,3)");
                 int a = (int)lua.GetNumber("a");
                 lua.DoString("luanet.free_object(test)");

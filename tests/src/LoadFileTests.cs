@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using NLua;
 
-using NLuaTest.Mock;
-
 
 using NUnit.Framework;
 
@@ -45,7 +43,7 @@ namespace LoadFileTests
                 int height = (int)(double)lua["height"];
                 string message = (string)lua["message"];
                 int color_g = (int)(double)lua["color.g"];
-                LuaFunction func = (LuaFunction)lua["func"];
+                var func = (LuaFunction)lua["func"];
                 object[] res = func.Call(12, 34);
                 int x = (int)(double)res[0];
                 int y = (int)(double)res[1];
@@ -82,7 +80,7 @@ namespace LoadFileTests
                 int height = (int)(double)lua["height"];
                 string message = (string)lua["message"];
                 int color_g = (int)(double)lua["color.g"];
-                LuaFunction func = (LuaFunction)lua["func"];
+                var func = (LuaFunction)lua["func"];
                 object[] res = func.Call(12, 34);
                 int x = (int)(double)res[0];
                 int y = (int)(double)res[1];

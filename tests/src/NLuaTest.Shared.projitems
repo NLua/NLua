@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -9,12 +9,45 @@
     <Import_RootNamespace>NLuaTest.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AAACodeGenTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BinderClass\LuaITestClassHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BinderClass\LuaTestClassHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CodeGenTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Entity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\DoWorkClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\IFoo1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\IFoo2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\ITest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaEventArgsHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaTestDelegate6Handler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaTestDelegate7Handler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\MyClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClass3.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassGeneric.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassWithGenericMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassWithMethodDefaultParameter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassWithOverloadedMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestEnum.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaTestDelegate5Handler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaTestDelegate4Handler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaTestDelegate3Handler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaTestDelegate2Handler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\Delegates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaTestDelegate1Handler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestStruct.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\DefaultElementModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\Employee.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LoadFileTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LuaTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TestLua.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\Master.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\Parameter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\Person.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\PersonExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestCaseName.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\Vector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\VectorExtension.cs" />
   </ItemGroup>
 </Project>
