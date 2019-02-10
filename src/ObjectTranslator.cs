@@ -331,9 +331,10 @@ namespace NLua
             return null;
         }
 
-        public bool IsExtensionMethodPresent(Type type, string name)
+        public bool TryGetExtensionMethod(Type type, string name, out MethodInfo method)
         {
-            return GetExtensionMethod(type, name) != null;
+            method = GetExtensionMethod(type, name);
+            return method != null;
         }
 
         public MethodInfo GetExtensionMethod(Type type, string name)
@@ -1009,9 +1010,9 @@ namespace NLua
          * Checks if the method matches the arguments in the Lua stack, getting
          * the arguments if it does.
          */
-        internal bool MatchParameters(LuaState luaState, MethodBase method, ref MethodCache methodCache)
+        internal bool MatchParameters(LuaState luaState, MethodBase method, MethodCache methodCache, int skipParam)
         {
-            return metaFunctions.MatchParameters(luaState, method, ref methodCache);
+            return metaFunctions.MatchParameters(luaState, method, methodCache, skipParam);
         }
 
         internal Array TableToArray(LuaState luaState, ExtractValue extractValue, Type paramArrayType, int startIndex, int count)

@@ -188,8 +188,11 @@ namespace NLuaTest
                 lua.DoString("test=TestClass()");
                 lua.DoString("test:MethodOverload()");
                 lua.DoString("test:MethodOverload(test)");
+                lua.DoString("test:MethodOverload(test)");
                 lua.DoString("test:MethodOverload(1,1,1)");
-                lua.DoString("test:MethodOverload(2,2,i)\r\nprint(i)");
+                lua.DoString("i = test:MethodOverload(2,2)\r\nprint(i)");
+                int i = (int) lua.GetNumber("i");
+                Assert.AreEqual(5, i, "#1");
             }
         }
 
@@ -1677,7 +1680,7 @@ namespace NLuaTest
                 lua.DoString("test=TestClass()");
                 lua.DoString("setMethod=luanet.get_method_bysig(TestClass,'setVal','System.String')");
                 lua.DoString("setMethod(test,'test')");
-                TestTypes.TestClass test = (TestTypes.TestClass)lua["test"];
+                var test = (TestTypes.TestClass)lua["test"];
 
                 Assert.AreEqual("test", test.getStrVal());
             }

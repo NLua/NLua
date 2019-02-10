@@ -4,8 +4,14 @@ using NLua.Extensions;
 
 namespace NLua.Method
 {
-    struct MethodCache
+    class MethodCache
     {
+        public MethodCache()
+        {
+            args = new object[0];
+            argTypes = new MethodArgs[0];
+            outList = new int[0];
+        }
         private MethodBase _cachedMethod;
 
         public MethodBase cachedMethod {

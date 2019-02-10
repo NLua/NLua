@@ -30,6 +30,7 @@ namespace NLua.Extensions
             luaState.RawGetInteger(LuaRegistry.Index, reference);
         }
 
+        // ReSharper disable once IdentifierTypo
         public static void Unref (this LuaState luaState, int reference)
         {
             luaState.Unref(LuaRegistry.Index, reference);
