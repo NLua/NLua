@@ -57,7 +57,7 @@ namespace NLua
         /// <summary>
         /// We want to ensure that objects always have a unique ID
         /// </summary>
-        int nextObj = 0;
+        int _nextObj;
 
         public MetaFunctions MetaFunctionsInstance => metaFunctions;
         public Lua Interpreter => interpreter;
@@ -415,7 +415,7 @@ namespace NLua
             PushObject(luaState, obj, "luaNet_metatable");
             luaState.NewTable();
             luaState.PushString("__index");
-            luaState.PushCopy(-3);;
+            luaState.PushCopy(-3);
             luaState.SetTable(-3);
             luaState.PushString("__newindex");
             luaState.PushCopy(-3);
@@ -808,7 +808,7 @@ namespace NLua
         private int AddObject(object obj)
         {
             // New object: inserts it in the list
-            int index = nextObj++;
+            int index = _nextObj++;
             _objects[index] = obj;
 
             if (!obj.GetType().IsValueType || obj.GetType().IsEnum)
@@ -1022,7 +1022,7 @@ namespace NLua
 
         private Type TypeOf(LuaState luaState, int idx)
         {
-            int udata = luaState.CheckUObject(1, "luaNet_class");
+            int udata = luaState.CheckUObject(idx, "luaNet_class");
             if (udata == -1)
                 return null;
 

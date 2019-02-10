@@ -4,13 +4,13 @@ namespace NLua.Method
 {
     public class LuaDelegate
     {
-        public LuaFunction function;
-        public Type[] returnTypes;
+        public LuaFunction Function;
+        public Type[] ReturnTypes;
 
         public LuaDelegate()
         {
-            function = null;
-            returnTypes = null;
+            Function = null;
+            ReturnTypes = null;
         }
 
         public object CallFunction(object[] args, object[] inArgs, int[] outArgs)
@@ -20,9 +20,9 @@ namespace NLua.Method
             // has the positions of out parameters
             object returnValue;
             int iRefArgs;
-            object[] returnValues = function.Call(inArgs, returnTypes);
+            object[] returnValues = Function.Call(inArgs, ReturnTypes);
 
-            if (returnTypes[0] == typeof(void))
+            if (ReturnTypes[0] == typeof(void))
             {
                 returnValue = null;
                 iRefArgs = 0;

@@ -726,8 +726,8 @@ namespace NLua
             }
 
             var luaDelegate = (LuaDelegate)Activator.CreateInstance(luaDelegateType);
-            luaDelegate.function = luaFunc;
-            luaDelegate.returnTypes = returnTypes.ToArray();
+            luaDelegate.Function = luaFunc;
+            luaDelegate.ReturnTypes = returnTypes.ToArray();
             return Delegate.CreateDelegate(delegateType, luaDelegate, "CallFunction");
         }
 

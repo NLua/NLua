@@ -13,13 +13,13 @@ namespace NLua
         public LuaFunction(int reference, Lua interpreter):base(reference)
         {
             function = null;
-            _Interpreter = interpreter;
+            _Interpreter = new WeakReference<Lua>(interpreter);
         }
 
         public LuaFunction(LuaNativeFunction nativeFunction, Lua interpreter):base (0)
         {
             function = nativeFunction;
-            _Interpreter = interpreter;
+            _Interpreter = new WeakReference<Lua>(interpreter);
         }
 
         /*
@@ -28,7 +28,11 @@ namespace NLua
          */
         internal object[] Call(object[] args, Type[] returnTypes)
         {
-            return _Interpreter.CallFunction(this, args, returnTypes);
+            Lua lua;
+            if (!_Interpreter.TryGetTarget(out lua))
+                return null;
+
+            return lua.CallFunction(this, args, returnTypes);
         }
 
         /*
@@ -37,7 +41,10 @@ namespace NLua
          */
         public object[] Call(params object[] args)
         {
-            return _Interpreter.CallFunction(this, args);
+            Lua lua;
+            if (!_Interpreter.TryGetTarget(out lua))
+                return null;
+            return lua.CallFunction(this, args);
         }
 
         /*
@@ -45,10 +52,14 @@ namespace NLua
          */
         internal void Push(LuaState luaState)
         {
+            Lua lua;
+            if (!_Interpreter.TryGetTarget(out lua))
+                return;
+
             if (_Reference != 0)
                 luaState.RawGetInteger(LuaRegistry.Index, _Reference);
             else
-                _Interpreter.PushCSFunction(function);
+                lua.PushCSFunction(function);
         }
 
         public override string ToString()
@@ -63,8 +74,12 @@ namespace NLua
             if (l == null)
                 return false;
 
+            Lua lua;
+            if (!_Interpreter.TryGetTarget(out lua))
+                return false;
+
             if (_Reference != 0 && l._Reference != 0)
-                return _Interpreter.CompareRef(l._Reference, _Reference);
+                return lua.CompareRef(l._Reference, _Reference);
 
             return function == l.function;
         }

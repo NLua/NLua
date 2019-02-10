@@ -1,11 +1,13 @@
 ﻿
+using System;
+
 namespace NLua
 {
     public class LuaUserData : LuaBase
     {
         public LuaUserData(int reference, Lua interpreter):base(reference)
         {
-            _Interpreter = interpreter;
+            _Interpreter = new WeakReference<Lua>(interpreter);
         }
 
         /*
@@ -14,11 +16,19 @@ namespace NLua
         public object this[string field] {
             get
             {
-                return _Interpreter.GetObject(_Reference, field);
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return null;
+
+                return lua.GetObject(_Reference, field);
             }
             set
             {
-                _Interpreter.SetObject(_Reference, field, value);
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return;
+
+                lua.SetObject(_Reference, field, value);
             }
         }
 
@@ -28,11 +38,19 @@ namespace NLua
         public object this[object field] {
             get
             {
-                return _Interpreter.GetObject(_Reference, field);
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return null;
+
+                return lua.GetObject(_Reference, field);
             }
             set
             {
-                _Interpreter.SetObject(_Reference, field, value);
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return;
+
+                lua.SetObject(_Reference, field, value);
             }
         }
 
@@ -42,7 +60,11 @@ namespace NLua
          */
         public object[] Call(params object[] args)
         {
-            return _Interpreter.CallFunction(this, args);
+            Lua lua;
+            if (!_Interpreter.TryGetTarget(out lua))
+                return null;
+
+            return lua.CallFunction(this, args);
         }
 
         public override string ToString()

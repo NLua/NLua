@@ -1209,7 +1209,6 @@ namespace NLua
             }
 
             Close();
-            GC.WaitForPendingFinalizers();
         }
         #endregion
     }

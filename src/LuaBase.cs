@@ -9,7 +9,7 @@ namespace NLua
     {
         private bool _disposed;
         protected readonly int _Reference;
-        protected Lua _Interpreter;
+        protected WeakReference<Lua> _Interpreter;
 
         protected LuaBase(int reference)
         {
@@ -27,13 +27,25 @@ namespace NLua
             GC.SuppressFinalize(this);
         }
 
+        void DisposeLuaRefernce()
+        {
+            if (_Interpreter == null)
+                return;
+            Lua lua;
+            if (!_Interpreter.TryGetTarget(out lua))
+                return;
+
+            lua.DisposeInternal(_Reference);
+        }
         public virtual void Dispose(bool disposeManagedResources)
         {
             if (_disposed)
                 return;
 
-            if (_Reference != 0 && disposeManagedResources)
-                _Interpreter.DisposeInternal(_Reference);
+            if (_Reference != 0)
+            {
+                DisposeLuaRefernce();
+            }
 
             _Interpreter = null;
             _disposed = true;
@@ -45,7 +57,11 @@ namespace NLua
             if (reference == null)
                 return false;
 
-            return _Interpreter.CompareRef(reference._Reference, _Reference);
+            Lua lua;
+            if (!_Interpreter.TryGetTarget(out lua))
+                return false;
+
+            return lua.CompareRef(reference._Reference, _Reference);
         }
 
         public override int GetHashCode()
