@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections;
 
 using NLua.Extensions;
@@ -11,7 +12,7 @@ namespace NLua
     {
         public LuaTable(int reference, Lua interpreter):base(reference)
         {
-            _Interpreter = interpreter;
+            _Interpreter = new WeakReference<Lua>(interpreter);
         }
 
         /*
@@ -20,11 +21,17 @@ namespace NLua
         public object this[string field] {
             get
             {
-                return _Interpreter.GetObject(_Reference, field);
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return null;
+                return lua.GetObject(_Reference, field);
             }
             set
             {
-                _Interpreter.SetObject(_Reference, field, value);
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return;
+                lua.SetObject(_Reference, field, value);
             }
         }
 
@@ -34,23 +41,55 @@ namespace NLua
         public object this[object field] {
             get
             {
-                return _Interpreter.GetObject(_Reference, field);
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return null;
+
+                return lua.GetObject(_Reference, field);
             }
             set
             {
-                _Interpreter.SetObject(_Reference, field, value);
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return;
+
+                lua.SetObject(_Reference, field, value);
             }
         }
 
         public IDictionaryEnumerator GetEnumerator()
         {
-            return _Interpreter.GetTableDict(this).GetEnumerator();
+            Lua lua;
+            if (!_Interpreter.TryGetTarget(out lua))
+                return null;
+
+            return lua.GetTableDict(this).GetEnumerator();
         }
 
-        public ICollection Keys => _Interpreter.GetTableDict(this).Keys;
+        public ICollection Keys
+        {
+            get
+            {
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return null;
+
+                return lua.GetTableDict(this).Keys;
+            }
+        }
 
 
-        public ICollection Values => _Interpreter.GetTableDict(this).Values;
+        public ICollection Values
+        {
+            get
+            {
+                Lua lua;
+                if (!_Interpreter.TryGetTarget(out lua))
+                    return null;
+
+                return lua.GetTableDict(this).Values;
+            }
+        }
 
 
         /*
@@ -59,7 +98,11 @@ namespace NLua
          */
         internal object RawGet(string field)
         {
-            return _Interpreter.RawGetObject(_Reference, field);
+            Lua lua;
+            if (!_Interpreter.TryGetTarget(out lua))
+                return null;
+
+            return lua.RawGetObject(_Reference, field);
         }
 
         /*

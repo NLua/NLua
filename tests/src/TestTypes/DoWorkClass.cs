@@ -11,9 +11,8 @@ namespace NLuaTest.TestTypes
 
         public void DoWork()
         {
-
             //simulate work by sleeping
-            Thread.Sleep(new Random().Next(0, 1000));
+            Thread.Sleep(500);
         }
     }
 }

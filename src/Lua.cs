@@ -1198,6 +1198,11 @@ namespace NLua
         }
 
         #region IDisposable Members
+
+        ~Lua()
+        {
+            Dispose();
+        }
         public virtual void Dispose()
         {
             if (_translator != null)
@@ -1209,7 +1214,7 @@ namespace NLua
             }
 
             Close();
-            GC.WaitForPendingFinalizers();
+            GC.SuppressFinalize(this);
         }
         #endregion
     }
