@@ -47,25 +47,21 @@ namespace NLua
         /// <summary>
         /// True while a script is being executed
         /// </summary>
-        public bool IsExecuting => executing;
+        public bool IsExecuting => _executing;
 
         public LuaState State => _luaState;
 
         private ObjectTranslator _translator;
-        /// <summary>
-        /// Used to protect the (global) object translator pool during add/remove
-        /// </summary>
-        private static readonly object translatorPoolLock = new object();
 
         /// <summary>
         /// Used to ensure multiple .net threads all get serialized by this single lock for access to the lua stack/objects
         /// </summary>
         //private object luaLock = new object();
         private bool _StatePassed;
-        private bool executing;
+        private bool _executing;
 
         // The commented code bellow is the initLua, the code assigned here is minified for size/performance reasons.
-        private static string initLuanet = @"local a={}local rawget=rawget;local b=luanet.import_type;local c=luanet.load_assembly;luanet.error,luanet.type=error,type;function a:__index(d)local e=rawget(self,'.fqn')e=(e and e..'.'or'')..d;local f=rawget(luanet,d)or b(e)if f==nil then pcall(c,e)f={['.fqn']=e}setmetatable(f,a)end;rawset(self,d,f)return f end;function a:__call(...)error('No such type: '..rawget(self,'.fqn'),2)end;luanet['.fqn']=false;setmetatable(luanet,a)luanet.load_assembly('mscorlib')";
+        private const string InitLuanet = @"local a={}local rawget=rawget;local b=luanet.import_type;local c=luanet.load_assembly;luanet.error,luanet.type=error,type;function a:__index(d)local e=rawget(self,'.fqn')e=(e and e..'.'or'')..d;local f=rawget(luanet,d)or b(e)if f==nil then pcall(c,e)f={['.fqn']=e}setmetatable(f,a)end;rawset(self,d,f)return f end;function a:__call(...)error('No such type: '..rawget(self,'.fqn'),2)end;luanet['.fqn']=false;setmetatable(luanet,a)luanet.load_assembly('mscorlib')";
  //@"local metatable = {}
  //       local rawget = rawget
  //       local import_type = luanet.import_type
@@ -106,7 +102,7 @@ namespace NLua
  //       -- Preload the mscorlib assembly
  //       luanet.load_assembly('mscorlib')";
 
- private static string clr_package = @"if not luanet then require'luanet'end;local a,b=luanet.import_type,luanet.load_assembly;local c={__index=function(d,e)local f=rawget(d,e)if f==nil then f=a(d.packageName.."".""..e)if f==nil then f=a(e)end;d[e]=f end;return f end}function luanet.namespace(g)if type(g)=='table'then local h={}for i=1,#g do h[i]=luanet.namespace(g[i])end;return unpack(h)end;local j={packageName=g}setmetatable(j,c)return j end;local k,l;local function m()l={}k={__index=function(n,e)for i,d in ipairs(l)do local f=d[e]if f then _G[e]=f;return f end end end}setmetatable(_G,k)end;function CLRPackage(o,p)p=p or o;local q=pcall(b,o)return luanet.namespace(p)end;function import(o,p)if not k then m()end;if not p then local i=o:find('%.dll$')if i then p=o:sub(1,i-1)else p=o end end;local j=CLRPackage(o,p)table.insert(l,j)return j end;function luanet.make_array(r,s)local t=r[#s]for i,u in ipairs(s)do t:SetValue(u,i-1)end;return t end;function luanet.each(v)local w=v:GetEnumerator()return function()if w:MoveNext()then return w.Current end end end";
+ private const string ClrPackage = @"if not luanet then require'luanet'end;local a,b=luanet.import_type,luanet.load_assembly;local c={__index=function(d,e)local f=rawget(d,e)if f==nil then f=a(d.packageName.."".""..e)if f==nil then f=a(e)end;d[e]=f end;return f end}function luanet.namespace(g)if type(g)=='table'then local h={}for i=1,#g do h[i]=luanet.namespace(g[i])end;return unpack(h)end;local j={packageName=g}setmetatable(j,c)return j end;local k,l;local function m()l={}k={__index=function(n,e)for i,d in ipairs(l)do local f=d[e]if f then _G[e]=f;return f end end end}setmetatable(_G,k)end;function CLRPackage(o,p)p=p or o;local q=pcall(b,o)return luanet.namespace(p)end;function import(o,p)if not k then m()end;if not p then local i=o:find('%.dll$')if i then p=o:sub(1,i-1)else p=o end end;local j=CLRPackage(o,p)table.insert(l,j)return j end;function luanet.make_array(r,s)local t=r[#s]for i,u in ipairs(s)do t:SetValue(u,i-1)end;return t end;function luanet.each(v)local w=v:GetEnumerator()return function()if w:MoveNext()then return w.Current end end end";
 //@"---
 //--- This lua module provides auto importing of .net classes into a named package.
 //--- Makes for super easy use of LuaInterface glue
@@ -282,12 +278,11 @@ namespace NLua
             _luaState.SetTable(-3);
             _luaState.PopGlobalTable();
             _translator = new ObjectTranslator(this, _luaState);
-            lock (translatorPoolLock)
-            {
-                ObjectTranslatorPool.Instance.Add(_luaState, _translator);
-            }
+
+            ObjectTranslatorPool.Instance.Add(_luaState, _translator);
+
             _luaState.PopGlobalTable();
-            _luaState.DoString(initLuanet);
+            _luaState.DoString(InitLuanet);
         }
 
         public void Close()
@@ -295,12 +290,9 @@ namespace NLua
             if (_StatePassed || _luaState == null)
                 return;
 
-            lock (translatorPoolLock)
-            {
-                _luaState.Close();
-                ObjectTranslatorPool.Instance.Remove(_luaState);
-                _luaState = null;
-            }
+            _luaState.Close();
+            ObjectTranslatorPool.Instance.Remove(_luaState);
+            _luaState = null;
         }
 
 #if __IOS__ || __TVOS__ || __WATCHOS__
@@ -388,7 +380,7 @@ namespace NLua
         public LuaFunction LoadString(string chunk, string name)
         {
             int oldTop = _luaState.GetTop();
-            executing = true;
+            _executing = true;
 
             try
             {
@@ -397,7 +389,7 @@ namespace NLua
             }
             finally
             {
-                executing = false;
+                _executing = false;
             }
 
             var result = _translator.GetFunction(_luaState, -1);
@@ -414,7 +406,7 @@ namespace NLua
         public LuaFunction LoadString(byte[] chunk, string name)
         {
             int oldTop = _luaState.GetTop();
-            executing = true;
+            _executing = true;
 
             try
             {
@@ -423,7 +415,7 @@ namespace NLua
             }
             finally
             {
-                executing = false;
+                _executing = false;
             }
 
             var result = _translator.GetFunction(_luaState, -1);
@@ -457,7 +449,7 @@ namespace NLua
         public object[] DoString(byte[] chunk, string chunkName = "chunk")
         {
             int oldTop = _luaState.GetTop();
-            executing = true;
+            _executing = true;
 
             if (_luaState.LoadBuffer(chunk, chunkName) != LuaStatus.OK)
                 ThrowExceptionFromError(oldTop);
@@ -479,7 +471,7 @@ namespace NLua
             }
             finally
             {
-                executing = false;
+                _executing = false;
             }
         }
 
@@ -492,7 +484,7 @@ namespace NLua
         public object[] DoString(string chunk, string chunkName = "chunk")
         {
             int oldTop = _luaState.GetTop();
-            executing = true;
+            _executing = true;
 
             if (_luaState.LoadString(chunk, chunkName) != LuaStatus.OK)
                 ThrowExceptionFromError(oldTop);
@@ -514,7 +506,7 @@ namespace NLua
             }
             finally
             {
-                executing = false;
+                _executing = false;
             }
         }
 
@@ -529,7 +521,7 @@ namespace NLua
             if (_luaState.LoadFile(fileName) != LuaStatus.OK)
                 ThrowExceptionFromError(oldTop);
 
-            executing = true;
+            _executing = true;
 
             int errorFunctionIndex = 0;
             if (UseTraceback)
@@ -547,7 +539,7 @@ namespace NLua
             }
             finally
             {
-                executing = false;
+                _executing = false;
             }
         }
 
@@ -779,7 +771,7 @@ namespace NLua
         // ReSharper disable once InconsistentNaming
         public void LoadCLRPackage()
         {
-            _luaState.DoString(clr_package);
+            _luaState.DoString(ClrPackage);
         }
         /*
             * Gets a function global variable as a delegate of
@@ -822,7 +814,7 @@ namespace NLua
                     _translator.Push(_luaState, args[i]);
             }
 
-            executing = true;
+            _executing = true;
 
             try
             {
@@ -839,7 +831,7 @@ namespace NLua
             }
             finally
             {
-                executing = false;
+                _executing = false;
             }
 
             if (returnTypes != null)
@@ -1165,7 +1157,7 @@ namespace NLua
             _luaState.SetTop(oldTop);
         }
 
-        public LuaFunction RegisterFunction(string path, MethodBase function /*MethodInfo function*/)
+        public LuaFunction RegisterFunction(string path, MethodBase function)
         {
             return RegisterFunction(path, null, function);
         }
@@ -1174,7 +1166,7 @@ namespace NLua
          * Registers an object's method as a Lua function (global or table field)
          * The method may have any signature
          */
-        public LuaFunction RegisterFunction(string path, object target, MethodBase function /*MethodInfo function*/)  //CP: Fix for struct constructor by Alexander Kappner (link: http://luaforge.net/forum/forum.php?thread_id = 2859&forum_id = 145)
+        public LuaFunction RegisterFunction(string path, object target, MethodBase function)
         {
             // We leave nothing on the stack when we are done
             int oldTop = _luaState.GetTop();
@@ -1199,6 +1191,7 @@ namespace NLua
             return equal;
         }
 
+        // ReSharper disable once InconsistentNaming
         internal void PushCSFunction(LuaNativeFunction function)
         {
             _translator.PushFunction(_luaState, function);

@@ -311,8 +311,7 @@ namespace NLua
         {
             if (!luaState.IsString(stackPos))
                 return null;
-            string retVal = luaState.ToString(stackPos, false);
-            return retVal;
+            return luaState.ToString(stackPos, false);
         }
 
         private object GetAsTable(LuaState luaState, int stackPos)
@@ -354,20 +353,20 @@ namespace NLua
         {
             object obj = _translator.GetNetObject(luaState, stackPos);
 
-            if (obj == null && luaState.Type(stackPos) == LuaType.Table)
+            if (obj != null || luaState.Type(stackPos) != LuaType.Table)
+                return obj;
+
+            if (luaState.GetMetaField(stackPos, "__index") == LuaType.Nil)
+                return null;
+
+            if (luaState.CheckMetaTable(-1, _translator.Tag))
             {
-                if (luaState.GetMetaField(stackPos, "__index") != LuaType.Nil)
-                {
-                    if (luaState.CheckMetaTable(-1, _translator.Tag))
-                    {
-                        luaState.Insert(stackPos);
-                        luaState.Remove(stackPos + 1);
-                        obj = _translator.GetNetObject(luaState, stackPos);
-                    }
-                    else
-                        luaState.SetTop(-2);
-                }
+                luaState.Insert(stackPos);
+                luaState.Remove(stackPos + 1);
+                obj = _translator.GetNetObject(luaState, stackPos);
             }
+            else
+                luaState.SetTop(-2);
 
             return obj;
         }
