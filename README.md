@@ -4,9 +4,9 @@
 NLua
 =======
 
-| NuGet | NuGet (Pre-Release) |
-| ------|------|
-|[![nuget](https://img.shields.io/nuget/v/NLua.svg)](https://www.nuget.org/packages/NLua)|[![nuget](https://img.shields.io/nuget/vpre/NLua.svg)](https://www.nuget.org/packages/NLua)|
+| NuGet |
+| ------|
+|[![nuget](https://badgen.net/nuget/v/NLua?icon=nuget)](https://www.nuget.org/packages/NLua)|
 
 |  | Status | 
 | :------ | :------: | 
