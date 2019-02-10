@@ -27,7 +27,7 @@ namespace NLua
             GC.SuppressFinalize(this);
         }
 
-        void DisposeLuaRefernce()
+        void DisposeLuaReference()
         {
             if (_Interpreter == null)
                 return;
@@ -41,10 +41,10 @@ namespace NLua
         {
             if (_disposed)
                 return;
-
-            if (_Reference != 0)
+            // TODO: Remove the disposeManagedResources check
+            if (_Reference != 0 && disposeManagedResources)
             {
-                DisposeLuaRefernce();
+                DisposeLuaReference();
             }
 
             _Interpreter = null;
