@@ -2418,7 +2418,7 @@ namespace NLuaTest
                 int ratio = after2 / before;
                 int ratio2 = after1 / after2;
 
-                Assert.True( ratio2 >= 10 , "#1:" + ratio2);
+                Assert.True( ratio2 >= 8 , "#1:" + ratio2);
                 Assert.True( ratio <= 1,  "#2:" + ratio);
             }
         }
