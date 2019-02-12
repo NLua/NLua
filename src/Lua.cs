@@ -1092,7 +1092,7 @@ namespace NLua
                 return;
             }
 
-            if (_luaState != null)
+            if (_luaState != null && !finalized)
                 _luaState.Unref(reference);
         }
 
