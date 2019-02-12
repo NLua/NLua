@@ -49,6 +49,9 @@ namespace NLua
         readonly Dictionary<object, int> _objectsBackMap = new Dictionary<object, int>(new ReferenceComparer());
         // object # to object (FIXME - it should be possible to get object address as an object #)
         readonly Dictionary<int, object> _objects = new Dictionary<int, object>();
+
+        readonly Queue<int> finalizedReferences = new Queue<int>();
+
         internal EventHandlerContainer PendingEvents = new EventHandlerContainer();
         MetaFunctions metaFunctions;
         List<Assembly> assemblies;
@@ -851,6 +854,9 @@ namespace NLua
          */
         internal LuaTable GetTable(LuaState luaState, int index)
         {
+            // Before create new tables, check if there is any finalized object to clean.
+            CleanFinalizedReferences(luaState);
+
             luaState.PushCopy(index);
             int reference = luaState.Ref(LuaRegistry.Index);
             if (reference == -1)
@@ -863,6 +869,9 @@ namespace NLua
          */
         internal LuaUserData GetUserData(LuaState luaState, int index)
         {
+            // Before create new tables, check if there is any finalized object to clean.
+            CleanFinalizedReferences(luaState);
+
             luaState.PushCopy(index);
             int reference = luaState.Ref(LuaRegistry.Index);
             if (reference == -1)
@@ -875,6 +884,9 @@ namespace NLua
          */
         internal LuaFunction GetFunction(LuaState luaState, int index)
         {
+            // Before create new tables, check if there is any finalized object to clean.
+            CleanFinalizedReferences(luaState);
+
             luaState.PushCopy(index);
             int reference = luaState.Ref(LuaRegistry.Index);
             if (reference == -1)
@@ -1101,6 +1113,23 @@ namespace NLua
             }
             PushObject(luaState, res, "luaNet_metatable");
             return 1;
+        }
+
+        internal void AddFinalizedReference(int reference)
+        {
+            finalizedReferences.Enqueue(reference);
+        }
+
+        void CleanFinalizedReferences(LuaState state)
+        {
+            if (finalizedReferences.Count == 0)
+                return;
+
+            while (finalizedReferences.Count != 0)
+            {
+                int reference = finalizedReferences.Dequeue();
+                state.Unref(LuaRegistry.Index, reference);
+            }
         }
     }
 }

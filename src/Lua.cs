@@ -1084,8 +1084,14 @@ namespace NLua
         }
         #endregion
 
-        internal void DisposeInternal(int reference)
+        internal void DisposeInternal(int reference, bool finalized)
         {
+            if (finalized && _translator != null)
+            {
+                _translator.AddFinalizedReference(reference);
+                return;
+            }
+
             if (_luaState != null)
                 _luaState.Unref(reference);
         }
