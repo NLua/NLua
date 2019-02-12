@@ -2384,7 +2384,7 @@ namespace NLuaTest
 
         void PleaseRunFinalizers()
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 5; i++)
             {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -2418,8 +2418,8 @@ namespace NLuaTest
                 int ratio = after2 / before;
                 int ratio2 = after1 / after2;
 
-                Assert.True( ratio2 >= 10 );
-                Assert.True( ratio <= 1 );
+                Assert.True( ratio2 >= 10 , "#1:" + ratio2);
+                Assert.True( ratio <= 1,  "#2:" + ratio);
             }
         }
 
