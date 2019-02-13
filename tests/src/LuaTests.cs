@@ -2384,7 +2384,7 @@ namespace NLuaTest
 
         void PleaseRunFinalizers()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
