@@ -10,16 +10,14 @@ namespace NLua
     {
         internal readonly LuaNativeFunction function;
 
-        public LuaFunction(int reference, Lua interpreter):base(reference)
+        public LuaFunction(int reference, Lua interpreter):base(reference, interpreter)
         {
             function = null;
-            _Interpreter = new WeakReference<Lua>(interpreter);
         }
 
-        public LuaFunction(LuaNativeFunction nativeFunction, Lua interpreter):base (0)
+        public LuaFunction(LuaNativeFunction nativeFunction, Lua interpreter):base (0, interpreter)
         {
             function = nativeFunction;
-            _Interpreter = new WeakReference<Lua>(interpreter);
         }
 
         /*
@@ -29,7 +27,7 @@ namespace NLua
         internal object[] Call(object[] args, Type[] returnTypes)
         {
             Lua lua;
-            if (!_Interpreter.TryGetTarget(out lua))
+            if (!TryGet(out lua))
                 return null;
 
             return lua.CallFunction(this, args, returnTypes);
@@ -42,8 +40,9 @@ namespace NLua
         public object[] Call(params object[] args)
         {
             Lua lua;
-            if (!_Interpreter.TryGetTarget(out lua))
+            if (!TryGet(out lua))
                 return null;
+
             return lua.CallFunction(this, args);
         }
 
@@ -53,7 +52,7 @@ namespace NLua
         internal void Push(LuaState luaState)
         {
             Lua lua;
-            if (!_Interpreter.TryGetTarget(out lua))
+            if (!TryGet(out lua))
                 return;
 
             if (_Reference != 0)
@@ -75,7 +74,7 @@ namespace NLua
                 return false;
 
             Lua lua;
-            if (!_Interpreter.TryGetTarget(out lua))
+            if (!TryGet(out lua))
                 return false;
 
             if (_Reference != 0 && l._Reference != 0)

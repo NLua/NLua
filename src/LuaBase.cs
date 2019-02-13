@@ -9,10 +9,22 @@ namespace NLua
     {
         private bool _disposed;
         protected readonly int _Reference;
-        protected WeakReference<Lua> _Interpreter;
+        Lua _lua;
 
-        protected LuaBase(int reference)
+        protected bool TryGet(out Lua lua)
         {
+            if (_lua.State == null)
+            {
+                lua = null;
+                return false;
+            }
+
+            lua = _lua;
+            return true;
+        }
+        protected LuaBase(int reference, Lua lua)
+        {
+            _lua = lua;
             _Reference = reference;
         }
 
@@ -27,27 +39,29 @@ namespace NLua
             GC.SuppressFinalize(this);
         }
 
-        void DisposeLuaReference()
+        void DisposeLuaReference(bool finalized)
         {
-            if (_Interpreter == null)
+            if (_lua == null)
                 return;
             Lua lua;
-            if (!_Interpreter.TryGetTarget(out lua))
+            if (!TryGet(out lua))
                 return;
 
-            lua.DisposeInternal(_Reference);
+            lua.DisposeInternal(_Reference, finalized);
         }
         public virtual void Dispose(bool disposeManagedResources)
         {
             if (_disposed)
                 return;
-            // TODO: Remove the disposeManagedResources check
-            if (_Reference != 0 && disposeManagedResources)
+
+            bool finalized = !disposeManagedResources;
+
+            if (_Reference != 0)
             {
-                DisposeLuaReference();
+                DisposeLuaReference(finalized);
             }
 
-            _Interpreter = null;
+            _lua = null;
             _disposed = true;
         }
 
@@ -58,7 +72,7 @@ namespace NLua
                 return false;
 
             Lua lua;
-            if (!_Interpreter.TryGetTarget(out lua))
+            if (!TryGet(out lua))
                 return false;
 
             return lua.CompareRef(reference._Reference, _Reference);

@@ -2,8 +2,7 @@
 using System.Text;
 using System.Reflection;
 using System.Threading;
-
-
+using KeraLua;
 using NLua;
 using NLua.Exceptions;
 
@@ -13,6 +12,9 @@ using NLuaTest.TestTypes;
 
 
 using NUnit.Framework;
+using Lua = NLua.Lua;
+using LuaFunction = NLua.LuaFunction;
+
 // ReSharper disable StringLiteralTypo
 
 namespace NLuaTest
@@ -2349,6 +2351,80 @@ namespace NLuaTest
                 Assert.AreEqual(15, obj.x, "#2.4");
             }
         }
+
+        [Test]
+        public static void TestUseLuaObjectAfterDisposeShouldNotCrash()
+        {
+            LuaTable table;
+            LuaFunction function;
+
+            using (var lua = new Lua())
+            {
+                lua.DoString("function F(a) return 2*a end");
+                function = lua.GetFunction("F");
+                table = lua.DoString("return { foo =\"Um dois tres\"}") [0] as LuaTable;
+            }
+            Assert.IsNotNull(function);
+            Assert.IsNotNull(table);
+
+            Assert.IsNull(table["foo"]);
+
+            var result = function.Call(2);
+            Assert.IsNull(result);
+
+        }
+
+        void ImplicitlyCreateATable(Lua lua)
+        {
+            var x = lua.DoString("return { foo = 1, bar = { la = 1 , la2 = 3, la4 = \"aidsjiasjdiasjdiajsdi\"} }")[0] as LuaTable;
+            var foo = x["foo"];
+            x = null;
+
+        }
+
+        void PleaseRunFinalizers()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                Thread.Sleep(0);
+            }
+        }
+
+        ///*
+        // * Tests if Lua objects are being released on finalizer
+        // */
+        [Test]
+        public void TestTableFinalizerDispose()
+        {
+            using (Lua lua = new Lua())
+            {
+                int before = lua.State.GarbageCollector(LuaGC.Count, 0);
+
+                for (int i = 0; i < 1000; i++)
+                    ImplicitlyCreateATable(lua);
+
+                int after1 = lua.State.GarbageCollector(LuaGC.Count, 0);
+
+                PleaseRunFinalizers();
+
+                ImplicitlyCreateATable(lua);
+
+                lua.State.GarbageCollector(LuaGC.Collect, 0);
+
+                int after2 = lua.State.GarbageCollector(LuaGC.Count, 0);
+
+                int ratio = after2 / before;
+                int ratio2 = after1 / after2;
+
+                // The ratio two is very uncertain, lets use 5x, just to have some certain that 
+                // the gc collect the tables
+                Assert.True( ratio2 >= 5 , "#1:" + ratio2);
+                Assert.True( ratio <= 1,  "#2:" + ratio);
+            }
+        }
+
 
 
         static Lua m_lua;

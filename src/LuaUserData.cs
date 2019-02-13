@@ -5,9 +5,8 @@ namespace NLua
 {
     public class LuaUserData : LuaBase
     {
-        public LuaUserData(int reference, Lua interpreter):base(reference)
+        public LuaUserData(int reference, Lua interpreter):base(reference, interpreter)
         {
-            _Interpreter = new WeakReference<Lua>(interpreter);
         }
 
         /*
@@ -17,7 +16,7 @@ namespace NLua
             get
             {
                 Lua lua;
-                if (!_Interpreter.TryGetTarget(out lua))
+                if (!TryGet(out lua))
                     return null;
 
                 return lua.GetObject(_Reference, field);
@@ -25,7 +24,7 @@ namespace NLua
             set
             {
                 Lua lua;
-                if (!_Interpreter.TryGetTarget(out lua))
+                if (!TryGet(out lua))
                     return;
 
                 lua.SetObject(_Reference, field, value);
@@ -39,7 +38,7 @@ namespace NLua
             get
             {
                 Lua lua;
-                if (!_Interpreter.TryGetTarget(out lua))
+                if (!TryGet(out lua))
                     return null;
 
                 return lua.GetObject(_Reference, field);
@@ -47,7 +46,7 @@ namespace NLua
             set
             {
                 Lua lua;
-                if (!_Interpreter.TryGetTarget(out lua))
+                if (!TryGet(out lua))
                     return;
 
                 lua.SetObject(_Reference, field, value);
@@ -61,7 +60,7 @@ namespace NLua
         public object[] Call(params object[] args)
         {
             Lua lua;
-            if (!_Interpreter.TryGetTarget(out lua))
+            if (!TryGet(out lua))
                 return null;
 
             return lua.CallFunction(this, args);
