@@ -62,6 +62,26 @@ You can use/instantiate any .NET class without any previous registration or anno
 
 ```
 
+* Using UTF-8 Encoding:
+
+NLua runs on top of [KeraLua](https://github.com/NLua/KeraLua) binding, it encodes the string using the ASCII encoding by default.
+If you want to use UTF-8 encoding, just set the `Lua.State.Encoding` property to `Encoding.UTF8`:
+
+```csharp
+
+using (Lua lua = new Lua())
+{
+	lua.State.Encoding = Encoding.UTF8;
+	lua.DoString("res = 'Файл'");
+	string res = (string)lua["res"];
+
+	Assert.AreEqual("Файл", res);
+}
+
+```
+
+
+
 Creating Lua state:
 
 ```csharp
