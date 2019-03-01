@@ -102,7 +102,7 @@ Passing raw values to the state:
 ```csharp
 	double val = 12.0;
 	state ["x"] = val; // Create a global value 'x' 
-	var res = state.DoString ("return 10 + x*(5 + 2)")[0] as double;
+	var res = (double)state.DoString ("return 10 + x*(5 + 2)")[0];
 ```
 
 
