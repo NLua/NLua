@@ -89,15 +89,15 @@
     <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KeraLua, Version=1.0.4.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\KeraLua.1.0.4\lib\xamarinios\KeraLua.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
     <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Numerics" />
+    <Reference Include="KeraLua">
+      <HintPath>..\..\..\packages\KeraLua.1.0.5\lib\xamarinios\KeraLua.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -105,8 +105,8 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
-    <None Include="packages.config" />
     <None Include="tools\Touch.Server.exe" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -159,5 +159,5 @@
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.9\build\RunSimulatorTests.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.9\build\RunSimulatorTests.targets')" />
+  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.10\build\Codefoco.Touch.Server.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.10\build\Codefoco.Touch.Server.targets')" />
 </Project>
