@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NLua</id>
-    <version>1.4.4</version>
+    <version>1.4.11</version>
     <authors>NLua</authors>
     <owners>Vinicius Jarina</owners>
     <licenseUrl>https://github.com/nlua/NLua/blob/master/LICENSE</licenseUrl>
@@ -15,7 +15,7 @@
     <copyright>Copyright © NLua 2019</copyright>
     <tags>lua nlua</tags>
     <dependencies>
-      <dependency id="KeraLua" version="1.0.4" />
+      <dependency id="KeraLua" version="1.0.5" />
     </dependencies>
   </metadata>
   <files>
