@@ -21,7 +21,7 @@
     <WarningsAsErrors />
   </PropertyGroup>
 
-  <Import Project="..\..\src\NLua.Core.projitems" Label="Shared" />
+  <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
     <PackageReference Include="KeraLua" Version="1.0.5" />

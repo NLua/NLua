@@ -42,16 +42,16 @@ Global
 		tests\src\NLuaTest.Shared.projitems*{20225b34-18f0-477b-ae89-1c95b788c55d}*SharedItemsImports = 4
 		tests\src\NLuaTest.Shared.projitems*{20ae709c-fb97-48e3-89b0-a34a5c3da1db}*SharedItemsImports = 4
 		tests\src\NLuaTest.Shared.Scripts.projitems*{20ae709c-fb97-48e3-89b0-a34a5c3da1db}*SharedItemsImports = 4
-		src\NLua.Core.projitems*{4b766e88-5872-4437-882d-c887a3c0cdf7}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{4b766e88-5872-4437-882d-c887a3c0cdf7}*SharedItemsImports = 4
 		tests\src\NLuaTest.Shared.projitems*{7279d001-6f21-4ff3-a0ee-3a1d12004ba3}*SharedItemsImports = 13
 		tests\src\NLuaTest.Shared.projitems*{73aa14f8-8a24-4011-8030-3fb3248044c3}*SharedItemsImports = 4
-		src\NLua.Core.projitems*{8fafdf62-e07e-487a-863c-74f308ae7ba6}*SharedItemsImports = 4
-		src\NLua.Core.projitems*{9238f6aa-2d63-4804-99d1-c279871f5669}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{8fafdf62-e07e-487a-863c-74f308ae7ba6}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{9238f6aa-2d63-4804-99d1-c279871f5669}*SharedItemsImports = 4
 		tests\src\NLuaTest.Shared.Scripts.projitems*{9e2a0bc0-5c10-4a85-9ca1-2beb751128b7}*SharedItemsImports = 13
-		src\NLua.Core.projitems*{bd205ad6-760e-48f3-bab2-21447396bd17}*SharedItemsImports = 13
-		src\NLua.Core.projitems*{bf6a650f-aa7a-4a08-8ada-08d9e73e1238}*SharedItemsImports = 4
-		src\NLua.Core.projitems*{c45805a8-6436-4738-bd9f-4632eea63bbc}*SharedItemsImports = 4
-		src\NLua.Core.projitems*{cfe2185e-c344-4503-9b94-9046744cef37}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{bd205ad6-760e-48f3-bab2-21447396bd17}*SharedItemsImports = 13
+		src\NLua.Shared.projitems*{bf6a650f-aa7a-4a08-8ada-08d9e73e1238}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{c45805a8-6436-4738-bd9f-4632eea63bbc}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{cfe2185e-c344-4503-9b94-9046744cef37}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

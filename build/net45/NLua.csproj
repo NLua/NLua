@@ -40,7 +40,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="..\..\src\NLua.Core.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Core.projitems')" />
+  <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Shared.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\targets\NLua.Sign.targets" />
   <Import Project="..\..\packages\KeraLua.1.0.5\build\net45\KeraLua.targets" Condition="Exists('..\..\packages\KeraLua.1.0.5\build\net45\KeraLua.targets')" />

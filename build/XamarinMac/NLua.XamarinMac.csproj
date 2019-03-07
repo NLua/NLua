@@ -69,7 +69,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="..\..\src\NLua.Core.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Core.projitems')" />
+  <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Import Project="..\targets\NLua.Sign.targets" />
 </Project>
