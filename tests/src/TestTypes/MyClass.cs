@@ -6,5 +6,10 @@
         {
             return 1;
         }
+
+        public T GetValue<T>()
+        {
+            return default(T);
+        }
     }
 }

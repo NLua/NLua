@@ -2425,6 +2425,31 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void PassIntegerToLua()
+        {
+            int x = 10;
+            using (var lua = new Lua())
+            {
+                try
+                {
+                    lua["x"] = x;
+
+                    object o = lua["x"];
+
+                    var my = new MyClass();
+
+                    object y = my.Func1();
+
+                    x = (int)(long)o;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+			}
+		}
+
 
 
         static Lua m_lua;
