@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
@@ -825,7 +825,7 @@ namespace NLua
          */
         internal object GetObject(LuaState luaState, int index)
         {
-            var type = luaState.Type(index);
+            LuaType type = luaState.Type(index);
 
             switch (type)
             {
@@ -1013,24 +1013,18 @@ namespace NLua
                 luaState.PushNumber((double)dc);
             else if(o is double db)
                 luaState.PushNumber(db);
-            else if (o is string)
-            {
-                string str = (string)o;
+            else if (o is string str)
                 luaState.PushString(str);
-            }
-            else if (o is bool)
-            {
-                bool b = (bool)o;
+            else if (o is bool b)
                 luaState.PushBoolean(b);
-            }
             else if (IsILua(o))
                 ((ILuaGeneratedType)o).LuaInterfaceGetLuaTable().Push(luaState);
-            else if (o is LuaTable)
-                ((LuaTable)o).Push(luaState);
-            else if (o is LuaNativeFunction)
-                PushFunction(luaState, (LuaNativeFunction)o);
-            else if (o is LuaFunction)
-                ((LuaFunction)o).Push(luaState);
+            else if (o is LuaTable table)
+                table.Push(luaState);
+            else if (o is LuaNativeFunction nativeFunction)
+                PushFunction(luaState, nativeFunction);
+            else if (o is LuaFunction luaFunction)
+                luaFunction.Push(luaState);
             else
                 PushObject(luaState, o, "luaNet_metatable");
         }

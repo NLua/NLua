@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using NLua;
 
@@ -45,8 +45,8 @@ namespace LoadFileTests
                 int color_g = (int)(double)lua["color.g"];
                 var func = (LuaFunction)lua["func"];
                 object[] res = func.Call(12, 34);
-                int x = (int)(double)res[0];
-                int y = (int)(double)res[1];
+                int x = (int)(long)res[0];
+                int y = (int)(long)res[1];
                 //function func(x,y)
                 //	return x,x+y
                 //end
@@ -82,9 +82,8 @@ namespace LoadFileTests
                 int color_g = (int)(double)lua["color.g"];
                 var func = (LuaFunction)lua["func"];
                 object[] res = func.Call(12, 34);
-                int x = (int)(double)res[0];
-                int y = (int)(double)res[1];
-
+                int x = (int)(long)res[0];
+                int y = (int)(long)res[1];
 
                 Assert.AreEqual(100, width);
                 Assert.AreEqual(200, height);

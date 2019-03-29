@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections;
 using System.Reflection;
@@ -373,6 +373,54 @@ namespace NLua
             return 2;
         }
 
+        private bool TryAccessByArray(LuaState luaState,
+            Type objType,
+            object obj,
+            object index)
+        {
+            if (!objType.IsArray)
+                return false;
+
+            int intIndex = -1;
+            if (index is long l)
+                intIndex = (int)l;
+            else if (index is double d)
+                intIndex = (int)d;
+
+            if (intIndex == -1)
+                return false;
+
+            Type type = objType.UnderlyingSystemType;
+
+            if (type == typeof(long[]))
+            {
+                long[] arr = (long[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
+            if (type == typeof(float[]))
+            {
+                float[] arr = (float[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
+            if (type == typeof(double[]))
+            {
+                double[] arr = (double[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
+            if (type == typeof(int[]))
+            {
+                int[] arr = (int[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
+
+            object[] arrObj = (object[])obj;
+            _translator.Push(luaState, arrObj[intIndex]);
+            return true;
+        }
 
         private int GetMethodFallback
         (LuaState luaState,
@@ -382,35 +430,8 @@ namespace NLua
          string methodName)
         {
             // Try to access by array if the type is right and index is an int (lua numbers always come across as double)
-            if (objType.IsArray && index is double)
-            {
-                int intIndex = (int)(double)index;
-
-                Type type = objType.UnderlyingSystemType;
-
-                if (type == typeof(float[]))
-                {
-                    float[] arr = (float[])obj;
-                    _translator.Push(luaState, arr[intIndex]);
-                    return 0;
-                }
-                if (type == typeof(double[]))
-                {
-                    double[] arr = (double[])obj;
-                    _translator.Push(luaState, arr[intIndex]);
-                    return 0;
-                }
-                if (type == typeof(int[]))
-                {
-                    int[] arr = (int[])obj;
-                    _translator.Push(luaState, arr[intIndex]);
-                    return 0;
-                }
-
-                object[] arrObj = (object[])obj;
-                _translator.Push(luaState, arrObj[intIndex]);
+            if (TryAccessByArray(luaState, objType, obj, index))
                 return 0;
-            }
 
             object method;
             if (!string.IsNullOrEmpty(methodName) && TryGetExtensionMethod(objType, methodName, out method))

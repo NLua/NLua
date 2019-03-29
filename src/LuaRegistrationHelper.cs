@@ -78,7 +78,7 @@ namespace NLua
             if (lua == null)
                 throw new ArgumentNullException(nameof(lua));
 
-            var type = typeof(T);
+            Type type = typeof(T);
 
             if (!type.IsEnum)
                 throw new ArgumentException("The type must be an enumeration!");
@@ -91,7 +91,7 @@ namespace NLua
             for (int i = 0; i < names.Length; i++)
             {
                 string path = type.Name + "." + names[i];
-                lua[path] = values[i];
+                lua.SetObjectToPath(path, values[i]);
             }
         }
     }

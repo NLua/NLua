@@ -94,7 +94,8 @@ namespace NLuaTest.TestTypes
         {
             if (func != null)
             {
-                return func.Call(1, 2);
+                object[]  result = func.Call(1, 2);
+                return result;
             }
             return null;
         }

@@ -755,8 +755,8 @@ namespace NLuaTest
             {
                 lua.DoString("a={b={c=2}}");
                 LuaTable tab = lua.GetTable("a.b");
-                double num = (double)tab["c"];
-                Assert.AreEqual(num, 2d);
+                long num = (long)tab["c"];
+                Assert.AreEqual(2L, num);
             }
         }
         /*
@@ -770,8 +770,8 @@ namespace NLuaTest
             {
                 lua.DoString("a={b={c=2}}");
                 LuaTable tab = lua.GetTable("a");
-                double num = (double)tab["b.c"];
-                Assert.AreEqual(num, 2d);
+                long num = (long)tab["b.c"];
+                Assert.AreEqual(2L, num);
             }
         }
         /*
@@ -875,8 +875,8 @@ namespace NLuaTest
             {
                 lua.DoString("a=2\nfunction f()\na=3\nend");
                 lua.GetFunction("f").Call();
-                double num = lua.GetNumber("a");
-                Assert.AreEqual(num, 3d);
+                int num = lua.GetInteger("a");
+                Assert.AreEqual(num, 3);
             }
         }
         /*
@@ -919,7 +919,7 @@ namespace NLuaTest
                 object[] ret = lua.GetFunction("f").Call(3);
 
                 Assert.AreEqual(1, ret.Length);
-                Assert.AreEqual(5, (double)ret[0]);
+                Assert.AreEqual(5, ret[0]);
             }
         }
         /*
@@ -931,11 +931,11 @@ namespace NLuaTest
             using (Lua lua = new Lua())
             {
                 lua.DoString("function f(x,y)\nreturn x,x+y\nend");
-                object[] ret = lua.GetFunction("f").Call(3, 2);
+                object[] ret = lua.GetFunction("f").Call(3, 2.5);
 
                 Assert.AreEqual(2, ret.Length);
-                Assert.AreEqual(3, (double)ret[0]);
-                Assert.AreEqual(5, (double)ret[1]);
+                Assert.AreEqual(3, (long)ret[0]);
+                Assert.AreEqual(5.5, (double)ret[1]);
             }
         }
         /*
@@ -950,8 +950,8 @@ namespace NLuaTest
                 object[] ret = lua.GetFunction("a.f").Call(3, 2);
 
                 Assert.AreEqual(2, ret.Length);
-                Assert.AreEqual(3, (double)ret[0]);
-                Assert.AreEqual(5, (double)ret[1]);
+                Assert.AreEqual(3, ret[0]);
+                Assert.AreEqual(5, ret[1]);
             }
         }
         /*
@@ -2428,27 +2428,17 @@ namespace NLuaTest
         [Test]
         public void PassIntegerToLua()
         {
-            int x = 10;
+            long x = 0x70DEC0DEC0DEC0DE;
+
             using (var lua = new Lua())
             {
-                try
-                {
-                    lua["x"] = x;
+                lua["x"] = x;
 
-                    object o = lua["x"];
+                long l = lua.GetLong("x");
 
-                    var my = new MyClass();
-
-                    object y = my.Func1();
-
-                    x = (int)(long)o;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-			}
-		}
+                Assert.AreEqual(x, l);
+            }
+        }
 
 
 

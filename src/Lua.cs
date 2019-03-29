@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
@@ -543,7 +543,59 @@ namespace NLua
             }
         }
 
+        public object GetObjectFromPath(string fullPath)
+        {
+            int oldTop = _luaState.GetTop();
+            string[] path = FullPathToArray(fullPath);
+            _luaState.GetGlobal(path[0]);
+            object returnValue = _translator.GetObject(_luaState, -1);
 
+            if (path.Length > 1)
+            {
+                var dispose = returnValue as LuaBase;
+                string[] remainingPath = new string[path.Length - 1];
+                Array.Copy(path, 1, remainingPath, 0, path.Length - 1);
+                returnValue = GetObject(remainingPath);
+                dispose?.Dispose();
+            }
+
+            _luaState.SetTop(oldTop);
+            return returnValue;
+        }
+
+        public void SetObjectToPath(string fullPath, object value)
+        {
+            int oldTop = _luaState.GetTop();
+            string[] path = FullPathToArray(fullPath);
+
+            if (path.Length == 1)
+            {
+                _translator.Push(_luaState, value);
+                _luaState.SetGlobal(fullPath);
+            }
+            else
+            {
+                _luaState.GetGlobal(path[0]);
+                string[] remainingPath = new string[path.Length - 1];
+                Array.Copy(path, 1, remainingPath, 0, path.Length - 1);
+                SetObject(remainingPath, value);
+            }
+
+            _luaState.SetTop(oldTop);
+
+            // Globals auto-complete
+            if (value == null)
+            {
+                // Remove now obsolete entries
+                _globals.Remove(fullPath);
+            }
+            else
+            {
+                // Add new entries
+                if (!_globals.Contains(fullPath))
+                    RegisterGlobal(fullPath, value.GetType(), 0);
+            }
+        }
         /*
             * Indexer for global variables from the LuaInterpreter
             * Supports navigation of tables by using . operator
@@ -551,55 +603,15 @@ namespace NLua
         public object this[string fullPath] {
             get
             {
-                int oldTop = _luaState.GetTop();
-                string[] path = FullPathToArray(fullPath);
-                _luaState.GetGlobal(path[0]);
-                object returnValue = _translator.GetObject(_luaState, -1);
-
-                if (path.Length > 1)
-                {
-                    var dispose = returnValue as LuaBase;
-                    string[] remainingPath = new string[path.Length - 1];
-                    Array.Copy(path, 1, remainingPath, 0, path.Length - 1);
-                    returnValue = GetObject(remainingPath);
-                    if (dispose != null)
-                        dispose.Dispose();
-                }
-
-                _luaState.SetTop(oldTop);
-                return returnValue;
+                // Silently convert Lua integer to double for backward compatibility with index[] operator
+                object obj = GetObjectFromPath(fullPath);
+                if (obj is long l)
+                    return (double)l;
+                return obj;
             }
             set
             {
-                int oldTop = _luaState.GetTop();
-                string[] path = FullPathToArray(fullPath);
-                if (path.Length == 1)
-                {
-                    _translator.Push(_luaState, value);
-                    _luaState.SetGlobal(fullPath);
-                }
-                else
-                {
-                    _luaState.GetGlobal(path[0]);
-                    string[] remainingPath = new string[path.Length - 1];
-                    Array.Copy(path, 1, remainingPath, 0, path.Length - 1);
-                    SetObject(remainingPath, value);
-                }
-
-                _luaState.SetTop(oldTop);
-
-                // Globals auto-complete
-                if (value == null)
-                {
-                    // Remove now obsolete entries
-                    _globals.Remove(fullPath);
-                }
-                else
-                {
-                    // Add new entries
-                    if (!_globals.Contains(fullPath))
-                        RegisterGlobal(fullPath, value.GetType(), 0);
-                }
+               SetObjectToPath(fullPath, value);
             }
         }
 
@@ -712,7 +724,21 @@ namespace NLua
             */
         public double GetNumber(string fullPath)
         {
-            return (double)this[fullPath];
+            // Silently convert Lua integer to double for backward compatibility with GetNumber method
+            object obj = GetObjectFromPath(fullPath);
+            if (obj is long l)
+                return l;
+            return (double)obj;
+        }
+
+        public int GetInteger(string fullPath)
+        {
+            return (int)(long)GetObjectFromPath(fullPath);
+        }
+
+        public long GetLong(string fullPath)
+        {
+            return (long)GetObjectFromPath(fullPath);
         }
 
         /*
@@ -720,7 +746,8 @@ namespace NLua
             */
         public string GetString(string fullPath)
         {
-            return this[fullPath].ToString();
+            object obj = GetObjectFromPath(fullPath);
+            return obj.ToString();
         }
 
         /*
@@ -728,7 +755,7 @@ namespace NLua
             */
         public LuaTable GetTable(string fullPath)
         {
-            return (LuaTable)this[fullPath];
+            return (LuaTable)GetObjectFromPath(fullPath);
         }
 
         /*
@@ -745,8 +772,8 @@ namespace NLua
             */
         public LuaFunction GetFunction(string fullPath)
         {
-            object obj = this[fullPath];
-            LuaFunction luaFunction = obj as LuaFunction;
+            object obj = GetObjectFromPath(fullPath);
+            var luaFunction = obj as LuaFunction;
             if (luaFunction != null)
                 return luaFunction;
 
@@ -1177,9 +1204,13 @@ namespace NLua
             // We leave nothing on the stack when we are done
             int oldTop = _luaState.GetTop();
             var wrapper = new LuaMethodWrapper(_translator, target, new ProxyType(function.DeclaringType), function);
+            
             _translator.Push(_luaState, new LuaNativeFunction(wrapper.InvokeFunction));
-            this[path] = _translator.GetObject(_luaState, -1);
-            var f = GetFunction(path);
+            
+            object value = _translator.GetObject(_luaState, -1);
+            SetObjectToPath(path, value);
+            
+            LuaFunction f = GetFunction(path);
             _luaState.SetTop(oldTop);
             return f;
         }
