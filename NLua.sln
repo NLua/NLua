@@ -37,6 +37,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLuaTest.Shared.Scripts", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLuaTest.Core", "tests\build\netcore\NLuaTest.Core.csproj", "{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D432F663-23CC-48B1-A413-935E5393493C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		tests\src\NLuaTest.Shared.projitems*{20225b34-18f0-477b-ae89-1c95b788c55d}*SharedItemsImports = 4

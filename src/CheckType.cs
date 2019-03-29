@@ -297,8 +297,6 @@ namespace NLua
             return luaState.ToBoolean(stackPos);
         }
 
-
-
         private object GetAsCharArray(LuaState luaState, int stackPos)
         {
             if (!luaState.IsString(stackPos))

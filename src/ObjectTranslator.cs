@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
@@ -825,12 +825,17 @@ namespace NLua
          */
         internal object GetObject(LuaState luaState, int index)
         {
-            var type = luaState.Type(index);
+            LuaType type = luaState.Type(index);
 
             switch (type)
             {
                 case LuaType.Number:
+                    {
+                        if (luaState.IsInteger(index))
+                            return luaState.ToInteger(index);
+
                         return luaState.ToNumber(index);
+                    }
                 case LuaType.String:
                         return luaState.ToString(index, false);
                 case LuaType.Boolean:
@@ -984,36 +989,42 @@ namespace NLua
         {
             if (o == null)
                 luaState.PushNil();
-            else if (o is sbyte || o is byte || o is short || o is ushort ||
-                     o is int || o is uint || o is long || o is float ||
-                     o is ulong || o is decimal || o is double)
-            {
-                double d = Convert.ToDouble(o);
-                luaState.PushNumber(d);
-            }
-            else if (o is char)
-            {
-                double d = (char)o;
-                luaState.PushNumber(d);
-            }
-            else if (o is string)
-            {
-                string str = (string)o;
+            else if (o is sbyte sb)
+                luaState.PushInteger(sb);
+            else if(o is byte bt)
+                luaState.PushInteger(bt);
+            else if(o is short s)
+                luaState.PushInteger(s);
+            else if (o is ushort us)
+                luaState.PushInteger(us);
+            else if (o is int i)
+                luaState.PushInteger(i);
+            else if (o is uint ui)
+                luaState.PushInteger(ui);
+            else if (o is long l)
+                luaState.PushInteger(l);
+            else if (o is ulong ul)
+                luaState.PushInteger((long)ul);
+            else if (o is char ch)
+                luaState.PushInteger(ch);
+            else if (o is float fl)
+                luaState.PushNumber(fl);
+            else if(o is decimal dc)
+                luaState.PushNumber((double)dc);
+            else if(o is double db)
+                luaState.PushNumber(db);
+            else if (o is string str)
                 luaState.PushString(str);
-            }
-            else if (o is bool)
-            {
-                bool b = (bool)o;
+            else if (o is bool b)
                 luaState.PushBoolean(b);
-            }
             else if (IsILua(o))
                 ((ILuaGeneratedType)o).LuaInterfaceGetLuaTable().Push(luaState);
-            else if (o is LuaTable)
-                ((LuaTable)o).Push(luaState);
-            else if (o is LuaNativeFunction)
-                PushFunction(luaState, (LuaNativeFunction)o);
-            else if (o is LuaFunction)
-                ((LuaFunction)o).Push(luaState);
+            else if (o is LuaTable table)
+                table.Push(luaState);
+            else if (o is LuaNativeFunction nativeFunction)
+                PushFunction(luaState, nativeFunction);
+            else if (o is LuaFunction luaFunction)
+                luaFunction.Push(luaState);
             else
                 PushObject(luaState, o, "luaNet_metatable");
         }
