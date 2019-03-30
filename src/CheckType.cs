@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using KeraLua;
 using NLua.Method;
@@ -186,38 +186,46 @@ namespace NLua
          */
         private object GetAsSbyte(LuaState luaState, int stackPos)
         {
-            sbyte retVal = (sbyte)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumber(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (sbyte)luaState.ToInteger(stackPos);
+
+            return (sbyte)luaState.ToNumber(stackPos);
         }
 
         private object GetAsByte(LuaState luaState, int stackPos)
         {
-            byte retVal = (byte)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumber(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (byte)luaState.ToInteger(stackPos);
+
+            return (byte)luaState.ToNumber(stackPos);
         }
 
         private object GetAsShort(LuaState luaState, int stackPos)
         {
-            short retVal = (short)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumber(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (short)luaState.ToInteger(stackPos);
+
+            return (short)luaState.ToNumber(stackPos);
         }
 
         private object GetAsUshort(LuaState luaState, int stackPos)
         {
-            ushort retVal = (ushort)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumericType(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (ushort)luaState.ToInteger(stackPos);
+
+            return (ushort)luaState.ToNumber(stackPos);
         }
 
         private object GetAsInt(LuaState luaState, int stackPos)
@@ -225,71 +233,87 @@ namespace NLua
             if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            int retVal = (int)luaState.ToNumber(stackPos);
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (int)luaState.ToInteger(stackPos);
+
+            return (int)luaState.ToNumber(stackPos);
         }
 
         private object GetAsUint(LuaState luaState, int stackPos)
         {
-            uint retVal = (uint)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumericType(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (uint)luaState.ToInteger(stackPos);
+
+            return (uint)luaState.ToNumber(stackPos);
         }
 
         private object GetAsLong(LuaState luaState, int stackPos)
         {
-            long retVal = (long)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumericType(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return luaState.ToInteger(stackPos);
+
+            return (long)luaState.ToNumber(stackPos);
         }
 
         private object GetAsUlong(LuaState luaState, int stackPos)
         {
-            ulong retVal = (ulong)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumericType(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (ulong)luaState.ToInteger(stackPos);
+
+            return (ulong)luaState.ToNumber(stackPos);
         }
 
         private object GetAsDouble(LuaState luaState, int stackPos)
         {
-            double retVal = luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumericType(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (double)luaState.ToInteger(stackPos);
+
+            return luaState.ToNumber(stackPos);
         }
 
         private object GetAsChar(LuaState luaState, int stackPos)
         {
-            char retVal = (char)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumericType(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (char)luaState.ToInteger(stackPos);
+
+            return (char)luaState.ToNumber(stackPos);
         }
 
         private object GetAsFloat(LuaState luaState, int stackPos)
         {
-            float retVal = (float)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumericType(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (float)luaState.ToInteger(stackPos);
+
+            return (float)luaState.ToNumber(stackPos);
         }
 
         private object GetAsDecimal(LuaState luaState, int stackPos)
         {
-            decimal retVal = (decimal)luaState.ToNumber(stackPos);
-            if (retVal == 0 && !luaState.IsNumericType(stackPos))
+            if (!luaState.IsNumericType(stackPos))
                 return null;
 
-            return retVal;
+            if (luaState.IsInteger(stackPos))
+                return (decimal)luaState.ToInteger(stackPos);
+
+            return (decimal)luaState.ToNumber(stackPos);
         }
 
         private object GetAsBoolean(LuaState luaState, int stackPos)

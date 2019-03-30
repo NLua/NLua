@@ -8,6 +8,8 @@ namespace NLuaTest.TestTypes
         public int val;
         private string strVal;
 
+        public long LongValue { get; set; }
+
         public TestClass()
         {
             val = 0;
@@ -312,7 +314,7 @@ namespace NLuaTest.TestTypes
             Console.WriteLine(output);
         }
 
-        static public int MethodWithParams(int a, params int[] others)
+        public static int MethodWithParams(int a, params int[] others)
         {
             Console.WriteLine(a);
             int i = 0;
@@ -324,7 +326,7 @@ namespace NLuaTest.TestTypes
             return i;
         }
 
-        static public int MethodWithObjectParams(params object[] others)
+        public static int MethodWithObjectParams(params object[] others)
         {
             int i = 0;
             foreach (var val in others)
@@ -333,6 +335,13 @@ namespace NLuaTest.TestTypes
                 i++;
             }
             return i;
+        }
+
+        public long MethodWithLong(long param)
+        {
+            LongValue = param;
+
+            return param;
         }
     }
 }

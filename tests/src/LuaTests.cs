@@ -2428,7 +2428,7 @@ namespace NLuaTest
         [Test]
         public void PassIntegerToLua()
         {
-            long x = 0x70DEC0DEC0DEC0DE;
+            long x = 0x7FFFC0DEC0DEC0DE;
 
             using (var lua = new Lua())
             {
@@ -2436,9 +2436,34 @@ namespace NLuaTest
 
                 long l = lua.GetLong("x");
 
-                Assert.AreEqual(x, l);
+                Assert.AreEqual(x, l, "#1");
+
+                lua.DoString("y = x");
+
+                l = lua.GetLong("y");
+
+                Assert.AreEqual(x, l, "#1.1");
+
+                var testObj = new TestClass();
+
+                lua["test"] = testObj;
+
+                lua.DoString("test:MethodWithLong(x)");
+
+                Assert.AreEqual(x, testObj.LongValue, "#2");
+
+                lua.DoString("test:MethodWithLong(0x7FFFC0DEC0DECAFF)");
+
+                Assert.AreEqual(0x7FFFC0DEC0DECAFF, testObj.LongValue, "#2.2");
+
+                lua.DoString("y = test:MethodWithLong(0x7FFFC0DECADECAFF)");
+
+                Assert.AreEqual(0x7FFFC0DECADECAFF, lua.GetLong("y"), "#2.3");
+
             }
         }
+
+        
 
 
 
