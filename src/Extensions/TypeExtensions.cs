@@ -112,7 +112,7 @@ namespace NLua.Extensions
                 .Where(t => t.method.IsDefined(typeof(ExtensionAttribute), false))
                 .Where(t =>
                     t.method.GetParameters()[0].ParameterType == type ||
-                     type.IsSubclassOf(t.method.GetParameters()[0].ParameterType) ||
+                     t.method.GetParameters()[0].ParameterType.IsAssignableFrom(type) ||
                      type.GetInterfaces().Contains(t.method.GetParameters()[0].ParameterType))
                 .Select(t => t.method);
 
