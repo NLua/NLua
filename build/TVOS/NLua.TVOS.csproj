@@ -51,7 +51,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.TVOS" />
     <Reference Include="KeraLua">
-      <HintPath>..\..\packages\KeraLua.1.0.5\lib\xamarintvos\KeraLua.dll</HintPath>
+      <HintPath>..\..\packages\KeraLua.1.0.6\lib\xamarintvos\KeraLua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

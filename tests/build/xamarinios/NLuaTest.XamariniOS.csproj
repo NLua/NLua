@@ -96,7 +96,7 @@
     <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Numerics" />
     <Reference Include="KeraLua">
-      <HintPath>..\..\..\packages\KeraLua.1.0.5\lib\xamarinios\KeraLua.dll</HintPath>
+      <HintPath>..\..\..\packages\KeraLua.1.0.6\lib\xamarinios\KeraLua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

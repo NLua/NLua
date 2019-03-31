@@ -49,7 +49,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.WatchOS" />
     <Reference Include="KeraLua">
-      <HintPath>..\..\packages\KeraLua.1.0.5\lib\xamarinwatchos\KeraLua.dll</HintPath>
+      <HintPath>..\..\packages\KeraLua.1.0.6\lib\xamarinwatchos\KeraLua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
