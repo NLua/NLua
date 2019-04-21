@@ -3,6 +3,17 @@ pool:
   demands: msbuild
 
 steps:
+# Azure DevOps hosted pool is still using an old version of Xamarin.iOS, 
+# so we will use the previous major version of Xcode
+- task: CmdLine@2
+  inputs:
+    script: 'sudo /usr/bin/xcode-select -s /Applications/Xcode_9.4.1.app/Contents/Developer'
+
+# Print the current version of Xamarin.iOS
+- task: CmdLine@2
+  inputs:
+    script: '/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch --version'
+
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
   inputs:

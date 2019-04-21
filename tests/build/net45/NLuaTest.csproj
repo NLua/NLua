@@ -48,7 +48,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="KeraLua">
-      <HintPath>..\..\..\packages\KeraLua.1.0.8\lib\net45\KeraLua.dll</HintPath>
+      <HintPath>..\..\..\packages\KeraLua.1.0.9\lib\net45\KeraLua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -70,5 +70,5 @@
     <Error Condition="!Exists('..\..\..\packages\NUnit.3.11.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NUnit.3.11.0\build\NUnit.props'))" />
     <Error Condition="!Exists('..\..\..\packages\NUnit3TestAdapter.3.13.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NUnit3TestAdapter.3.13.0\build\net35\NUnit3TestAdapter.props'))" />
   </Target>
-  <Import Project="..\..\..\packages\KeraLua.1.0.8\build\net45\KeraLua.targets" Condition="Exists('..\..\..\packages\KeraLua.1.0.8\build\net45\KeraLua.targets')" />
+  <Import Project="..\..\..\packages\KeraLua.1.0.9\build\net45\KeraLua.targets" Condition="Exists('..\..\..\packages\KeraLua.1.0.9\build\net45\KeraLua.targets')" />
 </Project>
