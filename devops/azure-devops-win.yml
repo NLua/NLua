@@ -1,0 +1,148 @@
+pool:
+  name: Hosted VS2017
+  demands:
+  - msbuild
+  - visualstudio
+  - vstest
+
+steps:
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet 4.7.3'
+  inputs:
+    versionSpec: 4.7.3
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+
+- powershell: 'Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString(''https://chocolatey.org/install.ps1''))'
+  displayName: 'Install Choco'
+
+- script: 'choco install gitversion.portable --pre '
+  displayName: 'Install GitVersion'
+
+- task: PowerShell@2
+  displayName: 'PreBuild Script'
+  inputs:
+    targetType: filePath
+    filePath: ./devops/PreBuild.ps1
+    arguments: 'NLua NLua.nuspec'
+
+- task: MSBuild@1
+  displayName: 'Build solution NLua.sln'
+  inputs:
+    solution: 'NLua.sln'
+    configuration: Release
+
+- task: MSBuild@1
+  displayName: 'Build .NET Core'
+  inputs:
+    solution: 'NLua.sln'
+    configuration: ReleaseCore
+    msbuildArguments: /restore
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet vstest'
+  inputs:
+    command: custom
+    custom: vstest
+    arguments: '.\tests\build\netcore\bin\Release\netcoreapp2.0\NLuaTest.dll'
+
+- task: MSBuild@1
+  displayName: 'Build Android'
+  inputs:
+    solution: 'NLua.sln'
+    configuration: ReleaseAndroid
+
+- task: VSTest@2
+  displayName: 'VsTest - testAssemblies'
+  inputs:
+    testAssemblyVer2: '.\tests\build\net45\bin\Release\NLuaTest.dll'
+    runSettingsFile: '.\tests\test.runsettings'
+    platform: x64
+
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download Build Xamarin.iOS'
+  inputs:
+    buildType: 'specific'
+    project: 'NuGets'
+    definition: 'NLua.Mac'
+    specificBuildWithTriggering: true
+    artifactName: Xamarin.iOS.NLua.dll
+
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download Build Xamarin.Mac'
+  inputs:
+    buildType: 'specific'
+    project: 'NuGets'
+    definition: 'NLua.Mac'
+    specificBuildWithTriggering: true
+    artifactName: Xamarin.Mac.NLua.dll
+
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download Build Xamarin.watchOS'
+  inputs:
+    buildType: 'specific'
+    project: 'NuGets'
+    definition: 'NLua.Mac'
+    specificBuildWithTriggering: true
+    artifactName: Xamarin.watchOS.NLua.dll
+
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download Build Xamarin.tvOS'
+  inputs:
+    buildType: 'specific'
+    project: 'NuGets'
+    definition: 'NLua.Mac'
+    specificBuildWithTriggering: true
+    artifactName: Xamarin.tvOS.NLua.dll
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: lib/Release/xamarinios/'
+  inputs:
+    SourceFolder: '$(System.ArtifactsDirectory)\Xamarin.iOS.NLua.dll\'
+    TargetFolder: lib/Release/xamarinios/
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: lib/Release/xamarinmac/'
+  inputs:
+    SourceFolder: '$(System.ArtifactsDirectory)\Xamarin.Mac.NLua.dll\'
+    TargetFolder: lib/Release/xamarinmac/
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: lib/Release/xamarintvos/ '
+  inputs:
+    SourceFolder: '$(System.ArtifactsDirectory)\Xamarin.tvOS.NLua.dll\'
+    TargetFolder: lib/Release/xamarintvos/
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: lib/Release/xamarinwatchos/'
+  inputs:
+    SourceFolder: '$(System.ArtifactsDirectory)\Xamarin.watchOS.NLua.dll\'
+    TargetFolder: lib/Release/xamarinwatchos/
+
+- script: 'nuget setapikey $(apikey)'
+  displayName: 'Set NuGet API Key'
+
+- task: PowerShell@2
+  displayName: 'Package NuGet'
+  inputs:
+    targetType: filePath
+    filePath: ./devops/Package.ps1
+    arguments: 'NLua NLua.nuspec'
+
+- script: 'rename *.nupkg NLua.nupkg'
+  displayName: 'Rename Nuget Package'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Save NLua.nupkg Artifact'
+  inputs:
+    PathtoPublish: NLua.nupkg
+    ArtifactName: NLua.nupkg
+
+- task: PowerShell@2
+  displayName: 'Publish NuGet'
+  inputs:
+    targetType: filePath
+    filePath: ./devops/Publish.ps1
+    arguments: NLua
+
