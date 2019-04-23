@@ -32,10 +32,10 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="KeraLua">
-      <HintPath>..\..\packages\KeraLua.1.0.10\lib\net45\KeraLua.dll</HintPath>
+    <Reference Include="KeraLua, Version=1.0.11.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\KeraLua.1.0.11\lib\net45\KeraLua.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -43,5 +43,11 @@
   <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Shared.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\targets\NLua.Sign.targets" />
-  <Import Project="..\..\packages\KeraLua.1.0.10\build\net45\KeraLua.targets" Condition="Exists('..\..\packages\KeraLua.1.0.10\build\net45\KeraLua.targets')" />
+  <Import Project="..\..\packages\KeraLua.1.0.11\build\net45\KeraLua.targets" Condition="Exists('..\..\packages\KeraLua.1.0.11\build\net45\KeraLua.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\KeraLua.1.0.11\build\net45\KeraLua.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\KeraLua.1.0.11\build\net45\KeraLua.targets'))" />
+  </Target>
 </Project>
