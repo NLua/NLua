@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
@@ -261,8 +261,17 @@ namespace NLua.Method
             //need to make a concrete type of the generic method definition
             var typeArgs = new List<Type>();
 
-            foreach (object arg in _lastCalledMethod.args)
-                typeArgs.Add(arg.GetType());
+            var parameters = methodToCall.GetParameters();
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var parameter = parameters[i];
+
+                if (parameter.ParameterType.IsGenericParameter)
+                {
+                    typeArgs.Add(_lastCalledMethod.args[i].GetType());
+                }
+            }
 
             var concreteMethod = methodToCall.MakeGenericMethod(typeArgs.ToArray());
 
