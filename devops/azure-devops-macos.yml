@@ -108,3 +108,39 @@ steps:
     useSameSourceVersion: true
     password: '$(myToken)'
 
+- task: SendTelegramNotification@0
+  condition: in(variables['Agent.JobStatus'], 'SucceededWithIssues')
+  inputs:
+    botToken: '$(botToken)'
+    chats: '$(chatId)'
+    taskStatus: false
+    message: |
+            ⚠️ <b>Warning!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
+            <pre>$(Build.SourceVersion)</pre>
+            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
+
+- task: SendTelegramNotification@0
+  condition: in(variables['Agent.JobStatus'], 'Failed')
+  inputs:
+    botToken: '$(botToken)'
+    chats: '$(chatId)'
+    taskStatus: false
+    buildQueuedBy: false
+    message: |
+            ❌ <b>Fail!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
+            <pre>$(Build.SourceVersion)</pre>
+            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
+
+- task: SendTelegramNotification@0
+  condition: in(variables['Agent.JobStatus'], 'Succeeded')
+  inputs:
+    botToken: '$(botToken)'
+    chats: '$(chatId)'
+    taskStatus: false
+    buildQueuedBy: false
+    message: |
+            ✅ <b>Success!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
+            <pre>$(Build.SourceVersion)</pre>
+            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
+
+# 
