@@ -13,6 +13,13 @@ steps:
 
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: NLua.sln
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: NLua.Core.sln
 
 - powershell: 'Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString(''https://chocolatey.org/install.ps1''))'
   displayName: 'Install Choco'
@@ -36,8 +43,8 @@ steps:
 - task: MSBuild@1
   displayName: 'Build .NET Core'
   inputs:
-    solution: 'NLua.sln'
-    configuration: ReleaseCore
+    solution: 'NLua.Core.sln'
+    configuration: Release
     msbuildArguments: /restore
 
 - task: DotNetCoreCLI@2
@@ -50,8 +57,8 @@ steps:
 - task: MSBuild@1
   displayName: 'Build Android'
   inputs:
-    solution: 'NLua.sln'
-    configuration: ReleaseAndroid
+    solution: 'NLua.Android.sln'
+    configuration: Release
 
 - task: VSTest@2
   displayName: 'VsTest - testAssemblies'
