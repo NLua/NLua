@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NLua", "NLua", "{4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLua.Shared", "src\NLua.Shared.shproj", "{BD205AD6-760E-48F3-BAB2-21447396BD17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.Android", "build\Android\NLua.Android.csproj", "{4B766E88-5872-4437-882D-C887A3C0CDF7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D432F663-23CC-48B1-A413-935E5393493C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\NLua.Shared.projitems*{4b766e88-5872-4437-882d-c887a3c0cdf7}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{bd205ad6-760e-48f3-bab2-21447396bd17}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B766E88-5872-4437-882D-C887A3C0CDF7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD205AD6-760E-48F3-BAB2-21447396BD17} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{4B766E88-5872-4437-882D-C887A3C0CDF7} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4720E610-698B-48DD-BBD7-03AC99E9BC90}
+	EndGlobalSection
+EndGlobal

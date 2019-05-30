@@ -25,16 +25,64 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KeraLua" Version="1.0.11" />
-    <PackageReference Include="nunit" Version="3.11.0" />
+    <PackageReference Include="KeraLua" Version="1.0.14" />
+    <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Include="..\..\scripts\core\bisect.lua">
+      <Link>scripts\core\bisect.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\core\cf.lua">
+      <Link>scripts\core\cf.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\core\factorial.lua">
+      <Link>scripts\core\factorial.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\core\fib.lua">
+      <Link>scripts\core\fib.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\core\fibfor.lua">
+      <Link>scripts\core\fibfor.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\core\life.lua">
+      <Link>scripts\core\life.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\core\printf.lua">
+      <Link>scripts\core\printf.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\core\sieve.lua">
+      <Link>scripts\core\sieve.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\core\sort.lua">
+      <Link>scripts\core\sort.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\test.lua">
+      <Link>scripts\test.lua</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\test_32.luac">
+      <Link>scripts\test_32.luac</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\test_64.luac">
+      <Link>scripts\test_64.luac</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\build\netcore\NLua.NetCore.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" />
-  <Import Project="..\..\src\NLuaTest.Shared.Scripts.projitems" Label="Shared" />
 </Project>

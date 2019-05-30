@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NLua", "NLua", "{4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLua.Shared", "src\NLua.Shared.shproj", "{BD205AD6-760E-48F3-BAB2-21447396BD17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BDBA9844-3BD3-436C-AB8A-8E78C810A710}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLua.NetCore", "build\netcore\NLua.NetCore.csproj", "{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLua.netstandard2.0", "build\netstandard2.0\NLua.netstandard2.0.csproj", "{6784E262-4845-4B08-8AD1-6319E76AF579}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLuaTest.Shared", "tests\src\NLuaTest.Shared.shproj", "{7279D001-6F21-4FF3-A0EE-3A1D12004BA3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLuaTest.Core", "tests\build\netcore\NLuaTest.Core.csproj", "{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D432F663-23CC-48B1-A413-935E5393493C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		tests\src\NLuaTest.Shared.projitems*{7279d001-6f21-4ff3-a0ee-3a1d12004ba3}*SharedItemsImports = 13
+		src\NLua.Shared.projitems*{bd205ad6-760e-48f3-bab2-21447396bd17}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6784E262-4845-4B08-8AD1-6319E76AF579}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD205AD6-760E-48F3-BAB2-21447396BD17} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{6784E262-4845-4B08-8AD1-6319E76AF579} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{7279D001-6F21-4FF3-A0EE-3A1D12004BA3} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
+		{C3B8FC88-E476-4D34-874E-A0FE67FA0CBC} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4720E610-698B-48DD-BBD7-03AC99E9BC90}
+	EndGlobalSection
+EndGlobal
