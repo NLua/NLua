@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NLua", "NLua", "{4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLua.Shared", "src\NLua.Shared.shproj", "{BD205AD6-760E-48F3-BAB2-21447396BD17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BDBA9844-3BD3-436C-AB8A-8E78C810A710}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.XamariniOS", "build\XamariniOS\NLua.XamariniOS.csproj", "{8FAFDF62-E07E-487A-863C-74F308AE7BA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.TVOS", "build\TVOS\NLua.TVOS.csproj", "{9238F6AA-2D63-4804-99D1-C279871F5669}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.WatchOS", "build\WatchOS\NLua.WatchOS.csproj", "{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.XamarinMac", "build\XamarinMac\NLua.XamarinMac.csproj", "{CFE2185E-C344-4503-9B94-9046744CEF37}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLuaTest.Shared", "tests\src\NLuaTest.Shared.shproj", "{7279D001-6F21-4FF3-A0EE-3A1D12004BA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.XamariniOS", "tests\build\xamarinios\NLuaTest.XamariniOS.csproj", "{20225B34-18F0-477B-AE89-1C95B788C55D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.XamarinTVOS", "tests\build\xamarintvos\NLuaTest.XamarinTVOS.csproj", "{73AA14F8-8A24-4011-8030-3FB3248044C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D432F663-23CC-48B1-A413-935E5393493C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		tests\src\NLuaTest.Shared.projitems*{20225b34-18f0-477b-ae89-1c95b788c55d}*SharedItemsImports = 4
+		tests\src\NLuaTest.Shared.projitems*{7279d001-6f21-4ff3-a0ee-3a1d12004ba3}*SharedItemsImports = 13
+		tests\src\NLuaTest.Shared.projitems*{73aa14f8-8a24-4011-8030-3fb3248044c3}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{8fafdf62-e07e-487a-863c-74f308ae7ba6}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{9238f6aa-2d63-4804-99d1-c279871f5669}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{bd205ad6-760e-48f3-bab2-21447396bd17}*SharedItemsImports = 13
+		src\NLua.Shared.projitems*{bf6a650f-aa7a-4a08-8ada-08d9e73e1238}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{cfe2185e-c344-4503-9b94-9046744cef37}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9238F6AA-2D63-4804-99D1-C279871F5669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFE2185E-C344-4503-9B94-9046744CEF37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{20225B34-18F0-477B-AE89-1C95B788C55D}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+		{73AA14F8-8A24-4011-8030-3FB3248044C3}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{73AA14F8-8A24-4011-8030-3FB3248044C3}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{73AA14F8-8A24-4011-8030-3FB3248044C3}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{73AA14F8-8A24-4011-8030-3FB3248044C3}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD205AD6-760E-48F3-BAB2-21447396BD17} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{8FAFDF62-E07E-487A-863C-74F308AE7BA6} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{9238F6AA-2D63-4804-99D1-C279871F5669} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{BF6A650F-AA7A-4A08-8ADA-08D9E73E1238} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{CFE2185E-C344-4503-9B94-9046744CEF37} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{7279D001-6F21-4FF3-A0EE-3A1D12004BA3} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
+		{20225B34-18F0-477B-AE89-1C95B788C55D} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
+		{73AA14F8-8A24-4011-8030-3FB3248044C3} = {BDBA9844-3BD3-436C-AB8A-8E78C810A710}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4720E610-698B-48DD-BBD7-03AC99E9BC90}
+	EndGlobalSection
+EndGlobal
