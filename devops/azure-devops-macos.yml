@@ -50,7 +50,7 @@ steps:
     solution: NLua.Mac.sln
     configuration: Release
 
-- script: 'mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./tests/build/net45/bin/Release/NLuaTest.dll -xml TEST-Result-Mac.xml'
+- script: 'mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./tests/build/net45/bin/Release/NLuaTest.dll --result=TEST-Result-Mac.xml'
   displayName: 'Run OSX tests'
 
 - task: PublishTestResults@2
