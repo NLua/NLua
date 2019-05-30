@@ -11,9 +11,9 @@ install:
   - sudo apt-get install mono-devel nunit nuget
 
 script:
-  - nuget restore
-  - msbuild /p:Configuration=Release /t:Restore
-  - msbuild /p:Configuration=Release
+  - nuget restore NLua.sln
+  - msbuild /p:Configuration=Release /t:Restore NLua.sln
+  - msbuild /p:Configuration=Release NLua.sln
   - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./tests/build/net45/bin/Release/NLuaTest.dll
 
 # Execute additional tests or commands
