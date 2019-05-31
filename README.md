@@ -21,7 +21,7 @@ Bridge between Lua world and the .NET (compatible with Xamarin.iOS/Mac/Android/.
 Building
 ---------
 
-	msbuild
+	msbuild NLua.sln
 
 
 ***
