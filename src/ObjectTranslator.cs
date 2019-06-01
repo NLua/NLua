@@ -1134,14 +1134,9 @@ namespace NLua
 
         void CleanFinalizedReferences(LuaState state)
         {
-            if (finalizedReferences.Count == 0)
-                return;
-
-            while (finalizedReferences.Count != 0)
-            {
-                int reference = finalizedReferences.Dequeue();
+            int reference;
+            while (finalizedReferences.TryDequeue(out reference))
                 state.Unref(LuaRegistry.Index, reference);
-            }
         }
     }
 }
