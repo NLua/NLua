@@ -2384,11 +2384,12 @@ namespace NLuaTest
 
         void PleaseRunFinalizers()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 20; i++)
             {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                Thread.Sleep(0);
+                Thread.Yield();
+                Thread.Sleep(1);
             }
         }
 
