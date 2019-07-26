@@ -10,10 +10,10 @@ NLua
 
 |  | Status | 
 | :------ | :------: | 
-| ![linux](https://badgen.net/badge//Ubuntu%20Linux%20x64?icon=travis&color=orange)   | [![Linux](https://travis-ci.org/NLua/NLua.svg?branch=master)](https://travis-ci.org/NLua/NLua) |
-| ![win](https://badgen.net/badge//Windows?icon=appveyor&color=blue) | [![Build status](https://ci.appveyor.com/api/projects/status/jkqcy9m9k35jwolx?svg=true)](https://ci.appveyor.com/project/viniciusjarina/NLua)|
-| ![mac](https://badgen.net/badge//macOS,iOS,tvOS?icon=apple&color=purple&list=1) | [![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua/NLua.Mac?branchName=master)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=13&branchName=master) |
-|![win](https://badgen.net/badge//Windows,.NET%20Core?icon=windows&list=1) | [![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua/NLua.Windows?branchName=master)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=14&branchName=master) |
+| ![linux](https://badgen.net/badge/icon/Ubuntu%20Linux%20x64?icon=travis&label&color=orange)   | [![Linux](https://travis-ci.org/NLua/NLua.svg?branch=master)](https://travis-ci.org/NLua/NLua) |
+| ![win](https://badgen.net/badge/icon/Windows?icon=windows&label&color=blue) | [![Build status](https://ci.appveyor.com/api/projects/status/jkqcy9m9k35jwolx?svg=true)](https://ci.appveyor.com/project/viniciusjarina/NLua)|
+| ![mac](https://badgen.net/badge/icon/macOS,iOS,tvOS,watchOS?icon=apple&label&color=purple&list=1) | [![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua/NLua.Mac?branchName=master)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=13&branchName=master) |
+|![win](https://badgen.net/badge/icon/Windows,.NET%20Core?icon=windows&label&list=1) | [![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua/NLua.Windows?branchName=master)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=14&branchName=master) |
 
 
 Bridge between Lua world and the .NET (compatible with Xamarin.iOS/Mac/Android/.NET/.NET Core) 
