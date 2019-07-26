@@ -3,15 +3,19 @@ pool:
   demands: msbuild
 
 steps:
+
 # Azure DevOps hosted pool is still using an old version of Xamarin.iOS, 
 # so we will use the previous major version of Xcode
 - task: CmdLine@2
+  displayName: 'Provisioning Xamarin.iOS'
   inputs:
-    script: 'sudo rm -rf /Applications/Xcode.app/;
-             sudo /bin/mv /Applications/Xcode_9.4.1.app/ /Applications/Xcode.app/'
+    script: 'cd ~;
+            curl -O https://download.visualstudio.microsoft.com/download/pr/87a0582e-09b0-499a-852a-6d963e614afb/b101ede139bd8ad0a5d4c2f0077c3ca4/xamarin.ios-12.14.0.110.pkg;
+            sudo installer -pkg ~/xamarin.ios-12.14.0.110.pkg -target /'
 
 # Print the current version of Xamarin.iOS
 - task: CmdLine@2
+  displayName: 'Show Xamarin.iOS Version'
   inputs:
     script: '/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch --version'
 
