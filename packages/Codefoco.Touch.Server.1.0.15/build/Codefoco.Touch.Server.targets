@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <TouchServerExe Condition=" '$(TouchServerExe)' == '' ">$(MSBuildProjectDirectory)/tools/Touch.Server.exe</TouchServerExe>
-        <MLaunch Condition=" '$(MLaunch)' == '' ">/Developer/MonoTouch/usr/bin/mlaunch</MLaunch>
+        <MLaunch Condition=" '$(MLaunch)' == '' ">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch</MLaunch>
         <TargetFrameworkIdentifier Condition=" '$(TargetFrameworkIdentifier)' == ''">Xamarin.iOS</TargetFrameworkIdentifier>
         <DeviceKind Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">iPhone</DeviceKind>
         <DeviceKind Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">Apple TV</DeviceKind>
