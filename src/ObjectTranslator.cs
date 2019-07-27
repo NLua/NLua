@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using KeraLua;
 
@@ -50,7 +51,7 @@ namespace NLua
         // object # to object (FIXME - it should be possible to get object address as an object #)
         readonly Dictionary<int, object> _objects = new Dictionary<int, object>();
 
-        readonly Queue<int> finalizedReferences = new Queue<int>();
+        readonly ConcurrentQueue<int> finalizedReferences = new ConcurrentQueue<int>();
 
         internal EventHandlerContainer PendingEvents = new EventHandlerContainer();
         MetaFunctions metaFunctions;
@@ -1136,11 +1137,10 @@ namespace NLua
             if (finalizedReferences.Count == 0)
                 return;
 
-            while (finalizedReferences.Count != 0)
-            {
-                int reference = finalizedReferences.Dequeue();
+            int reference;
+
+            while (finalizedReferences.TryDequeue(out reference))
                 state.Unref(LuaRegistry.Index, reference);
-            }
         }
     }
 }
