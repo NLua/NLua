@@ -2384,7 +2384,7 @@ namespace NLuaTest
 
         void PleaseRunFinalizers()
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 40; i++)
             {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -2412,6 +2412,7 @@ namespace NLuaTest
 
                 ImplicitlyCreateATable(lua);
 
+                lua.State.GarbageCollector(LuaGC.Collect, 0);
                 lua.State.GarbageCollector(LuaGC.Collect, 0);
 
                 int after2 = lua.State.GarbageCollector(LuaGC.Count, 0);
