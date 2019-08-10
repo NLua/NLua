@@ -1,3 +1,14 @@
+👋 Hello there! | 
+------------ | 
+> 🔭 Thank you for checking out this project.
+>
+> 🍻 We've made the project Open Source and **MIT** license so everyone can enjoy it. 
+>
+> 🛠 To deliver a project with quality we have to spent a lot of time working on it.
+> 
+> ⭐️ If you liked the project please star it.
+>
+> 💕 We also appreaciate any **Sponsor**  [ [Patreon](https://www.patreon.com/codefoco) | [PayPal](paypal.me/viniciusjarina) ] 
 
 [![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
 
