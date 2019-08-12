@@ -8,7 +8,7 @@
 > 
 > ⭐️ If you liked the project please star it.
 >
-> 💕 We also appreaciate any **Sponsor**  [ [Patreon](https://www.patreon.com/codefoco) | [PayPal](paypal.me/viniciusjarina) ] 
+> 💕 We also appreaciate any **Sponsor**  [ [Patreon](https://www.patreon.com/codefoco) | [PayPal](https://paypal.me/viniciusjarina) ] 
 
 [![Logo](https://secure.gravatar.com/avatar/77ecf0fb9d8419be7715c6e822e66562?s=150)]()
 
