@@ -22,26 +22,27 @@ namespace NLua
 {
     public class MetaFunctions
     {
-        public LuaNativeFunction GcFunction { get; }
-        public LuaNativeFunction IndexFunction { get;  }
-        public LuaNativeFunction NewIndexFunction { get; }
-        public LuaNativeFunction BaseIndexFunction { get; }
-        public LuaNativeFunction ClassIndexFunction { get; }
-        public LuaNativeFunction ClassNewIndexFunction { get; }
-        public LuaNativeFunction ExecuteDelegateFunction { get;  }
-        public LuaNativeFunction CallConstructorFunction { get; }
-        public LuaNativeFunction ToStringFunction { get; }
-        public LuaNativeFunction CallDelegateFunction { get; }
+        public static readonly LuaNativeFunction GcFunction = CollectObject;
+        public static readonly LuaNativeFunction IndexFunction  = GetMethod;
+        public static readonly LuaNativeFunction NewIndexFunction = SetFieldOrProperty;
+        public static readonly LuaNativeFunction BaseIndexFunction  = GetBaseMethod;
+        public static readonly LuaNativeFunction ClassIndexFunction  = GetClassMethod;
+        public static readonly LuaNativeFunction ClassNewIndexFunction  = SetClassFieldOrProperty;
+        public static readonly LuaNativeFunction ExecuteDelegateFunction  = RunFunctionDelegate;
+        public static readonly LuaNativeFunction CallConstructorFunction  = CallConstructor;
+        public static readonly LuaNativeFunction ToStringFunction = ToStringLua;
+        public static readonly LuaNativeFunction CallDelegateFunction = CallDelegate;
+        public static readonly LuaNativeFunction CallInvalidFunction  = CallInvalidMethod;
 
-        public LuaNativeFunction AddFunction { get; }
-        public LuaNativeFunction SubtractFunction { get; }
-        public LuaNativeFunction MultiplyFunction { get; }
-        public LuaNativeFunction DivisionFunction { get; }
-        public LuaNativeFunction ModulosFunction { get; }
-        public LuaNativeFunction UnaryNegationFunction { get; }
-        public LuaNativeFunction EqualFunction { get; }
-        public LuaNativeFunction LessThanFunction { get; }
-        public LuaNativeFunction LessThanOrEqualFunction { get; }
+        public static readonly LuaNativeFunction AddFunction = AddLua;
+        public static readonly LuaNativeFunction SubtractFunction = SubtractLua;
+        public static readonly LuaNativeFunction MultiplyFunction = MultiplyLua;
+        public static readonly LuaNativeFunction DivisionFunction = DivideLua;
+        public static readonly LuaNativeFunction ModulosFunction = ModLua;
+        public static readonly LuaNativeFunction UnaryNegationFunction = UnaryNegationLua;
+        public static readonly LuaNativeFunction EqualFunction = EqualLua;
+        public static readonly LuaNativeFunction LessThanFunction  = LessThanLua;
+        public static readonly LuaNativeFunction LessThanOrEqualFunction = LessThanOrEqualLua;
 
         readonly Dictionary<object, Dictionary<object, object>> _memberCache = new Dictionary<object, Dictionary<object, object>>();
         readonly ObjectTranslator _translator;
@@ -69,25 +70,6 @@ namespace NLua
         public MetaFunctions(ObjectTranslator translator)
         {
             _translator = translator;
-            GcFunction = CollectObject;
-            ToStringFunction = ToStringLua;
-            IndexFunction = GetMethod;
-            NewIndexFunction = SetFieldOrProperty;
-            BaseIndexFunction = GetBaseMethod;
-            CallConstructorFunction =CallConstructor;
-            ClassIndexFunction = GetClassMethod;
-            ClassNewIndexFunction = SetClassFieldOrProperty;
-            ExecuteDelegateFunction = RunFunctionDelegate;
-            CallDelegateFunction = CallDelegate;
-            AddFunction = AddLua;
-            SubtractFunction = SubtractLua;
-            MultiplyFunction = MultiplyLua;
-            DivisionFunction = DivideLua;
-            ModulosFunction = ModLua;
-            UnaryNegationFunction = UnaryNegationLua;
-            EqualFunction = EqualLua;
-            LessThanFunction = LessThanLua;
-            LessThanOrEqualFunction = LessThanOrEqualLua;
         }
 
         /*
@@ -365,11 +347,31 @@ namespace NLua
             if (!string.IsNullOrEmpty(methodName) && IsMemberPresent(proxyType, methodName))
                 return GetMember(luaState, proxyType, obj, methodName, BindingFlags.Instance);
 
+            // Try to access by array if the type is right and index is an int (lua numbers always come across as double)
+            if (TryAccessByArray(luaState, objType, obj, index))
+                return 1;
+
             int fallback = GetMethodFallback(luaState, objType, obj, index, methodName);
             if (fallback != 0)
                 return fallback;
 
+            if (!string.IsNullOrEmpty(methodName))
+            {
+                return PushInvalidMethodCall(luaState, objType, methodName);
+            }
+
             luaState.PushBoolean(false);
+            return 2;
+        }
+
+        private int PushInvalidMethodCall(LuaState luaState, Type type, string name)
+        {
+            var invokeDelegate = CallInvalidFunction;
+
+            SetMemberCache(type, name, invokeDelegate);
+
+            _translator.PushFunction(luaState, invokeDelegate);
+            _translator.Push(luaState, false);
             return 2;
         }
 
@@ -416,6 +418,42 @@ namespace NLua
                 _translator.Push(luaState, arr[intIndex]);
                 return true;
             }
+            if (type == typeof(byte[]))
+            {
+                byte[] arr = (byte[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
+            if (type == typeof(short[]))
+            {
+                short[] arr = (short[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
+            if (type == typeof(ushort[]))
+            {
+                ushort[] arr = (ushort[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
+            if (type == typeof(ulong[]))
+            {
+                ulong[] arr = (ulong[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
+            if (type == typeof(uint[]))
+            {
+                uint[] arr = (uint[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
+            if (type == typeof(sbyte[]))
+            {
+                sbyte[] arr = (sbyte[])obj;
+                _translator.Push(luaState, arr[intIndex]);
+                return true;
+            }
 
             object[] arrObj = (object[])obj;
             _translator.Push(luaState, arrObj[intIndex]);
@@ -429,10 +467,6 @@ namespace NLua
          object index,
          string methodName)
         {
-            // Try to access by array if the type is right and index is an int (lua numbers always come across as double)
-            if (TryAccessByArray(luaState, objType, obj, index))
-                return 0;
-
             object method;
             if (!string.IsNullOrEmpty(methodName) && TryGetExtensionMethod(objType, methodName, out method))
             {
@@ -482,6 +516,23 @@ namespace NLua
                         luaState.PushNil();
                     }
                 }
+            }
+
+            // Try find explicity interface implementation
+            MethodInfo explicitInterfaceMethod = objType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).
+                                                 FirstOrDefault(m => m.Name == methodName && m.IsPrivate && m.IsVirtual && m.IsFinal);
+
+            if (explicitInterfaceMethod != null)
+            {
+                var proxyType = new ProxyType(objType);
+                var methodWrapper = new LuaMethodWrapper(_translator, obj, proxyType, explicitInterfaceMethod);
+                var invokeDelegate = new LuaNativeFunction(methodWrapper.InvokeFunction);
+
+                SetMemberCache(proxyType, methodName, invokeDelegate);
+
+                _translator.PushFunction(luaState, invokeDelegate);
+                _translator.Push(luaState, true);
+                return 2;
             }
 
             return 0;
@@ -1065,6 +1116,21 @@ namespace NLua
             var translator = ObjectTranslatorPool.Instance.Find(luaState);
             var instance = translator.MetaFunctionsInstance;
             return instance.CallDelegateInternal(luaState);
+        }
+
+/*
+ * LuaNativeFunction called when the method wasn't found
+ */
+#if __IOS__ || __TVOS__ || __WATCHOS__
+        [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#endif
+        static int CallInvalidMethod(IntPtr state)
+        {
+            var luaState = LuaState.FromIntPtr(state);
+            var translator = ObjectTranslatorPool.Instance.Find(luaState);
+            translator.ThrowError(luaState, "Trying to invoke invalid method");
+            luaState.PushNil();
+            return 1;
         }
 
         int CallDelegateInternal(LuaState luaState)
