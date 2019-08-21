@@ -14,6 +14,7 @@ using NLuaTest.TestTypes;
 using NUnit.Framework;
 using Lua = NLua.Lua;
 using LuaFunction = NLua.LuaFunction;
+using System.Diagnostics;
 
 // ReSharper disable StringLiteralTypo
 
@@ -1161,15 +1162,18 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                var t1 = new TestTypes.TestClass();
+                var t1 = new TestClass();
                 lua["netobj"] = t1;
                 lua.DoString("a=netobj:foo()");
-                lua.DoString("b=netobj['NLuaTest.TestTypes.IFoo1.foo']");
+                lua.DoString("b=netobj['NLuaTest.TestTypes.IFoo1.foo']()");
                 int a = (int)lua.GetNumber("a");
                 int b = (int)lua.GetNumber("b");
 
-                Assert.AreEqual(5, a);
-                Assert.AreEqual(1, b);
+                Assert.AreEqual(5, a, "#1");
+                Assert.AreEqual(5, t1.foo(), "#1.1");
+                IFoo1 foo1 = t1;
+                Assert.AreEqual(3, b, "#2");
+                Assert.AreEqual(3, foo1.foo(), "#2.1");
             }
         }
         /*
@@ -2012,6 +2016,48 @@ namespace NLuaTest
                 lua.DoString(@" len2 = v:Length()");
                 double len2 = (double)lua["len2"];
                 Assert.AreEqual(len, len2, "#1");
+            }
+        }
+
+        [Test]
+        public void TestInexistentExtensionMethods()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.LoadCLRPackage();
+
+                lua.DoString(@" import ('NLuaTest', 'NLuaTest.TestTypes')
+                              v = Vector()
+                              v.x = 10
+                              v.y = 3
+                              v = v*2 ");
+
+                var sw = new Stopwatch();
+                sw.Start();
+                try
+                {
+                    lua.DoString(" v:Lengthx() ");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                sw.Stop();
+                long time1 = sw.ElapsedMilliseconds;
+
+                sw.Restart();
+                try
+                {
+                    lua.DoString(" v:Lengthx() ");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                sw.Stop();
+                long time2 = sw.ElapsedMilliseconds;
+
+                Assert.True(time2 < time1, "#1");
             }
         }
 

@@ -129,16 +129,16 @@ namespace NLua
         {
             luaState.NewMetaTable("luaNet_searchbase");
             luaState.PushString("__gc");
-            luaState.PushCFunction(metaFunctions.GcFunction);
+            luaState.PushCFunction(MetaFunctions.GcFunction);
             luaState.SetTable(-3);
             luaState.PushString("__tostring");
-            luaState.PushCFunction(metaFunctions.ToStringFunction);
+            luaState.PushCFunction(MetaFunctions.ToStringFunction);
             luaState.SetTable(-3);
             luaState.PushString("__index");
-            luaState.PushCFunction(metaFunctions.BaseIndexFunction);
+            luaState.PushCFunction(MetaFunctions.BaseIndexFunction);
             luaState.SetTable(-3);
             luaState.PushString("__newindex");
-            luaState.PushCFunction(metaFunctions.NewIndexFunction);
+            luaState.PushCFunction(MetaFunctions.NewIndexFunction);
             luaState.SetTable(-3);
             luaState.SetTop(-2);
         }
@@ -150,19 +150,19 @@ namespace NLua
         {
             luaState.NewMetaTable("luaNet_class");
             luaState.PushString("__gc");
-            luaState.PushCFunction(metaFunctions.GcFunction);
+            luaState.PushCFunction(MetaFunctions.GcFunction);
             luaState.SetTable(-3);
             luaState.PushString("__tostring");
-            luaState.PushCFunction(metaFunctions.ToStringFunction);
+            luaState.PushCFunction(MetaFunctions.ToStringFunction);
             luaState.SetTable(-3);
             luaState.PushString("__index");
-            luaState.PushCFunction(metaFunctions.ClassIndexFunction);
+            luaState.PushCFunction(MetaFunctions.ClassIndexFunction);
             luaState.SetTable(-3);
             luaState.PushString("__newindex");
-            luaState.PushCFunction(metaFunctions.ClassNewIndexFunction);
+            luaState.PushCFunction(MetaFunctions.ClassNewIndexFunction);
             luaState.SetTable(-3);
             luaState.PushString("__call");
-            luaState.PushCFunction(metaFunctions.CallConstructorFunction);
+            luaState.PushCFunction(MetaFunctions.CallConstructorFunction);
             luaState.SetTable(-3);
             luaState.SetTop(-2);
         }
@@ -172,7 +172,7 @@ namespace NLua
          */
         private void SetGlobalFunctions(LuaState luaState)
         {
-            luaState.PushCFunction(metaFunctions.IndexFunction);
+            luaState.PushCFunction(MetaFunctions.IndexFunction);
             luaState.SetGlobal("get_object_member");
             luaState.PushCFunction(_importTypeFunction);
             luaState.SetGlobal("import_type");
@@ -199,10 +199,10 @@ namespace NLua
         {
             luaState.NewMetaTable("luaNet_function");
             luaState.PushString("__gc");
-            luaState.PushCFunction(metaFunctions.GcFunction);
+            luaState.PushCFunction(MetaFunctions.GcFunction);
             luaState.SetTable(-3);
             luaState.PushString("__call");
-            luaState.PushCFunction(metaFunctions.ExecuteDelegateFunction);
+            luaState.PushCFunction(MetaFunctions.ExecuteDelegateFunction);
             luaState.SetTable(-3);
             luaState.SetTop(-2);
         }
@@ -677,13 +677,13 @@ namespace NLua
                     luaState.RawGet(LuaRegistry.Index);
                     luaState.RawSet(-3);
                     luaState.PushString("__gc");
-                    luaState.PushCFunction(metaFunctions.GcFunction);
+                    luaState.PushCFunction(MetaFunctions.GcFunction);
                     luaState.RawSet(-3);
                     luaState.PushString("__tostring");
-                    luaState.PushCFunction(metaFunctions.ToStringFunction);
+                    luaState.PushCFunction(MetaFunctions.ToStringFunction);
                     luaState.RawSet(-3);
                     luaState.PushString("__newindex");
-                    luaState.PushCFunction(metaFunctions.NewIndexFunction);
+                    luaState.PushCFunction(MetaFunctions.NewIndexFunction);
                     luaState.RawSet(-3);
                     // Bind C# operator with Lua metamethods (__add, __sub, __mul)
                     RegisterOperatorsFunctions(luaState, o.GetType());
@@ -711,7 +711,7 @@ namespace NLua
                 return;
 
             luaState.PushString("__call");
-            luaState.PushCFunction(metaFunctions.CallDelegateFunction);
+            luaState.PushCFunction(MetaFunctions.CallDelegateFunction);
             luaState.RawSet(-3);
         }
 
@@ -720,55 +720,55 @@ namespace NLua
             if (type.HasAdditionOperator())
             {
                 luaState.PushString("__add");
-                luaState.PushCFunction(metaFunctions.AddFunction);
+                luaState.PushCFunction(MetaFunctions.AddFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasSubtractionOperator())
             {
                 luaState.PushString("__sub");
-                luaState.PushCFunction(metaFunctions.SubtractFunction);
+                luaState.PushCFunction(MetaFunctions.SubtractFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasMultiplyOperator())
             {
                 luaState.PushString("__mul");
-                luaState.PushCFunction(metaFunctions.MultiplyFunction);
+                luaState.PushCFunction(MetaFunctions.MultiplyFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasDivisionOperator())
             {
                 luaState.PushString("__div");
-                luaState.PushCFunction(metaFunctions.DivisionFunction);
+                luaState.PushCFunction(MetaFunctions.DivisionFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasModulusOperator())
             {
                 luaState.PushString("__mod");
-                luaState.PushCFunction(metaFunctions.ModulosFunction);
+                luaState.PushCFunction(MetaFunctions.ModulosFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasUnaryNegationOperator())
             {
                 luaState.PushString("__unm");
-                luaState.PushCFunction(metaFunctions.UnaryNegationFunction);
+                luaState.PushCFunction(MetaFunctions.UnaryNegationFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasEqualityOperator())
             {
                 luaState.PushString("__eq");
-                luaState.PushCFunction(metaFunctions.EqualFunction);
+                luaState.PushCFunction(MetaFunctions.EqualFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasLessThanOperator())
             {
                 luaState.PushString("__lt");
-                luaState.PushCFunction(metaFunctions.LessThanFunction);
+                luaState.PushCFunction(MetaFunctions.LessThanFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasLessThanOrEqualOperator())
             {
                 luaState.PushString("__le");
-                luaState.PushCFunction(metaFunctions.LessThanOrEqualFunction);
+                luaState.PushCFunction(MetaFunctions.LessThanOrEqualFunction);
                 luaState.RawSet(-3);
             }
         }
