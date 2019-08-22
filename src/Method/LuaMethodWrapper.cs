@@ -148,10 +148,14 @@ namespace NLua.Method
 
             try
             {
+                object result;
+
                 if (method.IsConstructor)
-                    _translator.Push(luaState, ((ConstructorInfo)method).Invoke(_lastCalledMethod.args));
+                    result = ((ConstructorInfo)method).Invoke(_lastCalledMethod.args);
                 else
-                    _translator.Push(luaState, method.Invoke(targetObject, _lastCalledMethod.args));
+                    result = method.Invoke(targetObject, _lastCalledMethod.args);
+
+                _translator.Push(luaState, result);
             }
             catch (TargetInvocationException e)
             {
@@ -251,20 +255,30 @@ namespace NLua.Method
                 return 1;
             }
 
+            if (_lastCalledMethod.cachedMethod.ContainsGenericParameters)
+                return CallInvokeOnGenericMethod(luaState, (MethodInfo)_lastCalledMethod.cachedMethod, targetObject);
+
             return CallInvoke(luaState, _lastCalledMethod.cachedMethod, targetObject);
         }
 
         int CallInvokeOnGenericMethod(LuaState luaState, MethodInfo methodToCall, object targetObject)
         {
-            _translator.MatchParameters(luaState, methodToCall, _lastCalledMethod, 0);
-
             //need to make a concrete type of the generic method definition
             var typeArgs = new List<Type>();
 
-            foreach (object arg in _lastCalledMethod.args)
-                typeArgs.Add(arg.GetType());
+            ParameterInfo [] parameters = methodToCall.GetParameters();
 
-            var concreteMethod = methodToCall.MakeGenericMethod(typeArgs.ToArray());
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                ParameterInfo parameter = parameters[i];
+
+                if (!parameter.ParameterType.IsGenericParameter)
+                    continue;
+
+                typeArgs.Add(_lastCalledMethod.args[i].GetType());
+            }
+
+            MethodInfo concreteMethod = methodToCall.MakeGenericMethod(typeArgs.ToArray());
 
             _translator.Push(luaState, concreteMethod.Invoke(targetObject, _lastCalledMethod.args));
 
@@ -316,6 +330,8 @@ namespace NLua.Method
                     luaState.PushNil();
                     return 1;
                 }
+
+                _translator.MatchParameters(luaState, methodToCall, _lastCalledMethod, 0);
 
                 return CallInvokeOnGenericMethod(luaState, (MethodInfo) methodToCall, targetObject);
             }

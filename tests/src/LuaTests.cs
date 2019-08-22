@@ -2514,7 +2514,29 @@ namespace NLuaTest
             }
         }
 
-        
+        [Test]
+        public void CallMethodWithGeneric()
+        {
+            using (var lua = new Lua())
+            {
+                var u = new TestClassWithGenericMethod();
+                lua["u"] = u;
+                lua["foo"] = new DateTime(1234);
+
+                lua.DoString("u:GenericMethodWithCommonArgs(10, 11, foo)");
+
+                var foo = (DateTime)u.PassedValue;
+                int x = u.x;
+                int y = u.y;
+
+                Assert.AreEqual(foo, new DateTime(1234), "#1");
+                Assert.AreEqual(x, 10, "#2");
+                Assert.AreEqual(y, 11, "#3");
+            }
+        }
+
+
+
 
 
 

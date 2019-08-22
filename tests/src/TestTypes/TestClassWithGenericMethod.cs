@@ -6,6 +6,8 @@
     public class TestClassWithGenericMethod
     {
         private object _PassedValue;
+        public int x;
+        public int y;
 
         public object PassedValue
         {
@@ -22,6 +24,14 @@
         public void GenericMethod<T>(T value)
         {
             _PassedValue = value;
+            _GenericMethodSuccess = true;
+        }
+
+        public void GenericMethodWithCommonArgs<U>(int x, int y, U value)
+        {
+            _PassedValue = value;
+            this.x = x;
+            this.y = y;
             _GenericMethodSuccess = true;
         }
 
