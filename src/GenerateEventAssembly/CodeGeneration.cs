@@ -13,7 +13,7 @@ namespace NLua
         private readonly Dictionary<Type, LuaClassType> _classCollection = new Dictionary<Type, LuaClassType>();
         private readonly Dictionary<Type, Type> _delegateCollection = new Dictionary<Type, Type>();
 
-#if !(__IOS__ || __TVOS__ || __WATCHOS__) && !NETSTANDARD
+#if !NETSTANDARD
         private Dictionary<Type, Type> eventHandlerCollection = new Dictionary<Type, Type>();
         private Type eventHandlerParent = typeof(LuaEventHandler);
         private Type delegateParent = typeof(LuaDelegate);
@@ -36,7 +36,7 @@ namespace NLua
 #if NETCOREAPP
             newAssembly = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             newModule = newAssembly.DefineDynamicModule("NLua_generatedcode");
-#elif !(__IOS__ || __TVOS__ || __WATCHOS__) && !NETSTANDARD
+#elif !NETSTANDARD
             newAssembly = Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             newModule = newAssembly.DefineDynamicModule("NLua_generatedcode");
 #endif
@@ -52,9 +52,7 @@ namespace NLua
          */
         private Type GenerateEvent(Type eventHandlerType)
         {
-#if __IOS__ || __TVOS__ || __WATCHOS__
-            throw new NotImplementedException (" Emit not available on Xamarin.iOS ");
-#elif NETSTANDARD
+#if NETSTANDARD
             throw new NotImplementedException(" Emit not available on .NET Standard ");
 #else
             string typeName;
@@ -95,9 +93,7 @@ namespace NLua
          */
         private Type GenerateDelegate(Type delegateType)
         {
-#if __IOS__ || __TVOS__ || __WATCHOS__
-            throw new NotImplementedException ("GenerateDelegate is not available on iOS, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
-#elif NETSTANDARD
+#if NETSTANDARD
             throw new NotImplementedException("GenerateDelegate is not available on Windows Store, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
 #else
             string typeName;
@@ -301,9 +297,8 @@ namespace NLua
          */
         public void GenerateClass(Type klass, out Type newType, out Type[][] returnTypes)
         {
-#if __IOS__ || __TVOS__ || __WATCHOS__
-            throw new NotImplementedException (" Emit not available on Xamarin.iOS ");
-#elif NETSTANDARD
+
+#if NETSTANDARD
             throw new NotImplementedException (" Emit not available on .NET Standard ");
 #else
             string typeName;
@@ -415,7 +410,7 @@ namespace NLua
             returnTypes = returnTypesList.ToArray();
         }
 
-#if !(__IOS__ || __TVOS__ || __WATCHOS__) && !NETSTANDARD
+#if !NETSTANDARD
 
         /*
          * Generates an overriden implementation of method inside myType that delegates
@@ -664,9 +659,7 @@ namespace NLua
          */
         public LuaEventHandler GetEvent(Type eventHandlerType, LuaFunction eventHandler)
         {
-#if __IOS__ || __TVOS__ || __WATCHOS__
-            throw new NotImplementedException (" Emit not available on Xamarin.iOS ");
-#elif NETSTANDARD
+#if NETSTANDARD
             throw new NotImplementedException (" Emit not available on .NET Standard ");
 #else
             Type eventConsumerType;
