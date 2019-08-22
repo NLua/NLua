@@ -2036,7 +2036,8 @@ namespace NLuaTest
                 sw.Start();
                 try
                 {
-                    lua.DoString(" v:Lengthx() ");
+                    for(int i = 0; i < 100; i++)
+                        lua.DoString($" v:Lengthx{i}() ");
                 }
                 catch (Exception e)
                 {
@@ -2048,7 +2049,8 @@ namespace NLuaTest
                 sw.Restart();
                 try
                 {
-                    lua.DoString(" v:Lengthx() ");
+                    for (int i = 0; i < 100; i++)
+                        lua.DoString($" v:Lengthx{i}() ");
                 }
                 catch (Exception e)
                 {
