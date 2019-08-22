@@ -2036,7 +2036,7 @@ namespace NLuaTest
                 sw.Start();
                 try
                 {
-                    for(int i = 0; i < 100; i++)
+                    for(int i = 0; i < 500; i++)
                         lua.DoString($" v:Lengthx{i}() ");
                 }
                 catch (Exception e)
@@ -2046,20 +2046,21 @@ namespace NLuaTest
                 sw.Stop();
                 long time1 = sw.ElapsedMilliseconds;
 
-                sw.Restart();
+                var sw2 = new Stopwatch();
+                sw2.Start();
                 try
                 {
-                    for (int i = 0; i < 100; i++)
+                    for (int i = 0; i < 500; i++)
                         lua.DoString($" v:Lengthx{i}() ");
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
-                sw.Stop();
-                long time2 = sw.ElapsedMilliseconds;
+                sw2.Stop();
+                long time2 = sw2.ElapsedMilliseconds;
 
-                Assert.True(time2 < time1, "#1");
+                Assert.True(time2 < time1, "#1 t1:" + time1 + "t2:" + time2);
             }
         }
 
