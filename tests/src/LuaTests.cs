@@ -1722,7 +1722,7 @@ namespace NLuaTest
                 lua.DoString("TestClass=luanet.import_type('NLuaTest.TestTypes.TestClass')");
                 lua.DoString("test_cons=luanet.get_constructor_bysig(TestClass,'System.String')");
                 lua.DoString("test=test_cons('test')");
-                TestTypes.TestClass test = (TestTypes.TestClass)lua["test"];
+                var test = (TestClass)lua["test"];
 
                 Assert.AreEqual("test", test.getStrVal());
             }
@@ -2402,7 +2402,7 @@ namespace NLuaTest
         }
 
         [Test]
-        public static void TestUseLuaObjectAfterDisposeShouldNotCrash()
+        public void TestUseLuaObjectAfterDisposeShouldNotCrash()
         {
             LuaTable table;
             LuaFunction function;
@@ -2535,7 +2535,19 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void CallStaticMethod()
+        {
+            using (var lua = new Lua())
+            {
+                lua.DoString("FakeType = {}");
+                lua["FakeType.bar"] = (Func<object[],int>) TestClass.MethodWithObjectParams;
 
+                lua.DoString("i = FakeType.bar('one', 1)");
+
+                Assert.AreEqual(2, lua["i"], "#1");
+            }
+        }
 
 
 

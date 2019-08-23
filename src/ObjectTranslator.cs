@@ -37,14 +37,14 @@ namespace NLua
             }
         }
 
-        readonly LuaNativeFunction _registerTableFunction;
-        readonly LuaNativeFunction _unregisterTableFunction;
-        readonly LuaNativeFunction _getMethodSigFunction;
-        readonly LuaNativeFunction _getConstructorSigFunction;
-        readonly LuaNativeFunction _importTypeFunction;
-        readonly LuaNativeFunction _loadAssemblyFunction;
-        readonly LuaNativeFunction _ctypeFunction;
-        readonly LuaNativeFunction _enumFromIntFunction;
+        private static readonly LuaNativeFunction _registerTableFunction = RegisterTable;
+        private static readonly LuaNativeFunction _unregisterTableFunction = UnregisterTable;
+        private static readonly LuaNativeFunction _getMethodSigFunction = GetMethodSignature;
+        private static readonly LuaNativeFunction _getConstructorSigFunction = GetConstructorSignature;
+        private static readonly LuaNativeFunction _importTypeFunction = ImportType;
+        private static readonly LuaNativeFunction _loadAssemblyFunction = LoadAssembly;
+        private static readonly LuaNativeFunction _ctypeFunction = CType;
+        private static readonly LuaNativeFunction _enumFromIntFunction = EnumFromInt;
 
         // object to object #
         readonly Dictionary<object, int> _objectsBackMap = new Dictionary<object, int>(new ReferenceComparer());
@@ -76,15 +76,6 @@ namespace NLua
             typeChecker = new CheckType(this);
             metaFunctions = new MetaFunctions(this);
             assemblies = new List<Assembly>();
-
-            _importTypeFunction = ImportType;
-            _loadAssemblyFunction = LoadAssembly;
-            _registerTableFunction = RegisterTable;
-            _unregisterTableFunction = UnregisterTable;
-            _getMethodSigFunction = GetMethodSignature;
-            _getConstructorSigFunction = GetConstructorSignature;
-            _ctypeFunction = CType;
-            _enumFromIntFunction = EnumFromInt;
 
             CreateLuaObjectList(luaState);
             CreateIndexingMetaFunction(luaState);
