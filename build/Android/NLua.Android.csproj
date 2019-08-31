@@ -44,7 +44,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
     <Reference Include="KeraLua">
-      <HintPath>..\..\packages\KeraLua.1.0.21\lib\MonoAndroid\KeraLua.dll</HintPath>
+      <HintPath>..\..\packages\KeraLua.1.0.22\lib\MonoAndroid\KeraLua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
