@@ -484,7 +484,7 @@ namespace NLua
                 if (methodInfo.GetParameters().Length != 1)
                     continue;
 
-                var actualParams = methodInfo.GetParameters();
+                ParameterInfo[] actualParams = methodInfo.GetParameters();
 
                 if (actualParams.Length != 1)
                 {
@@ -495,6 +495,11 @@ namespace NLua
                 {
                     // Get the index in a form acceptable to the getter
                     index = _translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
+
+                    // If the index type and the parameter doesn't match, just skip it
+                    if (index == null)
+                        break;
+
                     object[] args = new object[1];
 
                     // Just call the indexer - if out of bounds an exception will happen
@@ -504,6 +509,7 @@ namespace NLua
                     {
                         object result = methodInfo.Invoke(obj, args);
                         _translator.Push(luaState, result);
+                        return 1;
                     }
                     catch (TargetInvocationException e)
                     {
