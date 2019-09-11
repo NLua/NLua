@@ -15,6 +15,7 @@ using NUnit.Framework;
 using Lua = NLua.Lua;
 using LuaFunction = NLua.LuaFunction;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 // ReSharper disable StringLiteralTypo
 
@@ -2550,7 +2551,26 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void CallDictionary()
+        {
+            using (var lua = new Lua())
+            {
+                var obj = new Dictionary<string, string>()
+                {
+                    { "key1" ,"value1" },
+                    { "key2" ,"value2" }
+                };
 
+                lua["obj"] = obj;
+
+                lua.DoString("i = obj.key1");
+                lua.DoString("j = obj['key2']");
+
+                Assert.AreEqual("value1", lua["i"], "#1");
+                Assert.AreEqual("value2", lua["j"], "#2");
+            }
+        }
 
 
         static Lua m_lua;
