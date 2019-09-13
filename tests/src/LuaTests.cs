@@ -16,6 +16,7 @@ using Lua = NLua.Lua;
 using LuaFunction = NLua.LuaFunction;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Collections;
 
 // ReSharper disable StringLiteralTypo
 
@@ -2569,6 +2570,33 @@ namespace NLuaTest
 
                 Assert.AreEqual("value1", lua["i"], "#1");
                 Assert.AreEqual("value2", lua["j"], "#2");
+
+                IDictionary<string,object> obj2 = new Dictionary<string, object>()
+                {
+                    { "key1" ,"value1" },
+                    { "key2" ,"value2" }
+                };
+
+                lua["obj2"] = obj;
+
+                lua.DoString("l = obj2.key1");
+                lua.DoString("m = obj2['key2']");
+
+                Assert.AreEqual("value1", lua["l"], "#3");
+                Assert.AreEqual("value2", lua["m"], "#4");
+
+                IDictionary<string, object> obj3 = new System.Dynamic.ExpandoObject();
+
+                obj3["key1"] = "value1";
+                obj3["key2"] = "value2";
+
+                lua["obj3"] = obj;
+
+                lua.DoString("n = obj3.key1");
+                lua.DoString("o = obj3['key2']");
+
+                Assert.AreEqual("value1", lua["n"], "#5");
+                Assert.AreEqual("value2", lua["o"], "#6");
             }
         }
 
