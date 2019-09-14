@@ -473,56 +473,22 @@ namespace NLua
                 return PushExtensionMethod(luaState, objType, obj, methodName, method);
             }
             // Try to use get_Item to index into this .net object
-            var methods = objType.GetMethods();
+            MethodInfo[] methods = objType.GetMethods();
 
-            foreach (var methodInfo in methods)
-            {
-                if (methodInfo.Name != "get_Item")
-                    continue;
+            int res = TryIndexMethods(luaState, methods, obj, index);
+            if (res != 0)
+                return res;
 
-                // Check if the signature matches the input
-                if (methodInfo.GetParameters().Length != 1)
-                    continue;
+            // Fallback to GetRuntimeMethods
+            methods = objType.GetRuntimeMethods().ToArray();
 
-                ParameterInfo[] actualParams = methodInfo.GetParameters();
+            res = TryIndexMethods(luaState, methods, obj, index);
+            if (res != 0)
+                return res;
 
-                if (actualParams.Length != 1)
-                {
-                    _translator.ThrowError(luaState, "method not found (or no indexer): " + index);
-                    luaState.PushNil();
-                }
-                else
-                {
-                    // Get the index in a form acceptable to the getter
-                    index = _translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
-
-                    // If the index type and the parameter doesn't match, just skip it
-                    if (index == null)
-                        break;
-
-                    object[] args = new object[1];
-
-                    // Just call the indexer - if out of bounds an exception will happen
-                    args[0] = index;
-
-                    try
-                    {
-                        object result = methodInfo.Invoke(obj, args);
-                        _translator.Push(luaState, result);
-                        return 1;
-                    }
-                    catch (TargetInvocationException e)
-                    {
-                        // Provide a more readable description for the common case of key not found
-                        if (e.InnerException is KeyNotFoundException)
-                            _translator.ThrowError(luaState, "key '" + index + "' not found ");
-                        else
-                            _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
-
-                        luaState.PushNil();
-                    }
-                }
-            }
+            res = TryGetValueForKeyMethods(luaState, methods, obj, index);
+            if (res != 0)
+                return res;
 
             // Try find explicity interface implementation
             MethodInfo explicitInterfaceMethod = objType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).
@@ -541,6 +507,107 @@ namespace NLua
                 return 2;
             }
 
+            return 0;
+        }
+
+        private int TryGetValueForKeyMethods(LuaState luaState, MethodInfo[] methods, object obj, object index)
+        {
+            foreach (MethodInfo methodInfo in methods)
+            {
+                if (methodInfo.Name != "TryGetValueForKey")
+                    continue;
+
+                // Check if the signature matches the input
+                if (methodInfo.GetParameters().Length != 2)
+                    continue;
+
+                ParameterInfo[] actualParams = methodInfo.GetParameters();
+
+                // Get the index in a form acceptable to the getter
+                index = _translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
+
+                // If the index type and the parameter doesn't match, just skip it
+                if (index == null)
+                    break;
+
+                object[] args = new object[2];
+
+                // Just call the indexer - if out of bounds an exception will happen
+                args[0] = index;
+
+                try
+                {
+                    bool found = (bool)methodInfo.Invoke(obj, args);
+
+                    if (!found)
+                    {
+                        _translator.ThrowError(luaState, "key not found: " + index);
+                        luaState.PushNil();
+                        return 1;
+                    }
+
+                    _translator.Push(luaState, args[1]);
+                    return 1;
+                }
+                catch (TargetInvocationException e)
+                {
+                    // Provide a more readable description for the common case of key not found
+                    if (e.InnerException is KeyNotFoundException)
+                        _translator.ThrowError(luaState, "key '" + index + "' not found ");
+                    else
+                        _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
+
+                    luaState.PushNil();
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+
+        private int TryIndexMethods(LuaState luaState, MethodInfo [] methods, object obj, object index)
+        {
+            foreach (MethodInfo methodInfo in methods)
+            {
+                if (methodInfo.Name != "get_Item")
+                    continue;
+
+                // Check if the signature matches the input
+                if (methodInfo.GetParameters().Length != 1)
+                    continue;
+
+                ParameterInfo[] actualParams = methodInfo.GetParameters();
+
+                // Get the index in a form acceptable to the getter
+                index = _translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
+
+                // If the index type and the parameter doesn't match, just skip it
+                if (index == null)
+                    break;
+
+                object[] args = new object[1];
+
+                // Just call the indexer - if out of bounds an exception will happen
+                args[0] = index;
+
+                try
+                {
+                    object result = methodInfo.Invoke(obj, args);
+                    _translator.Push(luaState, result);
+                    return 1;
+                }
+                catch (TargetInvocationException e)
+                {
+                    // Provide a more readable description for the common case of key not found
+                    if (e.InnerException is KeyNotFoundException)
+                        _translator.ThrowError(luaState, "key '" + index + "' not found ");
+                    else
+                        _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
+
+                    luaState.PushNil();
+                    return 1;
+                }
+            }
             return 0;
         }
 
@@ -912,11 +979,6 @@ namespace NLua
                     else
                         _translator.ThrowError(luaState, detailMessage); // Pass the original message from trySetMember because it is probably best
                 }
-            }
-            catch (SEHException)
-            {
-                // If we are seeing a C++ exception - this must actually be for Lua's private use.  Let it handle it
-                throw;
             }
             catch (Exception e)
             {

@@ -2573,30 +2573,30 @@ namespace NLuaTest
 
                 IDictionary<string,object> obj2 = new Dictionary<string, object>()
                 {
-                    { "key1" ,"value1" },
-                    { "key2" ,"value2" }
+                    { "key1" ,"value3" },
+                    { "key2" ,"value4" }
                 };
 
-                lua["obj2"] = obj;
+                lua["obj2"] = obj2;
 
                 lua.DoString("l = obj2.key1");
                 lua.DoString("m = obj2['key2']");
 
-                Assert.AreEqual("value1", lua["l"], "#3");
-                Assert.AreEqual("value2", lua["m"], "#4");
+                Assert.AreEqual("value3", lua["l"], "#3");
+                Assert.AreEqual("value4", lua["m"], "#4");
 
                 IDictionary<string, object> obj3 = new System.Dynamic.ExpandoObject();
 
-                obj3["key1"] = "value1";
-                obj3["key2"] = "value2";
+                obj3["key1"] = "value5";
+                obj3["key2"] = "value6";
 
-                lua["obj3"] = obj;
+                lua["obj3"] = obj3;
 
                 lua.DoString("n = obj3.key1");
                 lua.DoString("o = obj3['key2']");
 
-                Assert.AreEqual("value1", lua["n"], "#5");
-                Assert.AreEqual("value2", lua["o"], "#6");
+                Assert.AreEqual("value5", lua["n"], "#5");
+                Assert.AreEqual("value6", lua["o"], "#6");
             }
         }
 
