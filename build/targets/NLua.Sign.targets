@@ -4,7 +4,7 @@
         <SignAssembly>true</SignAssembly>
         <PublicSign Condition=" '$(OS)' !='Windows_NT' and '$(PublicSign)' == '' and '$(SignAssembly)' == 'true'">true</PublicSign>
         <KeyFileName Condition=" '$(KeyFileName)' == '' ">NLua.snk</KeyFileName>
-        <AssemblyOriginatorKeyFile>$(SolutionDir)$(KeyFileName)</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)\..\..\$(KeyFileName)</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <Target Name="_SignAssembly" AfterTargets="CoreCompile" Condition="'$(SignAssembly)' == 'true' and '$(OS)' !='Windows_NT' ">
         <Exec Command="sn -q -R @(IntermediateAssembly -> '&quot;%(Identity)&quot;') &quot;$(AssemblyOriginatorKeyFile)&quot;" />
