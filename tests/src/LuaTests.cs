@@ -16,7 +16,7 @@ using Lua = NLua.Lua;
 using LuaFunction = NLua.LuaFunction;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.Collections;
+using System.Linq;
 
 // ReSharper disable StringLiteralTypo
 
@@ -2598,6 +2598,25 @@ namespace NLuaTest
                 Assert.AreEqual("value5", lua["n"], "#5");
                 Assert.AreEqual("value6", lua["o"], "#6");
             }
+        }
+
+        [Test]
+        public void ByteArrayParameter()
+        {
+            using (var lua = new Lua())
+            {
+                lua["WriteBinary"] = (Action<byte[]>)WriteBinary;
+                lua.DoString(@"
+                        local value = string.char(1, 2, 3, 0x3f, 0x40, 0xff, 0xf3, 0x9f)
+                        WriteBinary (value);
+                ");
+            }
+        }
+
+        private void WriteBinary(byte [] buffer)
+        {
+            byte[] expected = { 1, 2, 3, 0x3f, 0x40, 0xff, 0xf3, 0x9f };
+            Assert.True(Enumerable.SequenceEqual(expected, buffer));
         }
 
 

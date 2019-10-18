@@ -32,6 +32,7 @@ namespace NLua
             _extractValues.Add(typeof(bool), GetAsBoolean);
             _extractValues.Add(typeof(string), GetAsString);
             _extractValues.Add(typeof(char[]), GetAsCharArray);
+            _extractValues.Add(typeof(byte[]), GetAsByteArray);
             _extractValues.Add(typeof(LuaFunction), GetAsFunction);
             _extractValues.Add(typeof(LuaTable), GetAsTable);
             _extractValues.Add(typeof(LuaUserData), GetAsUserdata);
@@ -113,7 +114,7 @@ namespace NLua
                 if (luatype == LuaType.Number)
                     return _extractValues[typeof(double)];
             }
-            bool netParamIsString = paramType == typeof(string) || paramType == typeof(char[]);
+            bool netParamIsString = paramType == typeof(string) || paramType == typeof(char[]) || paramType == typeof(byte[]);
 
             if (netParamIsNumeric)
             {
@@ -327,6 +328,15 @@ namespace NLua
                 return null;
             string retVal = luaState.ToString(stackPos, false);
             return retVal.ToCharArray();
+        }
+
+        private object GetAsByteArray(LuaState luaState, int stackPos)
+        {
+            if (!luaState.IsString(stackPos))
+                return null;
+
+            byte [] retVal = luaState.ToBuffer(stackPos, false);
+            return retVal;
         }
 
         private object GetAsString(LuaState luaState, int stackPos)
