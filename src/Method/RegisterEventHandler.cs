@@ -22,6 +22,11 @@ namespace NLua.Method
         public Delegate Add(LuaFunction function)
         {
             Delegate handlerDelegate = CodeGeneration.Instance.GetDelegate(_eventInfo.EventHandlerType, function);
+            return Add(handlerDelegate);
+        }
+
+        public Delegate Add(Delegate handlerDelegate)
+        {
             _eventInfo.AddEventHandler(_target, handlerDelegate);
             _pendingEvents.Add(handlerDelegate, this);
 

@@ -2613,6 +2613,52 @@ namespace NLuaTest
             }
         }
 
+        Entity myEntity;
+
+        void OnMyClicked(object sender, EventArgs args)
+        {
+            Console.WriteLine("MyClicked");
+
+            myEntity.Property = myEntity.Property + "B";
+        }
+
+        [Test]
+        public void RemoveEventAction()
+        {
+            using (var lua = new Lua())
+            {
+                myEntity = new Entity();
+                myEntity.Property = "A";
+
+                lua["obj"] = myEntity;
+
+                lua["myClicked"] = (EventHandler<EventArgs>)OnMyClicked;
+
+                lua.DoString(@"
+                        obj.Clicked:Add(myClicked);
+                        obj:Click();
+                        obj.Clicked:Remove(myClicked);
+                        obj:Click();
+                ");
+
+
+                Assert.AreEqual("AB", myEntity.Property, "#1");
+
+                lua.DoString(@"
+                        local f = function()
+                            obj.Property = obj.Property .. 'C'
+                        end
+
+                        local del = obj.Clicked:Add(f);
+                        obj:Click();
+                        obj.Clicked:Remove(del);
+                        obj:Click();
+                ");
+
+                Assert.AreEqual("ABC", myEntity.Property, "#1");
+            }
+        }
+
         private void WriteBinary(byte [] buffer)
         {
             byte[] expected = { 1, 2, 3, 0x3f, 0x40, 0xff, 0xf3, 0x9f };
