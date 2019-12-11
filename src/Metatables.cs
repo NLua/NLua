@@ -455,8 +455,9 @@ namespace NLua
                 return true;
             }
 
-            object[] arrObj = (object[])obj;
-            _translator.Push(luaState, arrObj[intIndex]);
+            var array = (Array)obj;
+            object element = array.GetValue(intIndex);
+            _translator.Push(luaState, element);
             return true;
         }
 

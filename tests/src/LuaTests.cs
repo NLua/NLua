@@ -2666,6 +2666,41 @@ namespace NLuaTest
         }
 
 
+        enum Enumeration
+        {
+            First,
+            Second
+        }
+
+        [Test]
+        public void DontCrashToArray()
+        {
+            var lua = new Lua();
+            IEnumerable<Enumeration> enu = new List<Enumeration> { Enumeration.First, Enumeration.Second };
+
+            lua["arr"] = enu;
+
+            var script = @"
+                firstValue = arr:ToArray()[0];
+                return firstValue
+            ";
+
+            object result = null;
+            //run
+            try
+            {
+                result = lua.DoString(script)[0];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                Assert.Fail();
+            }
+             
+            Assert.AreEqual(Enumeration.First, result, "#1");
+        }
+
+
         static Lua m_lua;
     }
 }
