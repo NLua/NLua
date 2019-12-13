@@ -355,8 +355,11 @@ namespace NLua
             if (fallback != 0)
                 return fallback;
 
-            if (!string.IsNullOrEmpty(methodName))
+            if (!string.IsNullOrEmpty(methodName) || index != null)
             {
+                if (string.IsNullOrEmpty(methodName))
+                    methodName = index.ToString();
+
                 return PushInvalidMethodCall(luaState, objType, methodName);
             }
 
@@ -1197,7 +1200,7 @@ namespace NLua
         {
             var luaState = LuaState.FromIntPtr(state);
             var translator = ObjectTranslatorPool.Instance.Find(luaState);
-            translator.ThrowError(luaState, "Trying to invoke invalid method");
+            translator.ThrowError(luaState, "Trying to invoke invalid method or an access an invalid index");
             luaState.PushNil();
             return 1;
         }
