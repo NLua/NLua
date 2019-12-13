@@ -2700,6 +2700,17 @@ namespace NLuaTest
             Assert.AreEqual(Enumeration.First, result, "#1");
         }
 
+        [Test]
+        public void InvalidArrayIndex()
+        {
+            var lua = new Lua();
+
+            lua["main"] = new Person();
+            object result = lua.DoString("return main[15]")[0];
+
+            Assert.AreNotEqual(15, result, "#1");
+        }
+
 
         static Lua m_lua;
     }
