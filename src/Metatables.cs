@@ -1023,7 +1023,7 @@ namespace NLua
             }
 
             // Find our member via reflection or the cache
-            var member = (MemberInfo)CheckMemberCache(targetType, fieldName);
+            var member = CheckMemberCache(targetType, fieldName);
             if (member == null)
             {
                 var members = targetType.GetMember(fieldName, bindingType | BindingFlags.Public);
@@ -1037,38 +1037,47 @@ namespace NLua
                 member = members[0];
                 SetMemberCache(targetType, fieldName, member);
             }
-
-            if (member.MemberType == MemberTypes.Field)
+            else if (member is LuaNativeFunction)
             {
-                var field = (FieldInfo)member;
-                object val = _translator.GetAsType(luaState, 3, field.FieldType);
-
-                try
-                {
-                    field.SetValue(target, val);
-                }
-                catch (Exception e)
-                {
-                    ThrowError(luaState, e);
-                }
-
+                SetMemberCache(targetType, fieldName, member);
                 return true;
             }
-            if (member.MemberType == MemberTypes.Property)
+            else if (member is MemberInfo)
             {
-                var property = (PropertyInfo)member;
-                object val = _translator.GetAsType(luaState, 3, property.PropertyType);
+                var memberInfo = (MemberInfo)member;
 
-                try
+                if (memberInfo.MemberType == MemberTypes.Field)
                 {
-                    property.SetValue(target, val, null);
-                }
-                catch (Exception e)
-                {
-                    ThrowError(luaState, e);
-                }
+                    var field = (FieldInfo)member;
+                    object val = _translator.GetAsType(luaState, 3, field.FieldType);
 
-                return true;
+                    try
+                    {
+                        field.SetValue(target, val);
+                    }
+                    catch (Exception e)
+                    {
+                        ThrowError(luaState, e);
+                    }
+
+                    return true;
+                }
+                if (memberInfo.MemberType == MemberTypes.Property)
+                {
+                    var property = (PropertyInfo)member;
+                    object val = _translator.GetAsType(luaState, 3, property.PropertyType);
+
+                    try
+                    {
+                        property.SetValue(target, val, null);
+                    }
+                    catch (Exception e)
+                    {
+                        ThrowError(luaState, e);
+                    }
+
+                    return true;
+                }
             }
 
             detailMessage = "'" + fieldName + "' is not a .net field or property";
