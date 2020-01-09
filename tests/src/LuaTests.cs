@@ -99,6 +99,68 @@ namespace NLuaTest
             }
         }
 
+        /*
+        * Tests capturing multiple exceptions
+        */
+        [Test]
+        public void ThrowMultipleExceptions()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString("luanet.load_assembly('mscorlib')");
+                lua.DoString("luanet.load_assembly('NLuaTest', 'NLuaTest.TestTypes')");
+                lua.DoString("TestClass = luanet.import_type('NLuaTest.TestTypes.TestClass')");
+                lua.DoString("test = TestClass()");
+                lua.DoString("err,errMsg = pcall(test.exceptionMethod,test)");
+                bool err = (bool)lua["err"];
+
+                var errMsg = (Exception)lua["errMsg"];
+                Assert.AreEqual(false, err);
+                Assert.AreNotEqual(null, errMsg.InnerException);
+                Assert.AreEqual("exception test", errMsg.InnerException.Message);
+
+                lua.DoString("err2,errMsg2 = pcall(test.exceptionMethod,test)");
+                err = (bool)lua["err2"];
+
+                errMsg = (Exception)lua["errMsg2"];
+                Assert.AreEqual(false, err);
+                Assert.AreNotEqual(null, errMsg.InnerException);
+                Assert.AreEqual("exception test", errMsg.InnerException.Message);
+            }
+        }
+
+        /*
+        * Tests capturing multiple exceptions in LuaFunction call
+        */
+        [Test]
+        public void ThrowMultipleExceptionsInScript()
+        {
+            string script =
+                "function run(test)\n" +
+                "   err, errMsg = pcall(test.exceptionMethod,test);\n" +
+                "   err2, errMsg2 = pcall(test.exceptionMethod,test);\n" +
+                "end";
+
+            TestClass test = new TestClass();
+            using (Lua lua = new Lua())
+            {
+                var script_func = lua.LoadString(script, "script");
+                script_func.Call();
+
+                (lua["run"] as LuaFunction).Call(test);   
+                bool err = (bool)lua["err"];
+                var errMsg = (Exception)lua["errMsg"];
+                Assert.AreEqual(false, err);
+                Assert.AreNotEqual(null, errMsg.InnerException);
+                Assert.AreEqual("exception test", errMsg.InnerException.Message);
+
+                err = (bool)lua["err2"];
+                errMsg = (Exception)lua["errMsg2"];
+                Assert.AreEqual(false, err);
+                Assert.AreNotEqual(null, errMsg.InnerException);
+                Assert.AreEqual("exception test", errMsg.InnerException.Message);
+            }
+        }
 
         /*
         * Tests nullable fields
