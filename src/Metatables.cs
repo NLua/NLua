@@ -17,6 +17,7 @@ using NLua.Extensions;
 
 using LuaState = KeraLua.Lua;
 using LuaNativeFunction = KeraLua.LuaFunction;
+using NLua.Exceptions;
 
 namespace NLua
 {
@@ -84,8 +85,13 @@ namespace NLua
             var translator = ObjectTranslatorPool.Instance.Find(state);
             var func = (LuaNativeFunction)translator.GetRawNetObject(state, 1);
             state.Remove(1);
-            return func(luaState);
-        }
+            int result = func(luaState);
+            var exception = translator.GetObject(state, -1) as LuaScriptException;
+
+            if (exception != null)
+                return state.Error();
+            return result;
+         }
 
         /*
          * __gc metafunction of CLR objects.
@@ -221,7 +227,7 @@ namespace NLua
             if (obj1 == null)
             {
                 translator.ThrowError(luaState, "Cannot negate a nil object");
-                luaState.PushNil();
+                //luaState.PushNil();
                 return 1;
             }
 
@@ -231,7 +237,7 @@ namespace NLua
             if (opUnaryNegation == null)
             {
                 translator.ThrowError(luaState, "Cannot negate object (" + type.Name + " does not overload the operator -)");
-                luaState.PushNil();
+                //luaState.PushNil();
                 return 1;
             }
             obj1 = opUnaryNegation.Invoke(obj1, new [] { obj1 });
@@ -331,7 +337,7 @@ namespace NLua
             if (obj == null)
             {
                 _translator.ThrowError(luaState, "Trying to index an invalid object reference");
-                luaState.PushNil();
+                //luaState.PushNil();
                 return 1;
             }
 
@@ -546,7 +552,7 @@ namespace NLua
                     if (!found)
                     {
                         _translator.ThrowError(luaState, "key not found: " + index);
-                        luaState.PushNil();
+                        //luaState.PushNil();
                         return 1;
                     }
 
@@ -561,7 +567,7 @@ namespace NLua
                     else
                         _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
 
-                    luaState.PushNil();
+                    //luaState.PushNil();
                     return 1;
                 }
             }
@@ -608,7 +614,7 @@ namespace NLua
                     else
                         _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
 
-                    luaState.PushNil();
+                    //luaState.PushNil();
                     return 1;
                 }
             }
@@ -637,8 +643,8 @@ namespace NLua
             if (obj == null)
             {
                 _translator.ThrowError(luaState, "Trying to index an invalid object reference");
-                luaState.PushNil();
-                luaState.PushBoolean(false);
+                //luaState.PushNil();
+                //luaState.PushBoolean(false);
                 return 2;
             }
 
@@ -845,7 +851,7 @@ namespace NLua
                 {
                     // If we reach this point we found a static method, but can't use it in this context because the user passed in an instance
                     _translator.ThrowError(luaState, "Can't pass instance to static method " + methodName);
-                    luaState.PushNil();
+                    //luaState.PushNil();
                 }
             }
             else
@@ -857,7 +863,8 @@ namespace NLua
                 // is not sufficient.  valid data members may return nil and therefore there must be some
                 // way to know the member just doesn't exist.
                 _translator.ThrowError(luaState, "Unknown member name " + methodName);
-                luaState.PushNil();
+                //luaState.PushNil();
+                return 1;
             }
 
             // Push false because we are NOT returning a function (see luaIndexFunction)
@@ -1128,7 +1135,7 @@ namespace NLua
             if (klass == null)
             {
                 _translator.ThrowError(luaState, "Trying to index an invalid type reference");
-                luaState.PushNil();
+                //luaState.PushNil();
                 return 1;
             }
             
@@ -1170,7 +1177,7 @@ namespace NLua
             if (target == null)
             {
                 _translator.ThrowError(luaState, "trying to index an invalid type reference");
-                return 0;
+                return 1;
             }
 
             return SetMember(luaState, target, null, BindingFlags.Static);
@@ -1187,7 +1194,13 @@ namespace NLua
             var luaState = LuaState.FromIntPtr(state);
             var translator = ObjectTranslatorPool.Instance.Find(luaState);
             var instance = translator.MetaFunctionsInstance;
-            return instance.CallDelegateInternal(luaState);
+            int result = instance.CallDelegateInternal(luaState);
+            var exception = translator.GetObject(luaState, -1) as LuaScriptException;
+
+            if (exception != null)
+                return luaState.Error();
+
+            return result;
         }
 
 /*
@@ -1201,7 +1214,7 @@ namespace NLua
             var luaState = LuaState.FromIntPtr(state);
             var translator = ObjectTranslatorPool.Instance.Find(luaState);
             translator.ThrowError(luaState, "Trying to invoke invalid method or an access an invalid index");
-            luaState.PushNil();
+            luaState.Error();
             return 1;
         }
 
@@ -1236,7 +1249,7 @@ namespace NLua
             }
 
             _translator.ThrowError(luaState, "Cannot invoke delegate (invalid arguments for  " + methodDelegate.Name + ")");
-            luaState.PushNil();
+            //luaState.PushNil();
             return 1;
         }
 
@@ -1347,7 +1360,7 @@ namespace NLua
             if (target == null)
             {
                 translator.ThrowError(luaState, "Cannot call " + operation + " on a nil object");
-                luaState.PushNil();
+                // luaState.PushNil();
                 return 1;
             }
 

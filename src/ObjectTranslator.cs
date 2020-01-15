@@ -239,7 +239,7 @@ namespace NLua
             }
 
             Push(luaState, e);
-            luaState.Error();
+            //luaState.Error();
         }
 
         /*

@@ -220,7 +220,7 @@ namespace NLua.Method
                 {
                     _translator.ThrowError(luaState,
                         string.Format("instance method '{0}' requires a non null target object", _methodName));
-                    luaState.PushNil();
+                    //luaState.PushNil();
                     return 1;
                 }
 
@@ -251,7 +251,7 @@ namespace NLua.Method
                     ? "Invalid arguments to method call"
                     : ("Invalid arguments to method: " + candidateName);
                 _translator.ThrowError(luaState, msg);
-                luaState.PushNil();
+                //luaState.PushNil();
                 return 1;
             }
 
@@ -317,7 +317,7 @@ namespace NLua.Method
                 if (!_translator.MatchParameters(luaState, methodToCall,  _lastCalledMethod, 0))
                 {
                     _translator.ThrowError(luaState, "Invalid arguments to method call");
-                    luaState.PushNil();
+                    //luaState.PushNil();
                     return 1;
                 }
             }
@@ -327,7 +327,7 @@ namespace NLua.Method
                 {
                     _translator.ThrowError(luaState,
                         "Unable to invoke method on generic class as the current method is an open generic method");
-                    luaState.PushNil();
+                    //luaState.PushNil();
                     return 1;
                 }
 
