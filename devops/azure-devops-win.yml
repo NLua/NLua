@@ -1,15 +1,22 @@
 pool:
-  name: Hosted VS2017
+  vmImage: 'windows-2019'
   demands:
   - msbuild
   - visualstudio
   - vstest
 
 steps:
-- task: NuGetToolInstaller@1
-  displayName: 'Use NuGet 4.7.3'
+- task: UseDotNet@2
+  displayName: 'Install .NET Core 3.0.102'
   inputs:
-    versionSpec: 4.7.3
+    packageType: sdk
+    version: '3.0.102'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet 5.4.0'
+  inputs:
+    versionSpec: 5.4.0
 
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
@@ -30,9 +37,10 @@ steps:
 - task: PowerShell@2
   displayName: 'PreBuild Script'
   inputs:
-    targetType: filePath
-    filePath: ./devops/PreBuild.ps1
+    filePath: './devops/PreBuild.ps1'
     arguments: 'NLua NLua.nuspec'
+    errorActionPreference: 'silentlyContinue'
+    pwsh: true
 
 - task: MSBuild@1
   displayName: 'Build solution NLua.sln'
@@ -52,7 +60,7 @@ steps:
   inputs:
     command: custom
     custom: vstest
-    arguments: '.\tests\build\netcore\bin\Release\netcoreapp2.0\NLuaTest.dll'
+    arguments: '.\tests\build\netcore\bin\Release\netcoreapp3.0\NLuaTest.dll'
 
 - task: MSBuild@1
   displayName: 'Build Android'

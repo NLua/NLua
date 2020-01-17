@@ -220,7 +220,7 @@ You can re-write the `import` function before load the user script and if the us
 [Lua-Sandbox user-list](http://lua-users.org/wiki/SandBoxes)
 
 
-Copyright (c) 2019 Vinicius Jarina (viniciusjarina@gmail.com)
+Copyright (c) 2020 Vinicius Jarina (viniciusjarina@gmail.com)
 
 NLua 1.4.x
 ----------

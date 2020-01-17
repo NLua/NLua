@@ -272,6 +272,6 @@ function Update-Ensure-Git-Not-Detached ()
 		return
 	}
 	$currentTag = Get-Git-Current-Tag
-	& git checkout -B $currentTag
+	$result = [string](& git checkout -B $currentTag)
 	# We are using -B because maybe the branch alrady exist
 }
