@@ -23,10 +23,10 @@ using System.Reflection;
 [assembly: AssemblyTitle ("NLua (.NET Framework)")]
 #endif
 
-[assembly: AssemblyDescription ("Library to create simple Mazes")]
+[assembly: AssemblyDescription ("NLua library")]
 [assembly: AssemblyCompany ("NLua.org")]
 [assembly: AssemblyProduct ("NLua")]
-[assembly: AssemblyCopyright ("Copyright © Vinicius Jarina 2019")]
+[assembly: AssemblyCopyright ("Copyright © Vinicius Jarina 2020")]
 [assembly: AssemblyCulture ("")]
 
 

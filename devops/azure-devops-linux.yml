@@ -1,0 +1,74 @@
+pool:
+  name: Hosted Ubuntu 1604
+  demands: msbuild
+
+steps:
+- checkout: self 
+
+- task: UseDotNet@2
+  displayName: 'Install .NET Core 3.0.102'
+  inputs:
+    packageType: sdk
+    version: '3.0.102'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet 5.4.0'
+  inputs:
+    versionSpec: 5.4.0
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: NLua.Core.sln
+
+- task: MSBuild@1
+  displayName: 'Build .NET Core'
+  inputs:
+    solution: NLua.Core.sln
+    configuration: Release
+    msbuildArguments: /restore
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet vstest'
+  inputs:
+    command: custom
+    custom: vstest
+    arguments: '.\tests\build\netcore\bin\Release\netcoreapp3.0\KeraLuaTest.Core.dll'
+
+- task: SendTelegramNotification@0
+  condition: in(variables['Agent.JobStatus'], 'SucceededWithIssues')
+  inputs:
+    botToken: '$(botToken)'
+    chats: '$(chatId)'
+    taskStatus: false
+    message: |
+            ⚠️ <b>Warning!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
+            <pre>$(Build.SourceVersion)</pre>
+            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
+
+- task: SendTelegramNotification@0
+  condition: in(variables['Agent.JobStatus'], 'Failed')
+  inputs:
+    botToken: '$(botToken)'
+    chats: '$(chatId)'
+    taskStatus: false
+    buildQueuedBy: false
+    message: |
+            ❌ <b>Fail!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
+            <pre>$(Build.SourceVersion)</pre>
+            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
+
+- task: SendTelegramNotification@0
+  condition: in(variables['Agent.JobStatus'], 'Succeeded')
+  inputs:
+    botToken: '$(botToken)'
+    chats: '$(chatId)'
+    taskStatus: false
+    buildQueuedBy: false
+    message: |
+            ✅ <b>Success!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
+            <pre>$(Build.SourceVersion)</pre>
+            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
+
+# 

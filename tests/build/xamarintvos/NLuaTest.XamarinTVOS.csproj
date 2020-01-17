@@ -98,7 +98,7 @@
     <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Numerics" />
     <Reference Include="KeraLua">
-      <HintPath>..\..\..\packages\KeraLua.1.0.22\lib\xamarintvos\KeraLua.dll</HintPath>
+      <HintPath>..\..\..\packages\KeraLua.1.0.24\lib\xamarintvos\KeraLua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -164,8 +164,8 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
-    <None Include="packages.config" />
     <None Include="tools\Touch.Server.exe" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\build\TVOS\NLua.TVOS.csproj">
@@ -221,5 +221,5 @@
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
-  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.17\build\Codefoco.Touch.Server.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.17\build\Codefoco.Touch.Server.targets')" />
+  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.18\build\Codefoco.Touch.Server.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.18\build\Codefoco.Touch.Server.targets')" />
 </Project>

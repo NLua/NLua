@@ -60,7 +60,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
     <Reference Include="KeraLua">
-      <HintPath>..\..\packages\KeraLua.1.0.22\lib\xamarinmac\KeraLua.dll</HintPath>
+      <HintPath>..\..\packages\KeraLua.1.0.24\lib\xamarinmac\KeraLua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
