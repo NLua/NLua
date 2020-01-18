@@ -34,7 +34,7 @@ steps:
   inputs:
     command: custom
     custom: vstest
-    arguments: '.\tests\build\netcore\bin\Release\netcoreapp3.0\KeraLuaTest.Core.dll'
+    arguments: 'tests/build/netcore/bin/Release/netcoreapp3.0/NLuaTest.dll'
 
 - task: SendTelegramNotification@0
   condition: in(variables['Agent.JobStatus'], 'SucceededWithIssues')
