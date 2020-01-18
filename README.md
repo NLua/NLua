@@ -25,6 +25,7 @@ NLua
 | ![win](https://badgen.net/badge/icon/Windows?icon=windows&label&color=blue) | [![Build status](https://ci.appveyor.com/api/projects/status/jkqcy9m9k35jwolx?svg=true)](https://ci.appveyor.com/project/viniciusjarina/NLua)|
 | ![mac](https://badgen.net/badge/icon/macOS,iOS,tvOS,watchOS?icon=apple&label&color=purple&list=1) | [![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua/NLua.Mac?branchName=master)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=13&branchName=master) |
 |![win](https://badgen.net/badge/icon/Windows,.NET%20Core?icon=windows&label&list=1) | [![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua/NLua.Windows?branchName=master)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=14&branchName=master) |
+|![linuxnet](https://badgen.net/badge/icon/Ubuntu%20Linux%20x64?,.NET%20Core?icon=ubuntu&label&list=1) | [![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua/NLua.Linux?branchName=master)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=27&branchName=master) |
 
 
 Bridge between Lua world and the .NET (compatible with Xamarin.iOS/Mac/Android/.NET/.NET Core) 
