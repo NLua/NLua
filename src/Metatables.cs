@@ -227,7 +227,6 @@ namespace NLua
             if (obj1 == null)
             {
                 translator.ThrowError(luaState, "Cannot negate a nil object");
-                //luaState.PushNil();
                 return 1;
             }
 
@@ -237,7 +236,6 @@ namespace NLua
             if (opUnaryNegation == null)
             {
                 translator.ThrowError(luaState, "Cannot negate object (" + type.Name + " does not overload the operator -)");
-                //luaState.PushNil();
                 return 1;
             }
             obj1 = opUnaryNegation.Invoke(obj1, new [] { obj1 });
@@ -337,7 +335,6 @@ namespace NLua
             if (obj == null)
             {
                 _translator.ThrowError(luaState, "Trying to index an invalid object reference");
-                //luaState.PushNil();
                 return 1;
             }
 
@@ -552,7 +549,6 @@ namespace NLua
                     if (!found)
                     {
                         _translator.ThrowError(luaState, "key not found: " + index);
-                        //luaState.PushNil();
                         return 1;
                     }
 
@@ -567,7 +563,6 @@ namespace NLua
                     else
                         _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
 
-                    //luaState.PushNil();
                     return 1;
                 }
             }
@@ -614,7 +609,6 @@ namespace NLua
                     else
                         _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
 
-                    //luaState.PushNil();
                     return 1;
                 }
             }
@@ -643,8 +637,6 @@ namespace NLua
             if (obj == null)
             {
                 _translator.ThrowError(luaState, "Trying to index an invalid object reference");
-                //luaState.PushNil();
-                //luaState.PushBoolean(false);
                 return 2;
             }
 
@@ -851,7 +843,6 @@ namespace NLua
                 {
                     // If we reach this point we found a static method, but can't use it in this context because the user passed in an instance
                     _translator.ThrowError(luaState, "Can't pass instance to static method " + methodName);
-                    //luaState.PushNil();
                 }
             }
             else
@@ -863,7 +854,6 @@ namespace NLua
                 // is not sufficient.  valid data members may return nil and therefore there must be some
                 // way to know the member just doesn't exist.
                 _translator.ThrowError(luaState, "Unknown member name " + methodName);
-                //luaState.PushNil();
                 return 1;
             }
 
@@ -1135,7 +1125,6 @@ namespace NLua
             if (klass == null)
             {
                 _translator.ThrowError(luaState, "Trying to index an invalid type reference");
-                //luaState.PushNil();
                 return 1;
             }
             
@@ -1249,7 +1238,6 @@ namespace NLua
             }
 
             _translator.ThrowError(luaState, "Cannot invoke delegate (invalid arguments for  " + methodDelegate.Name + ")");
-            //luaState.PushNil();
             return 1;
         }
 
