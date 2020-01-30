@@ -20,7 +20,7 @@
   </PropertyGroup>
   <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Shared.projitems')" />
   <ItemGroup>
-    <PackageReference Include="KeraLua" Version="1.0.24" />
+    <PackageReference Include="KeraLua" Version="1.0.26" />
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />
   </ItemGroup>

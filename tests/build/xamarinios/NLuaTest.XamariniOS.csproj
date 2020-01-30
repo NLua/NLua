@@ -133,7 +133,7 @@
     <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Numerics" />
     <Reference Include="KeraLua">
-      <HintPath>..\..\..\packages\KeraLua.1.0.24\lib\xamarinios\KeraLua.dll</HintPath>
+      <HintPath>..\..\..\packages\KeraLua.1.0.26\lib\xamarinios\KeraLua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -196,5 +196,5 @@
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.18\build\Codefoco.Touch.Server.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.18\build\Codefoco.Touch.Server.targets')" />
+  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.19\build\Codefoco.Touch.Server.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.19\build\Codefoco.Touch.Server.targets')" />
 </Project>

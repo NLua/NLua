@@ -55,7 +55,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
     <Reference Include="KeraLua">
-      <HintPath>..\..\packages\KeraLua.1.0.24\lib\xamarinios\KeraLua.dll</HintPath>
+      <HintPath>..\..\packages\KeraLua.1.0.26\lib\xamarinios\KeraLua.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
