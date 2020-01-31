@@ -12,6 +12,8 @@ pool:
 
 steps:
 - checkout: self
+  submodules: 'true'
+
 
 - template: common-dotnet.yml@templates
 - template: common-macos.yml@templates
