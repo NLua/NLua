@@ -1,21 +1,19 @@
+# Repo: codefoco/AzureDevopsTemplates
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: codefoco/AzureDevopsTemplates
+      endpoint: codefoco
+
 pool:
-  name: Hosted Ubuntu 1604
+  vmImage: 'ubuntu-16.04'
   demands: msbuild
 
 steps:
+- template: common-dotnet.yml@templates
+
 - checkout: self 
-
-- task: UseDotNet@2
-  displayName: 'Install .NET Core 3.0.102'
-  inputs:
-    packageType: sdk
-    version: '3.0.102'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
-
-- task: NuGetToolInstaller@1
-  displayName: 'Use NuGet 5.4.0'
-  inputs:
-    versionSpec: 5.4.0
 
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
@@ -34,41 +32,6 @@ steps:
   inputs:
     command: custom
     custom: vstest
-    arguments: 'tests/build/netcore/bin/Release/netcoreapp3.0/NLuaTest.dll'
+    arguments: 'tests/build/netcore/bin/Release/netcoreapp3.1/NLuaTest.dll'
 
-- task: SendTelegramNotification@0
-  condition: in(variables['Agent.JobStatus'], 'SucceededWithIssues')
-  inputs:
-    botToken: '$(botToken)'
-    chats: '$(chatId)'
-    taskStatus: false
-    message: |
-            ⚠️ <b>Warning!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
-            <pre>$(Build.SourceVersion)</pre>
-            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
-
-- task: SendTelegramNotification@0
-  condition: in(variables['Agent.JobStatus'], 'Failed')
-  inputs:
-    botToken: '$(botToken)'
-    chats: '$(chatId)'
-    taskStatus: false
-    buildQueuedBy: false
-    message: |
-            ❌ <b>Fail!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
-            <pre>$(Build.SourceVersion)</pre>
-            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
-
-- task: SendTelegramNotification@0
-  condition: in(variables['Agent.JobStatus'], 'Succeeded')
-  inputs:
-    botToken: '$(botToken)'
-    chats: '$(chatId)'
-    taskStatus: false
-    buildQueuedBy: false
-    message: |
-            ✅ <b>Success!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
-            <pre>$(Build.SourceVersion)</pre>
-            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
-
-# 
+- template: send-telegram.yml@templates

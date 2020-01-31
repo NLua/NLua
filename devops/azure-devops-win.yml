@@ -6,17 +6,11 @@ pool:
   - vstest
 
 steps:
-- task: UseDotNet@2
-  displayName: 'Install .NET Core 3.0.102'
-  inputs:
-    packageType: sdk
-    version: '3.0.102'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+- checkout: self
+  submodules: true
 
-- task: NuGetToolInstaller@1
-  displayName: 'Use NuGet 5.4.0'
-  inputs:
-    versionSpec: 5.4.0
+- template: common-dotnet.yml@templates
+- template: common-win.yml@templates
 
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
@@ -27,12 +21,6 @@ steps:
   displayName: 'NuGet restore'
   inputs:
     restoreSolution: NLua.Core.sln
-
-- powershell: 'Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString(''https://chocolatey.org/install.ps1''))'
-  displayName: 'Install Choco'
-
-- script: 'choco install gitversion.portable --pre '
-  displayName: 'Install GitVersion'
 
 - task: PowerShell@2
   displayName: 'PreBuild Script'
@@ -60,7 +48,7 @@ steps:
   inputs:
     command: custom
     custom: vstest
-    arguments: '.\tests\build\netcore\bin\Release\netcoreapp3.0\NLuaTest.dll'
+    arguments: '.\tests\build\netcore\bin\Release\netcoreapp3.1\NLuaTest.dll'
 
 - task: MSBuild@1
   displayName: 'Build Android'
@@ -161,39 +149,4 @@ steps:
     filePath: ./devops/Publish.ps1
     arguments: NLua
 
-- task: SendTelegramNotification@0
-  condition: in(variables['Agent.JobStatus'], 'SucceededWithIssues')
-  inputs:
-    botToken: '$(botToken)'
-    chats: '$(chatId)'
-    taskStatus: false
-    message: |
-            ⚠️ <b>Warning!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
-            <pre>$(Build.SourceVersion)</pre>
-            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
-
-- task: SendTelegramNotification@0
-  condition: in(variables['Agent.JobStatus'], 'Failed')
-  inputs:
-    botToken: '$(botToken)'
-    chats: '$(chatId)'
-    taskStatus: false
-    buildQueuedBy: false
-    message: |
-            ❌ <b>Fail!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
-            <pre>$(Build.SourceVersion)</pre>
-            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
-
-- task: SendTelegramNotification@0
-  condition: in(variables['Agent.JobStatus'], 'Succeeded')
-  inputs:
-    botToken: '$(botToken)'
-    chats: '$(chatId)'
-    taskStatus: false
-    buildQueuedBy: false
-    message: |
-            ✅ <b>Success!</b>  <a href="$(Build.Repository.Uri)">$(Build.DefinitionName)</a> (<code>$(Build.SourceBranchName)</code>)
-            <pre>$(Build.SourceVersion)</pre>
-            $(Build.SourceVersionMessage) by $(Build.QueuedBy)
-
-# 
+- template: send-telegram.yml@templates
