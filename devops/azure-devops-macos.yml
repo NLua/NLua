@@ -13,12 +13,27 @@ pool:
 steps:
 
 - task: TriggerBuild@3
-  displayName: 'Trigger a new build of NLua.Windows'
   inputs:
-    buildDefinition: 'KeraLua.Mac'
+    definitionIsInCurrentTeamProject: true
+    buildDefinition: 'MyCoolPipeline'
+    queueBuildForUserThatTriggeredBuild: true
     ignoreSslCertificateErrors: true
-    useSameSourceVersion: true
+    useSameSourceVersion: false
+    useSameBranch: true
+    waitForQueuedBuildsToFinish: true
+    waitForQueuedBuildsToFinishRefreshTime: '60'
+    failTaskIfBuildsNotSuccessful: true
+    cancelBuildsIfAnyFails: false
+    treatPartiallySucceededBuildAsSuccessful: false
+    downloadBuildArtifacts: false
+    storeInEnvironmentVariable: false
+    authenticationMethod: 'Personal Access Token'
     password: '$(myToken)'
+    enableBuildInQueueCondition: false
+    dependentOnSuccessfulBuildCondition: false
+    dependentOnFailedBuildCondition: false
+    checkbuildsoncurrentbranch: false
+    failTaskIfConditionsAreNotFulfilled: false
 
 
 - checkout: self
