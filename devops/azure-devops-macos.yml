@@ -189,7 +189,7 @@ jobs:
     inputs:
       buildType: 'specific'
       project: 'NuGets'
-      definition: 'NLua.Mac'
+      definition: 'NLua'
       specificBuildWithTriggering: true
       artifactName: Xamarin.iOS.NLua.dll
 
@@ -198,7 +198,7 @@ jobs:
     inputs:
       buildType: 'specific'
       project: 'NuGets'
-      definition: 'NLua.Mac'
+      definition: 'NLua'
       specificBuildWithTriggering: true
       artifactName: Xamarin.Mac.NLua.dll
 
@@ -207,7 +207,7 @@ jobs:
     inputs:
       buildType: 'specific'
       project: 'NuGets'
-      definition: 'NLua.Mac'
+      definition: 'NLua'
       specificBuildWithTriggering: true
       artifactName: Xamarin.watchOS.NLua.dll
 
@@ -216,7 +216,7 @@ jobs:
     inputs:
       buildType: 'specific'
       project: 'NuGets'
-      definition: 'NLua.Mac'
+      definition: 'NLua'
       specificBuildWithTriggering: true
       artifactName: Xamarin.tvOS.NLua.dll
 
