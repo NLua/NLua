@@ -18,7 +18,7 @@ steps:
     buildDefinition: 'MyCoolPipeline'
     queueBuildForUserThatTriggeredBuild: true
     ignoreSslCertificateErrors: true
-    useSameSourceVersion: false
+    useSameSourceVersion: true
     useSameBranch: true
     waitForQueuedBuildsToFinish: true
     waitForQueuedBuildsToFinishRefreshTime: '60'
