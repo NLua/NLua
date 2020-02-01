@@ -11,15 +11,19 @@ pool:
   demands: msbuild
 
 steps:
-- checkout: self
 
 - task: TriggerBuild@3
   displayName: 'Trigger a new build of NLua.Windows'
   inputs:
-    buildDefinition: 'NLua.Windows'
+    buildDefinition: 'MyCoolPipeline'
     ignoreSslCertificateErrors: true
     useSameSourceVersion: true
     password: '$(myToken)'
+
+
+- checkout: self
+
+
 
 
 - template: common-dotnet.yml@templates
