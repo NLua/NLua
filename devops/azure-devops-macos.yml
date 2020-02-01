@@ -15,7 +15,7 @@ steps:
 - task: TriggerBuild@3
   displayName: 'Trigger a new build of NLua.Windows'
   inputs:
-    buildDefinition: 'MyCoolPipeline'
+    buildDefinition: 'KeraLua.Mac'
     ignoreSslCertificateErrors: true
     useSameSourceVersion: true
     password: '$(myToken)'
