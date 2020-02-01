@@ -16,7 +16,7 @@ steps:
 - task: TriggerBuild@3
   displayName: 'Trigger a new build of NLua.Windows'
   inputs:
-    buildDefinition: 'TestBuild.Foo'
+    buildDefinition: 'NLua.Windows'
     ignoreSslCertificateErrors: true
     useSameSourceVersion: true
     password: '$(myToken)'
