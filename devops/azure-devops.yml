@@ -271,3 +271,38 @@ jobs:
       arguments: NLua
 
   - template: send-telegram.yml@templates
+
+- job: 'NLuaLinux'
+  displayName: 'NLua.Linux'
+  variables:
+    - group: 'Keys'
+
+  pool:
+    vmImage: 'ubuntu-16.04'
+    demands: msbuild
+
+  steps:
+  - template: common-dotnet.yml@templates
+
+  - checkout: self 
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet restore'
+    inputs:
+      restoreSolution: NLua.Core.sln
+
+  - task: MSBuild@1
+    displayName: 'Build .NET Core'
+    inputs:
+      solution: NLua.Core.sln
+      configuration: Release
+      msbuildArguments: /restore
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet vstest'
+    inputs:
+      command: custom
+      custom: vstest
+      arguments: 'tests/build/netcore/bin/Release/netcoreapp3.1/NLuaTest.dll'
+
+  - template: send-telegram.yml@templates
