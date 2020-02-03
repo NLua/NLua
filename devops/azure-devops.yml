@@ -89,12 +89,6 @@ jobs:
       testResultsFiles: 'tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml'
 
   - task: PublishPipelineArtifact@1
-    inputs:
-      targetPath: '$(Pipeline.Workspace)'
-      artifact: 'Xamarin.iOS.NLua.dll'
-      publishLocation: 'pipeline'
-
-  - task: PublishPipelineArtifact@1
     displayName: 'Publish Pipeline Artifact: Xamarin.iOS.NLua.dll'
     inputs:
       targetPath: lib/Release/xamarinios/NLua.dll
