@@ -23,12 +23,12 @@ jobs:
   - template: common-macos.yml@templates
 
   - task: NuGetCommand@2
-    displayName: 'NuGet restore'
+    displayName: 'NuGet restore NLua.sln'
     inputs:
       restoreSolution: NLua.sln
 
   - task: NuGetCommand@2
-    displayName: 'NuGet restore'
+    displayName: 'NuGet restore NLua.Mac.sln'
     inputs:
       restoreSolution: NLua.Mac.sln
 
@@ -88,29 +88,39 @@ jobs:
       testResultsFormat: NUnit
       testResultsFiles: 'tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml'
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: Xamarin.iOS.NLua.dll'
+  - task: PublishPipelineArtifact@1
     inputs:
-      PathtoPublish: lib/Release/xamarinios/NLua.dll
-      ArtifactName: Xamarin.iOS.NLua.dll
+      targetPath: '$(Pipeline.Workspace)'
+      artifact: 'Xamarin.iOS.NLua.dll'
+      publishLocation: 'pipeline'
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: Xamarin.tvOS.NLua.dll'
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Pipeline Artifact: Xamarin.iOS.NLua.dll'
     inputs:
-      PathtoPublish: lib/Release/xamarintvos/NLua.dll
-      ArtifactName: Xamarin.tvOS.NLua.dll
+      targetPath: lib/Release/xamarinios/NLua.dll
+      artifact: 'Xamarin.iOS.NLua.dll'
+      publishLocation: 'pipeline'
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: Xamarin.watchOS.NLua.dll'
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Pipeline Artifact: Xamarin.tvOS.NLua.dll'
     inputs:
-      PathtoPublish: lib/Release/xamarinwatchos/NLua.dll
-      ArtifactName: Xamarin.watchOS.NLua.dll
+      targetPath: lib/Release/xamarintvos/NLua.dll
+      artifact: Xamarin.tvOS.NLua.dll
+      publishLocation: 'pipeline'
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: Xamarin.Mac.NLua.dll'
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Pipeline Artifact: Xamarin.watchOS.NLua.dll'
     inputs:
-      PathtoPublish: lib/Release/xamarinmac/NLua.dll
-      ArtifactName: Xamarin.Mac.NLua.dll
+      targetPath: lib/Release/xamarinwatchos/NLua.dll
+      artifact: Xamarin.watchOS.NLua.dll
+      publishLocation: 'pipeline'
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Pipeline Artifact: Xamarin.Mac.NLua.dll'
+    inputs:
+      targetPath: lib/Release/xamarinmac/NLua.dll
+      artifact: Xamarin.Mac.NLua.dll
+      publishLocation: 'pipeline'
 
   - template: send-telegram.yml@templates
 
@@ -184,41 +194,40 @@ jobs:
       runSettingsFile: '.\tests\test.runsettings'
       platform: x64
 
-  - task: DownloadBuildArtifacts@0
+  - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.iOS'
     inputs:
-      buildType: 'specific'
-      project: 'NuGets'
-      definition: 'NLua'
-      specificBuildWithTriggering: true
-      artifactName: Xamarin.iOS.NLua.dll
+      buildType: 'current'
+      artifactName: 'Xamarin.iOS.NLua.dll'
+      targetPath: '$(Pipeline.Workspace)'
 
-  - task: DownloadBuildArtifacts@0
+  - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.Mac'
     inputs:
-      buildType: 'specific'
-      project: 'NuGets'
-      definition: 'NLua'
-      specificBuildWithTriggering: true
-      artifactName: Xamarin.Mac.NLua.dll
+      buildType: 'current'
+      artifactName: 'Xamarin.Mac.NLua.dll'
+      targetPath: '$(Pipeline.Workspace)'
 
-  - task: DownloadBuildArtifacts@0
+  - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.watchOS'
     inputs:
-      buildType: 'specific'
-      project: 'NuGets'
-      definition: 'NLua'
-      specificBuildWithTriggering: true
-      artifactName: Xamarin.watchOS.NLua.dll
+      buildType: 'current'
+      artifactName: 'Xamarin.watchOS.NLua.dll'
+      targetPath: '$(Pipeline.Workspace)'
 
-  - task: DownloadBuildArtifacts@0
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download Build Xamarin.watchOS'
+    inputs:
+      buildType: 'current'
+      artifactName: 'Xamarin.watchOS.NLua.dll'
+      targetPath: '$(Pipeline.Workspace)'
+
+  - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.tvOS'
     inputs:
-      buildType: 'specific'
-      project: 'NuGets'
-      definition: 'NLua'
-      specificBuildWithTriggering: true
-      artifactName: Xamarin.tvOS.NLua.dll
+      buildType: 'current'
+      artifactName: 'Xamarin.tvOS.NLua.dll'
+      targetPath: '$(Pipeline.Workspace)'
 
   - task: CopyFiles@2
     displayName: 'Copy Files to: lib/Release/xamarinios/'
