@@ -91,28 +91,28 @@ jobs:
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Pipeline Artifact: Xamarin.iOS.NLua'
     inputs:
-      targetPath: lib/Release/xamarinios/NLua.*
+      targetPath: lib/Release/xamarinios
       artifact: 'Xamarin.iOS.NLua'
       publishLocation: 'pipeline'
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Pipeline Artifact: Xamarin.tvOS.NLua'
     inputs:
-      targetPath: lib/Release/xamarintvos/NLua.*
+      targetPath: lib/Release/xamarintvos
       artifact: Xamarin.tvOS.NLua
       publishLocation: 'pipeline'
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Pipeline Artifact: Xamarin.watchOS.NLua'
     inputs:
-      targetPath: lib/Release/xamarinwatchos/NLua.*
+      targetPath: lib/Release/xamarinwatchos
       artifact: Xamarin.watchOS.NLua
       publishLocation: 'pipeline'
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Pipeline Artifact: Xamarin.Mac.NLua'
     inputs:
-      targetPath: lib/Release/xamarinmac/NLua.*
+      targetPath: lib/Release/xamarinmac
       artifact: Xamarin.Mac.NLua
       publishLocation: 'pipeline'
 
