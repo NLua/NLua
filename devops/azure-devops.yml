@@ -193,35 +193,35 @@ jobs:
     inputs:
       buildType: 'current'
       artifactName: 'Xamarin.iOS.NLua.dll'
-      targetPath: '$(Pipeline.Workspace)'
+      targetPath: '$(Pipeline.Workspace)/Xamarin.iOS.NLua.dll'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.Mac'
     inputs:
       buildType: 'current'
       artifactName: 'Xamarin.Mac.NLua.dll'
-      targetPath: '$(Pipeline.Workspace)'
+      targetPath: '$(Pipeline.Workspace)/Xamarin.Mac.NLua.dll'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.watchOS'
     inputs:
       buildType: 'current'
       artifactName: 'Xamarin.watchOS.NLua.dll'
-      targetPath: '$(Pipeline.Workspace)'
+      targetPath: '$(Pipeline.Workspace)/Xamarin.watchOS.NLua.dll'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.watchOS'
     inputs:
       buildType: 'current'
       artifactName: 'Xamarin.watchOS.NLua.dll'
-      targetPath: '$(Pipeline.Workspace)'
+      targetPath: '$(Pipeline.Workspace)/Xamarin.watchOS.NLua.dll'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.tvOS'
     inputs:
       buildType: 'current'
       artifactName: 'Xamarin.tvOS.NLua.dll'
-      targetPath: '$(Pipeline.Workspace)'
+      targetPath: '$(Pipeline.Workspace)/Xamarin.tvOS.NLua.dll'
 
   - task: CopyFiles@2
     displayName: 'Copy Files to: lib/Release/xamarinios/'
