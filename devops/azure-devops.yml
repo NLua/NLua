@@ -8,7 +8,7 @@ resources:
 
 jobs:
 - job: 'NLuaMac'
-  displayName: 'NLua.Mac'
+  displayName: 'Mac'
   variables:
     - group: 'Keys'
 
@@ -89,6 +89,20 @@ jobs:
       testResultsFiles: 'tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml'
 
   - task: PublishPipelineArtifact@1
+    displayName: 'Publish Pipeline Artifact: TEST-Result-Xamarin.iOS.xml'
+    inputs:
+      targetPath: tests/build/xamarinios/TEST-Result-Xamarin.iOS.xml
+      artifact: Test.Results.iOS
+      publishLocation: 'pipeline'
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Pipeline Artifact: TEST-Result-Xamarin.tvOS.xml'
+    inputs:
+      targetPath: tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml
+      artifact: Test.Results.tvOS
+      publishLocation: 'pipeline'
+
+  - task: PublishPipelineArtifact@1
     displayName: 'Publish Pipeline Artifact: Xamarin.iOS.NLua'
     inputs:
       targetPath: lib/Release/xamarinios
@@ -119,7 +133,7 @@ jobs:
   - template: send-telegram.yml@templates
 
 - job: 'NLuaWindows'
-  displayName: 'NLua.Windows'
+  displayName: 'Windows'
   dependsOn: 'NLuaMac'
   variables:
     - group: 'Keys'
@@ -269,7 +283,7 @@ jobs:
   - template: send-telegram.yml@templates
 
 - job: 'NLuaLinux'
-  displayName: 'NLua.Linux'
+  displayName: 'Linux'
   variables:
     - group: 'Keys'
 
