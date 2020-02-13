@@ -1023,7 +1023,7 @@ namespace NLua
             }
 
             // Find our member via reflection or the cache
-            var member = CheckMemberCache(targetType, fieldName);
+            object member = CheckMemberCache(targetType, fieldName);
             if (member == null)
             {
                 var members = targetType.GetMember(fieldName, bindingType | BindingFlags.Public);
@@ -1037,12 +1037,14 @@ namespace NLua
                 member = members[0];
                 SetMemberCache(targetType, fieldName, member);
             }
-            else if (member is LuaNativeFunction)
+
+            if (member is LuaNativeFunction)
             {
                 SetMemberCache(targetType, fieldName, member);
                 return true;
             }
-            else if (member is MemberInfo)
+
+            if (member is MemberInfo)
             {
                 var memberInfo = (MemberInfo)member;
 
