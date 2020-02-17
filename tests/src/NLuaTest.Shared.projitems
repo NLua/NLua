@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaTestDelegate6Handler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\LuaTestDelegate7Handler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\MyClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\PrintOverrides.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClass3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassGeneric.cs" />

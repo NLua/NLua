@@ -1767,6 +1767,111 @@ namespace NLuaTest
         }
 
         [Test]
+        public void TestPrintNoParams()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print()");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintSingleNil()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print(nil)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNil()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print(nil, nil, nil, nil, nil, nil)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilFirstNumber()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print(2, nil, nil, nil, nil, nil)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilLastNumber()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print(nil, nil, nil, nil, nil, 2)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintNoParamsParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.DoString(@"print()");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintSingleNilParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.DoString(@"print(nil)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.DoString(@"print(nil, nil, nil, nil, nil, nil)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilFirstNumberParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.DoString(@"print(2, nil, nil, nil, nil, nil)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilLastNumberParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.DoString(@"print(nil, nil, nil, nil, nil, 2)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
         public void TestUnicodeChars()
         {
             using (Lua lua = new Lua())
