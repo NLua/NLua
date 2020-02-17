@@ -355,14 +355,6 @@ namespace NLua
             if (fallback != 0)
                 return fallback;
 
-            if (!string.IsNullOrEmpty(methodName) || index != null)
-            {
-                if (string.IsNullOrEmpty(methodName))
-                    methodName = index.ToString();
-
-                return PushInvalidMethodCall(luaState, objType, methodName);
-            }
-
             luaState.PushBoolean(false);
             return 2;
         }
