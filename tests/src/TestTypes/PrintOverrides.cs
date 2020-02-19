@@ -11,27 +11,30 @@ namespace NLuaTest.TestTypes
 
         private static void Print(params object[] arguments)
         {
-            string output = "";
+            StringBuilder output = new StringBuilder();
 
             if (arguments != null)
             {
-                foreach (object argument in arguments)
+                for(int i = 0; i < arguments.Length; i++)
                 {
+                    object argument = arguments[i];
+                    string concat = i > 0 ? SYMBOL_PRINT_CONCAT.ToString() : "";
+
                     if (argument == null)
                     {
-                        output += SYMBOL_PRINT_CONCAT + "nil";
+                        output.Append(concat + "nil");
                         continue;
                     }
 
-                    output += SYMBOL_PRINT_CONCAT + argument.ToString();
+                    output.Append(concat + argument.ToString());
                 }
             }
             else
             {
-                output = "nil";
+                output.Append("nil");
             }
 
-            Console.WriteLine(output.TrimStart(SYMBOL_PRINT_CONCAT));
+            Console.WriteLine(output.ToString());
         }
 
         public static MethodInfo GetPrintDetourMethodInfo()
