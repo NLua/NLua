@@ -1821,7 +1821,7 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
                 lua.DoString(@"print()");
                 Assert.IsTrue(true);
             }
@@ -1832,7 +1832,7 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
                 lua.DoString(@"print(nil)");
                 Assert.IsTrue(true);
             }
@@ -1843,7 +1843,7 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
                 lua.DoString(@"print(nil, nil, nil, nil, nil, nil)");
                 Assert.IsTrue(true);
             }
@@ -1854,7 +1854,7 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
                 lua.DoString(@"print(2, nil, nil, nil, nil, nil)");
                 Assert.IsTrue(true);
             }
@@ -1865,7 +1865,7 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", PrintOverrides.GetPrintDetourMethodInfo());
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
                 lua.DoString(@"print(nil, nil, nil, nil, nil, 2)");
                 Assert.IsTrue(true);
             }

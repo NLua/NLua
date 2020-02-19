@@ -9,7 +9,7 @@ namespace NLuaTest.TestTypes
     {
         public static char SYMBOL_PRINT_CONCAT = '\t';
 
-        private static void Print(params object[] arguments)
+        public static void Print(params object[] arguments)
         {
             StringBuilder output = new StringBuilder();
 
@@ -35,18 +35,6 @@ namespace NLuaTest.TestTypes
             }
 
             Console.WriteLine(output.ToString());
-        }
-
-        public static MethodInfo GetPrintDetourMethodInfo()
-        {
-            return typeof(PrintOverrides).GetMethod(
-                "Print",
-                BindingFlags.NonPublic | BindingFlags.Static,
-                null,
-                new Type[] {
-                    typeof(object[])
-                },
-                null);
         }
     }
 }
