@@ -1821,9 +1821,12 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
-                lua.DoString(@"print()");
-                Assert.IsTrue(true);
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+
+                object[] outputs = lua.DoString(@"return print()");
+
+                string expected = "";
+                Assert.AreEqual(outputs[0], expected);
             }
         }
 
@@ -1832,9 +1835,11 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
-                lua.DoString(@"print(nil)");
-                Assert.IsTrue(true);
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+                object[] outputs = lua.DoString(@"return print(nil)");
+
+                string expected = "nil";
+                Assert.AreEqual(outputs[0], expected);
             }
         }
 
@@ -1843,9 +1848,12 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
-                lua.DoString(@"print(nil, nil, nil, nil, nil, nil)");
-                Assert.IsTrue(true);
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+
+                object[] outputs = lua.DoString(@"return print(nil, nil, nil, nil, nil, nil)");
+
+                string expected = string.Format("{1}{0}{1}{0}{1}{0}{1}{0}{1}{0}{1}", PrintOverrides.SYMBOL_PRINT_CONCAT, "nil");
+                Assert.AreEqual(outputs[0], expected);
             }
         }
 
@@ -1854,9 +1862,11 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
-                lua.DoString(@"print(2, nil, nil, nil, nil, nil)");
-                Assert.IsTrue(true);
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+                object[] outputs = lua.DoString(@"return print(2, nil, nil, nil, nil, nil)");
+
+                string expected = string.Format("2{0}{1}{0}{1}{0}{1}{0}{1}{0}{1}", PrintOverrides.SYMBOL_PRINT_CONCAT, "nil");
+                Assert.AreEqual(outputs[0], expected);
             }
         }
 
@@ -1865,9 +1875,11 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("Print"));
-                lua.DoString(@"print(nil, nil, nil, nil, nil, 2)");
-                Assert.IsTrue(true);
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+                object[] outputs = lua.DoString(@"return print(nil, nil, nil, nil, nil, 2)");
+
+                string expected = string.Format("{1}{0}{1}{0}{1}{0}{1}{0}{1}{0}2", PrintOverrides.SYMBOL_PRINT_CONCAT, "nil");
+                Assert.AreEqual(outputs[0], expected);
             }
         }
 

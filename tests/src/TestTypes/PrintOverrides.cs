@@ -9,7 +9,8 @@ namespace NLuaTest.TestTypes
     {
         public static char SYMBOL_PRINT_CONCAT = '\t';
 
-        public static void Print(params object[] arguments)
+        // A custom print method as a replacement for the default Lua print function
+        public static string GetPrintOutput(params object[] arguments)
         {
             StringBuilder output = new StringBuilder();
 
@@ -34,7 +35,7 @@ namespace NLuaTest.TestTypes
                 output.Append("nil");
             }
 
-            Console.WriteLine(output.ToString());
+            return output.ToString();
         }
     }
 }
