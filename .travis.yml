@@ -14,7 +14,7 @@ script:
   - nuget restore NLua.sln
   - msbuild /p:Configuration=Release /t:Restore NLua.sln
   - msbuild /p:Configuration=Release NLua.sln
-  - mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./tests/build/net45/bin/Release/NLuaTest.dll
+  - mono packages/NUnit.ConsoleRunner.3.11.1/tools/nunit3-console.exe ./tests/build/net45/bin/Release/NLuaTest.dll
 
 # Execute additional tests or commands
 #after_script:

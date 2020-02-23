@@ -21,6 +21,8 @@
   <files>
     <file src="lib\Release\MonoAndroid\NLua.dll" target="lib\MonoAndroid" />
     <file src="lib\Release\net45\NLua.dll" target="lib\net45" />
+    <file src="lib\Release\uap10.0\NLua.dll" target="lib\uap10.0" />
+    <file src="lib\Release\uap10.0\NLua.pri" target="lib\uap10.0" />
     <file src="lib\Release\netcore\netcoreapp3.1\NLua.dll" target="lib\netcoreapp3.1" />
     <file src="lib\Release\netstandard2.0\NLua.dll" target="lib\netstandard2.0" />
     <file src="lib\Release\xamarinios\NLua.dll" target="lib\xamarinios" />
