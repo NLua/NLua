@@ -91,15 +91,15 @@
     <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="KeraLua, Version=1.0.27.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\KeraLua.1.0.27\lib\xamarintvos\KeraLua.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.TVOS" />
     <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Numerics" />
-    <Reference Include="KeraLua">
-      <HintPath>..\..\..\packages\KeraLua.1.0.26\lib\xamarintvos\KeraLua.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\Contents.json">
@@ -171,6 +171,8 @@
     <ProjectReference Include="..\..\..\build\TVOS\NLua.TVOS.csproj">
       <Project>{9238F6AA-2D63-4804-99D1-C279871F5669}</Project>
       <Name>NLua.TVOS</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -38,6 +38,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="KeraLua, Version=1.0.27.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\KeraLua.1.0.27\lib\net45\KeraLua.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
@@ -47,9 +50,6 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
-    <Reference Include="KeraLua">
-      <HintPath>..\..\..\packages\KeraLua.1.0.26\lib\net45\KeraLua.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\build\net45\NLua.csproj">
@@ -68,6 +68,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\KeraLua.1.0.27\build\net45\KeraLua.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\KeraLua.1.0.27\build\net45\KeraLua.targets'))" />
   </Target>
-  <Import Project="..\..\..\packages\KeraLua.1.0.26\build\net45\KeraLua.targets" Condition="Exists('..\..\..\packages\KeraLua.1.0.26\build\net45\KeraLua.targets')" />
+  <Import Project="..\..\..\packages\KeraLua.1.0.27\build\net45\KeraLua.targets" Condition="Exists('..\..\..\packages\KeraLua.1.0.27\build\net45\KeraLua.targets')" />
 </Project>
