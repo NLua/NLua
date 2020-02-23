@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NLua", "NLua", "{4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLua.Shared", "src\NLua.Shared.shproj", "{BD205AD6-760E-48F3-BAB2-21447396BD17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BDBA9844-3BD3-436C-AB8A-8E78C810A710}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D432F663-23CC-48B1-A413-935E5393493C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLua.UWP", "build\uap10.0\NLua.UWP.csproj", "{01873689-C719-45A1-8D90-8AE2F1BBF001}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\NLua.Shared.projitems*{01873689-c719-45a1-8d90-8ae2f1bbf001}*SharedItemsImports = 4
+		src\NLua.Shared.projitems*{bd205ad6-760e-48f3-bab2-21447396bd17}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01873689-C719-45A1-8D90-8AE2F1BBF001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01873689-C719-45A1-8D90-8AE2F1BBF001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01873689-C719-45A1-8D90-8AE2F1BBF001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01873689-C719-45A1-8D90-8AE2F1BBF001}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD205AD6-760E-48F3-BAB2-21447396BD17} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+		{01873689-C719-45A1-8D90-8AE2F1BBF001} = {4A43DAAC-F9FF-4EB1-BFBD-FB4655CCE1F7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4720E610-698B-48DD-BBD7-03AC99E9BC90}
+	EndGlobalSection
+EndGlobal

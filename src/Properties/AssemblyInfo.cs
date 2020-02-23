@@ -1,10 +1,12 @@
-using System.Reflection;
+﻿using System.Reflection;
 
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
 #if NETFRAMEWORK
 [assembly: AssemblyTitle ("NLua (.NET Framework 4.5)")]
+#elif WINDOWS_UWP
+[assembly: AssemblyTitle ("NLua (Windows Universal)")]
 #elif __ANDROID__
 [assembly: AssemblyTitle ("NLua (Xamarin.Android)")]
 #elif NETCOREAPP

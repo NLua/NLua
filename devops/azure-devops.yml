@@ -37,7 +37,8 @@ jobs:
     inputs:
       targetType: filePath
       filePath: ./devops/PreBuild.ps1
-      arguments: 'NLua NLua.nuspec'
+      arguments: 'NLua'
+      pwsh: true
 
   - task: MSBuild@1
     displayName: 'Build solution NLua.sln'
@@ -51,7 +52,7 @@ jobs:
       solution: NLua.Mac.sln
       configuration: Release
 
-  - script: 'mono packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./tests/build/net45/bin/Release/NLuaTest.dll --result=TEST-Result-Mac.xml'
+  - script: 'mono packages/NUnit.ConsoleRunner.3.11.1/tools/nunit3-console.exe ./tests/build/net45/bin/Release/NLuaTest.dll --result=TEST-Result-Mac.xml'
     displayName: 'Run OSX tests'
 
   - task: PublishTestResults@2
@@ -157,6 +158,11 @@ jobs:
       restoreSolution: NLua.sln
 
   - task: NuGetCommand@2
+    displayName: 'NuGet restore NLua.UWP'
+    inputs:
+      restoreSolution: NLua.UWP.sln
+
+  - task: NuGetCommand@2
     displayName: 'NuGet restore'
     inputs:
       restoreSolution: NLua.Core.sln
@@ -165,7 +171,7 @@ jobs:
     displayName: 'PreBuild Script'
     inputs:
       filePath: './devops/PreBuild.ps1'
-      arguments: 'NLua NLua.nuspec'
+      arguments: 'NLua'
       errorActionPreference: 'silentlyContinue'
       pwsh: true
 
@@ -174,6 +180,13 @@ jobs:
     inputs:
       solution: 'NLua.sln'
       configuration: Release
+
+  - task: MSBuild@1
+    displayName: 'Build UWP'
+    inputs:
+      solution: 'NLua.UWP.sln'
+      configuration: Release
+      msbuildArguments: /restore
 
   - task: MSBuild@1
     displayName: 'Build .NET Core'
@@ -262,7 +275,8 @@ jobs:
     inputs:
       targetType: filePath
       filePath: ./devops/Package.ps1
-      arguments: 'NLua NLua.nuspec'
+      arguments: 'NLua'
+      pwsh: true
 
   - script: 'rename *.nupkg NLua.nupkg'
     displayName: 'Rename Nuget Package'
@@ -279,6 +293,7 @@ jobs:
       targetType: filePath
       filePath: ./devops/Publish.ps1
       arguments: NLua
+      pwsh: true
 
   - template: send-telegram.yml@templates
 

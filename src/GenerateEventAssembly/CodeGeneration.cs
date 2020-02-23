@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Reflection;
 
@@ -13,7 +13,7 @@ namespace NLua
         private readonly Dictionary<Type, LuaClassType> _classCollection = new Dictionary<Type, LuaClassType>();
         private readonly Dictionary<Type, Type> _delegateCollection = new Dictionary<Type, Type>();
 
-#if !NETSTANDARD
+#if !NETSTANDARD && !WINDOWS_UWP
         private Dictionary<Type, Type> eventHandlerCollection = new Dictionary<Type, Type>();
         private Type eventHandlerParent = typeof(LuaEventHandler);
         private Type delegateParent = typeof(LuaDelegate);
@@ -36,7 +36,7 @@ namespace NLua
 #if NETCOREAPP
             newAssembly = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             newModule = newAssembly.DefineDynamicModule("NLua_generatedcode");
-#elif !NETSTANDARD
+#elif !NETSTANDARD && !WINDOWS_UWP
             newAssembly = Thread.GetDomain().DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             newModule = newAssembly.DefineDynamicModule("NLua_generatedcode");
 #endif
@@ -52,7 +52,7 @@ namespace NLua
          */
         private Type GenerateEvent(Type eventHandlerType)
         {
-#if NETSTANDARD
+#if NETSTANDARD || WINDOWS_UWP
             throw new NotImplementedException(" Emit not available on .NET Standard ");
 #else
             string typeName;
@@ -93,7 +93,7 @@ namespace NLua
          */
         private Type GenerateDelegate(Type delegateType)
         {
-#if NETSTANDARD
+#if NETSTANDARD || WINDOWS_UWP
             throw new NotImplementedException("GenerateDelegate is not available on Windows Store, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
 #else
             string typeName;
@@ -298,7 +298,7 @@ namespace NLua
         public void GenerateClass(Type klass, out Type newType, out Type[][] returnTypes)
         {
 
-#if NETSTANDARD
+#if NETSTANDARD || WINDOWS_UWP
             throw new NotImplementedException (" Emit not available on .NET Standard ");
 #else
             string typeName;
@@ -410,7 +410,7 @@ namespace NLua
             returnTypes = returnTypesList.ToArray();
         }
 
-#if !NETSTANDARD
+#if !NETSTANDARD && !WINDOWS_UWP
 
         /*
          * Generates an overriden implementation of method inside myType that delegates
@@ -659,7 +659,7 @@ namespace NLua
          */
         public LuaEventHandler GetEvent(Type eventHandlerType, LuaFunction eventHandler)
         {
-#if NETSTANDARD
+#if NETSTANDARD || WINDOWS_UWP
             throw new NotImplementedException (" Emit not available on .NET Standard ");
 #else
             Type eventConsumerType;
