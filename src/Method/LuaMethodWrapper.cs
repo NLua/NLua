@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,9 +67,23 @@ namespace NLua.Method
             _lastCalledMethod = new MethodCache();
 
             _isStatic = (bindingType & BindingFlags.Static) == BindingFlags.Static;
-            _members = GetMethodsRecursively(targetType.UnderlyingSystemType,
+            MethodInfo [] methods = GetMethodsRecursively(targetType.UnderlyingSystemType,
                 methodName,
                 bindingType | BindingFlags.Public);
+            _members = ReorderMethods(methods);
+        }
+
+        private static MethodInfo[] ReorderMethods(MethodInfo[] m)
+        {
+            int len = m.Length;
+
+            if (len < 2)
+                return m;
+
+            return m.
+                GroupBy(c => c.GetParameters().Length).
+                SelectMany(g => g.OrderByDescending(ci => ci.ToString())).
+                ToArray();
         }
 
         MethodInfo[] GetMethodsRecursively(Type type, string methodName, BindingFlags bindingType)

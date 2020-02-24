@@ -1258,6 +1258,19 @@ namespace NLua
             return instance.CallConstructorInternal(luaState);
         }
 
+        private static ConstructorInfo[] ReorderConstructors(ConstructorInfo[] constructors)
+        {
+            int len = constructors.Length;
+
+            if (len < 2)
+                return constructors;
+
+            return constructors.
+                GroupBy(c => c.GetParameters().Length).
+                SelectMany(g => g.OrderByDescending(ci => ci.ToString())).
+                ToArray();
+        }
+
         private int CallConstructorInternal(LuaState luaState)
         {
             var klass = _translator.GetRawNetObject(luaState, 1) as ProxyType;
@@ -1273,7 +1286,7 @@ namespace NLua
 
             luaState.Remove(1);
             ConstructorInfo[] constructors = klass.UnderlyingSystemType.GetConstructors();
-
+            constructors = ReorderConstructors(constructors);
             foreach (var constructor in constructors)
             {
                 bool isConstructor = MatchParameters(luaState, constructor, validConstructor, 0);

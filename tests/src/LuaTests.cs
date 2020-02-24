@@ -2782,6 +2782,20 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void TestGuid()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.LoadCLRPackage();
+                object o = lua.DoString(@" import ('mscorlib','System')
+                              return Guid('adc70ae1-769e-4ace-aa83-928a604c5739')
+                              ")[0];
+                
+                Assert.AreEqual(new Guid("adc70ae1-769e-4ace-aa83-928a604c5739"), o);
+            }
+        }
+
 
         static Lua m_lua;
     }
