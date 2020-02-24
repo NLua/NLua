@@ -148,7 +148,7 @@ namespace NLua
                 if (luatype == LuaType.Function || luatype == LuaType.Nil)
                     return _extractValues[paramType];
             }
-            else if (typeof(Delegate).IsAssignableFrom(paramType) && luatype == LuaType.Function)
+            else if (typeof(Delegate).IsAssignableFrom(paramType) && luatype == LuaType.Function && paramType.GetMethod("Invoke") != null)
                 return new DelegateGenerator(_translator, paramType).ExtractGenerated;
             else if (paramType.IsInterface && luatype == LuaType.Table)
                 return new ClassGenerator(_translator, paramType).ExtractGenerated;
