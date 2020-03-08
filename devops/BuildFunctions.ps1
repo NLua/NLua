@@ -47,6 +47,27 @@ function Get-Git-Full-Sem-Ver ()
 	return [string](gitversion /showvariable FullSemVer)
 }
 
+function Get-Git-Commit-Sha () 
+{
+	Update-Ensure-Git-Not-Detached
+
+	return [string](gitversion /showvariable Sha)
+}
+
+function Update-NuSpec-Commit-Hash($File, $sha) 
+{
+		$File = Resolve-Path $File
+	
+		[xml] $fileContents = Get-Content -Encoding UTF8 -Path $File
+	
+		$repositoryPath = "package.metadata.repository"
+	
+		if ($null -ne $sha -and $sha -ne "") {
+			Set-XmlAttributeValue -XmlDocument $fileContents -ElementPath $repositoryPath -AttributeName "commit" -AttributeValue $sha
+		}
+		$fileContents.Save($File)
+}
+
 function Update-NuSpec-Release-Notes($File, $releaseNotes) 
 {
 		$File = Resolve-Path $File
@@ -136,6 +157,39 @@ function Set-XmlElementsTextValue([xml]$XmlDocument, [string]$ElementPath, [stri
 	}
 }
 
+function Set-XmlAttributeValue([xml]$XmlDocument, [string]$ElementPath, [string]$AttributeName, [string]$AttributeValue, [string]$NamespaceURI = "", [string]$NodeSeparatorCharacter = '.')
+{
+	# Try and get the node.	
+	$node = Get-XmlNode -XmlDocument $XmlDocument -NodePath $ElementPath -NamespaceURI $NamespaceURI -NodeSeparatorCharacter $NodeSeparatorCharacter
+	
+	# If the node already exists, update its value.
+	if ($node)
+	{ 
+		$node.SetAttribute($AttributeName, $AttributeValue)
+	}
+	# Else the node doesn't exist yet, so create it with the given value.
+	else
+	{
+		# Create the new element with the given value.
+		$elementName = $ElementPath.Substring($ElementPath.LastIndexOf($NodeSeparatorCharacter) + 1)
+ 		$element = $XmlDocument.CreateElement($elementName, $XmlDocument.DocumentElement.NamespaceURI)		
+		$element.SetAttribute($AttributeName, $AttributeValue)
+		
+		# Try and get the parent node.
+		$parentNodePath = $ElementPath.Substring(0, $ElementPath.LastIndexOf($NodeSeparatorCharacter))
+		$parentNode = Get-XmlNode -XmlDocument $XmlDocument -NodePath $parentNodePath -NamespaceURI $NamespaceURI -NodeSeparatorCharacter $NodeSeparatorCharacter
+		
+		if ($parentNode)
+		{
+			$parentNode.AppendChild($element) > $null
+		}
+		else
+		{
+			throw "$parentNodePath does not exist in the xml."
+		}
+	}
+}
+
 function Test-Tag-Build ($nugetGitVersion, $buildMetaData, $fullSemVer) {
 	if ([string]::IsNullOrEmpty($buildMetaData) -and $fullSemVer -eq $nugetGitVersion) {
 		return $true
@@ -161,7 +215,7 @@ function Get-Prefix-Name ()
 	return "beta"
 }
 
-function Get-Next-Version-String ($PackageId)
+function Get-Next-Version-String ()
 {
 	$nugetGitVersion   = Get-Git-Package-Version
 	$buildMetaData = Get-Git-Build-MetaData
