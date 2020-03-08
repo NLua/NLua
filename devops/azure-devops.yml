@@ -220,52 +220,28 @@ jobs:
     inputs:
       buildType: 'current'
       artifactName: 'Xamarin.iOS.NLua'
-      targetPath: '$(Pipeline.Workspace)\Xamarin.iOS.NLua'
+      targetPath: 'lib/Release/xamarinios/'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.Mac'
     inputs:
       buildType: 'current'
       artifactName: 'Xamarin.Mac.NLua'
-      targetPath: '$(Pipeline.Workspace)\Xamarin.Mac.NLua'
+      targetPath: 'lib/Release/xamarinmac/'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.watchOS'
     inputs:
       buildType: 'current'
       artifactName: 'Xamarin.watchOS.NLua'
-      targetPath: '$(Pipeline.Workspace)\Xamarin.watchOS.NLua'
+      targetPath: 'lib/Release/xamarinwatchos/'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.tvOS'
     inputs:
       buildType: 'current'
       artifactName: 'Xamarin.tvOS.NLua'
-      targetPath: '$(Pipeline.Workspace)\Xamarin.tvOS.NLua'
-
-  - task: CopyFiles@2
-    displayName: 'Copy Files to: lib/Release/xamarinios/'
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)\Xamarin.iOS.NLua\'
-      TargetFolder: lib/Release/xamarinios/
-
-  - task: CopyFiles@2
-    displayName: 'Copy Files to: lib/Release/xamarinmac/'
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)\Xamarin.Mac.NLua\'
-      TargetFolder: lib/Release/xamarinmac/
-
-  - task: CopyFiles@2
-    displayName: 'Copy Files to: lib/Release/xamarintvos/ '
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)\Xamarin.tvOS.NLua\'
-      TargetFolder: lib/Release/xamarintvos/
-
-  - task: CopyFiles@2
-    displayName: 'Copy Files to: lib/Release/xamarinwatchos/'
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)\Xamarin.watchOS.NLua\'
-      TargetFolder: lib/Release/xamarinwatchos/
+      targetPath: 'lib/Release/xamarintvos/'
 
   - script: 'nuget setapikey $(apikey)'
     displayName: 'Set NuGet API Key'
@@ -278,14 +254,17 @@ jobs:
       arguments: 'NLua'
       pwsh: true
 
-  - script: 'rename *.nupkg NLua.nupkg'
-    displayName: 'Rename Nuget Package'
-
   - task: PublishBuildArtifacts@1
     displayName: 'Save NLua.nupkg Artifact'
     inputs:
       PathtoPublish: NLua.nupkg
       ArtifactName: NLua.nupkg
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Save NLua.snupkg Artifact'
+    inputs:
+      PathtoPublish: NLua.snupkg
+      ArtifactName: NLua.snupkg
 
   - task: PowerShell@2
     displayName: 'Publish NuGet'

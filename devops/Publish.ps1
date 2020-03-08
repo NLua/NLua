@@ -6,6 +6,7 @@ if (-Not (Test-Should-Deploy)) {
 	return
 }
 
-$nupkgFile = $PackageId +  '.nupkg'
+$nupkgFile  = $PackageId + '.nupkg'
 
-& nuget push $nupkgFile -Source https://www.nuget.org/api/v2/package
+& nuget push $nupkgFile -Source https://api.nuget.org/v3/index.json
+
