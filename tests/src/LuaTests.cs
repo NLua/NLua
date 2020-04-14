@@ -2795,6 +2795,57 @@ namespace NLuaTest
                 Assert.AreEqual(new Guid("adc70ae1-769e-4ace-aa83-928a604c5739"), o);
             }
         }
+        
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public void TestMaximumRecursion(int maxRecursion)
+        {
+            var dt = new System.Data.DataTable();
+            dt.Columns.Add("MyCol");
+            Assert.AreEqual("MyCol",dt.Columns[0].ColumnName);
+            Assert.AreEqual("MyCol",dt.Columns[0].Table.Columns[0].Table.Columns[0].ColumnName);
+            Assert.AreEqual("MyCol",dt.Columns[0].ColumnName.ToString());
+            Assert.AreEqual("MyCol",dt.Columns[0].Table.Columns[0].Table.Columns[0].ColumnName.ToString());
+            
+            using (Lua lua = new Lua())
+            {
+                lua.MaximumRecursion = maxRecursion;
+                lua.LoadCLRPackage();
+                lua["myDt"] = dt;
+                
+                if(maxRecursion == 0)
+                    Assert.AreEqual(1,lua.Globals.Count()); //register only the root reference
+                else
+                    Assert.Greater(lua.Globals.Count(),1); //many globals registered
+
+                object o = lua.DoString(@" import ('mscorlib','System')
+                              import ('System.Data','System.Data')
+                              return myDt.Columns[0].ColumnName
+                              ")[0];
+                
+                Assert.AreEqual("MyCol", o);
+
+
+                o = lua.DoString(@" return myDt.Columns[0].Table.Columns[0].Table.Columns[0].ColumnName
+                              ")[0];
+                
+                Assert.AreEqual("MyCol", o);
+
+                o = lua.DoString(@" import ('mscorlib','System')
+                              return myDt.Columns[0]:ToString()
+                              ")[0];
+                
+                Assert.AreEqual("MyCol", o);
+
+
+                o = lua.DoString(@" return myDt.Columns[0].Table.Columns[0].Table.Columns[0]:ToString()
+                              ")[0];
+                
+                Assert.AreEqual("MyCol", o);
+            }
+        }
 
 
         static Lua m_lua;
