@@ -2802,48 +2802,23 @@ namespace NLuaTest
         [TestCase(3)]
         public void TestMaximumRecursion(int maxRecursion)
         {
-            var dt = new System.Data.DataTable();
-            dt.Columns.Add("MyCol");
-            Assert.AreEqual("MyCol",dt.Columns[0].ColumnName);
-            Assert.AreEqual("MyCol",dt.Columns[0].Table.Columns[0].Table.Columns[0].ColumnName);
-            Assert.AreEqual("MyCol",dt.Columns[0].ColumnName.ToString());
-            Assert.AreEqual("MyCol",dt.Columns[0].Table.Columns[0].Table.Columns[0].ColumnName.ToString());
+            var tc = new TestClass();
+            tc.LongValue = 5;
             
             using (Lua lua = new Lua())
             {
                 lua.MaximumRecursion = maxRecursion;
                 lua.LoadCLRPackage();
-                lua["myDt"] = dt;
+                lua["myTc"] = tc;
                 
                 if(maxRecursion == 0)
                     Assert.AreEqual(1,lua.Globals.Count()); //register only the root reference
                 else
-                    Assert.Greater(lua.Globals.Count(),1); //many globals registered
+                    Assert.Greater(lua.Globals.Count(),1); //many globals registered (all sub properties)
 
-                object o = lua.DoString(@" import ('mscorlib','System')
-                              import ('System.Data','System.Data')
-                              return myDt.Columns[0].ColumnName
-                              ")[0];
-                
-                Assert.AreEqual("MyCol", o);
-
-
-                o = lua.DoString(@" return myDt.Columns[0].Table.Columns[0].Table.Columns[0].ColumnName
-                              ")[0];
-                
-                Assert.AreEqual("MyCol", o);
-
-                o = lua.DoString(@" import ('mscorlib','System')
-                              return myDt.Columns[0]:ToString()
-                              ")[0];
-                
-                Assert.AreEqual("MyCol", o);
-
-
-                o = lua.DoString(@" return myDt.Columns[0].Table.Columns[0].Table.Columns[0]:ToString()
-                              ")[0];
-                
-                Assert.AreEqual("MyCol", o);
+                // ensure even with 0 recursion we can still call properties
+                object o = lua.DoString(@"return myTc.LongValue")[0];
+                Assert.AreEqual(5, o);
             }
         }
 
