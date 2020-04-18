@@ -71,6 +71,7 @@ You can use/instantiate any .NET class without any previous registration or anno
 		{
 			return "Return of Static Method";
 		}
+        }
 
 ```
 
