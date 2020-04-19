@@ -1767,6 +1767,123 @@ namespace NLuaTest
         }
 
         [Test]
+        public void TestPrintNoParams()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print()");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintSingleNil()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print(nil)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNil()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print(nil, nil, nil, nil, nil, nil)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilFirstNumber()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print(2, nil, nil, nil, nil, nil)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilLastNumber()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.DoString(@"print(nil, nil, nil, nil, nil, 2)");
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void TestPrintNoParamsParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+
+                object[] outputs = lua.DoString(@"return print()");
+
+                string expected = "";
+                Assert.AreEqual(outputs[0], expected);
+            }
+        }
+
+        [Test]
+        public void TestPrintSingleNilParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+                object[] outputs = lua.DoString(@"return print(nil)");
+
+                string expected = "nil";
+                Assert.AreEqual(outputs[0], expected);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+
+                object[] outputs = lua.DoString(@"return print(nil, nil, nil, nil, nil, nil)");
+
+                string expected = string.Format("{1}{0}{1}{0}{1}{0}{1}{0}{1}{0}{1}", PrintOverrides.SYMBOL_PRINT_CONCAT, "nil");
+                Assert.AreEqual(outputs[0], expected);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilFirstNumberParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+                object[] outputs = lua.DoString(@"return print(2, nil, nil, nil, nil, nil)");
+
+                string expected = string.Format("2{0}{1}{0}{1}{0}{1}{0}{1}{0}{1}", PrintOverrides.SYMBOL_PRINT_CONCAT, "nil");
+                Assert.AreEqual(outputs[0], expected);
+            }
+        }
+
+        [Test]
+        public void TestPrintManyNilLastNumberParamsDetour()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.RegisterFunction("print", null, typeof(PrintOverrides).GetMethod("GetPrintOutput"));
+                object[] outputs = lua.DoString(@"return print(nil, nil, nil, nil, nil, 2)");
+
+                string expected = string.Format("{1}{0}{1}{0}{1}{0}{1}{0}{1}{0}2", PrintOverrides.SYMBOL_PRINT_CONCAT, "nil");
+                Assert.AreEqual(outputs[0], expected);
+            }
+        }
+
+        [Test]
         public void TestUnicodeChars()
         {
             using (Lua lua = new Lua())
