@@ -2795,6 +2795,32 @@ namespace NLuaTest
                 Assert.AreEqual(new Guid("adc70ae1-769e-4ace-aa83-928a604c5739"), o);
             }
         }
+        
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public void TestMaximumRecursion(int maxRecursion)
+        {
+            var tc = new TestClass();
+            tc.LongValue = 5;
+            
+            using (Lua lua = new Lua())
+            {
+                lua.MaximumRecursion = maxRecursion;
+                lua.LoadCLRPackage();
+                lua["myTc"] = tc;
+                
+                if(maxRecursion == 0)
+                    Assert.AreEqual(1,lua.Globals.Count()); //register only the root reference
+                else
+                    Assert.IsTrue(lua.Globals.Count() > 1); //many globals registered (all sub properties)
+
+                // ensure even with 0 recursion we can still call properties
+                object o = lua.DoString(@"return myTc.LongValue")[0];
+                Assert.AreEqual(5, o);
+            }
+        }
 
 
         static Lua m_lua;

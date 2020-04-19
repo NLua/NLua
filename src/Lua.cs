@@ -213,6 +213,11 @@ namespace NLua
 //";
         public bool UseTraceback { get; set; } = false;
 
+        /// <summary>
+        /// The maximum number of recursive steps to take when adding global reference variables.  Defaults to 2.
+        /// </summary>
+        public int MaximumRecursion { get; set;} = 2;
+
         #region Globals auto-complete
         /// <summary>
         /// An alphabetically sorted list of all globals (objects, methods, etc.) externally added to this Lua instance
@@ -631,7 +636,7 @@ namespace NLua
                 _globals.Add(path + "(");
             }
             // If the type is a class or an interface and recursion hasn't been running too long, list the members
-            else if ((type.IsClass || type.IsInterface) && type != typeof(string) && recursionCounter < 2)
+            else if ((type.IsClass || type.IsInterface) && type != typeof(string) && recursionCounter < MaximumRecursion)
             {
                 #region Methods
                 foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
