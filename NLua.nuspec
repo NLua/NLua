@@ -10,7 +10,7 @@
     <iconUrl>https://raw.githubusercontent.com/nlua/NLua/master/NLua.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>NLua Package.</description>
-    <summary>NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android.</summary>
+    <summary>NLua allow use Lua from C#, using Windows, UWP, Linux, Android, Mac, iOS , tvOS.</summary>
     <releaseNotes>Release: 2bffe65</releaseNotes>
     <copyright>Copyright © NLua 2020</copyright>
     <tags>lua nlua</tags>
