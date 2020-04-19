@@ -2708,7 +2708,23 @@ namespace NLuaTest
             lua["main"] = new Person();
             object result = lua.DoString("return main[15]")[0];
 
+            object result2 = lua.DoString(
+            @"
+
+            function bar()
+                if main.foo ~= nil then
+                    return 42
+                end
+ 
+                return 10
+            end
+
+            return bar()
+            ")[0];
+
             Assert.AreNotEqual(15, result, "#1");
+            Assert.AreEqual(10, result2, "#2");
+            Assert.IsNull(result, "#3");
         }
 
         [Test]
@@ -2812,13 +2828,13 @@ namespace NLuaTest
                 lua["myTc"] = tc;
                 
                 if(maxRecursion == 0)
-                    Assert.AreEqual(1,lua.Globals.Count()); //register only the root reference
+                    Assert.AreEqual(1,lua.Globals.Count(), "#1"); //register only the root reference
                 else
-                    Assert.IsTrue(lua.Globals.Count() > 1); //many globals registered (all sub properties)
+                    Assert.IsTrue(lua.Globals.Count() > 1, "#1"); //many globals registered (all sub properties)
 
                 // ensure even with 0 recursion we can still call properties
                 object o = lua.DoString(@"return myTc.LongValue")[0];
-                Assert.AreEqual(5, o);
+                Assert.AreEqual(5, o, "#2");
             }
         }
 

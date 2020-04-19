@@ -216,7 +216,7 @@ namespace NLua
         /// <summary>
         /// The maximum number of recursive steps to take when adding global reference variables.  Defaults to 2.
         /// </summary>
-        public int MaximumRecursion { get; set;} = 2;
+        public int MaximumRecursion { get; set; } = 2;
 
         #region Globals auto-complete
         /// <summary>

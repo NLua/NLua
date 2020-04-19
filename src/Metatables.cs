@@ -33,7 +33,6 @@ namespace NLua
         public static readonly LuaNativeFunction CallConstructorFunction  = CallConstructor;
         public static readonly LuaNativeFunction ToStringFunction = ToStringLua;
         public static readonly LuaNativeFunction CallDelegateFunction = CallDelegate;
-        public static readonly LuaNativeFunction CallInvalidFunction  = CallInvalidMethod;
 
         public static readonly LuaNativeFunction AddFunction = AddLua;
         public static readonly LuaNativeFunction SubtractFunction = SubtractLua;
@@ -372,11 +371,9 @@ namespace NLua
 
         private int PushInvalidMethodCall(LuaState luaState, Type type, string name)
         {
-            var invokeDelegate = CallInvalidFunction;
+            SetMemberCache(type, name, null);
 
-            SetMemberCache(type, name, invokeDelegate);
-
-            _translator.PushFunction(luaState, invokeDelegate);
+            _translator.Push(luaState, null);
             _translator.Push(luaState, false);
             return 2;
         }
@@ -1190,21 +1187,6 @@ namespace NLua
                 return luaState.Error();
 
             return result;
-        }
-
-/*
- * LuaNativeFunction called when the method wasn't found
- */
-#if __IOS__ || __TVOS__ || __WATCHOS__
-        [MonoPInvokeCallback(typeof(LuaNativeFunction))]
-#endif
-        static int CallInvalidMethod(IntPtr state)
-        {
-            var luaState = LuaState.FromIntPtr(state);
-            var translator = ObjectTranslatorPool.Instance.Find(luaState);
-            translator.ThrowError(luaState, "Trying to invoke invalid method or an access an invalid index");
-            luaState.Error();
-            return 1;
         }
 
         int CallDelegateInternal(LuaState luaState)
