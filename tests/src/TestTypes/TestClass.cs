@@ -70,18 +70,6 @@ namespace NLuaTest.TestTypes
             }
         }
 
-        public int this[int index]
-        {
-            get { return 1; }
-            set { }
-        }
-
-        public int this[string index]
-        {
-            get { return 1; }
-            set { }
-        }
-
         public TimeSpan? NullableMethod(TimeSpan? input)
         {
             return input;

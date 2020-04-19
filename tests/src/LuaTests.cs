@@ -2838,6 +2838,26 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void TestIndexers()
+        {
+            var myClass = new TestClass2();
+            myClass.teststrval = "Gamma";
+            Assert.AreEqual("Gamma", myClass.teststrval);
+            Assert.AreEqual(3, myClass[1]);
+            Assert.AreEqual(1, myClass["fff"]);
+
+            using (var lua = new Lua())
+            {
+                lua["mc"] = myClass;
+
+                Assert.AreEqual("Gamma", lua.DoString("return mc.teststrval")[0]);
+                Assert.AreEqual(3, lua.DoString("return mc[1]")[0]);
+                Assert.AreEqual(1, lua.DoString("return mc['fff']")[0]);
+            }
+        }
+
+
 
         static Lua m_lua;
     }
