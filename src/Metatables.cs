@@ -585,7 +585,7 @@ namespace NLua
 
                 // If the index type and the parameter doesn't match, just skip it
                 if (index == null)
-                    break;
+                    continue;
 
                 object[] args = new object[1];
 

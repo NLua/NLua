@@ -2155,7 +2155,7 @@ namespace NLuaTest
                 sw.Start();
                 try
                 {
-                    for(int i = 0; i < 1000; i++)
+                    for(int i = 0; i < 10000; i++)
                         lua.DoString($" v:Lengthx{i}() ");
                 }
                 catch (Exception e)
@@ -2169,7 +2169,7 @@ namespace NLuaTest
                 sw2.Start();
                 try
                 {
-                    for (int i = 0; i < 1000; i++)
+                    for (int i = 0; i < 10000; i++)
                         lua.DoString($" v:Lengthx{i}() ");
                 }
                 catch (Exception e)
@@ -2954,6 +2954,26 @@ namespace NLuaTest
                 Assert.AreEqual(5, o, "#2");
             }
         }
+
+        [Test]
+        public void TestIndexers()
+        {
+            var myClass = new TestClass2();
+            myClass.teststrval = "Gamma";
+            Assert.AreEqual("Gamma", myClass.teststrval);
+            Assert.AreEqual(3, myClass[1]);
+            Assert.AreEqual(1, myClass["fff"]);
+
+            using (var lua = new Lua())
+            {
+                lua["mc"] = myClass;
+
+                Assert.AreEqual("Gamma", lua.DoString("return mc.teststrval")[0]);
+                Assert.AreEqual(3, lua.DoString("return mc[1]")[0]);
+                Assert.AreEqual(1, lua.DoString("return mc['fff']")[0]);
+            }
+        }
+
 
 
         static Lua m_lua;
