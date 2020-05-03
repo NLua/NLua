@@ -52,7 +52,7 @@ jobs:
       solution: NLua.Mac.sln
       configuration: Release
 
-  - script: 'dotnet test ./tests/build/net45/bin/Release/NLuaTest.dll --result=TEST-Result-Mac.xml'
+  - script: 'dotnet test ./tests/build/net45/bin/Release/NLuaTest.dll -l:trx;LogFileName=TEST-Result-Mac.xml'
     displayName: 'Run OSX tests'
 
   - task: PublishTestResults@2
