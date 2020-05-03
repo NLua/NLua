@@ -163,6 +163,11 @@ jobs:
       restoreSolution: NLua.UWP.sln
 
   - task: NuGetCommand@2
+    displayName: 'NuGet restore NLua.Android'
+    inputs:
+      restoreSolution: NLua.Android.sln
+
+  - task: NuGetCommand@2
     displayName: 'NuGet restore'
     inputs:
       restoreSolution: NLua.Core.sln
