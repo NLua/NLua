@@ -73,12 +73,16 @@
       <Link>scripts\test.lua</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\scripts\test_32.luac">
-      <Link>scripts\test_32.luac</Link>
+    <None Include="..\..\scripts\test.win_32.luac">
+      <Link>scripts\test.win_32.luac</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\..\scripts\test_64.luac">
       <Link>scripts\test_64.luac</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\scripts\test.win_64.luac">
+      <Link>scripts\test.win_64.luac</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

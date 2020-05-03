@@ -33,7 +33,9 @@
   <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="KeraLua" Version="1.0.29" />
+    <PackageReference Include="KeraLua">
+      <Version>1.0.30-lua54-build5</Version>
+    </PackageReference>
     <PackageReference Include="NUnit" Version="3.12.0" />
   </ItemGroup>
   

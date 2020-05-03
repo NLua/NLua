@@ -49,8 +49,16 @@
       <Link>scripts\test.lua</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="$(MSBuildThisFileDirectory)..\scripts\test_32.luac">
-      <Link>scripts\test_32.luac</Link>
+    <None Include="$(MSBuildThisFileDirectory)..\scripts\test.win_32.luac">
+      <Link>scripts\test.win_32.luac</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\scripts\test.win_64.luac">
+      <Link>scripts\test.win_64.luac</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\scripts\test.win_64.luac">
+      <Link>scripts\test.win_64.luac</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="$(MSBuildThisFileDirectory)..\scripts\test_64.luac">
