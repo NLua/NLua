@@ -372,7 +372,6 @@ namespace NLua
                 return 0;
 
             _translator.ThrowError(_luaState, caughtExcept);
-            //_luaState.PushNil();
             return 1;
         }
 

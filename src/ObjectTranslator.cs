@@ -239,7 +239,6 @@ namespace NLua
             }
 
             Push(luaState, e);
-            //luaState.Error();
         }
 
         /*
@@ -253,7 +252,12 @@ namespace NLua
         {
             var state = LuaState.FromIntPtr(luaState);
             var translator = ObjectTranslatorPool.Instance.Find(state);
-            return translator.LoadAssemblyInternal(state);
+            int result = translator.LoadAssemblyInternal(state);
+            var exception = translator.GetObject(state, -1) as LuaScriptException;
+
+            if (exception != null)
+                return state.Error();
+            return result;
         }
 
         private int LoadAssemblyInternal(LuaState luaState)
@@ -302,7 +306,10 @@ namespace NLua
                             exception = null;
                     }
                     if (exception != null)
+                    {
                         ThrowError(luaState, exception);
+                        return 1;
+                    }
                 }
                 if (assembly != null && !assemblies.Contains(assembly))
                     assemblies.Add(assembly);
@@ -310,6 +317,7 @@ namespace NLua
             catch (Exception e)
             {
                 ThrowError(luaState, e);
+                return 1;
             }
             return 0;
         }
@@ -376,7 +384,12 @@ namespace NLua
         {
             var state = LuaState.FromIntPtr(luaState);
             var translator = ObjectTranslatorPool.Instance.Find(state);
-            return translator.RegisterTableInternal(state);
+            int result = translator.RegisterTableInternal(state);
+            var exception = translator.GetObject(state, -1) as LuaScriptException;
+
+            if (exception != null)
+                return state.Error();
+            return result;
         }
 
         private int RegisterTableInternal(LuaState luaState)
@@ -384,7 +397,7 @@ namespace NLua
             if (luaState.Type(1) != LuaType.Table)
             {
                 ThrowError(luaState, "register_table: first arg is not a table");
-                return 0;
+                return 1;
             }
 
             LuaTable luaTable = GetTable(luaState, 1);
@@ -393,7 +406,7 @@ namespace NLua
             if (string.IsNullOrEmpty(superclassName))
             {
                 ThrowError(luaState, "register_table: superclass name can not be null");
-                return 0;
+                return 1;
             }
 
             var klass = FindType(superclassName);
@@ -401,7 +414,7 @@ namespace NLua
             if (klass == null)
             {
                 ThrowError(luaState, "register_table: can not find superclass '" + superclassName + "'");
-                return 0;
+                return 1;
             }
 
             // Creates and pushes the object in the stack, setting
@@ -438,7 +451,12 @@ namespace NLua
         {
             var state = LuaState.FromIntPtr(luaState);
             var translator = ObjectTranslatorPool.Instance.Find(state);
-            return translator.UnregisterTableInternal(state);
+            int result = translator.UnregisterTableInternal(state);
+            var exception = translator.GetObject(state, -1) as LuaScriptException;
+
+            if (exception != null)
+                return state.Error();
+            return result;
         }
 
         private int UnregisterTableInternal(LuaState luaState)
@@ -447,7 +465,7 @@ namespace NLua
             if (!luaState.GetMetaTable(1))
             {
                 ThrowError(luaState, "unregister_table: arg is not valid table");
-                return 0;
+                return 1;
             }
 
             luaState.PushString("__index");
@@ -455,12 +473,18 @@ namespace NLua
             object obj = GetRawNetObject(luaState, -1);
 
             if (obj == null)
+            {
                 ThrowError(luaState, "unregister_table: arg is not valid table");
+                return 1;
+            }
 
             var luaTableField = obj.GetType().GetField("__luaInterface_luaTable");
 
             if (luaTableField == null)
+            {
                 ThrowError(luaState, "unregister_table: arg is not valid table");
+                return 1;
+            }
 
             // ReSharper disable once PossibleNullReferenceException
             luaTableField.SetValue(obj, null);
@@ -484,7 +508,12 @@ namespace NLua
         {
             var state = LuaState.FromIntPtr(luaState);
             var translator = ObjectTranslatorPool.Instance.Find(state);
-            return translator.GetMethodSignatureInternal(state);
+            int result = translator.GetMethodSignatureInternal(state);
+            var exception = translator.GetObject(state, -1) as LuaScriptException;
+
+            if (exception != null)
+                return state.Error();
+            return result;
         }
 
         private int GetMethodSignatureInternal(LuaState luaState)
@@ -505,7 +534,6 @@ namespace NLua
                 if (target == null)
                 {
                     ThrowError(luaState, "get_method_bysig: first arg is not type or object reference");
-                    luaState.PushNil();
                     return 1;
                 }
 
@@ -529,7 +557,6 @@ namespace NLua
             catch (Exception e)
             {
                 ThrowError(luaState, e);
-                luaState.PushNil();
             }
 
             return 1;
@@ -546,7 +573,12 @@ namespace NLua
         {
             var state = LuaState.FromIntPtr(luaState);
             var translator = ObjectTranslatorPool.Instance.Find(state);
-            return translator.GetConstructorSignatureInternal(state);
+            int result = translator.GetConstructorSignatureInternal(state);
+            var exception = translator.GetObject(state, -1) as LuaScriptException;
+
+            if (exception != null)
+                return state.Error();
+            return result;
         }
 
         private int GetConstructorSignatureInternal(LuaState luaState)
@@ -558,7 +590,10 @@ namespace NLua
                 klass = (ProxyType)_objects[udata];
 
             if (klass == null)
+            { 
                 ThrowError(luaState, "get_constructor_bysig: first arg is invalid type reference");
+                return 1;
+            }
 
             var signature = new Type[luaState.GetTop() - 1];
 
@@ -575,7 +610,6 @@ namespace NLua
             catch (Exception e)
             {
                 ThrowError(luaState, e);
-                luaState.PushNil();
             }
             return 1;
         }
