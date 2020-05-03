@@ -1214,6 +1214,27 @@ namespace NLuaTest
             }
         }
         /*
+        * Tests instantiating an object with one-argument constructor
+        */
+        [Test]
+        public void CreateNetObjectWrongArgCons()
+        {
+            using (Lua lua = new Lua())
+            {
+                try
+                {
+                    lua.DoString("luanet.load_assembly(\"NLuaTest\")");
+                    lua.DoString("TestClass=luanet.import_type(\"NLuaTest.TestTypes.TestClass\")");
+                    lua.DoString("test=TestClass(3, 3)");
+                    Assert.Fail("Should throw an Exception");
+                }
+                catch (Exception e)
+                {
+                    Assert.True(e is LuaScriptException, "#1");
+                }
+            }
+        }
+        /*
         * Tests instantiating an object with overloaded constructor
         */
         [Test]
