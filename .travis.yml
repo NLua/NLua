@@ -4,6 +4,8 @@
 
 language: csharp
 
+dotnet: 3.1
+
 before_install:
   - export PATH=/opt/mono/bin:$PATH
 
