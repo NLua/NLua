@@ -47,9 +47,6 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
-    <Reference Include="KeraLua">
-      <HintPath>..\..\..\packages\KeraLua.1.0.30-lua54-build5\lib\net45\KeraLua.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\build\net45\NLua.csproj">
@@ -58,7 +55,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="KeraLua">
+      <Version>1.0.30-lua54-build5</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" />
   <Import Project="..\..\src\NLuaTest.Shared.Scripts.projitems" Label="Shared" />

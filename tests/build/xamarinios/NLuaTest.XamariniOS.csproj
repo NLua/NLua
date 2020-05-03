@@ -126,9 +126,6 @@
     <MtouchExtraArgs>--setenv=NUNIT_ENABLE_XML_OUTPUT=true --setenv=NUNIT_SKIP_LOG_HEADER=true --interpreter</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KeraLua, Version=1.0.29.0, Culture=neutral, PublicKeyToken=6a194c04b9c89217, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\KeraLua.1.0.29\lib\xamarinios\KeraLua.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -143,7 +140,6 @@
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <None Include="tools\Touch.Server.exe" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -161,9 +157,6 @@
   <ItemGroup>
     <BundleResource Include="..\..\scripts\test.lua">
       <Link>Resources\scripts\test.lua</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\scripts\test_32.luac">
-      <Link>Resources\scripts\test_32.luac</Link>
     </BundleResource>
     <BundleResource Include="..\..\scripts\test_64.luac">
       <Link>Resources\scripts\test_64.luac</Link>
@@ -195,6 +188,11 @@
     <BundleResource Include="..\..\scripts\core\sort.lua">
       <Link>Resources\scripts\core\sort.lua</Link>
     </BundleResource>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="KeraLua">
+      <Version>1.0.30-lua54-build5</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
