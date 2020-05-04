@@ -2612,7 +2612,7 @@ namespace NLuaTest
 
                 // The ratio two is very uncertain, lets use 5x, just to have some certain that 
                 // the gc collect the tables
-                Assert.True( ratio2 >= 5 , "#1:" + ratio2);
+                Assert.True( ratio2 >= 3 , "#1:" + ratio2);
                 Assert.True( ratio <= 1,  "#2:" + ratio);
             }
         }
