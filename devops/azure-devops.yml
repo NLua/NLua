@@ -221,9 +221,10 @@ jobs:
     inputs:
       testAssemblyVer2: '.\tests\build\net45\bin\Release\NLuaTest.dll'
       runSettingsFile: '.\tests\test.runsettings'
+      resultsFolder: '.\TestResults'
       platform: x64
 
-  - script: 'rename ./TestResults/*.trx ./NLua.Windows.xml'
+  - script: 'rename .\TestResults\*.trx .\NLua.Windows.xml'
     displayName: 'Rename Test result'
 
   - task: PublishTestResults@2
