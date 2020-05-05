@@ -220,7 +220,6 @@ jobs:
     displayName: 'VsTest - testAssemblies'
     inputs:
       testAssemblyVer2: '.\tests\build\net45\bin\Release\NLuaTest.dll'
-      runSettingsFile: '.\tests\test.runsettings'
       resultsFolder: '.\TestResults'
       platform: x64
 
