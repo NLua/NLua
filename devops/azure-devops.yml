@@ -223,6 +223,21 @@ jobs:
       runSettingsFile: '.\tests\test.runsettings'
       platform: x64
 
+  - script: 'rename ./TestResults/*.trx ./NLua.Windows.xml'
+    displayName: 'Rename Test result'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'VSTest'
+      testResultsFiles: 'NLua.Windows.xml'
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish KeraLuaTest.Windows.xml'
+    inputs:
+      targetPath: NLua.Windows.xml
+      artifact: 'NLua.Windows.xml'
+      publishLocation: 'pipeline'
+
   - task: DownloadPipelineArtifact@2
     displayName: 'Download Build Xamarin.iOS'
     inputs:
