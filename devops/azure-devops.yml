@@ -13,7 +13,7 @@ jobs:
     - group: 'Keys'
 
   pool:
-    vmImage: 'macOS-10.14'
+    vmImage: 'macOS-10.15'
     demands: msbuild
 
   steps:
