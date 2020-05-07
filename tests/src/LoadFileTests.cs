@@ -73,11 +73,7 @@ namespace LoadFileTests
                     file = GetScriptsPath("test.win_32.luac");
                 else
                 {
-                    if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                        file = GetScriptsPath("test.win_64.luac");
-                    else
-                        file = GetScriptsPath("test_64.luac");
-
+                    file = GetScriptsPath("test_64.luac");
                 }
 
                 lua.DoFile(file);
