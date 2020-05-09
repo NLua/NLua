@@ -70,7 +70,7 @@ namespace LoadFileTests
                 lua.LoadCLRPackage();
 
                 if (IntPtr.Size == 4)
-                    file = GetScriptsPath("test.win_32.luac");
+                    file = GetScriptsPath("test_32.luac");
                 else
                 {
                     file = GetScriptsPath("test_64.luac");
