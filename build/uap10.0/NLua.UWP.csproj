@@ -44,7 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="KeraLua">
-      <Version>1.0.30-lua54-build5</Version>
+      <Version>1.0.30-lua54-build20</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.9</Version>

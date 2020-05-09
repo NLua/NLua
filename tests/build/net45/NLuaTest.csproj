@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\packages\NUnit3TestAdapter.3.16.1\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\..\..\packages\NUnit3TestAdapter.3.16.1\build\net35\NUnit3TestAdapter.props')" />
-  <Import Project="..\..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="KeraLua">
-      <Version>1.0.30-lua54-build5</Version>
+      <Version>1.0.30-lua54-build20</Version>
     </PackageReference>
     <PackageReference Include="NUnit">
       <Version>3.12.0</Version>
@@ -67,5 +65,4 @@
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" />
   <Import Project="..\..\src\NLuaTest.Shared.Scripts.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\..\packages\KeraLua.1.0.30-lua54-build5\build\net45\KeraLua.targets" Condition="Exists('..\..\..\packages\KeraLua.1.0.30-lua54-build5\build\net45\KeraLua.targets')" />
 </Project>
