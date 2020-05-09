@@ -191,7 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="KeraLua">
-      <Version>1.0.30-lua54-build5</Version>
+      <Version>1.0.30-lua54-build20</Version>
     </PackageReference>
     <PackageReference Include="Codefoco.Touch.Server">
       <Version>1.0.19</Version>
@@ -201,5 +201,4 @@
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <Import Project="..\..\..\packages\Codefoco.Touch.Server.1.0.19\build\Codefoco.Touch.Server.targets" Condition="Exists('..\..\..\packages\Codefoco.Touch.Server.1.0.19\build\Codefoco.Touch.Server.targets')" />
 </Project>
