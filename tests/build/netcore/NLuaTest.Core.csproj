@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="KeraLua">
-      <Version>1.2.4</Version>
+      <Version>1.2.6</Version>
     </PackageReference>
     <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
