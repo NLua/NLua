@@ -63,6 +63,7 @@ jobs:
     inputs:
       testResultsFormat: VSTest
       testResultsFiles: 'TEST-Result-Mac.xml'
+      failTaskOnFailedTests: true
 
   - task: MSBuild@1
     displayName: 'Run iOS tests'
@@ -77,6 +78,7 @@ jobs:
     inputs:
       testResultsFormat: NUnit
       testResultsFiles: 'tests/build/xamarinios/TEST-Result-Xamarin.iOS.xml'
+      failTaskOnFailedTests: true
 
   - task: MSBuild@1
     displayName: 'Run tvOS tests'
@@ -91,6 +93,7 @@ jobs:
     inputs:
       testResultsFormat: NUnit
       testResultsFiles: 'tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml'
+      failTaskOnFailedTests: true
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Pipeline Artifact: TEST-Result-Xamarin.iOS.xml'
@@ -229,6 +232,7 @@ jobs:
     inputs:
       testResultsFormat: 'VSTest'
       testResultsFiles: 'NLua.Windows.xml'
+      failTaskOnFailedTests: true
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish KeraLuaTest.Windows.xml'
