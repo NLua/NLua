@@ -50,22 +50,32 @@ namespace NLua
         /*
          * __index metafunction for CLR objects. Implemented in Lua.
          */
-        public const string LuaIndexFunction = @"local function a(b,c)local d=getmetatable(b)local e=d.cache[c]if e~=nil then return e else local f,g=get_object_member(b,c)if g then d.cache[c]=f end;return f end end;return a";
-            //@"local function index(obj,name)
-            //    local meta = getmetatable(obj)
-            //    local cached = meta.cache[name]
-            //    if cached ~= nil then
-            //       return cached
-            //    else
-            //       local value,isFunc = get_object_member(obj,name)
-                   
-            //       if isFunc then
-            //        meta.cache[name]=value
-            //       end
-            //       return value
-            //     end
-            //end
-            //return index";
+        public const string LuaIndexFunction = @"local a={}local function b(c,d)local e=getmetatable(c)local f=e.cache[d]if f~=nil then if f==a then return nil end;return f else local g,h=get_object_member(c,d)if h then if g==nil then e.cache[d]=a else e.cache[d]=g end end;return g end end;return b";
+            //@"local fakenil = {}
+            //  local function index(obj, name)
+            //      local meta = getmetatable(obj)
+            //      local cached = meta.cache[name]
+              
+            //      if cached ~= nil then
+            //          if cached == fakenil then
+            //              return nil
+            //          end
+            //          return cached
+              
+            //      else
+            //          local value, isCached = get_object_member(obj, name)
+            //          if isCached then
+            //              if value == nil then
+            //                  meta.cache[name] = fakenil
+            //              else
+            //                  meta.cache[name] = value
+            //              end
+            //          end
+            //          return value
+            //      end
+            //  end
+              
+            //  return index";
 
         public MetaFunctions(ObjectTranslator translator)
         {
