@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace NLua.Method
 {
@@ -31,6 +31,9 @@ namespace NLua.Method
             object returnValue;
             int iRefArgs;
             object[] returnValues = function.Call(inArgs, returnTypes);
+
+            if (returnValues == null || returnTypes.Length == 0)
+                return null;
 
             if (returnTypes[0] == typeof(void))
             {

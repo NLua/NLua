@@ -516,7 +516,7 @@ namespace NLua
             return result;
         }
 
-        private int GetMethodSignatureInternal(LuaState luaState)
+        private int GetMethodSignatureInternal(LuaState luaState) //-V3009
         {
             ProxyType klass;
             object target;
@@ -581,7 +581,7 @@ namespace NLua
             return result;
         }
 
-        private int GetConstructorSignatureInternal(LuaState luaState)
+        private int GetConstructorSignatureInternal(LuaState luaState) //-V3009
         {
             ProxyType klass = null;
             int udata = luaState.CheckUObject(1, "luaNet_class");
@@ -955,7 +955,7 @@ namespace NLua
             int newTop = luaState.GetTop();
 
             if (oldTop == newTop)
-                return null;
+                return new object[0];
 
             var returnValues = new List<object>();
             for (int i = oldTop + 1; i <= newTop; i++)
@@ -975,7 +975,7 @@ namespace NLua
             int newTop = luaState.GetTop();
 
             if (oldTop == newTop)
-                return null;
+                return new object[0];
 
             int iTypes;
             var returnValues = new List<object>();

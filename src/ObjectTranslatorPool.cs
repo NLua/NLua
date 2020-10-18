@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
-
+using NLua.Exceptions;
 using LuaState = KeraLua.Lua;
 
 namespace NLua
@@ -29,7 +29,7 @@ namespace NLua
                 LuaState main = luaState.MainThread;
 
                 if (!translators.TryGetValue(main, out translator))
-                    return null;
+                    throw new Exception("Invalid luaState, couldn't find ObjectTranslator");
             }
             return translator;
         }

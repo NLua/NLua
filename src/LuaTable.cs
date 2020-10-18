@@ -84,7 +84,7 @@ namespace NLua
             {
                 Lua lua;
                 if (!TryGet(out lua))
-                    return null;
+                    return new object[0];
 
                 return lua.GetTableDict(this).Values;
             }

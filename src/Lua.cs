@@ -737,12 +737,20 @@ namespace NLua
 
         public int GetInteger(string fullPath)
         {
-            return (int)(long)GetObjectFromPath(fullPath);
+            object result = GetObjectFromPath(fullPath);
+            if (result == null)
+                return 0;
+
+            return (int)(long)result;
         }
 
         public long GetLong(string fullPath)
         {
-            return (long)GetObjectFromPath(fullPath);
+            object result = GetObjectFromPath(fullPath);
+            if (result == null)
+                return 0L;
+
+            return (long)result;
         }
 
         /*
@@ -751,6 +759,9 @@ namespace NLua
         public string GetString(string fullPath)
         {
             object obj = GetObjectFromPath(fullPath);
+            if (obj == null)
+                return null;
+
             return obj.ToString();
         }
 

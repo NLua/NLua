@@ -83,6 +83,9 @@ namespace NLua
             var state = LuaState.FromIntPtr(luaState);
             var translator = ObjectTranslatorPool.Instance.Find(state);
             var func = (LuaNativeFunction)translator.GetRawNetObject(state, 1);
+            if (func == null)
+                return state.Error();
+
             state.Remove(1);
             int result = func(luaState);
             var exception = translator.GetObject(state, -1) as LuaScriptException;
@@ -249,7 +252,7 @@ namespace NLua
             return result;
         }
 
-        static int UnaryNegationLua(LuaState luaState, ObjectTranslator translator)
+        static int UnaryNegationLua(LuaState luaState, ObjectTranslator translator) //-V3009
         {
             object obj1 = translator.GetRawNetObject(luaState, 1);
 
@@ -347,7 +350,8 @@ namespace NLua
                 if (type == LuaType.UserData)
                 {
                     object obj = translator.GetRawNetObject(luaState, i);
-                    strrep = obj.ToString();
+                    
+                    strrep = obj == null ? "(null)" : obj.ToString();
                 }
 
                 Debug.WriteLine("{0}: ({1}) {2}", i, typestr, strrep);
@@ -403,7 +407,7 @@ namespace NLua
             if (TryAccessByArray(luaState, objType, obj, index))
                 return 1;
 
-            int fallback = GetMethodFallback(luaState, objType, obj, index, methodName);
+            int fallback = GetMethodFallback(luaState, objType, obj, methodName);
             if (fallback != 0)
                 return fallback;
 
@@ -518,7 +522,6 @@ namespace NLua
         (LuaState luaState,
          Type objType,
          object obj,
-         object index,
          string methodName)
         {
             object method;
@@ -529,18 +532,18 @@ namespace NLua
             // Try to use get_Item to index into this .net object
             MethodInfo[] methods = objType.GetMethods();
 
-            int res = TryIndexMethods(luaState, methods, obj, index);
+            int res = TryIndexMethods(luaState, methods, obj);
             if (res != 0)
                 return res;
 
             // Fallback to GetRuntimeMethods
             methods = objType.GetRuntimeMethods().ToArray();
 
-            res = TryIndexMethods(luaState, methods, obj, index);
+            res = TryIndexMethods(luaState, methods, obj);
             if (res != 0)
                 return res;
 
-            res = TryGetValueForKeyMethods(luaState, methods, obj, index);
+            res = TryGetValueForKeyMethods(luaState, methods, obj);
             if (res != 0)
                 return res;
 
@@ -564,7 +567,7 @@ namespace NLua
             return 0;
         }
 
-        private int TryGetValueForKeyMethods(LuaState luaState, MethodInfo[] methods, object obj, object index)
+        private int TryGetValueForKeyMethods(LuaState luaState, MethodInfo[] methods, object obj)
         {
             foreach (MethodInfo methodInfo in methods)
             {
@@ -578,7 +581,7 @@ namespace NLua
                 ParameterInfo[] actualParams = methodInfo.GetParameters();
 
                 // Get the index in a form acceptable to the getter
-                index = _translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
+                object index = _translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
 
                 // If the index type and the parameter doesn't match, just skip it
                 if (index == null)
@@ -617,7 +620,7 @@ namespace NLua
         }
 
 
-        private int TryIndexMethods(LuaState luaState, MethodInfo [] methods, object obj, object index)
+        private int TryIndexMethods(LuaState luaState, MethodInfo [] methods, object obj)
         {
             foreach (MethodInfo methodInfo in methods)
             {
@@ -631,7 +634,7 @@ namespace NLua
                 ParameterInfo[] actualParams = methodInfo.GetParameters();
 
                 // Get the index in a form acceptable to the getter
-                index = _translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
+                object index = _translator.GetAsType(luaState, 2, actualParams[0].ParameterType);
 
                 // If the index type and the parameter doesn't match, just skip it
                 if (index == null)
