@@ -115,6 +115,11 @@ namespace NLuaTest.TestTypes
             return strVal;
         }
 
+        public string getParamStrVal(string str)
+        {
+            return str;
+        }
+
         public int outVal(out int val)
         {
             val = 5;

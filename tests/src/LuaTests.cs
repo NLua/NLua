@@ -1101,6 +1101,26 @@ namespace NLuaTest
             }
         }
         /*
+        * Tests calling of an object's method with a nil string param value, 
+        * then a non-null string value. This test ensures that after a method 
+        * is cached, a string parameter can be retrieved appropriately.
+        */
+        [Test]
+        public void CallObjectMethodNilStringParam()
+        {
+            using (Lua lua = new Lua())
+            {
+                TestTypes.TestClass t1 = new TestTypes.TestClass();
+                lua["netobj"] = t1;
+                string inputParam = "foo";
+                lua.DoString($"val=netobj:getParamStrVal(nil)");
+                lua.DoString($"val=netobj:getParamStrVal('{inputParam}')");
+                string val = (string)lua.GetString("val");
+
+                Assert.AreEqual(inputParam, val);
+            }
+        }
+        /*
         * Tests calling of an object's method with no overloading
         * and out parameters
         */
