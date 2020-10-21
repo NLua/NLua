@@ -128,10 +128,8 @@ namespace NLua
             }
             else if (netParamIsString)
             {
-                if (luaState.IsString(stackPos))
+                if (luaState.IsString(stackPos) || luatype == LuaType.Nil)
                     return _extractValues[paramType];
-                if (luatype == LuaType.Nil)
-                    return _extractNetObject; // kevinh - silently convert nil to a null string pointer
             }
             else if (paramType == typeof(LuaTable))
             {
