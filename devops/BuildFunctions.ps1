@@ -209,7 +209,7 @@ function Get-Prefix-Name ()
 {
 	$branchName = Get-Current-Branch-Name
 
-	if ($branchName -ne "master") {
+	if ($branchName -ne "main") {
 		return $branchName
 	}
 	return "beta"

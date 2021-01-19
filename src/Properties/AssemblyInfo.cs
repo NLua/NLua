@@ -33,7 +33,7 @@
 
 
 [assembly: AssemblyVersion("1.4.1.0")]
-[assembly: AssemblyInformationalVersion("1.0.7+Branch.master.Sha.80a328a64f12ed9032a0f14a75e6ecad967514d0")]
+[assembly: AssemblyInformationalVersion("1.0.7+Branch.main.Sha.80a328a64f12ed9032a0f14a75e6ecad967514d0")]
 [assembly: AssemblyFileVersion("1.4.1.0")]
 
 

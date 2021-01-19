@@ -22,10 +22,10 @@ script:
 #after_script:
 #  - [run additional test commans]
 
-# Only watch the master branch
+# Only watch the main branch
 branches:
   only:
-    - master
+    - main
 
 # Notify if needed
 notifications:

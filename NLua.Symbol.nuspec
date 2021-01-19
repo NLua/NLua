@@ -5,9 +5,9 @@
     <version>1.4.11</version>
     <authors>NLua</authors>
     <owners>Vinicius Jarina</owners>
-    <licenseUrl>https://github.com/nlua/NLua/blob/master/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/nlua/NLua/blob/main/LICENSE</licenseUrl>
     <projectUrl>https://github.com/nlua/NLua</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/nlua/NLua/master/NLua.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/nlua/NLua/main/NLua.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>NLua Package.</description>
     <summary>NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android.</summary>
