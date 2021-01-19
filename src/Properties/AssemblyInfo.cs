@@ -28,7 +28,7 @@
 [assembly: AssemblyDescription ("NLua library")]
 [assembly: AssemblyCompany ("NLua.org")]
 [assembly: AssemblyProduct ("NLua")]
-[assembly: AssemblyCopyright ("Copyright © Vinicius Jarina 2020")]
+[assembly: AssemblyCopyright ("Copyright © Vinicius Jarina 2021")]
 [assembly: AssemblyCulture ("")]
 
 
