@@ -25,10 +25,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KeraLua">
-      <Version>1.2.11</Version>
+    <PackageReference Include="KeraLua" Version="1.2.12">
     </PackageReference>
-    <PackageReference Include="nunit" Version="3.13.0" />
+    <PackageReference Include="nunit" Version="3.13.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 <PrivateAssets>all</PrivateAssets>
 </PackageReference>
@@ -85,8 +84,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\build\netcore\NLua.NetCore.csproj" />
+    <ProjectReference Include="..\..\..\build\netcoreapp3.1\NLua.netcoreapp3.1.csproj" />
   </ItemGroup>
-
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" />
 </Project>

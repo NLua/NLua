@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NLuaTest</RootNamespace>
     <AssemblyName>NLuaTest</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -44,17 +44,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\build\net45\NLua.csproj">
+    <ProjectReference Include="..\..\..\build\net46\NLua.csproj">
       <Project>{D5B6902E-37CD-44DB-8AC5-BFAEEE663633}</Project>
       <Name>NLua</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="KeraLua">
-      <Version>1.2.11</Version>
+      <Version>1.2.12</Version>
     </PackageReference>
     <PackageReference Include="NUnit">
-      <Version>3.13.0</Version>
+      <Version>3.13.1</Version>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter">
       <Version>3.17.0</Version>

@@ -1,43 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>NLua</RootNamespace>
     <AssemblyName>NLua</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\lib\Debug\</OutputPath>
-    <DefineConstants>TRACE;NETSTANDARD</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>true</Optimize>
     <DebugType>portable</DebugType>
-    <OutputPath>..\..\lib\Release\</OutputPath>
-    <DefineConstants>TRACE;NETSTANDARD</DefineConstants>
+    <DocumentationFile></DocumentationFile>
+    <OutputPath>..\..\lib\Release\netcoreapp3.1\</OutputPath>
+    <DefineConstants>TRACE;NETCOREAPP</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
-
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\lib\Debug\netcoreapp3.1\</OutputPath>
+    <DefineConstants>TRACE;NETCOREAPP</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  
-  <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" />
-
+  <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Shared.projitems')" />
   <ItemGroup>
     <PackageReference Include="KeraLua">
-      <Version>1.2.11</Version>
+      <Version>1.2.12</Version>
     </PackageReference>
-    <PackageReference Include="NUnit" Version="3.13.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />
   </ItemGroup>
-  
   <Import Project="..\targets\NLua.Sign.targets" />
 </Project>

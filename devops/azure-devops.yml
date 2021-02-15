@@ -52,7 +52,7 @@ jobs:
       solution: NLua.Mac.sln
       configuration: Release
 
-  - script: 'dotnet test ./tests/build/net45/bin/Release/NLuaTest.dll -l:trx;'
+  - script: 'dotnet test ./tests/build/net46/bin/Release/NLuaTest.dll -l:trx;'
     displayName: 'Run OSX tests'
 
   - script: 'mv TestResults/*.trx ./TEST-Result-Mac.xml'
@@ -174,9 +174,14 @@ jobs:
       restoreSolution: NLua.Android.sln
 
   - task: NuGetCommand@2
-    displayName: 'NuGet restore'
+    displayName: 'NuGet restore NET Core'
     inputs:
-      restoreSolution: NLua.Core.sln
+      restoreSolution: NLua.netcoreapp3.1.sln
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet restore NET 5'
+    inputs:
+      restoreSolution: NLua.net5.0.sln
 
   - task: PowerShell@2
     displayName: 'PreBuild Script'
@@ -202,16 +207,21 @@ jobs:
   - task: MSBuild@1
     displayName: 'Build .NET Core'
     inputs:
-      solution: 'NLua.Core.sln'
+      solution: 'NLua.netcoreapp3.1.sln'
       configuration: Release
-      msbuildArguments: /restore
+
+  - task: MSBuild@1
+    displayName: 'Build .NET Core'
+    inputs:
+      solution: 'NLua.net5.0.sln'
+      configuration: Release
 
   - task: DotNetCoreCLI@2
     displayName: 'dotnet vstest'
     inputs:
       command: custom
       custom: vstest
-      arguments: '.\tests\build\netcore\bin\Release\netcoreapp3.1\NLuaTest.dll'
+      arguments: '.\tests\build\netcoreapp3.1\bin\Release\netcoreapp3.1\NLuaTest.dll'
 
   - task: MSBuild@1
     displayName: 'Build Android'
@@ -219,7 +229,7 @@ jobs:
       solution: 'NLua.Android.sln'
       configuration: Release
 
-  - script: 'dotnet test .\tests\build\net45\bin\Release\NLuaTest.dll -l:trx --Platform:x64'
+  - script: 'dotnet test .\tests\build\net46\bin\Release\NLuaTest.dll -l:trx --Platform:x64'
     displayName: 'Run Windows Tests'
 
   - script: 'RENAME TestResults\*.trx NLua.Windows.xml'
@@ -319,20 +329,19 @@ jobs:
   - task: NuGetCommand@2
     displayName: 'NuGet restore'
     inputs:
-      restoreSolution: NLua.Core.sln
+      restoreSolution: NLua.netcoreapp3.1.sln
 
   - task: MSBuild@1
     displayName: 'Build .NET Core'
     inputs:
-      solution: NLua.Core.sln
+      solution: NLua.netcoreapp3.1.sln
       configuration: Release
-      msbuildArguments: /restore
 
   - task: DotNetCoreCLI@2
     displayName: 'dotnet vstest'
     inputs:
       command: custom
       custom: vstest
-      arguments: 'tests/build/netcore/bin/Release/netcoreapp3.1/NLuaTest.dll'
+      arguments: 'tests/build/netcoreapp3.1/bin/Release/netcoreapp3.1/NLuaTest.dll'
 
   - template: send-telegram.yml@templates

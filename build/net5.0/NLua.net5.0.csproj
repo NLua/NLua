@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>NLua</RootNamespace>
     <AssemblyName>NLua</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -9,13 +9,13 @@
     <Optimize>true</Optimize>
     <DebugType>portable</DebugType>
     <DocumentationFile></DocumentationFile>
-    <OutputPath>..\..\lib\Release\netcore\</OutputPath>
+    <OutputPath>..\..\lib\Release\net5.0\</OutputPath>
     <DefineConstants>TRACE;NETCOREAPP</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\lib\Debug\netcore\</OutputPath>
+    <OutputPath>..\..\lib\Debug\net5.0\</OutputPath>
     <DefineConstants>TRACE;NETCOREAPP</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
@@ -29,7 +29,7 @@
   <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Shared.projitems')" />
   <ItemGroup>
     <PackageReference Include="KeraLua">
-      <Version>1.2.11</Version>
+      <Version>1.2.12</Version>
     </PackageReference>
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />

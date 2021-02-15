@@ -191,10 +191,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="KeraLua">
-      <Version>1.2.11</Version>
+      <Version>1.2.12</Version>
     </PackageReference>
     <PackageReference Include="Codefoco.Touch.Server">
-      <Version>1.0.26</Version>
+      <Version>1.0.27</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
