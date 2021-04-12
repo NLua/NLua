@@ -318,7 +318,7 @@ jobs:
     - group: 'Keys'
 
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-latest'
     demands: msbuild
 
   steps:
