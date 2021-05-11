@@ -118,7 +118,7 @@ namespace NLua
 
             if (netParamIsNumeric)
             {
-                if (luaState.IsNumber(stackPos) && !netParamIsString)
+                if (luaState.IsNumericType(stackPos) && !netParamIsString)
                     return _extractValues[paramType];
             }
             else if (paramType == typeof(bool))
