@@ -198,6 +198,13 @@ namespace NLuaTest
                 lua.DoString("i = test:MethodOverload(2,2)\r\nprint(i)");
                 int i = (int) lua.GetNumber("i");
                 Assert.AreEqual(5, i, "#1");
+
+                lua.DoString("v = test:MethodOverload2(11)");
+                var value = lua.GetString("v");
+                Assert.AreEqual("uint32:11", value, "#2");
+                lua.DoString("v = test:MethodOverload2('321')");
+                value = lua.GetString("v");
+                Assert.AreEqual("string:321", value, "#3");
             }
         }
 
