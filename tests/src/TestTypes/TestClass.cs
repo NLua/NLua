@@ -296,6 +296,20 @@ namespace NLuaTest.TestTypes
             Console.WriteLine("Overload with out param" + i + ", " + j);
         }
 
+        public string MethodOverload2(uint i)
+        {
+            Console.WriteLine("Overload with uint32 param: " + i );
+
+            return $"uint32:{i}";
+        }
+
+        public string MethodOverload2(string i)
+        {
+            Console.WriteLine("Overload with numeric string param: " + i);
+
+            return $"string:{i}";
+        }
+
         public void Print(object format, params object[] args)
         {
             //just for test,this is not printf implements
