@@ -36,7 +36,7 @@
     <PackageReference Include="KeraLua">
       <Version>1.2.14</Version>
     </PackageReference>
-    <PackageReference Include="NUnit" Version="3.17.0" />
+    <PackageReference Include="NUnit" Version="3.13.1" />
   </ItemGroup>
 
   <Import Project="..\targets\NLua.Sign.targets" />
