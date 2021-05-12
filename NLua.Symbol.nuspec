@@ -15,7 +15,7 @@
     <copyright>Copyright © NLua 2021</copyright>
     <tags>lua nlua</tags>
     <dependencies>
-      <dependency id="KeraLua" version="1.2.13" />
+      <dependency id="KeraLua" version="1.2.14" />
     </dependencies>
     <packageTypes>
       <packageType name="SymbolsPackage" />
@@ -33,6 +33,8 @@
     <file src="lib\Release\net5.0\net5.0\NLua.pdb" target="lib\net5.0" />
     <file src="lib\Release\netcoreapp3.1\netcoreapp3.1\NLua.dll" target="lib\netcoreapp3.1" />
     <file src="lib\Release\netcoreapp3.1\netcoreapp3.1\NLua.pdb" target="lib\netcoreapp3.1" />
+    <file src="lib\Release\netstandard2.0\NLua.dll" target="lib\netstandard2.0" />
+    <file src="lib\Release\netstandard2.0\NLua.pdb" target="lib\netstandard2.0" />
     <file src="lib\Release\xamarinios\NLua.dll" target="lib\xamarinios" />
     <file src="lib\Release\xamarinios\NLua.pdb" target="lib\xamarinios" />
     <file src="lib\Release\xamarinmac\NLua.dll" target="lib\xamarinmac" />
