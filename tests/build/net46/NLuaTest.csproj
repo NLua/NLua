@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="KeraLua">
-      <Version>1.2.13</Version>
+      <Version>1.2.14</Version>
     </PackageReference>
     <PackageReference Include="NUnit">
       <Version>3.13.1</Version>
