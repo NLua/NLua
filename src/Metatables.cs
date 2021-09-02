@@ -1301,14 +1301,27 @@ namespace NLua
             if (isOk)
             {
                 object result;
+                try
+                {
+                    if (methodDelegate.IsStatic)
+                        result = methodDelegate.Invoke(null, validDelegate.args);
+                    else
+                        result = methodDelegate.Invoke(del.Target, validDelegate.args);
 
-                if (methodDelegate.IsStatic)
-                    result = methodDelegate.Invoke(null, validDelegate.args);
-                else
-                    result = methodDelegate.Invoke(del.Target, validDelegate.args);
-
-                _translator.Push(luaState, result);
-                return 1;
+                    _translator.Push(luaState, result);
+                    return 1;
+                }
+                catch (TargetInvocationException e)
+                {
+                    // Failure of method invocation
+                    if (_translator.interpreter.UseTraceback)
+                        e.GetBaseException().Data["Traceback"] = _translator.interpreter.GetDebugTraceback();
+                    return  _translator.Interpreter.SetPendingException(e.GetBaseException());
+                }
+                catch (Exception e)
+                {
+                    return _translator.Interpreter.SetPendingException(e);
+                }
             }
 
             _translator.ThrowError(luaState, "Cannot invoke delegate (invalid arguments for  " + methodDelegate.Name + ")");
