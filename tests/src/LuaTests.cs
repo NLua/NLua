@@ -2778,6 +2778,29 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void RawByteArrayParameter()
+        {
+            using (var lua = new Lua())
+            {
+                lua.LoadCLRPackage();
+                lua["WriteBinary"] = (Action<byte[]>)WriteBinary;
+                lua.DoString(@"
+                        import 'System'
+                        local value = Byte[8]
+                        value[0] = 1
+                        value[1] = 2
+                        value[2] = 3
+                        value[3] = 0x3f
+                        value[4] = 0x40
+                        value[5] = 0xff
+                        value[6] = 0xf3
+                        value[7] = 0x9f
+                        WriteBinary (value);
+                ");
+            }
+        }
+
         Entity myEntity;
 
         void OnMyClicked(object sender, EventArgs args)
