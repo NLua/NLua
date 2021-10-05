@@ -167,12 +167,10 @@ namespace NLua
                 else
                     return null;
             }
-            else
-            {
-                object obj = _translator.GetNetObject(luaState, stackPos);
-                if (obj != null && paramType.IsInstanceOfType(obj))
-                    return _extractNetObject;
-            }
+
+            object netObj = _translator.GetNetObject(luaState, stackPos);
+            if (netObj != null && paramType.IsInstanceOfType(netObj))
+                return _extractNetObject;
 
             return null;
         }
