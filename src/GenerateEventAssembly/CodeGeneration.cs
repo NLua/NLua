@@ -463,9 +463,6 @@ namespace NLua
 
                 generatorBase.Emit(OpCodes.Call, method);
 
-                if (returnType == typeof(void))
-                    generatorBase.Emit(OpCodes.Pop);
-
                 generatorBase.Emit(OpCodes.Ret);
             }
 
@@ -586,14 +583,9 @@ namespace NLua
 
                 generator.Emit(OpCodes.Call, method);
 
-                if (returnType == typeof(void))
-                    generator.Emit(OpCodes.Pop);
-
                 generator.Emit(OpCodes.Ret);
-                generator.Emit(OpCodes.Ldnull);
             }
-            else
-                generator.Emit(OpCodes.Ldnull);
+            generator.Emit(OpCodes.Ldnull);
 
             var lab2 = generator.DefineLabel();
             generator.Emit(OpCodes.Br_S, lab2);
