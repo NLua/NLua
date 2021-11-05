@@ -783,6 +783,14 @@ namespace NLua
         }
 
         /*
+            * Gets a thread global variable
+            */
+        public LuaThread GetThread(string fullPath)
+        {
+            return (LuaThread)GetObjectFromPath(fullPath);
+        }
+
+        /*
             * Gets a function global variable
             */
         public LuaFunction GetFunction(string fullPath)

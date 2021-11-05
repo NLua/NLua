@@ -875,6 +875,8 @@ namespace NLua
                         int udata = luaState.ToNetObject(index, Tag);
                         return udata != -1 ? _objects[udata] : GetUserData(luaState, index);
                     }
+                case LuaType.Thread:
+                    return GetThread(luaState, index);
                 default:
                     return null;
             }
@@ -893,6 +895,21 @@ namespace NLua
             if (reference == -1)
                 return null;
             return new LuaTable(reference, interpreter);
+        }
+
+        /*
+         * Gets the thread in the index positon of the Lua stack.
+         */
+        internal LuaThread GetThread(LuaState luaState, int index)
+        {
+            // Before create new tables, check if there is any finalized object to clean.
+            CleanFinalizedReferences(luaState);
+
+            luaState.PushCopy(index);
+            int reference = luaState.Ref(LuaRegistry.Index);
+            if (reference == -1)
+                return null;
+            return new LuaThread(reference, interpreter);
         }
 
         /*
@@ -1047,6 +1064,8 @@ namespace NLua
                 ((ILuaGeneratedType)o).LuaInterfaceGetLuaTable().Push(luaState);
             else if (o is LuaTable table)
                 table.Push(luaState);
+            else if (o is LuaThread thread)
+                thread.Push(luaState);
             else if (o is LuaNativeFunction nativeFunction)
                 PushFunction(luaState, nativeFunction);
             else if (o is LuaFunction luaFunction)
