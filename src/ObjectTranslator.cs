@@ -1070,6 +1070,8 @@ namespace NLua
                 PushFunction(luaState, nativeFunction);
             else if (o is LuaFunction luaFunction)
                 luaFunction.Push(luaState);
+            else if (o is LuaUserData userData)
+                userData.Push(luaState);
             else
                 PushObject(luaState, o, "luaNet_metatable");
         }

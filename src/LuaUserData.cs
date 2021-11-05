@@ -1,5 +1,10 @@
 ﻿
 using System;
+using System.Collections;
+
+using NLua.Extensions;
+
+using LuaState = KeraLua.Lua;
 
 namespace NLua
 {
@@ -64,6 +69,14 @@ namespace NLua
                 return null;
 
             return lua.CallFunction(this, args);
+        }
+
+        /*
+         * Pushes this userdata into the Lua stack
+         */
+        internal void Push(LuaState luaState)
+        {
+            luaState.GetRef(_Reference);
         }
 
         public override string ToString()
