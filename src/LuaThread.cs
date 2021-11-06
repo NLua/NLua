@@ -15,6 +15,23 @@ namespace NLua
 
         public LuaState State => _luaState;
 
+        /// <summary>
+        /// Get the main thread object
+        /// </summary>
+        public LuaThread MainThread
+        {
+            get
+            {
+                LuaState mainThread = _luaState.MainThread;
+                int oldTop = mainThread.GetTop();
+                mainThread.PushThread();
+                object returnValue = _translator.GetObject(mainThread, -1);
+
+                mainThread.SetTop(oldTop);
+                return (LuaThread)returnValue;
+            }
+        }
+
         public LuaThread(int reference, Lua interpreter): base(reference, interpreter)
         {
             _luaState = interpreter.GetThreadState(reference);

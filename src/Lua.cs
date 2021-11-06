@@ -240,6 +240,39 @@ namespace NLua
         }
         #endregion
 
+        /// <summary>
+        /// Get the thread object of this state.
+        /// </summary>
+        public LuaThread Thread
+        {
+            get
+            {
+                int oldTop = _luaState.GetTop();
+                _luaState.PushThread();
+                object returnValue = _translator.GetObject(_luaState, -1);
+
+                _luaState.SetTop(oldTop);
+                return (LuaThread)returnValue;
+            }
+        }
+
+        /// <summary>
+        /// Get the main thread object
+        /// </summary>
+        public LuaThread MainThread
+        {
+            get
+            {
+                LuaState mainThread = _luaState.MainThread;
+                int oldTop = mainThread.GetTop();
+                mainThread.PushThread();
+                object returnValue = _translator.GetObject(mainThread, -1);
+
+                mainThread.SetTop(oldTop);
+                return (LuaThread)returnValue;
+            }
+        }
+
         public Lua()
         {
             _luaState = new LuaState();
