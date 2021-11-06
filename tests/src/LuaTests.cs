@@ -1989,7 +1989,6 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.LoadCLRPackage();
                 var result = lua.DoString(@"return function()
                                 a=1;
                                 print('start');
@@ -2007,8 +2006,7 @@ namespace NLuaTest
                 LuaFunction yielder = (LuaFunction)result[0];
                 LuaFunction afterReset = (LuaFunction)result[1];
 
-                lua.NewThread("threadTest", yielder); // create thread with yielder function
-                LuaThread thread = lua.GetObjectFromPath("threadTest") as LuaThread;
+                lua.NewThread(yielder, out LuaThread thread); // create thread with yielder function
 
                 LuaFunction resume = lua.GetFunction("coroutine.resume");
                 resume.Call(thread); //prints start
@@ -2027,8 +2025,7 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                lua.LoadCLRPackage();
-                LuaUserData file = (LuaUserData)lua.DoString(@"return io.tmpfile()")[0];
+                LuaUserData file = (LuaUserData)lua.GetFunction("io.tmpfile").Call()[0];
 
                 LuaFunction io_type = lua.GetFunction("io.type");
 
