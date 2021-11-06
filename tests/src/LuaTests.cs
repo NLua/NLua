@@ -2023,6 +2023,26 @@ namespace NLuaTest
         }
 
         [Test]
+        public void TestTempFile()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.LoadCLRPackage();
+                LuaUserData file = (LuaUserData)lua.DoString(@"return io.tmpfile()")[0];
+
+                LuaFunction io_type = lua.GetFunction("io.type");
+
+                string type1 = (string)io_type.Call(file)[0]; //file
+                Assert.AreEqual("file", type1);
+
+                lua.GetFunction("io.close").Call(file);// closes file
+
+                string type2 = (string)io_type.Call(file)[0]; //closed file
+                Assert.AreEqual("closed file", type2);
+            }
+        }
+
+        [Test]
         public void TestDebugHook()
         {
             int[] lines = { 1, 2, 1, 3 };
