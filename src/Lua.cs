@@ -1291,6 +1291,20 @@ namespace NLua
         }
 
         /*
+            * Creates a new empty thread
+            */
+        public LuaState NewThread(out LuaThread thread)
+        {
+            int oldTop = _luaState.GetTop();
+
+            LuaState state = _luaState.NewThread();
+            thread = (LuaThread)_translator.GetObject(_luaState, -1);
+
+            _luaState.SetTop(oldTop);
+            return state;
+        }
+
+        /*
             * Creates a new empty thread as a global variable or as a field
             * inside an existing table
             */
@@ -1320,6 +1334,23 @@ namespace NLua
                 state = _luaState.NewThread();
                 _luaState.SetTable(-3);
             }
+
+            _luaState.SetTop(oldTop);
+            return state;
+        }
+
+        /*
+            * Creates a new coroutine thread
+            */
+        public LuaState NewThread(LuaFunction function, out LuaThread thread)
+        {
+            int oldTop = _luaState.GetTop();
+
+            LuaState state = _luaState.NewThread();
+            thread = (LuaThread)_translator.GetObject(_luaState, -1);
+
+            _translator.Push(_luaState, function);
+            _luaState.XMove(state, 1);
 
             _luaState.SetTop(oldTop);
             return state;
