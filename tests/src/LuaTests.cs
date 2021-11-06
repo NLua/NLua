@@ -2015,7 +2015,7 @@ namespace NLuaTest
                 resume.Call(thread); //prints middle
                 resume.Call(thread); //prints end
                 thread.Reset(); // removes yielder
-                lua.XMove(thread, afterReset, 1); // adds afterReset
+                lua.XMove(thread, afterReset); // adds afterReset
                 resume.Call(thread); //prints after reset
                 double num = lua.GetNumber("a"); //gets 4
                 Assert.AreEqual(num, 4d);
