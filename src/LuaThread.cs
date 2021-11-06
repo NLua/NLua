@@ -105,6 +105,11 @@ namespace NLua
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public bool Equals(LuaThread other) => this.State == other.State;
         public bool Equals(LuaState other) => this.State == other;
         public bool Equals(Lua other) => this.State == other.State;
