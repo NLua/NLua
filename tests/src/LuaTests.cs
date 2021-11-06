@@ -1985,6 +1985,17 @@ namespace NLuaTest
         }
 
         [Test]
+        public void TestThreadEquality()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.NewThread(out LuaThread thread);
+                Assert.AreNotEqual(lua.Thread, thread);
+                Assert.AreEqual(lua.Thread, thread.MainThread);
+            }
+        }
+
+        [Test]
         public void TestXMove()
         {
             using (Lua lua = new Lua())
