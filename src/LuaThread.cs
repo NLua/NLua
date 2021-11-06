@@ -8,7 +8,7 @@ using LuaState = KeraLua.Lua;
 
 namespace NLua
 {
-    public class LuaThread : LuaBase
+    public class LuaThread : LuaBase, IEquatable<LuaThread>, IEquatable<LuaState>, IEquatable<Lua>
     {
         private LuaState _luaState;
         private ObjectTranslator _translator;
@@ -93,5 +93,38 @@ namespace NLua
         {
             return "thread";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is LuaThread thread)
+                return this.State == thread.State;
+            else if (obj is Lua interpreter)
+                return this.State == interpreter.State;
+            else if (obj is LuaState state)
+                return this.State == state;
+            return false;
+        }
+
+        public bool Equals(LuaThread other) => this.State == other.State;
+        public bool Equals(LuaState other) => this.State == other;
+        public bool Equals(Lua other) => this.State == other.State;
+
+        public override int GetHashCode() => State.GetHashCode();
+
+        public static explicit operator LuaState(LuaThread thread) => thread.State;
+        public static explicit operator LuaThread(Lua interpreter) => interpreter.Thread;
+
+        public static bool operator ==(LuaThread threadA, LuaThread threadB) => threadA.State == threadB.State;
+        public static bool operator !=(LuaThread threadA, LuaThread threadB) => threadA.State != threadB.State;
+
+        public static bool operator ==(LuaThread thread, LuaState state) => thread.State == state;
+        public static bool operator !=(LuaThread thread, LuaState state) => thread.State != state;
+        public static bool operator ==(LuaState state, LuaThread thread) => state == thread.State;
+        public static bool operator !=(LuaState state, LuaThread thread) => state != thread.State;
+
+        public static bool operator ==(LuaThread thread, Lua interpreter) => thread.State == interpreter.State;
+        public static bool operator !=(LuaThread thread, Lua interpreter) => thread.State != interpreter.State;
+        public static bool operator ==(Lua interpreter, LuaThread thread) => interpreter.State == thread.State;
+        public static bool operator !=(Lua interpreter, LuaThread thread) => interpreter.State != thread.State;
     }
 }
