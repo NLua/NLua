@@ -1985,6 +1985,44 @@ namespace NLuaTest
         }
 
         [Test]
+        public void TestXMove()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.LoadCLRPackage();
+                var result = lua.DoString(@"return function()
+                                a=1;
+                                print('start');
+                                coroutine.yield();
+                                a=1;
+                                print('middle');
+                                coroutine.yield();
+                                a=3;
+                                print('end');
+                             end, function()
+                                a=4;
+                                print('after reset');
+                             end");
+
+                LuaFunction yielder = (LuaFunction)result[0];
+                LuaFunction afterReset = (LuaFunction)result[1];
+
+                lua.NewThread("threadTest", yielder); // create thread with yielder function
+                LuaThread thread = lua.GetObjectFromPath("threadTest") as LuaThread;
+
+                LuaFunction resume = lua.GetFunction("coroutine.resume");
+                resume.Call(thread); //prints start
+                resume.Call(thread); //prints middle
+                resume.Call(thread); //prints end
+                thread.Reset(); // removes yielder
+                lua.XMove(thread, afterReset, 1); // adds afterReset
+                resume.Call(thread); //prints after reset
+                double num = lua.GetNumber("a"); //gets 4
+                Assert.AreEqual(num, 4d);
+            }
+        }
+
+        [Test]
         public void TestDebugHook()
         {
             int[] lines = { 1, 2, 1, 3 };
