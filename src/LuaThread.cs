@@ -109,8 +109,6 @@ namespace NLua
         public bool Equals(LuaState other) => this.State == other;
         public bool Equals(Lua other) => this.State == other.State;
 
-        public override int GetHashCode() => State.GetHashCode();
-
         public static explicit operator LuaState(LuaThread thread) => thread.State;
         public static explicit operator LuaThread(Lua interpreter) => interpreter.Thread;
 
