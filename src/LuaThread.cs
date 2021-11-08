@@ -102,7 +102,7 @@ namespace NLua
                 return this.State == interpreter.State;
             else if (obj is LuaState state)
                 return this.State == state;
-            return false;
+            return base.Equals(obj);
         }
 
         public override int GetHashCode()
