@@ -53,6 +53,8 @@ namespace NLua
 
         private ObjectTranslator _translator;
 
+        internal ObjectTranslator Translator => _translator;
+
         /// <summary>
         /// Used to ensure multiple .net threads all get serialized by this single lock for access to the lua stack/objects
         /// </summary>
@@ -237,6 +239,39 @@ namespace NLua
             }
         }
         #endregion
+
+        /// <summary>
+        /// Get the thread object of this state.
+        /// </summary>
+        public LuaThread Thread
+        {
+            get
+            {
+                int oldTop = _luaState.GetTop();
+                _luaState.PushThread();
+                object returnValue = _translator.GetObject(_luaState, -1);
+
+                _luaState.SetTop(oldTop);
+                return (LuaThread)returnValue;
+            }
+        }
+
+        /// <summary>
+        /// Get the main thread object
+        /// </summary>
+        public LuaThread MainThread
+        {
+            get
+            {
+                LuaState mainThread = _luaState.MainThread;
+                int oldTop = mainThread.GetTop();
+                mainThread.PushThread();
+                object returnValue = _translator.GetObject(mainThread, -1);
+
+                mainThread.SetTop(oldTop);
+                return (LuaThread)returnValue;
+            }
+        }
 
         public Lua()
         {
@@ -783,6 +818,14 @@ namespace NLua
         }
 
         /*
+            * Gets a thread global variable
+            */
+        public LuaThread GetThread(string fullPath)
+        {
+            return (LuaThread)GetObjectFromPath(fullPath);
+        }
+
+        /*
             * Gets a function global variable
             */
         public LuaFunction GetFunction(string fullPath)
@@ -1202,6 +1245,151 @@ namespace NLua
             _translator.Push(_luaState, field);
             _translator.Push(_luaState, val);
             _luaState.SetTable(-3);
+            _luaState.SetTop(oldTop);
+        }
+
+        /*
+            * Gets the luaState from the thread
+            */
+        internal LuaState GetThreadState(int reference)
+        {
+            int oldTop = _luaState.GetTop();
+            _luaState.GetRef(reference);
+            LuaState state = _luaState.ToThread(-1);
+            _luaState.SetTop(oldTop);
+            return state;
+        }
+
+        public void XMove(LuaState to, object val, int index = 1)
+        {
+            int oldTop = _luaState.GetTop();
+
+            _translator.Push(_luaState, val);
+            _luaState.XMove(to, index);
+
+            _luaState.SetTop(oldTop);
+        }
+
+        public void XMove(Lua to, object val, int index = 1)
+        {
+            int oldTop = _luaState.GetTop();
+
+            _translator.Push(_luaState, val);
+            _luaState.XMove(to._luaState, index);
+
+            _luaState.SetTop(oldTop);
+        }
+
+        public void XMove(LuaThread thread, object val, int index = 1)
+        {
+            int oldTop = _luaState.GetTop();
+
+            _translator.Push(_luaState, val);
+            _luaState.XMove(thread.State, index);
+
+            _luaState.SetTop(oldTop);
+        }
+
+        /*
+            * Creates a new empty thread
+            */
+        public LuaState NewThread(out LuaThread thread)
+        {
+            int oldTop = _luaState.GetTop();
+
+            LuaState state = _luaState.NewThread();
+            thread = (LuaThread)_translator.GetObject(_luaState, -1);
+
+            _luaState.SetTop(oldTop);
+            return state;
+        }
+
+        /*
+            * Creates a new empty thread as a global variable or as a field
+            * inside an existing table
+            */
+        public LuaState NewThread(string fullPath)
+        {
+            string[] path = FullPathToArray(fullPath);
+            int oldTop = _luaState.GetTop();
+
+            LuaState state;
+
+            if (path.Length == 1)
+            {
+                state = _luaState.NewThread();
+                _luaState.SetGlobal(fullPath);
+            }
+            else
+            {
+                _luaState.GetGlobal(path[0]);
+
+                for (int i = 1; i < path.Length - 1; i++)
+                {
+                    _luaState.PushString(path[i]);
+                    _luaState.GetTable(-2);
+                }
+
+                _luaState.PushString(path[path.Length - 1]);
+                state = _luaState.NewThread();
+                _luaState.SetTable(-3);
+            }
+
+            _luaState.SetTop(oldTop);
+            return state;
+        }
+
+        /*
+            * Creates a new coroutine thread
+            */
+        public LuaState NewThread(LuaFunction function, out LuaThread thread)
+        {
+            int oldTop = _luaState.GetTop();
+
+            LuaState state = _luaState.NewThread();
+            thread = (LuaThread)_translator.GetObject(_luaState, -1);
+
+            _translator.Push(_luaState, function);
+            _luaState.XMove(state, 1);
+
+            _luaState.SetTop(oldTop);
+            return state;
+        }
+
+        /*
+            * Creates a new coroutine thread as a global variable or as a field
+            * inside an existing table
+            */
+        public void NewThread(string fullPath, LuaFunction function)
+        {
+            string[] path = FullPathToArray(fullPath);
+            int oldTop = _luaState.GetTop();
+
+            LuaState state;
+
+            if (path.Length == 1)
+            {
+                state = _luaState.NewThread();
+                _luaState.SetGlobal(fullPath);
+            }
+            else
+            {
+                _luaState.GetGlobal(path[0]);
+
+                for (int i = 1; i < path.Length - 1; i++)
+                {
+                    _luaState.PushString(path[i]);
+                    _luaState.GetTable(-2);
+                }
+
+                _luaState.PushString(path[path.Length - 1]);
+                state = _luaState.NewThread();
+                _luaState.SetTable(-3);
+            }
+
+            _translator.Push(_luaState, function);
+            _luaState.XMove(state, 1);
+
             _luaState.SetTop(oldTop);
         }
 
