@@ -225,11 +225,11 @@ stages:
         arguments: '.\NLua.netstandard2.0.sln /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build NLua.net6.0-android.sln'
+      displayName: 'dotnet build ./build/Android/NLua.net6.0-android.csproj'
       inputs:
         command: custom
         custom: build
-        arguments: '.\NLua.net6.0-android.sln /p:Configuration=Release'
+        arguments: './build/Android/NLua.net6.0-android.csproj /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet vstest'
