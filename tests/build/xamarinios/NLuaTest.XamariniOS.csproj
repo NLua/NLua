@@ -145,14 +145,6 @@
     <Compile Include="Main.cs" />
     <Compile Include="UnitTestAppDelegate.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\build\XamariniOS\NLua.XamariniOS.csproj">
-      <Project>{8FAFDF62-E07E-487A-863C-74F308AE7BA6}</Project>
-      <Name>NLua.XamariniOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <BundleResource Include="..\..\scripts\test.lua">
@@ -198,6 +190,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\build\iOS\NLua.XamariniOS.csproj">
+      <Project>{8FAFDF62-E07E-487A-863C-74F308AE7BA6}</Project>
+      <Name>NLua.XamariniOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\src\NLuaTest.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLuaTest.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
