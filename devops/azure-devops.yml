@@ -121,14 +121,14 @@ stages:
         custom: build
         arguments: './build/iOS/NLua.net6.0-ios.csproj /p:Configuration=Release'
 
-   - task: DotNetCoreCLI@2
+    - task: DotNetCoreCLI@2
       displayName: 'dotnet build ./build/iOS/NLua.net6.0-maccatalyst.csproj'
       inputs:
         command: custom
         custom: build
         arguments: './build/iOS/NLua.net6.0-maccatalyst.csproj /p:Configuration=Release'
 
-   - task: DotNetCoreCLI@2
+    - task: DotNetCoreCLI@2
       displayName: 'dotnet build ./build/macOS/NLua.net6.0-macos.csproj'
       inputs:
         command: custom
