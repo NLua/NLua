@@ -189,11 +189,6 @@ stages:
       inputs:
         restoreSolution: NLua.Android.sln
 
-    - task: NuGetCommand@2
-      displayName: 'NuGet restore NET 6'
-      inputs:
-        restoreSolution: NLua.net6.0.sln
-
     - task: PowerShell@2
       displayName: 'PreBuild Script'
       inputs:
@@ -215,11 +210,12 @@ stages:
         configuration: Release
         msbuildArguments: /restore
 
-    - task: MSBuild@1
-      displayName: 'Build .NET 6'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build NLua.net6.0.sln'
       inputs:
-        solution: 'NLua.net6.0.sln'
-        configuration: Release
+        command: custom
+        custom: build
+        arguments: '.\NLua.net6.0.sln /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build NLua.netstandard.sln'
