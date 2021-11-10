@@ -5,14 +5,14 @@ using System.IO;
 using LoadFileTests;
 using NUnit.Framework;
 
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
 using Foundation;
 #endif
 
 namespace NLuaTest
 {
     [TestFixture]
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
     [Preserve (AllMembers = true)]
 #endif
     public class Core

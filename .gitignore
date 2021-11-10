@@ -40,4 +40,4 @@ tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml
 tests/build/xamarinios/result.xml
 tests/build/xamarinios/TEST-Result-Xamarin.iOS.xml
 tests/build/xamarintvos/result.xml
-build/net5.0/obj
+build/net6.0/obj

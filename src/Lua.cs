@@ -10,7 +10,7 @@ using NLua.Method;
 using NLua.Exceptions;
 using NLua.Extensions;
 
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
     using ObjCRuntime;
 #endif
 
@@ -335,7 +335,7 @@ namespace NLua
             _luaState = null;
         }
 
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
 #endif
         static int PanicCallback(IntPtr state)
@@ -1108,7 +1108,7 @@ namespace NLua
         /// <param name = "luaState">lua state</param>
         /// <param name = "luaDebug">Pointer to LuaDebug (lua_debug) structure</param>
         /// 
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaHookFunction))]
 #endif
         static void DebugHookCallback(IntPtr luaState, IntPtr luaDebug)

@@ -6,342 +6,342 @@ resources:
       name: codefoco/AzureDevopsTemplates
       endpoint: codefoco
 
-jobs:
-- job: 'NLuaMac'
-  displayName: 'Mac'
-  variables:
-    - group: 'Keys'
+- stage: Build_Mac
+  displayName: 'Build Mac'
 
-  pool:
-    vmImage: 'macOS-11'
-    demands: msbuild
+  jobs:
+  - job: 'NLuaMac'
+    displayName: 'Mac'
+    variables:
+      - group: 'Keys'
 
-  steps:
-  - checkout: self
+    pool:
+      vmImage: 'macOS-11'
+      demands: msbuild
 
-  - template: common-dotnet.yml@templates
-  - template: common-macos.yml@templates
+    steps:
+    - checkout: self
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore NLua.sln'
-    inputs:
-      restoreSolution: NLua.sln
+    - template: common-dotnet.yml@templates
+    - template: common-macos.yml@templates
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore NLua.Mac.sln'
-    inputs:
-      restoreSolution: NLua.Mac.sln
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore NLua.sln'
+      inputs:
+        restoreSolution: NLua.sln
 
-  - task: PowerShell@2
-    displayName: 'PowerShell Script'
-    inputs:
-      targetType: filePath
-      filePath: ./devops/PreBuild.ps1
-      arguments: 'NLua'
-      pwsh: true
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore NLua.Mac.sln'
+      inputs:
+        restoreSolution: NLua.Mac.sln
 
-  - task: MSBuild@1
-    displayName: 'Build solution NLua.sln'
-    inputs:
-      solution: NLua.sln
-      configuration: Release
+    - task: PowerShell@2
+      displayName: 'PowerShell Script'
+      inputs:
+        targetType: filePath
+        filePath: ./devops/PreBuild.ps1
+        arguments: 'NLua'
+        pwsh: true
 
-  - task: MSBuild@1
-    displayName: 'Build solution NLua.Mac.sln'
-    inputs:
-      solution: NLua.Mac.sln
-      configuration: Release
+    - task: MSBuild@1
+      displayName: 'Build solution NLua.sln'
+      inputs:
+        solution: NLua.sln
+        configuration: Release
 
-  - script: 'dotnet test ./tests/build/net46/bin/Release/NLuaTest.dll -l:trx;'
-    displayName: 'Run OSX tests'
+    - task: MSBuild@1
+      displayName: 'Build solution NLua.Mac.sln'
+      inputs:
+        solution: NLua.Mac.sln
+        configuration: Release
 
-  - script: 'mv TestResults/*.trx ./TEST-Result-Mac.xml'
-    displayName: 'Rename Test result'
+    - script: 'dotnet test ./tests/build/net46/bin/Release/NLuaTest.dll -l:trx;'
+      displayName: 'Run OSX tests'
 
-  - task: PublishTestResults@2
-    displayName: 'Publish Mac Test Results TEST-Result-Mac.xml'
-    inputs:
-      testResultsFormat: VSTest
-      testResultsFiles: 'TEST-Result-Mac.xml'
-      failTaskOnFailedTests: true
+    - script: 'mv TestResults/*.trx ./TEST-Result-Mac.xml'
+      displayName: 'Rename Test result'
 
-  - task: MSBuild@1
-    displayName: 'Run iOS tests'
-    inputs:
-      solution: tests/build/xamarinios/NLuaTest.XamariniOS.csproj
-      platform: iPhoneSimulator
-      configuration: Release
-      msbuildArguments: '/t:RunSimulatorTests'
+    - task: PublishTestResults@2
+      displayName: 'Publish Mac Test Results TEST-Result-Mac.xml'
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: 'TEST-Result-Mac.xml'
+        failTaskOnFailedTests: true
 
-  - task: PublishTestResults@2
-    displayName: 'Publish iOS Test Results TEST-Result-iOS.xml'
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: 'tests/build/xamarinios/TEST-Result-Xamarin.iOS.xml'
-      failTaskOnFailedTests: true
+    - task: MSBuild@1
+      displayName: 'Run iOS tests'
+      inputs:
+        solution: tests/build/xamarinios/NLuaTest.XamariniOS.csproj
+        platform: iPhoneSimulator
+        configuration: Release
+        msbuildArguments: '/t:RunSimulatorTests'
 
-  - task: MSBuild@1
-    displayName: 'Run tvOS tests'
-    inputs:
-      solution: tests/build/xamarintvos/NLuaTest.XamarinTVOS.csproj
-      platform: iPhoneSimulator
-      configuration: Release
-      msbuildArguments: '/t:RunSimulatorTests'
+    - task: PublishTestResults@2
+      displayName: 'Publish iOS Test Results TEST-Result-iOS.xml'
+      inputs:
+        testResultsFormat: NUnit
+        testResultsFiles: 'tests/build/xamarinios/TEST-Result-Xamarin.iOS.xml'
+        failTaskOnFailedTests: true
 
-  - task: PublishTestResults@2
-    displayName: 'Publish tvOS Test Results TEST-Result-tvOS.xml'
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: 'tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml'
-      failTaskOnFailedTests: true
+    - task: MSBuild@1
+      displayName: 'Run tvOS tests'
+      inputs:
+        solution: tests/build/xamarintvos/NLuaTest.XamarinTVOS.csproj
+        platform: iPhoneSimulator
+        configuration: Release
+        msbuildArguments: '/t:RunSimulatorTests'
 
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Pipeline Artifact: TEST-Result-Xamarin.iOS.xml'
-    inputs:
-      targetPath: tests/build/xamarinios/TEST-Result-Xamarin.iOS.xml
-      artifact: Test.Results.iOS
-      publishLocation: 'pipeline'
+    - task: PublishTestResults@2
+      displayName: 'Publish tvOS Test Results TEST-Result-tvOS.xml'
+      inputs:
+        testResultsFormat: NUnit
+        testResultsFiles: 'tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml'
+        failTaskOnFailedTests: true
 
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Pipeline Artifact: TEST-Result-Xamarin.tvOS.xml'
-    inputs:
-      targetPath: tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml
-      artifact: Test.Results.tvOS
-      publishLocation: 'pipeline'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Pipeline Artifact: TEST-Result-Xamarin.iOS.xml'
+      inputs:
+        targetPath: tests/build/xamarinios/TEST-Result-Xamarin.iOS.xml
+        artifact: Test.Results.iOS
+        publishLocation: 'pipeline'
 
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Pipeline Artifact: Xamarin.iOS.NLua'
-    inputs:
-      targetPath: lib/Release/xamarinios
-      artifact: 'Xamarin.iOS.NLua'
-      publishLocation: 'pipeline'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Pipeline Artifact: TEST-Result-Xamarin.tvOS.xml'
+      inputs:
+        targetPath: tests/build/xamarintvos/TEST-Result-Xamarin.TVOS.xml
+        artifact: Test.Results.tvOS
+        publishLocation: 'pipeline'
 
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Pipeline Artifact: Xamarin.tvOS.NLua'
-    inputs:
-      targetPath: lib/Release/xamarintvos
-      artifact: Xamarin.tvOS.NLua
-      publishLocation: 'pipeline'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build ./build/iOS/NLua.net6.0-ios.csproj'
+      inputs:
+        command: custom
+        custom: build
+        arguments: './build/iOS/NLua.net6.0-ios.csproj /p:Configuration=Release'
 
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Pipeline Artifact: Xamarin.watchOS.NLua'
-    inputs:
-      targetPath: lib/Release/xamarinwatchos
-      artifact: Xamarin.watchOS.NLua
-      publishLocation: 'pipeline'
+   - task: DotNetCoreCLI@2
+      displayName: 'dotnet build ./build/iOS/NLua.net6.0-maccatalyst.csproj'
+      inputs:
+        command: custom
+        custom: build
+        arguments: './build/iOS/NLua.net6.0-maccatalyst.csproj /p:Configuration=Release'
 
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Pipeline Artifact: Xamarin.Mac.NLua'
-    inputs:
-      targetPath: lib/Release/xamarinmac
-      artifact: Xamarin.Mac.NLua
-      publishLocation: 'pipeline'
+   - task: DotNetCoreCLI@2
+      displayName: 'dotnet build ./build/macOS/NLua.net6.0-macos.csproj'
+      inputs:
+        command: custom
+        custom: build
+        arguments: './build/macOS/NLua.net6.0-macos.csproj /p:Configuration=Release'
 
-  - template: send-telegram.yml@templates
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build ./build/TVOS/NLua.net6.0-tvos.csproj'
+      inputs:
+        command: custom
+        custom: build
+        arguments: './build/TVOS/NLua.net6.0-tvos.csproj /p:Configuration=Release'
 
-- job: 'NLuaWindows'
-  displayName: 'Windows'
-  dependsOn: 'NLuaMac'
-  variables:
-    - group: 'Keys'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Pipeline Artifact: libs.mac'
+      inputs:
+        targetPath: lib/Release/
+        artifact: 'libs.mac'
+        publishLocation: 'pipeline'
 
-  pool:
-    vmImage: 'windows-2019'
-    demands:
-    - msbuild
-    - visualstudio
-    - vstest
+    - template: send-telegram.yml@templates
 
-  steps:
-  - checkout: self
+- stage: Build_Windows
+  displayName: Build Windows
+  dependsOn: ['Build_Mac']
 
-  - template: common-dotnet.yml@templates
-  - template: common-win.yml@templates
+  jobs:
+  - job: 'NLuaWindows'
+    displayName: 'Windows'
+    variables:
+      - group: 'Keys'
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore'
-    inputs:
-      restoreSolution: NLua.sln
+    pool:
+      vmImage: 'windows-2019'
+      demands:
+      - msbuild
+      - visualstudio
+      - vstest
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore NLua.UWP'
-    inputs:
-      restoreSolution: NLua.UWP.sln
+    steps:
+    - checkout: self
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore NLua.Android'
-    inputs:
-      restoreSolution: NLua.Android.sln
+    - template: common-dotnet.yml@templates
+    - template: common-win.yml@templates
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore NET Core'
-    inputs:
-      restoreSolution: NLua.netcoreapp3.1.sln
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore'
+      inputs:
+        restoreSolution: NLua.sln
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore NET 5'
-    inputs:
-      restoreSolution: NLua.net5.0.sln
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore NLua.UWP'
+      inputs:
+        restoreSolution: NLua.UWP.sln
 
-  - task: PowerShell@2
-    displayName: 'PreBuild Script'
-    inputs:
-      filePath: './devops/PreBuild.ps1'
-      arguments: 'NLua'
-      errorActionPreference: 'silentlyContinue'
-      pwsh: true
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore NLua.Android'
+      inputs:
+        restoreSolution: NLua.Android.sln
 
-  - task: MSBuild@1
-    displayName: 'Build solution NLua.sln'
-    inputs:
-      solution: 'NLua.sln'
-      configuration: Release
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore NET 6'
+      inputs:
+        restoreSolution: NLua.net6.0.sln
 
-  - task: MSBuild@1
-    displayName: 'Build UWP'
-    inputs:
-      solution: 'NLua.UWP.sln'
-      configuration: Release
-      msbuildArguments: /restore
+    - task: PowerShell@2
+      displayName: 'PreBuild Script'
+      inputs:
+        filePath: './devops/PreBuild.ps1'
+        arguments: 'NLua'
+        errorActionPreference: 'silentlyContinue'
+        pwsh: true
 
-  - task: MSBuild@1
-    displayName: 'Build .NET Core'
-    inputs:
-      solution: 'NLua.netcoreapp3.1.sln'
-      configuration: Release
+    - task: MSBuild@1
+      displayName: 'Build solution NLua.sln'
+      inputs:
+        solution: 'NLua.sln'
+        configuration: Release
 
-  - task: MSBuild@1
-    displayName: 'Build .NET Core'
-    inputs:
-      solution: 'NLua.net5.0.sln'
-      configuration: Release
+    - task: MSBuild@1
+      displayName: 'Build UWP'
+      inputs:
+        solution: 'NLua.UWP.sln'
+        configuration: Release
+        msbuildArguments: /restore
 
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet vstest'
-    inputs:
-      command: custom
-      custom: vstest
-      arguments: '.\tests\build\netcoreapp3.1\bin\Release\netcoreapp3.1\NLuaTest.dll'
+    - task: MSBuild@1
+      displayName: 'Build .NET 6'
+      inputs:
+        solution: 'NLua.net6.0.sln'
+        configuration: Release
 
-  - task: MSBuild@1
-    displayName: 'Build Android'
-    inputs:
-      solution: 'NLua.Android.sln'
-      configuration: Release
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build NLua.netstandard.sln'
+      inputs:
+        command: custom
+        custom: build
+        arguments: '.\NLua.netstandard.sln /p:Configuration=Release'
 
-  - script: 'dotnet test .\tests\build\net46\bin\Release\NLuaTest.dll -l:trx --Platform:x64'
-    displayName: 'Run Windows Tests'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build NLua.net6.0-android.sln'
+      inputs:
+        command: custom
+        custom: build
+        arguments: '.\NLua.net6.0-android.sln /p:Configuration=Release'
 
-  - script: 'RENAME TestResults\*.trx NLua.Windows.xml'
-    displayName: 'Rename Test result'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet vstest'
+      inputs:
+        command: custom
+        custom: vstest
+        arguments: '.\tests\build\net6.0\bin\Release\net6.0\NLuaTest.dll'
 
-  - script: 'MOVE TestResults\NLua.Windows.xml .'
-    displayName: 'Move Test result'
+    - task: MSBuild@1
+      displayName: 'Build Android'
+      inputs:
+        solution: 'NLua.Android.sln'
+        configuration: Release
 
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'VSTest'
-      testResultsFiles: 'NLua.Windows.xml'
-      failTaskOnFailedTests: true
+    - script: 'dotnet test .\tests\build\net46\bin\Release\NLuaTest.dll -l:trx --Platform:x64'
+      displayName: 'Run Windows Tests'
 
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish KeraLuaTest.Windows.xml'
-    inputs:
-      targetPath: NLua.Windows.xml
-      artifact: 'NLua.Windows.xml'
-      publishLocation: 'pipeline'
+    - script: 'RENAME TestResults\*.trx NLua.Windows.xml'
+      displayName: 'Rename Test result'
 
-  - task: DownloadPipelineArtifact@2
-    displayName: 'Download Build Xamarin.iOS'
-    inputs:
-      buildType: 'current'
-      artifactName: 'Xamarin.iOS.NLua'
-      targetPath: 'lib/Release/xamarinios/'
+    - script: 'MOVE TestResults\NLua.Windows.xml .'
+      displayName: 'Move Test result'
 
-  - task: DownloadPipelineArtifact@2
-    displayName: 'Download Build Xamarin.Mac'
-    inputs:
-      buildType: 'current'
-      artifactName: 'Xamarin.Mac.NLua'
-      targetPath: 'lib/Release/xamarinmac/'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'VSTest'
+        testResultsFiles: 'NLua.Windows.xml'
+        failTaskOnFailedTests: true
 
-  - task: DownloadPipelineArtifact@2
-    displayName: 'Download Build Xamarin.watchOS'
-    inputs:
-      buildType: 'current'
-      artifactName: 'Xamarin.watchOS.NLua'
-      targetPath: 'lib/Release/xamarinwatchos/'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish KeraLuaTest.Windows.xml'
+      inputs:
+        targetPath: NLua.Windows.xml
+        artifact: 'NLua.Windows.xml'
+        publishLocation: 'pipeline'
 
-  - task: DownloadPipelineArtifact@2
-    displayName: 'Download Build Xamarin.tvOS'
-    inputs:
-      buildType: 'current'
-      artifactName: 'Xamarin.tvOS.NLua'
-      targetPath: 'lib/Release/xamarintvos/'
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Build libs.mac'
+      inputs:
+        buildType: 'current'
+        artifactName: 'libs.mac'
+        targetPath: './lib/Release/'
 
-  - script: 'nuget setapikey $(apikey)'
-    displayName: 'Set NuGet API Key'
+    - script: 'nuget setapikey $(apikey)'
+      displayName: 'Set NuGet API Key'
 
-  - task: PowerShell@2
-    displayName: 'Package NuGet'
-    inputs:
-      targetType: filePath
-      filePath: ./devops/Package.ps1
-      arguments: 'NLua'
-      pwsh: true
+    - task: PowerShell@2
+      displayName: 'Package NuGet'
+      inputs:
+        targetType: filePath
+        filePath: ./devops/Package.ps1
+        arguments: 'NLua'
+        pwsh: true
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Save NLua.nupkg Artifact'
-    inputs:
-      PathtoPublish: NLua.nupkg
-      ArtifactName: NLua.nupkg
+    - task: PublishBuildArtifacts@1
+      displayName: 'Save NLua.nupkg Artifact'
+      inputs:
+        PathtoPublish: NLua.nupkg
+        ArtifactName: NLua.nupkg
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Save NLua.snupkg Artifact'
-    inputs:
-      PathtoPublish: NLua.snupkg
-      ArtifactName: NLua.snupkg
+    - task: PublishBuildArtifacts@1
+      displayName: 'Save NLua.snupkg Artifact'
+      inputs:
+        PathtoPublish: NLua.snupkg
+        ArtifactName: NLua.snupkg
 
-  - task: PowerShell@2
-    displayName: 'Publish NuGet'
-    inputs:
-      targetType: filePath
-      filePath: ./devops/Publish.ps1
-      arguments: NLua
-      pwsh: true
+    - task: PowerShell@2
+      displayName: 'Publish NuGet'
+      inputs:
+        targetType: filePath
+        filePath: ./devops/Publish.ps1
+        arguments: NLua
+        pwsh: true
 
-  - template: send-telegram.yml@templates
+    - template: send-telegram.yml@templates
 
-- job: 'NLuaLinux'
-  displayName: 'Linux'
-  variables:
-    - group: 'Keys'
+- stage: Build_Linux
+  displayName: Build Linux
 
-  pool:
-    vmImage: 'ubuntu-latest'
-    demands: msbuild
+  jobs:
+  - job: 'NLuaLinux'
+    displayName: 'Linux'
+    variables:
+      - group: 'Keys'
 
-  steps:
-  - template: common-dotnet.yml@templates
+    pool:
+      vmImage: 'ubuntu-latest'
+      demands: msbuild
 
-  - checkout: self 
+    steps:
+    - template: common-dotnet.yml@templates
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore'
-    inputs:
-      restoreSolution: NLua.netcoreapp3.1.sln
+    - checkout: self 
 
-  - task: MSBuild@1
-    displayName: 'Build .NET Core'
-    inputs:
-      solution: NLua.netcoreapp3.1.sln
-      configuration: Release
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore'
+      inputs:
+        restoreSolution: NLua.net6.0.sln
 
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet vstest'
-    inputs:
-      command: custom
-      custom: vstest
-      arguments: 'tests/build/netcoreapp3.1/bin/Release/netcoreapp3.1/NLuaTest.dll'
+    - task: MSBuild@1
+      displayName: 'Build .NET 6'
+      inputs:
+        solution: NLua.net6.0.sln
+        configuration: Release
 
-  - template: send-telegram.yml@templates
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet vstest'
+      inputs:
+        command: custom
+        custom: vstest
+        arguments: 'tests/build/net6.0/bin/Release/net6.0/NLuaTest.dll'
+
+    - template: send-telegram.yml@templates
