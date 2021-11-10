@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\lib\Debug\</OutputPath>
+    <OutputPath>..\..\lib\Debug</OutputPath>
     <DefineConstants>TRACE;NETSTANDARD</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
@@ -17,14 +17,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>true</Optimize>
     <DebugType>portable</DebugType>
-    <OutputPath>..\..\lib\Release\</OutputPath>
+    <OutputPath>..\..\lib\Release</OutputPath>
     <DefineConstants>TRACE;NETSTANDARD</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -33,10 +33,8 @@
   <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="KeraLua">
-      <Version>1.2.15</Version>
+    <PackageReference Include="KeraLua" Version="1.3.1">
     </PackageReference>
-    <PackageReference Include="NUnit" Version="3.13.1" />
   </ItemGroup>
 
   <Import Project="..\targets\NLua.Sign.targets" />

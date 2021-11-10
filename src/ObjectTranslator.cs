@@ -10,7 +10,7 @@ using NLua.Method;
 using NLua.Exceptions;
 using NLua.Extensions;
 
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
     using ObjCRuntime;
 #endif
 
@@ -245,7 +245,7 @@ namespace NLua
          * Implementation of load_assembly. Throws an error
          * if the assembly is not found.
          */
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
 #endif
         private static int LoadAssembly(IntPtr luaState)
@@ -349,7 +349,7 @@ namespace NLua
          * Implementation of import_type. Returns nil if the
          * type is not found.
          */
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
 #endif
         private static int ImportType(IntPtr luaState)
@@ -377,7 +377,7 @@ namespace NLua
          * argument in the stack) as an object subclassing the
          * type passed as second argument in the stack.
          */
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
 #endif
         private static int RegisterTable(IntPtr luaState)
@@ -444,7 +444,7 @@ namespace NLua
          * Implementation of free_object. Clears the metatable and the
          * base field, freeing the created object for garbage-collection
          */
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
 #endif
         private static int UnregisterTable(IntPtr luaState)
@@ -501,7 +501,7 @@ namespace NLua
          * Implementation of get_method_bysig. Returns nil
          * if no matching method is not found.
          */
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
 #endif
         private static int GetMethodSignature(IntPtr luaState)
@@ -566,7 +566,7 @@ namespace NLua
          * Implementation of get_constructor_bysig. Returns nil
          * if no matching constructor is found.
          */
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
 #endif
         private static int GetConstructorSignature(IntPtr luaState)
@@ -1107,7 +1107,7 @@ namespace NLua
             return 2;
         }
 
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
 #endif
         private static int CType(IntPtr luaState)
@@ -1127,7 +1127,7 @@ namespace NLua
             return 1;
         }
 
-#if __IOS__ || __TVOS__ || __WATCHOS__
+#if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
 #endif
         private static int EnumFromInt(IntPtr luaState)
