@@ -6,6 +6,8 @@ resources:
       name: codefoco/AzureDevopsTemplates
       endpoint: codefoco
 
+stages:
+
 - stage: Build_Mac
   displayName: 'Build Mac'
 
