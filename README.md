@@ -24,7 +24,7 @@ NLua
 | ![linux](https://badgen.net/badge/icon/Ubuntu%20Linux%20x64?icon=travis&label&color=orange)   | [![Linux](https://travis-ci.org/NLua/NLua.svg?branch=main)](https://travis-ci.org/NLua/NLua) |
 | ![win](https://badgen.net/badge/icon/Windows?icon=windows&label&color=blue) | [![Build status](https://ci.appveyor.com/api/projects/status/jkqcy9m9k35jwolx?svg=true)](https://ci.appveyor.com/project/viniciusjarina/NLua)|
 | ![mac](https://badgen.net/badge/icon/macOS,iOS,tvOS,catalyst?icon=apple&label&color=purple&list=1) | [![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua?branchName=main&jobName=Mac)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=65&branchName=main) |
-|![win](https://badgen.net/badge/icon/Windows,.NET%20Core?icon=windows&label&list=1) |[![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua?branchName=main&jobName=Windows)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=65&branchName=main) |
+|![win](https://badgen.net/badge/icon/Windows,.NET?icon=windows&label&list=1) |[![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua?branchName=main&jobName=Windows)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=65&branchName=main) |
 |![linuxnet](https://badgen.net/badge/icon/Ubuntu%20Linux%20x64?icon=terminal&label&list=1) |[![Build Status](https://dev.azure.com/codefoco/NuGets/_apis/build/status/NLua?branchName=main&jobName=Linux)](https://dev.azure.com/codefoco/NuGets/_build/latest?definitionId=65&branchName=main) |
 
 
