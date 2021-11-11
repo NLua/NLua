@@ -204,6 +204,12 @@ stages:
         configuration: Release
 
     - task: MSBuild@1
+      displayName: 'Build Android'
+      inputs:
+        solution: 'NLua.Android.sln'
+        configuration: Release
+
+    - task: MSBuild@1
       displayName: 'Build UWP'
       inputs:
         solution: 'NLua.UWP.sln'
@@ -237,12 +243,6 @@ stages:
         command: custom
         custom: vstest
         arguments: '.\tests\build\net6.0\bin\Release\net6.0\NLuaTest.dll'
-
-    - task: MSBuild@1
-      displayName: 'Build Android'
-      inputs:
-        solution: 'NLua.Android.sln'
-        configuration: Release
 
     - script: 'dotnet test .\tests\build\net46\bin\Release\NLuaTest.dll -l:trx --Platform:x64'
       displayName: 'Run Windows Tests'
