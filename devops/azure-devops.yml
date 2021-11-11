@@ -8,6 +8,53 @@ resources:
 
 stages:
 
+- stage: Build_Linux
+  displayName: Build Linux
+
+  jobs:
+  - job: 'NLuaLinux'
+    displayName: 'Linux'
+    variables:
+      - group: 'Keys'
+
+    pool:
+      vmImage: 'ubuntu-latest'
+      demands: msbuild
+
+    steps:
+    - template: common-dotnet.yml@templates
+
+    # - script: |
+    #     wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    #     sudo dpkg -i packages-microsoft-prod.deb
+    #     rm packages-microsoft-prod.deb
+    #   displayName: 'Prepare to install .NET 6 SDK'
+
+    # - script: |
+    #     sudo apt-get update; \
+    #     sudo apt-get install -y apt-transport-https && \
+    #     sudo apt-get update && \
+    #     sudo apt-get install -y dotnet-sdk-6.0
+    #   displayName: 'Install .NET 6 SDK'
+
+    - checkout: self 
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build NLua.net6.0.sln'
+      inputs:
+        command: custom
+        custom: build
+        arguments: '.\NLua.net6.0.sln /p:Configuration=Release'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet vstest'
+      inputs:
+        command: custom
+        custom: vstest
+        arguments: 'tests/build/net6.0/bin/Release/net6.0/NLuaTest.dll'
+
+    - template: send-telegram.yml@templates
+
 - stage: Build_Mac
   displayName: 'Build Mac'
 
@@ -306,40 +353,3 @@ stages:
 
     - template: send-telegram.yml@templates
 
-- stage: Build_Linux
-  displayName: Build Linux
-
-  jobs:
-  - job: 'NLuaLinux'
-    displayName: 'Linux'
-    variables:
-      - group: 'Keys'
-
-    pool:
-      vmImage: 'ubuntu-latest'
-      demands: msbuild
-
-    steps:
-    - template: common-dotnet.yml@templates
-
-    - checkout: self 
-
-    - task: NuGetCommand@2
-      displayName: 'NuGet restore'
-      inputs:
-        restoreSolution: NLua.net6.0.sln
-
-    - task: MSBuild@1
-      displayName: 'Build .NET 6'
-      inputs:
-        solution: NLua.net6.0.sln
-        configuration: Release
-
-    - task: DotNetCoreCLI@2
-      displayName: 'dotnet vstest'
-      inputs:
-        command: custom
-        custom: vstest
-        arguments: 'tests/build/net6.0/bin/Release/net6.0/NLuaTest.dll'
-
-    - template: send-telegram.yml@templates
