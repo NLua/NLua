@@ -273,9 +273,9 @@ namespace NLua
             }
         }
 
-        public Lua()
+        public Lua(bool openLibs = true)
         {
-            _luaState = new LuaState();
+            _luaState = new LuaState(openLibs);
             Init();
             // We need to keep this in a managed reference so the delegate doesn't get garbage collected
             _luaState.AtPanic(PanicCallback);
