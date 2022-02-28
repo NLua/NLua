@@ -243,7 +243,7 @@ NLua 1.3.2
 * Fixed [#117](https://github.com/NLua/NLua/issues/117) problem with same method in class and base class
 * Fixed [#125](https://github.com/NLua/NLua/issues/125) calling methods with params keyword.
 
-NLua 1.3.1
+NLua 1.3.2
 ----------
 * Added support to WinRT (Windows Phone 8)
 * Added support to Unity3D
