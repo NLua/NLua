@@ -1505,8 +1505,14 @@ namespace NLua
                         if (value != null && value is double && IsInteger((double)value))
                             value = Convert.ToInt32((double)value);
                     }
-
-                    paramArray.SetValue(Convert.ChangeType(value, paramArrayType), paramArrayIndex);
+                    if (typeof(IConvertible).IsAssignableFrom(value.GetType()))
+                    {
+                        paramArray.SetValue(Convert.ChangeType(value, paramArrayType), paramArrayIndex);
+                    }
+                    else
+                    {
+                        paramArray.SetValue(value, paramArrayIndex);
+                    }
                     paramArrayIndex++;
                 }
             }
