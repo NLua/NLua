@@ -40,8 +40,7 @@ namespace NLua
         private LuaHookFunction _hookCallback;
         #endregion
         #region Globals auto-complete
-        private readonly List<string> _globals = new List<string>();
-        private bool _globalsSorted;
+        private readonly LuaGlobals _globals = new LuaGlobals();
         #endregion
         private LuaState _luaState;
         /// <summary>
@@ -218,7 +217,17 @@ namespace NLua
         /// <summary>
         /// The maximum number of recursive steps to take when adding global reference variables.  Defaults to 2.
         /// </summary>
-        public int MaximumRecursion { get; set; } = 2;
+        public int MaximumRecursion
+        {
+            get
+            {
+                return _globals.MaximumRecursion;
+            }
+            set
+            {
+                _globals.MaximumRecursion = value;
+            }
+        }
 
         #region Globals auto-complete
         /// <summary>
@@ -228,14 +237,7 @@ namespace NLua
         public IEnumerable<string> Globals {
             get
             {
-                // Only sort list when necessary
-                if (!_globalsSorted)
-                {
-                    _globals.Sort();
-                    _globalsSorted = true;
-                }
-
-                return _globals;
+                return _globals.Globals;
             }
         }
         #endregion
@@ -626,13 +628,13 @@ namespace NLua
             if (value == null)
             {
                 // Remove now obsolete entries
-                _globals.Remove(fullPath);
+                _globals.RemoveGlobal(fullPath);
             }
             else
             {
                 // Add new entries
                 if (!_globals.Contains(fullPath))
-                    RegisterGlobal(fullPath, value.GetType(), 0);
+                    _globals.RegisterGlobal(fullPath, value.GetType(), 0);
             }
         }
         /*
@@ -653,89 +655,6 @@ namespace NLua
                SetObjectToPath(fullPath, value);
             }
         }
-
-        #region Globals auto-complete
-        /// <summary>
-        /// Adds an entry to <see cref = "_globals"/> (recursivley handles 2 levels of members)
-        /// </summary>
-        /// <param name = "path">The index accessor path ot the entry</param>
-        /// <param name = "type">The type of the entry</param>
-        /// <param name = "recursionCounter">How deep have we gone with recursion?</param>
-        private void RegisterGlobal(string path, Type type, int recursionCounter)
-        {
-            // If the type is a global method, list it directly
-            if (type == typeof(LuaFunction))
-            {
-                // Format for easy method invocation
-                _globals.Add(path + "(");
-            }
-            // If the type is a class or an interface and recursion hasn't been running too long, list the members
-            else if ((type.IsClass || type.IsInterface) && type != typeof(string) && recursionCounter < MaximumRecursion)
-            {
-                #region Methods
-                foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    string name = method.Name;
-                    if (
-                        // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-                        (!method.GetCustomAttributes(typeof(LuaHideAttribute), false).Any()) &&
-                        (!method.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Any()) &&
-                        // Exclude some generic .NET methods that wouldn't be very usefull in Lua
-                        name != "GetType" && name != "GetHashCode" && name != "Equals" &&
-                        name != "ToString" && name != "Clone" && name != "Dispose" &&
-                        name != "GetEnumerator" && name != "CopyTo" &&
-                        !name.StartsWith("get_", StringComparison.Ordinal) &&
-                        !name.StartsWith("set_", StringComparison.Ordinal) &&
-                        !name.StartsWith("add_", StringComparison.Ordinal) &&
-                        !name.StartsWith("remove_", StringComparison.Ordinal))
-                    {
-                        // Format for easy method invocation
-                        string command = path + ":" + name + "(";
-
-                        if (method.GetParameters().Length == 0)
-                            command += ")";
-                        _globals.Add(command);
-                    }
-                }
-                #endregion
-
-                #region Fields
-                foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    if (
-                        // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-                        (!field.GetCustomAttributes(typeof(LuaHideAttribute), false).Any()) &&
-                        (!field.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Any()))
-                    {
-                        // Go into recursion for members
-                        RegisterGlobal(path + "." + field.Name, field.FieldType, recursionCounter + 1);
-                    }
-                }
-                #endregion
-
-                #region Properties
-                foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    if (
-                        // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-                        (!property.GetCustomAttributes(typeof(LuaHideAttribute), false).Any()) &&
-                        (!property.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Any())
-                        // Exclude some generic .NET properties that wouldn't be very useful in Lua
-                        && property.Name != "Item")
-                    {
-                        // Go into recursion for members
-                        RegisterGlobal(path + "." + property.Name, property.PropertyType, recursionCounter + 1);
-                    }
-                }
-                #endregion
-            }
-            else
-                _globals.Add(path); // Otherwise simply add the element to the list
-
-            // List will need to be sorted on next access
-            _globalsSorted = false;
-        }
-        #endregion
 
         /*
             * Navigates a table in the top of the stack, returning
