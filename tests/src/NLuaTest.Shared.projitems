@@ -50,5 +50,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\Vector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\VectorExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\GlobalsTestClass.cs" />
   </ItemGroup>
 </Project>

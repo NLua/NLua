@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Reflection;
 using System.Threading;
@@ -980,6 +980,71 @@ namespace NLuaTest
                 var t2 = (TestTypes.TestClass)lua["netobj"];
                 Assert.AreEqual(t2.testval, 4);
                 Assert.AreEqual(t1, t2);
+            }
+        }
+        ///*
+        // * Tests setting of a global variable to a CLR object and checking if the Globals correctly registered everything.
+        // */
+        [Test]
+        public void SetGlobalObjectLuaGlobalsListIsCorrect()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua["netobj"] = new TestTypes.GlobalsTestClass();
+
+                var globals = lua.Globals.ToList();
+                Assert.AreEqual(globals.Count, 4);
+                Assert.Contains("netobj.Property1", globals);
+                Assert.Contains("netobj.Property2", globals);
+                Assert.Contains("netobj:Method1()", globals);
+                Assert.Contains("netobj:Method3(", globals);
+            }
+        }
+        ///*
+        // * Tests setting of a global variable to a CLR object value and then re assigning it to a non CLR object.
+        // */
+        [Test]
+        public void SetGlobalObjectAndReasignToNonCLR()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua["netobj"] = new TestTypes.GlobalsTestClass();
+                lua["netobj"] = 4;
+                var globals = lua.Globals.Where(x => x.StartsWith("netobj")).ToList();
+                Assert.AreEqual(1, globals.Count);
+                Assert.Contains("netobj", globals);
+            }
+        }
+        ///*
+        // * Tests setting of a global variable to a CLR object value and then re assigning it to a null value.
+        // */
+        [Test]
+        public void SetGlobalObjectAndReasignToNull()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua["netobj"] = new TestTypes.GlobalsTestClass();
+                lua["netobj"] = null;
+                var globals = lua.Globals.Where(x => x.StartsWith("netobj")).ToList();
+                Assert.AreEqual(0, globals.Count);
+            }
+        }
+        ///*
+        // * Tests setting of a global variable to a CLR object value and then re assigning it to another CLR object of another type.
+        // */
+        [Test]
+        public void SetGlobalObjectAndReasignToOtherCLR()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua["netobj"] = new TestTypes.TestClass();
+                lua["netobj"] = new TestTypes.GlobalsTestClass();
+                var globals = lua.Globals.Where(x => x.StartsWith("netobj")).ToList();
+                Assert.AreEqual(4, globals.Count);
+                Assert.Contains("netobj.Property1", globals);
+                Assert.Contains("netobj.Property2", globals);
+                Assert.Contains("netobj:Method1()", globals);
+                Assert.Contains("netobj:Method3(", globals);
             }
         }
         ///*

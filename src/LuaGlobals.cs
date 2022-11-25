@@ -58,7 +58,7 @@ namespace NLua
 
         public void RemoveGlobal(string path)
         {
-            var knownType = _knownTypes.FirstOrDefault(x => x.Path.Equals(path));
+            var knownType = GetKnownType(path);
             if (knownType != null)
             {
                 // We need to clean up the globals
@@ -69,8 +69,6 @@ namespace NLua
 
                 _knownTypes.Remove(knownType);
             }
-
-            _globals.Remove(path);
         }
 
         private LuaGlobalEntry GetKnownType(string path)
