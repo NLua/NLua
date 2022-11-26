@@ -994,10 +994,10 @@ namespace NLuaTest
 
                 var globals = lua.Globals.ToList();
                 Assert.AreEqual(globals.Count, 4);
-                Assert.Contains("netobj.Property1", globals);
-                Assert.Contains("netobj.Property2", globals);
-                Assert.Contains("netobj:Method1()", globals);
-                Assert.Contains("netobj:Method3(", globals);
+                Assert.True(globals.Contains("netobj.Property1"));
+                Assert.True(globals.Contains("netobj.Property2"));
+                Assert.True(globals.Contains("netobj:Method1()"));
+                Assert.True(globals.Contains("netobj:Method3("));
             }
         }
         ///*
@@ -1012,7 +1012,7 @@ namespace NLuaTest
                 lua["netobj"] = 4;
                 var globals = lua.Globals.Where(x => x.StartsWith("netobj")).ToList();
                 Assert.AreEqual(1, globals.Count);
-                Assert.Contains("netobj", globals);
+                Assert.True(globals.Contains("netobj"));
             }
         }
         ///*
@@ -1041,10 +1041,10 @@ namespace NLuaTest
                 lua["netobj"] = new TestTypes.GlobalsTestClass();
                 var globals = lua.Globals.Where(x => x.StartsWith("netobj")).ToList();
                 Assert.AreEqual(4, globals.Count);
-                Assert.Contains("netobj.Property1", globals);
-                Assert.Contains("netobj.Property2", globals);
-                Assert.Contains("netobj:Method1()", globals);
-                Assert.Contains("netobj:Method3(", globals);
+                Assert.True(globals.Contains("netobj.Property1"));
+                Assert.True(globals.Contains("netobj.Property2"));
+                Assert.True(globals.Contains("netobj:Method1()"));
+                Assert.True(globals.Contains("netobj:Method3("));
             }
         }
         ///*
