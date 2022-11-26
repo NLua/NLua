@@ -41,3 +41,5 @@ tests/build/xamarinios/result.xml
 tests/build/xamarinios/TEST-Result-Xamarin.iOS.xml
 tests/build/xamarintvos/result.xml
 build/net6.0/obj
+tests/build/net6.0/obj/
+tests/build/net6.0/bin/
