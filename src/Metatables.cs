@@ -1477,62 +1477,21 @@ namespace NLua
             return 1;
         }
 
-        internal Array TableToArray(LuaState luaState, ExtractValue extractValue, Type paramArrayType, ref int startIndex, int count)
+        /*
+         * Creates an array for the given range of arguments. The range is [startIndex .. startIndex + count).
+         * Usage scenario: Mapping a number of arguments (all remaining) to a 'params' declared parameter.
+         */
+        internal static Array CreateParamsArray(LuaState luaState, ExtractValue extractValue, Type paramArrayType, int startIndex, int count)
         {
-            Array paramArray;
-
-            if (count == 0)
-                return Array.CreateInstance(paramArrayType, 0);
-
-            var luaParamValue = extractValue(luaState, startIndex);
-            startIndex++;
-
-            if (luaParamValue is LuaTable)
+            var paramArray = Array.CreateInstance(paramArrayType, count);
+            for (int i = 0; i < count; i++)
             {
-                LuaTable table = (LuaTable)luaParamValue;
-                IDictionaryEnumerator tableEnumerator = table.GetEnumerator();
-                tableEnumerator.Reset();
-                paramArray = Array.CreateInstance(paramArrayType, table.Values.Count);
-
-                int paramArrayIndex = 0;
-
-                while (tableEnumerator.MoveNext())
-                {
-                    object value = tableEnumerator.Value;
-
-                    if (paramArrayType == typeof(object))
-                    {
-                        if (value != null && value is double && IsInteger((double)value))
-                            value = Convert.ToInt32((double)value);
-                    }
-                    if (typeof(IConvertible).IsAssignableFrom(value.GetType()))
-                    {
-                        paramArray.SetValue(Convert.ChangeType(value, paramArrayType), paramArrayIndex);
-                    }
-                    else
-                    {
-                        paramArray.SetValue(value, paramArrayIndex);
-                    }
-                    paramArrayIndex++;
-                }
-            }
-            else
-            {
-                paramArray = Array.CreateInstance(paramArrayType, count);
-
-                paramArray.SetValue(luaParamValue, 0);
-
-                for (int i = 1; i < count; i++)
-                {
-                    var value = extractValue(luaState, startIndex);
-                    paramArray.SetValue(value, i);
-                    startIndex++;
-                }
-
+                var value = extractValue(luaState, startIndex);
+                paramArray.SetValue(value, i);
+                startIndex++;
             }
 
             return paramArray;
-
         }
 
         /*
@@ -1564,7 +1523,8 @@ namespace NLua
                     int count = (nLuaParams - currentLuaParam) + 1;
                     Type paramArrayType = currentNetParam.ParameterType.GetElementType();
 
-                    Array paramArray = TableToArray(luaState, extractValue, paramArrayType, ref currentLuaParam, count);
+                    Array paramArray = CreateParamsArray(luaState, extractValue, paramArrayType, currentLuaParam, count);
+                    currentLuaParam += count;
                     paramList.Add(paramArray);
                     int index = paramList.LastIndexOf(paramArray);
                     var methodArg = new MethodArgs();

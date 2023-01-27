@@ -1085,9 +1085,9 @@ namespace NLua
             return metaFunctions.MatchParameters(luaState, method, methodCache, skipParam);
         }
 
-        internal Array TableToArray(LuaState luaState, ExtractValue extractValue, Type paramArrayType, int startIndex, int count)
+        internal Array CreateParamsArray(LuaState luaState, ExtractValue extractValue, Type paramArrayType, int startIndex, int count)
         {
-            return metaFunctions.TableToArray(luaState, extractValue, paramArrayType, ref startIndex, count);
+            return MetaFunctions.CreateParamsArray(luaState, extractValue, paramArrayType, startIndex, count);
         }
 
         private Type TypeOf(LuaState luaState, int idx)
