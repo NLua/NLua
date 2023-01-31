@@ -146,6 +146,14 @@ namespace NLuaTest.TestTypes
             return arg;
         }
 
+        /*
+         * Returns the number of arguments received.
+         */
+        public int vararg(params object[] args)
+        {
+            return args.Length;
+        }
+
         public int callDelegate1(TestDelegate1 del)
         {
             return del(2, 3);

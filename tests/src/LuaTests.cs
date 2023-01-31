@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using System.Reflection;
 using System.Threading;
@@ -1190,6 +1190,21 @@ namespace NLuaTest
                 string val = (string)lua.GetString("val");
 
                 Assert.AreEqual(inputParam, val);
+            }
+        }
+        /*
+        * Tests invocation of a method with a variadic argument list.
+        * This should work with zero or more arguments and any argument type, e.g. no unpacking/ conversion of Lua tables.
+        */
+        [Test]
+        public void CallObjectMethodVarArgs()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua["netobj"] = new TestTypes.TestClass();
+                Assert.AreEqual(0, (long)lua.DoString("return netobj:vararg()")[0]);
+                Assert.AreEqual(4, (long)lua.DoString("return netobj:vararg(true, nil, 1.2, '3')")[0]);
+                Assert.AreEqual(1, (long)lua.DoString("return netobj:vararg{true, nil, 1.2, '3'}")[0]);
             }
         }
         /*
@@ -2834,17 +2849,19 @@ namespace NLuaTest
             }
         }
 
+        /*
+         * A variadic function should except any number of arguments. A Lua table shouldn't
+         * be understood as an array of arguments but as a single argument (like any other type).
+         */
         [Test]
-        public void CallStaticMethod()
+        public void CallStaticVarArgsFunction()
         {
             using (var lua = new Lua())
             {
-                lua.DoString("FakeType = {}");
-                lua["FakeType.bar"] = (Func<object[],int>) TestClass.MethodWithObjectParams;
-
-                lua.DoString("i = FakeType.bar('one', 1)");
-
-                Assert.AreEqual(2, lua["i"], "#1");
+                lua["f"] = (Func<object[], int>)TestClass.MethodWithObjectParams;
+                Assert.AreEqual(1, (long)lua.DoString("return f{'one', 1}")[0]);
+                Assert.AreEqual(2, (long)lua.DoString("return f({'one', 1}, true)")[0]);
+                Assert.AreEqual(0, (long)lua.DoString("return f()")[0]);
             }
         }
 

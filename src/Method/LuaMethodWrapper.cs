@@ -122,15 +122,15 @@ namespace NLua.Method
                 if (_lastCalledMethod.argTypes[i].IsParamsArray)
                 {
                     int count = _lastCalledMethod.argTypes.Length - i;
-                    Array paramArray = _translator.TableToArray(luaState, type.ExtractValue, type.ParameterType, index, count);
+                    Array paramArray = _translator.CreateParamsArray(luaState, type.ExtractValue, type.ParameterType, index, count);
                     args[_lastCalledMethod.argTypes[i].Index] = paramArray;
                 }
                 else
                 {
                     args[type.Index] = type.ExtractValue(luaState, index);
-                }
+            }
 
-                if (_lastCalledMethod.args[_lastCalledMethod.argTypes[i].Index] == null &&
+            if (_lastCalledMethod.args[_lastCalledMethod.argTypes[i].Index] == null &&
                     !luaState.IsNil(i + 1 + numStackToSkip))
                     throw new LuaException(string.Format("Argument number {0} is invalid", (i + 1)));
             }
