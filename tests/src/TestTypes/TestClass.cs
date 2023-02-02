@@ -146,6 +146,17 @@ namespace NLuaTest.TestTypes
             return arg;
         }
 
+        public (int, string) returnPair()
+        {
+            return (5, "five");
+        }
+
+        public (int, string) returnPairWithOutParam(out bool b)
+        {
+            b = true;
+            return (5, "five");
+        }
+
         /*
          * Returns the number of arguments received.
          */
