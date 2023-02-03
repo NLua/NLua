@@ -1244,6 +1244,7 @@ namespace NLuaTest
                 Assert.AreEqual(5, b);
             }
         }
+#if NETCOREAPP1_1_OR_GREATER
         /*
         * Tests calling of an object's method with multiple return values (Tuple).
         */
@@ -1275,6 +1276,7 @@ namespace NLuaTest
                 Assert.AreEqual(true, ret[2]);
             }
         }
+#endif
         /*
         * Tests calling of an object's method with ref params
         */

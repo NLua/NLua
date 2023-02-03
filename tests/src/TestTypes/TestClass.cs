@@ -146,6 +146,7 @@ namespace NLuaTest.TestTypes
             return arg;
         }
 
+#if NETCOREAPP1_1_OR_GREATER
         public (int, string) returnPair()
         {
             return (5, "five");
@@ -156,6 +157,7 @@ namespace NLuaTest.TestTypes
             b = true;
             return (5, "five");
         }
+#endif
 
         /*
          * Returns the number of arguments received.

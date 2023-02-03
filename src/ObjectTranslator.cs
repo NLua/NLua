@@ -1084,6 +1084,7 @@ namespace NLua
          */
         public int PushMultiple(LuaState luaState, object o)
         {
+#if NETCOREAPP1_1_OR_GREATER
             if (o is ITuple tuple && o.GetType().IsValueType)
             {
                 for (int i = 0; i < tuple.Length; ++i)
@@ -1093,7 +1094,7 @@ namespace NLua
 
                 return tuple.Length;
             }
-
+#endif
             Push(luaState, o);
             return 1;
         }
