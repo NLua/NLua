@@ -1244,6 +1244,39 @@ namespace NLuaTest
                 Assert.AreEqual(5, b);
             }
         }
+#if NETCOREAPP1_1_OR_GREATER
+        /*
+        * Tests calling of an object's method with multiple return values (Tuple).
+        */
+        [Test]
+        public void CallObjectMethodWithMultipleReturnValues()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua["netobj"] = new TestTypes.TestClass();
+                var ret = lua.DoString("return netobj:returnPair()");
+                Assert.AreEqual(2, ret.Length);
+                Assert.AreEqual(5, ret[0]);
+                Assert.AreEqual("five", ret[1]);
+            }
+        }
+        /*
+        * Tests calling of an object's method with multiple return values (Tuple) and out parameter.
+        */
+        [Test]
+        public void CallObjectMethodWithMultipleReturnValuesAndOutParam()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua["netobj"] = new TestTypes.TestClass();
+                var ret = lua.DoString("return netobj:returnPairWithOutParam()");
+                Assert.AreEqual(3, ret.Length);
+                Assert.AreEqual(5, ret[0]);
+                Assert.AreEqual("five", ret[1]);
+                Assert.AreEqual(true, ret[2]);
+            }
+        }
+#endif
         /*
         * Tests calling of an object's method with ref params
         */

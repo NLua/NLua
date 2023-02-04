@@ -136,9 +136,16 @@ namespace NLua.Method
             }
         }
 
-        int PushReturnValue(LuaState luaState)
+        /*
+         * Pushes all return values onto the stack (including out and ref parameters).
+         * Returns the number of return values.
+         */
+        int PushReturnValue(LuaState luaState, object returnValue)
         {
             int nReturnValues = 0;
+            if (!_lastCalledMethod.IsReturnVoid)
+                nReturnValues = _translator.PushMultiple(luaState, returnValue);
+
             // Pushes out and ref return values
             for (int index = 0; index < _lastCalledMethod.outList.Length; index++)
             {
@@ -146,13 +153,7 @@ namespace NLua.Method
                 _translator.Push(luaState, _lastCalledMethod.args[_lastCalledMethod.outList[index]]);
             }
 
-            //  If not return void,we need add 1,
-            //  or we will lost the function's return value 
-            //  when call dotnet function like "int foo(arg1,out arg2,out arg3)" in Lua code 
-            if (!_lastCalledMethod.IsReturnVoid && nReturnValues > 0)
-                nReturnValues++;
-
-            return nReturnValues < 1 ? 1 : nReturnValues;
+            return nReturnValues;
         }
 
         int CallInvoke(LuaState luaState, MethodBase method, object targetObject)
@@ -169,7 +170,7 @@ namespace NLua.Method
                 else
                     result = method.Invoke(targetObject, _lastCalledMethod.args);
 
-                _translator.Push(luaState, result);
+                return PushReturnValue(luaState, result);
             }
             catch (TargetInvocationException e)
             {
@@ -182,8 +183,6 @@ namespace NLua.Method
             {
                 return SetPendingException(e);
             }
-
-            return PushReturnValue(luaState);
         }
 
         bool IsMethodCached(LuaState luaState, int numArgsPassed, int skipParams)
@@ -291,10 +290,9 @@ namespace NLua.Method
             }
 
             MethodInfo concreteMethod = methodToCall.MakeGenericMethod(typeArgs.ToArray());
+            var result = concreteMethod.Invoke(targetObject, _lastCalledMethod.args);
 
-            _translator.Push(luaState, concreteMethod.Invoke(targetObject, _lastCalledMethod.args));
-
-            return PushReturnValue(luaState);
+            return PushReturnValue(luaState, result);
         }
 
         /*

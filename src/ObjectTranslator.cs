@@ -16,6 +16,7 @@ using NLua.Extensions;
 
 using LuaState = KeraLua.Lua;
 using LuaNativeFunction = KeraLua.LuaFunction;
+using System.Runtime.CompilerServices;
 
 namespace NLua
 {
@@ -1074,6 +1075,28 @@ namespace NLua
                 userData.Push(luaState);
             else
                 PushObject(luaState, o, "luaNet_metatable");
+        }
+
+        /*
+         * If the given object is an ITuple value type (e.g. ValueTuple) all elements
+         * of it are pushed onto the stack. Otherwise the element is pushed as is,
+         * according to it's type.
+         */
+        public int PushMultiple(LuaState luaState, object o)
+        {
+#if NETCOREAPP1_1_OR_GREATER
+            if (o is ITuple tuple && o.GetType().IsValueType)
+            {
+                for (int i = 0; i < tuple.Length; ++i)
+                {
+                    Push(luaState, tuple[i]);
+                }
+
+                return tuple.Length;
+            }
+#endif
+            Push(luaState, o);
+            return 1;
         }
 
         /*
