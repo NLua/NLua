@@ -3226,7 +3226,18 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void TestAmountOfRegisteredGlobals()
+        {
+            using (Lua lua = new Lua())
+            {
+                var testFunc = (string s) => s;
+                lua.RegisterFunction("testFunc1", null, testFunc.Method);
+                lua["testFunc2"] = testFunc.Method;
 
+                Assert.AreEqual(2, lua.Globals.Count());
+            }
+        }
 
         static Lua m_lua;
     }
