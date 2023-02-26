@@ -652,7 +652,7 @@ namespace NLua
             }
             set
             {
-                if (value != null && value.GetType().IsAssignableTo(typeof(MethodBase)))
+                if (value != null && value.GetType().IsSubclassOf(typeof(MethodBase)))
                 {
                     // If the value is a delegate type, instead treat it as a function
                     this.RegisterFunction(fullPath, (MethodBase)value);
