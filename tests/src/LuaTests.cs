@@ -3231,7 +3231,7 @@ namespace NLuaTest
         {
             using (Lua lua = new Lua())
             {
-                var testFunc = (string s) => s;
+                Func<string, string> testFunc = (string s) => s;
                 lua.RegisterFunction("testFunc1", null, testFunc.Method);
                 lua["testFunc2"] = testFunc.Method;
 
