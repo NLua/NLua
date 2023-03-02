@@ -3167,7 +3167,6 @@ namespace NLuaTest
             }
         }
 
-#if NETCOREAPP3_1_OR_GREATER
         /*
             * Tests registering a global function with RegisterFunction and with the indexer
             * Makes sure that the amount of registered globals is correct
@@ -3184,7 +3183,6 @@ namespace NLuaTest
                 Assert.AreEqual(2, lua.Globals.Count());
             }
         }
-#endif
 
         [Test]
         public void TestGuid()
