@@ -338,7 +338,9 @@ namespace NLua
         }
 
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         static int PanicCallback(IntPtr state)
         {
@@ -1028,7 +1030,9 @@ namespace NLua
         /// <param name = "luaDebug">Pointer to LuaDebug (lua_debug) structure</param>
         /// 
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaHookFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         static void DebugHookCallback(IntPtr luaState, IntPtr luaDebug)
         {
