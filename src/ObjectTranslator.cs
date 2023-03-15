@@ -247,7 +247,9 @@ namespace NLua
          * if the assembly is not found.
          */
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         private static int LoadAssembly(IntPtr luaState)
         {
@@ -351,7 +353,9 @@ namespace NLua
          * type is not found.
          */
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         private static int ImportType(IntPtr luaState)
         {
@@ -379,7 +383,9 @@ namespace NLua
          * type passed as second argument in the stack.
          */
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         private static int RegisterTable(IntPtr luaState)
         {
@@ -446,7 +452,9 @@ namespace NLua
          * base field, freeing the created object for garbage-collection
          */
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         private static int UnregisterTable(IntPtr luaState)
         {
@@ -503,7 +511,9 @@ namespace NLua
          * if no matching method is not found.
          */
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         private static int GetMethodSignature(IntPtr luaState)
         {
@@ -568,7 +578,9 @@ namespace NLua
          * if no matching constructor is found.
          */
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         private static int GetConstructorSignature(IntPtr luaState)
         {
@@ -1131,7 +1143,9 @@ namespace NLua
         }
 
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         private static int CType(IntPtr luaState)
         {
@@ -1151,7 +1165,9 @@ namespace NLua
         }
 
 #if __IOS__ || __TVOS__ || __WATCHOS__ || __MACCATALYST__
+#pragma warning disable CA1416 // Validate platform compatibility
         [MonoPInvokeCallback(typeof(LuaNativeFunction))]
+#pragma warning restore CA1416 // Validate platform compatibility
 #endif
         private static int EnumFromInt(IntPtr luaState)
         {
