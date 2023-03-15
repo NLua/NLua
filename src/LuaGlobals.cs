@@ -100,7 +100,7 @@ namespace NLua
         private void RegisterPath(string path, Type type, int recursionCounter, LuaGlobalEntry entry = null)
         {
             // If the type is a global method, list it directly
-            if (type == typeof(LuaFunction))
+            if (type == typeof(KeraLua.LuaFunction))
             {
                 RegisterLuaFunction(path, entry);
             }

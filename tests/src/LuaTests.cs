@@ -3167,6 +3167,23 @@ namespace NLuaTest
             }
         }
 
+        /*
+            * Tests registering a global function with RegisterFunction and with the indexer
+            * Makes sure that the amount of registered globals is correct
+        */
+        [Test]
+        public void TestAmountOfRegisteredGlobals()
+        {
+            using (Lua lua = new Lua())
+            {
+                Func<string, string> testFunc = (string s) => s;
+                lua.RegisterFunction("testFunc1", null, testFunc.Method);
+                lua["testFunc2"] = testFunc.Method;
+
+                Assert.AreEqual(2, lua.Globals.Count());
+            }
+        }
+
         [Test]
         public void TestGuid()
         {
@@ -3225,8 +3242,6 @@ namespace NLuaTest
                 Assert.AreEqual(1, lua.DoString("return mc['fff']")[0]);
             }
         }
-
-
 
         static Lua m_lua;
     }
