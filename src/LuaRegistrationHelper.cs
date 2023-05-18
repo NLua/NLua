@@ -8,7 +8,7 @@ namespace NLua
     {
         #region Tagged instance methods
         /// <summary>
-        /// Registers all public instance methods in an object tagged with <see cref="LuaGlobalAttribute"/> as Lua global functions
+        /// Registers all public instance methods in an object tagged with <see cref="LuaMemberAttribute"/> as Lua global functions
         /// </summary>
         /// <param name="lua">The Lua VM to add the methods to</param>
         /// <param name="o">The object to get the methods from</param>
@@ -24,7 +24,7 @@ namespace NLua
 
             foreach (var method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
             {
-                foreach (LuaGlobalAttribute attribute in method.GetCustomAttributes(typeof(LuaGlobalAttribute), true))
+                foreach (LuaMemberAttribute attribute in method.GetCustomAttributes(typeof(LuaMemberAttribute), true))
                 {
                     if (string.IsNullOrEmpty(attribute.Name))
                         lua.RegisterFunction(method.Name, o, method); // CLR name
@@ -37,7 +37,7 @@ namespace NLua
 
         #region Tagged static methods
         /// <summary>
-        /// Registers all public static methods in a class tagged with <see cref="LuaGlobalAttribute"/> as Lua global functions
+        /// Registers all public static methods in a class tagged with <see cref="LuaMemberAttribute"/> as Lua global functions
         /// </summary>
         /// <param name="lua">The Lua VM to add the methods to</param>
         /// <param name="type">The class type to get the methods from</param>
@@ -56,7 +56,7 @@ namespace NLua
 
             foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
             {
-                foreach (LuaGlobalAttribute attribute in method.GetCustomAttributes(typeof(LuaGlobalAttribute), false))
+                foreach (LuaMemberAttribute attribute in method.GetCustomAttributes(typeof(LuaMemberAttribute), false))
                 {
                     if (string.IsNullOrEmpty(attribute.Name))
                         lua.RegisterFunction(method.Name, null, method); // CLR name

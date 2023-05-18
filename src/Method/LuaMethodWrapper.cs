@@ -91,7 +91,7 @@ namespace NLua.Method
             if (type == typeof(object))
                 return type.GetMethods(methodName, bindingType);
 
-            var methods = type.GetMethods(methodName, bindingType);
+            var methods = LuaMemberAttribute.GetMethodsForType(type, methodName, bindingType);
             var baseMethods = GetMethodsRecursively(type.BaseType, methodName, bindingType);
 
             return methods.Concat(baseMethods).ToArray();

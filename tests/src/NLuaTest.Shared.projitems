@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClass3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassGeneric.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassWithGenericMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassWithNLuaAttributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassWithMethodDefaultParameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestClassWithOverloadedMethod.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\TestEnum.cs" />

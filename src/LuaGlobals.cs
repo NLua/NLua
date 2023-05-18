@@ -150,7 +150,6 @@ namespace NLua
                 if (
                     // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
                     (!method.GetCustomAttributes(typeof(LuaHideAttribute), false).Any()) &&
-                    (!method.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Any()) &&
                     // Exclude some generic .NET methods that wouldn't be very usefull in Lua
                     name != "GetType" && name != "GetHashCode" && name != "Equals" &&
                     name != "ToString" && name != "Clone" && name != "Dispose" &&
@@ -160,6 +159,13 @@ namespace NLua
                     !name.StartsWith("add_", StringComparison.Ordinal) &&
                     !name.StartsWith("remove_", StringComparison.Ordinal))
                 {
+                    if (method.GetCustomAttributes(typeof(LuaMemberAttribute), false).Any())
+                    {
+                        // If the LuaGlobalAttribute was applied, use the name specified in the attribute
+                        var attribute = (LuaMemberAttribute)method.GetCustomAttributes(typeof(LuaMemberAttribute), false).First();
+                        name = attribute.Name;
+                    }
+
                     // Format for easy method invocation
                     string command = path + ":" + name + "(";
 
@@ -177,11 +183,19 @@ namespace NLua
             {
                 if (
                     // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-                    (!field.GetCustomAttributes(typeof(LuaHideAttribute), false).Any()) &&
-                    (!field.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Any()))
+                    (!field.GetCustomAttributes(typeof(LuaHideAttribute), false).Any()))
                 {
+                    var name = field.Name;
+
+                    if (field.GetCustomAttributes(typeof(LuaMemberAttribute), false).Any())
+                    {
+                        // If the LuaGlobalAttribute was applied, use the name specified in the attribute
+                        var attribute = (LuaMemberAttribute)field.GetCustomAttributes(typeof(LuaMemberAttribute), false).First();
+                        name = attribute.Name;
+                    }
+
                     // Go into recursion for members
-                    RegisterPath(path + "." + field.Name, field.FieldType, recursionCounter + 1, entry);
+                    RegisterPath(path + "." + name, field.FieldType, recursionCounter + 1, entry);
                 }
             }
             #endregion
@@ -191,13 +205,21 @@ namespace NLua
             {
                 if (
                     // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
-                    (!property.GetCustomAttributes(typeof(LuaHideAttribute), false).Any()) &&
-                    (!property.GetCustomAttributes(typeof(LuaGlobalAttribute), false).Any())
+                    (!property.GetCustomAttributes(typeof(LuaHideAttribute), false).Any())
                     // Exclude some generic .NET properties that wouldn't be very useful in Lua
                     && property.Name != "Item")
                 {
+                    var name = property.Name;
+
+                    if (property.GetCustomAttributes(typeof(LuaMemberAttribute), false).Any())
+                    {
+                        // If the LuaGlobalAttribute was applied, use the name specified in the attribute
+                        var attribute = (LuaMemberAttribute)property.GetCustomAttributes(typeof(LuaMemberAttribute), false).First();
+                        name = attribute.Name;
+                    }
+
                     // Go into recursion for members
-                    RegisterPath(path + "." + property.Name, property.PropertyType, recursionCounter + 1, entry);
+                    RegisterPath(path + "." + name, property.PropertyType, recursionCounter + 1, entry);
                 }
             }
             #endregion
