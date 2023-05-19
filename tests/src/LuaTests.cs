@@ -3252,14 +3252,14 @@ namespace NLuaTest
                 lua["test"] = testClass;
                 string[] globals = lua.Globals.ToArray();
 
-                Assert.Contains("test.PropWithoutAttribute", globals);
-                Assert.Contains("test.prop_with_attribute", globals);
-                Assert.Contains("test.fieldWithoutAttribute", globals);
-                Assert.Contains("test.field_with_attribute", globals);
+                Assert.True(globals.Contains("test.PropWithoutAttribute"));
+                Assert.True(globals.Contains("test.prop_with_attribute"));
+                Assert.True(globals.Contains("test.fieldWithoutAttribute"));
+                Assert.True(globals.Contains("test.field_with_attribute"));
 
                 // Methods use : instead of .
-                Assert.Contains("test:MethodWithoutAttribute()", globals);
-                Assert.Contains("test:method_with_attribute()", globals);
+                Assert.True(globals.Contains("test:MethodWithoutAttribute()"));
+                Assert.True(globals.Contains("test:method_with_attribute()"));
 
                 Assert.AreEqual(6, globals.Length);
 
