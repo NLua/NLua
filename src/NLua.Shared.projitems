@@ -25,7 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Lua.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LuaBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LuaFunction.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LuaGlobalAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LuaMemberAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LuaGlobals.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LuaHideAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LuaRegistrationHelper.cs" />

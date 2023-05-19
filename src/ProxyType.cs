@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace NLua
@@ -42,12 +43,12 @@ namespace NLua
 
         public MemberInfo[] GetMember(string name, BindingFlags bindingAttr)
         {
-            return _proxy.GetMember(name, bindingAttr);
+            return LuaMemberAttribute.GetMembersForType(_proxy, name, bindingAttr);
         }
 
         public MethodInfo GetMethod(string name, BindingFlags bindingAttr, Type[] signature)
         {
-            return _proxy.GetMethod(name, bindingAttr, null, signature, null);
+            return LuaMemberAttribute.GetMethodsForType(_proxy, name, bindingAttr, signature).FirstOrDefault();
         }
     }
 }

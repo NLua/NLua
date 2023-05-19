@@ -3243,6 +3243,44 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void TestNLuaAttributes()
+        {
+            using (Lua lua = new Lua())
+            {
+                var testClass = new TestClassWithNLuaAttributes();
+                lua["test"] = testClass;
+                string[] globals = lua.Globals.ToArray();
+
+                Assert.True(globals.Contains("test.PropWithoutAttribute"));
+                Assert.True(globals.Contains("test.prop_with_attribute"));
+                Assert.True(globals.Contains("test.fieldWithoutAttribute"));
+                Assert.True(globals.Contains("test.field_with_attribute"));
+
+                // Methods use : instead of .
+                Assert.True(globals.Contains("test:MethodWithoutAttribute()"));
+                Assert.True(globals.Contains("test:method_with_attribute()"));
+
+                Assert.AreEqual(6, globals.Length);
+
+                Assert.AreEqual(0, lua.DoString("return test.PropWithoutAttribute")[0]);
+                Assert.AreEqual(1, lua.DoString("return test.prop_with_attribute")[0]);
+                Assert.AreEqual(2, lua.DoString("return test.fieldWithoutAttribute")[0]);
+                Assert.AreEqual(3, lua.DoString("return test.field_with_attribute")[0]);
+                Assert.AreEqual(4, lua.DoString("return test:MethodWithoutAttribute()")[0]);
+                Assert.AreEqual(5, lua.DoString("return test:method_with_attribute()")[0]);
+
+                // Test that accessing hidden properties/fields is the same as accessing nonexisting ones
+                object valueOfNonExisting = lua.DoString("return test.NonExistingProperty")[0];
+                Assert.AreEqual(valueOfNonExisting, lua.DoString("return test.HiddenProperty")[0]);
+                Assert.AreEqual(valueOfNonExisting, lua.DoString("return test.hiddenField")[0]);
+
+                // Calling nonexisting/hidden methods should throw an exception
+                Assert.Throws<LuaScriptException>(() => lua.DoString("return test:NonExistingMethod()"), "Non existing method should throw an exception");
+                Assert.Throws<LuaScriptException>(() => lua.DoString("return test:HiddenMethod()"), "Hidden method should throw an exception");
+            }
+        }
+
         static Lua m_lua;
     }
 }
