@@ -7,14 +7,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NLua", "NLua", "{4A43DAAC-F
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NLua.Shared", "src\NLua.Shared.shproj", "{BD205AD6-760E-48F3-BAB2-21447396BD17}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLua.net6.0", "build\net6.0\NLua.net6.0.csproj", "{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLua.net7.0", "build\net7.0\NLua.net7.0.csproj", "{A1944148-0AD8-4DEF-A245-60C7A8AE8AA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D432F663-23CC-48B1-A413-935E5393493C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.net6.0", "tests\build\net6.0\NLuaTest.net6.0.csproj", "{3E63EFA4-AEBA-4F9E-B87A-47EEF4510031}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.net7.0", "tests\build\net7.0\NLuaTest.net7.0.csproj", "{3E63EFA4-AEBA-4F9E-B87A-47EEF4510031}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

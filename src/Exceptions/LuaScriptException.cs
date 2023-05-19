@@ -10,7 +10,7 @@ namespace NLua.Exceptions
     public class LuaScriptException : LuaException
     {
         /// <summary>
-        /// Returns true if the exception has occured as the result of a .NET exception in user code
+        /// Returns true if the exception has occurred as the result of a .NET exception in user code
         /// </summary>
         public bool IsNetException { get;  }
 
@@ -37,7 +37,7 @@ namespace NLua.Exceptions
         /// <param name="innerException">The .NET exception triggered by user-code.</param>
         /// <param name="source">The position in the script where the exception was triggered.</param>
         public LuaScriptException(Exception innerException, string source)
-            : base("A .NET exception occured in user-code", innerException)
+            : base("A .NET exception occurred in user-code", innerException)
         {
             _source = source;
             IsNetException = true;
