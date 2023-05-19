@@ -3250,7 +3250,7 @@ namespace NLuaTest
             {
                 var testClass = new TestClassWithNLuaAttributes();
                 lua["test"] = testClass;
-                var globals = lua.Globals.ToArray();
+                string[] globals = lua.Globals.ToArray();
 
                 Assert.Contains("test.PropWithoutAttribute", globals);
                 Assert.Contains("test.prop_with_attribute", globals);
@@ -3271,7 +3271,7 @@ namespace NLuaTest
                 Assert.AreEqual(5, lua.DoString("return test:method_with_attribute()")[0]);
 
                 // Test that accessing hidden properties/fields is the same as accessing nonexisting ones
-                var valueOfNonExisting = lua.DoString("return test.NonExistingProperty")[0];
+                object valueOfNonExisting = lua.DoString("return test.NonExistingProperty")[0];
                 Assert.AreEqual(valueOfNonExisting, lua.DoString("return test.HiddenProperty")[0]);
                 Assert.AreEqual(valueOfNonExisting, lua.DoString("return test.hiddenField")[0]);
 

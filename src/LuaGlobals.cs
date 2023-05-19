@@ -185,7 +185,7 @@ namespace NLua
                     // Check that the LuaHideAttribute and LuaGlobalAttribute were not applied
                     (!field.GetCustomAttributes(typeof(LuaHideAttribute), false).Any()))
                 {
-                    var name = field.Name;
+                    string name = field.Name;
 
                     if (field.GetCustomAttributes(typeof(LuaMemberAttribute), false).Any())
                     {
@@ -209,7 +209,7 @@ namespace NLua
                     // Exclude some generic .NET properties that wouldn't be very useful in Lua
                     && property.Name != "Item")
                 {
-                    var name = property.Name;
+                    string name = property.Name;
 
                     if (property.GetCustomAttributes(typeof(LuaMemberAttribute), false).Any())
                     {
