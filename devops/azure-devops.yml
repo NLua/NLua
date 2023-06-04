@@ -302,7 +302,7 @@ stages:
     - script: 'RENAME TestResult.xml NLua.Windows.xml'
       displayName: 'Rename Test result'
 
-    - script: 'MOVE TestResults\NLua.Windows.xml .'
+    - script: 'MOVE NLua.Windows.xml .'
       displayName: 'Move Test result'
 
     - task: PublishTestResults@2
