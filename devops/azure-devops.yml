@@ -296,10 +296,10 @@ stages:
         custom: vstest
         arguments: '.\tests\build\net7.0\bin\Release\net7.0\NLuaTest.dll'
 
-    - script: 'dotnet test .\tests\build\net46\bin\Release\NLuaTest.dll -l:trx --Platform:x64'
+    - script: 'nunit3-console.exe .\tests\build\net46\bin\Release\NLuaTest.dll '
       displayName: 'Run Windows Tests'
 
-    - script: 'RENAME TestResults\*.trx NLua.Windows.xml'
+    - script: 'RENAME TestResult.xml NLua.Windows.xml'
       displayName: 'Rename Test result'
 
     - script: 'MOVE TestResults\NLua.Windows.xml .'
