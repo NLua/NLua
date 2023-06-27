@@ -275,6 +275,15 @@ namespace NLua
             }
         }
 
+        public Lua(LuaAlloc alloc, IntPtr ptr , bool openLibs = true)
+        {
+            _luaState = new LuaState(alloc, ptr);
+            if (openLibs)  _luaState.OpenLibs();
+            Init();
+            // We need to keep this in a managed reference so the delegate doesn't get garbage collected
+            _luaState.AtPanic(PanicCallback);
+        }
+
         public Lua(bool openLibs = true)
         {
             _luaState = new LuaState(openLibs);
