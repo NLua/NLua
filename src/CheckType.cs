@@ -117,6 +117,14 @@ namespace NLua
                 if (luatype == LuaType.Number)
                     return _extractValues[typeof(double)];
             }
+
+            //Added support for generic type
+            if (paramType.IsGenericType)
+            {
+                if (luatype == LuaType.UserData)
+                    return _extractValues[typeof(object)];
+            }
+
             bool netParamIsString = paramType == typeof(string) || paramType == typeof(char[]) || paramType == typeof(byte[]);
 
             if (netParamIsNumeric)
