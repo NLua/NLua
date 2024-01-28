@@ -944,6 +944,7 @@ namespace NLua
             {
                 _hookCallback = DebugHookCallback;
                 _luaState.SetHook(_hookCallback, mask, count);
+                return 0;
             }
 
             return -1;
