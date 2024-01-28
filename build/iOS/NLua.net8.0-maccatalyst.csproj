@@ -5,7 +5,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NLua</RootNamespace>
     <AssemblyName>NLua</AssemblyName>
-    <TargetFramework>net7.0-tvos</TargetFramework>
+    <TargetFramework>net8.0-maccatalyst</TargetFramework>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
@@ -21,8 +21,10 @@
     <MtouchDebug>true</MtouchDebug>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <MtouchFastDev>true</MtouchFastDev>
-    <IOSDebuggerPort>16365</IOSDebuggerPort>
+    <IOSDebuggerPort>37816</IOSDebuggerPort>
     <DeviceSpecificBuild>false</DeviceSpecificBuild>
+    <MtouchVerbosity>
+    </MtouchVerbosity>
     <MtouchLink>
     </MtouchLink>
     <MtouchHttpClientHandler>
@@ -40,6 +42,8 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchVerbosity>
+    </MtouchVerbosity>
     <MtouchHttpClientHandler>
     </MtouchHttpClientHandler>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -52,9 +56,6 @@
     <PackageReference Include="KeraLua">
       <Version>1.4.0</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Info.plist" />
   </ItemGroup>
   <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Shared.projitems')" />
   <Import Project="..\targets\NLua.Sign.targets" />

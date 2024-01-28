@@ -219,7 +219,7 @@
       <Version>1.4.0</Version>
     </PackageReference>
     <PackageReference Include="Codefoco.Touch.Server">
-      <Version>1.0.29</Version>
+      <Version>1.0.30</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

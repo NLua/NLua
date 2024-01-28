@@ -40,18 +40,18 @@ stages:
     - checkout: self 
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build NLua.net7.0.sln'
+      displayName: 'dotnet build NLua.net8.0.sln'
       inputs:
         command: custom
         custom: build
-        arguments: '.\NLua.net7.0.sln /p:Configuration=Release'
+        arguments: '.\NLua.net8.0.sln /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet vstest'
       inputs:
         command: custom
         custom: vstest
-        arguments: 'tests/build/net7.0/bin/Release/net7.0/NLuaTest.dll'
+        arguments: 'tests/build/net8.0/bin/Release/net8.0/NLuaTest.dll'
 
     - template: send-telegram.yml@templates
 
@@ -167,32 +167,32 @@ stages:
         publishLocation: 'pipeline'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build ./build/iOS/NLua.net7.0-ios.csproj'
+      displayName: 'dotnet build ./build/iOS/NLua.net8.0-ios.csproj'
       inputs:
         command: custom
         custom: build
-        arguments: './build/iOS/NLua.net7.0-ios.csproj /p:Configuration=Release'
+        arguments: './build/iOS/NLua.net8.0-ios.csproj /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build ./build/iOS/NLua.net7.0-maccatalyst.csproj'
+      displayName: 'dotnet build ./build/iOS/NLua.net8.0-maccatalyst.csproj'
       inputs:
         command: custom
         custom: build
-        arguments: './build/iOS/NLua.net7.0-maccatalyst.csproj /p:Configuration=Release'
+        arguments: './build/iOS/NLua.net8.0-maccatalyst.csproj /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build ./build/macOS/NLua.net7.0-macos.csproj'
+      displayName: 'dotnet build ./build/macOS/NLua.net8.0-macos.csproj'
       inputs:
         command: custom
         custom: build
-        arguments: './build/macOS/NLua.net7.0-macos.csproj /p:Configuration=Release'
+        arguments: './build/macOS/NLua.net8.0-macos.csproj /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build ./build/TVOS/NLua.net7.0-tvos.csproj'
+      displayName: 'dotnet build ./build/TVOS/NLua.net8.0-tvos.csproj'
       inputs:
         command: custom
         custom: build
-        arguments: './build/TVOS/NLua.net7.0-tvos.csproj /p:Configuration=Release'
+        arguments: './build/TVOS/NLua.net8.0-tvos.csproj /p:Configuration=Release'
 
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Pipeline Artifact: libs.mac'
@@ -269,11 +269,11 @@ stages:
         msbuildArguments: /restore
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build NLua.net7.0.sln'
+      displayName: 'dotnet build NLua.net8.0.sln'
       inputs:
         command: custom
         custom: build
-        arguments: '.\NLua.net7.0.sln /p:Configuration=Release'
+        arguments: '.\NLua.net8.0.sln /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build NLua.netstandard2.0.sln'
@@ -283,18 +283,18 @@ stages:
         arguments: '.\NLua.netstandard2.0.sln /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build ./build/Android/NLua.net7.0-android.csproj'
+      displayName: 'dotnet build ./build/Android/NLua.net8.0-android.csproj'
       inputs:
         command: custom
         custom: build
-        arguments: './build/Android/NLua.net7.0-android.csproj /p:Configuration=Release'
+        arguments: './build/Android/NLua.net8.0-android.csproj /p:Configuration=Release'
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet vstest'
       inputs:
         command: custom
         custom: vstest
-        arguments: '.\tests\build\net7.0\bin\Release\net7.0\NLuaTest.dll'
+        arguments: '.\tests\build\net8.0\bin\Release\net8.0\NLuaTest.dll'
 
     - script: 'nunit3-console.exe .\tests\build\net46\bin\Release\NLuaTest.dll '
       displayName: 'Run Windows Tests'

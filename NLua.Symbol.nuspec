@@ -29,18 +29,18 @@
     <file src="lib\Release\net46\NLua.pdb" target="lib\net46" />
     <file src="lib\Release\uap10.0\NLua.dll" target="lib\uap10.0" />
     <file src="lib\Release\uap10.0\NLua.pdb" target="lib\uap10.0" />
-    <file src="lib\Release\net7.0\NLua.dll" target="lib\net7.0" />
-    <file src="lib\Release\net7.0\NLua.pdb" target="lib\net7.0" />
-    <file src="lib\Release\net7.0-android\NLua.dll" target="lib\net7.0-android28" />
-    <file src="lib\Release\net7.0-android\NLua.pdb" target="lib\net7.0-android28" />
-    <file src="lib\Release\net7.0-ios\NLua.dll" target="lib\net7.0-ios11.0" />
-    <file src="lib\Release\net7.0-ios\NLua.pdb" target="lib\net7.0-ios11.0" />
-    <file src="lib\Release\net7.0-maccatalyst\NLua.dll" target="lib\net7.0-maccatalyst13.0" />
-    <file src="lib\Release\net7.0-maccatalyst\NLua.pdb" target="lib\net7.0-maccatalyst13.0" />
-    <file src="lib\Release\net7.0-tvos\NLua.dll" target="lib\net7.0-tvos11.0" />
-    <file src="lib\Release\net7.0-tvos\NLua.pdb" target="lib\net7.0-tvos11.0" />
-    <file src="lib\Release\net7.0-macos\NLua.dll" target="lib\net7.0-macos10.13" />
-    <file src="lib\Release\net7.0-macos\NLua.pdb" target="lib\net7.0-macos10.13" />
+    <file src="lib\Release\net8.0\NLua.dll" target="lib\net8.0" />
+    <file src="lib\Release\net8.0\NLua.pdb" target="lib\net8.0" />
+    <file src="lib\Release\net8.0-android\NLua.dll" target="lib\net8.0-android28" />
+    <file src="lib\Release\net8.0-android\NLua.pdb" target="lib\net8.0-android28" />
+    <file src="lib\Release\net8.0-ios\NLua.dll" target="lib\net8.0-ios11.0" />
+    <file src="lib\Release\net8.0-ios\NLua.pdb" target="lib\net8.0-ios11.0" />
+    <file src="lib\Release\net8.0-maccatalyst\NLua.dll" target="lib\net8.0-maccatalyst13.0" />
+    <file src="lib\Release\net8.0-maccatalyst\NLua.pdb" target="lib\net8.0-maccatalyst13.0" />
+    <file src="lib\Release\net8.0-tvos\NLua.dll" target="lib\net8.0-tvos11.0" />
+    <file src="lib\Release\net8.0-tvos\NLua.pdb" target="lib\net8.0-tvos11.0" />
+    <file src="lib\Release\net8.0-macos\NLua.dll" target="lib\net8.0-macos10.13" />
+    <file src="lib\Release\net8.0-macos\NLua.pdb" target="lib\net8.0-macos10.13" />
     <file src="lib\Release\netstandard2.0\NLua.dll" target="lib\netstandard2.0" />
     <file src="lib\Release\netstandard2.0\NLua.pdb" target="lib\netstandard2.0" />
     <file src="lib\Release\xamarinios\NLua.dll" target="lib\xamarinios" />
