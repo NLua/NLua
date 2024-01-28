@@ -275,19 +275,45 @@ namespace NLua.Method
         int CallInvokeOnGenericMethod(LuaState luaState, MethodInfo methodToCall, object targetObject)
         {
             //need to make a concrete type of the generic method definition
-            var typeArgs = new List<Type>();
+            Dictionary<string, Type> genericParameterNames = new Dictionary<string, Type>();
 
-            ParameterInfo [] parameters = methodToCall.GetParameters();
-
+            ParameterInfo[] parameters = methodToCall.GetParameters();
             for (int i = 0; i < parameters.Length; i++)
             {
                 ParameterInfo parameter = parameters[i];
 
-                if (!parameter.ParameterType.IsGenericParameter)
-                    continue;
+                if (parameter.ParameterType.IsGenericType)
+                {
+                    var currentArg = _lastCalledMethod.args[i];
+                    var currentArgType = currentArg.GetType();
+                    var genericArgTypeArguments = currentArgType.GenericTypeArguments;
 
-                typeArgs.Add(_lastCalledMethod.args[i].GetType());
+                    //if currentArgType is array, use element type to be generic arguments for compatibility IEnumerable.
+                    if (currentArgType.IsArray)
+                    {
+                        genericArgTypeArguments = new Type[] { currentArgType.GetElementType() };
+                    }
+
+                    var genericTypeArguments = parameter.ParameterType.GenericTypeArguments;
+                    for (int j = 0; j < genericTypeArguments.Length; j++)
+                    {
+                        var arg = genericTypeArguments[j];
+                        if (arg.IsGenericParameter && !genericParameterNames.ContainsKey(arg.Name))
+                        {
+                            genericParameterNames.Add(arg.Name, genericArgTypeArguments[j]);
+                        }
+                    }
+                }
+
+                if (parameter.ParameterType.IsGenericParameter)
+                {
+                    genericParameterNames.Add(parameter.ParameterType.Name, _lastCalledMethod.args[i].GetType());
+                }
             }
+
+            //Map Name/Type to generic arguments types
+            var methodGenericArguments = methodToCall.GetGenericArguments();
+            var typeArgs = methodGenericArguments.Select(item => genericParameterNames[item.Name]);
 
             MethodInfo concreteMethod = methodToCall.MakeGenericMethod(typeArgs.ToArray());
             var result = concreteMethod.Invoke(targetObject, _lastCalledMethod.args);

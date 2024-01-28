@@ -1,4 +1,7 @@
-﻿namespace NLuaTest.TestTypes
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace NLuaTest.TestTypes
 {
     /// <summary>
     /// Normal class containing a generic method
@@ -32,6 +35,12 @@
             _PassedValue = value;
             this.x = x;
             this.y = y;
+            _GenericMethodSuccess = true;
+        }
+
+        public void GenericMethodWithGenericTypes<T, T1>(IEnumerable<T> ts, Dictionary<T, T1> dic)
+        {
+            _PassedValue = dic.Count() + ts.Count();
             _GenericMethodSuccess = true;
         }
 

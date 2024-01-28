@@ -492,6 +492,22 @@ namespace NLuaTest
 
                 Assert.AreEqual(true, classWithGenericMethod.GenericMethodSuccess);
                 Assert.AreEqual(56, (classWithGenericMethod.PassedValue as TestTypes.TestClass).val);
+
+
+                lua.RegisterFunction("genericMethod3", classWithGenericMethod, typeof(TestClassWithGenericMethod).GetMethod("GenericMethodWithGenericTypes"));
+
+                try
+                {
+                    lua["ts"] = new string[] { "aaa", "bbb", "ccc" };
+                    lua["dic"] = new Dictionary<string, int> { { "ddd", 111 }, { "eee", 222 }, { "fff", 333 } };
+                    lua.DoString("genericMethod3(ts, dic)");
+                }
+                catch
+                {
+                }
+
+                Assert.AreEqual(true, classWithGenericMethod.GenericMethodSuccess);
+                Assert.AreEqual(true, classWithGenericMethod.Validate<int>(6));
             }
         }
 
