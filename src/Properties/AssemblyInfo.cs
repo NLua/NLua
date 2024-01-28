@@ -24,14 +24,14 @@
 #elif __MACOS__
 [assembly: AssemblyTitle ("NLua (Mac)")]
 #else
-[assembly: AssemblyTitle ("NLua (.NET)")]
+[assembly: AssemblyTitle("NLua (.NET)")]
 #endif
 
-[assembly: AssemblyDescription ("NLua library")]
-[assembly: AssemblyCompany ("NLua.org")]
-[assembly: AssemblyProduct ("NLua")]
-[assembly: AssemblyCopyright ("Copyright © Vinicius Jarina 2023")]
-[assembly: AssemblyCulture ("")]
+[assembly: AssemblyDescription("NLua library")]
+[assembly: AssemblyCompany("NLua.org")]
+[assembly: AssemblyProduct("NLua")]
+[assembly: AssemblyCopyright("Copyright © Vinicius Jarina 2024")]
+[assembly: AssemblyCulture("")]
 
 
 [assembly: AssemblyVersion("1.4.1.0")]
