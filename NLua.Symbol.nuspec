@@ -15,7 +15,7 @@
     <copyright>Copyright © NLua 2024</copyright>
     <tags>lua nlua</tags>
     <dependencies>
-      <dependency id="KeraLua" version="1.3.4" />
+      <dependency id="KeraLua" version="1.4.0" />
     </dependencies>
     <packageTypes>
       <packageType name="SymbolsPackage" />
