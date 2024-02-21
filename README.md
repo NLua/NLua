@@ -221,6 +221,71 @@ You can re-write the `import` function before load the user script and if the us
 ```
 [Lua-Sandbox user-list](http://lua-users.org/wiki/SandBoxes)
 
+Unity Integration
+---------
+1) Build for .Net 2.0 or Download [KeraLua](https://www.nuget.org/packages/KeraLua/) and [NLua](https://www.nuget.org/packages/NLua/) from NuGet (use the `Download package` link)
+2) if Download: change the file extensions from `.nupkg` to `.zip`
+3) create folders in your Unity project's Assets directory `Plugins/KeraLua` and `Plugins/NLua`
+4) extract the `netstandard2.0` contents of those zip files into the newly created unity folders. Your tree should look roughly like this (with KeraLua runtimes customized to your build targets)
+```
+Plugins
+├── KeraLua
+│   ├── LICENSE
+│   ├── LICENSE.meta
+│   ├── lib
+│   │   ├── netstandard2.0
+│   │   │   ├── KeraLua.dll
+│   │   │   ├── KeraLua.dll.meta
+│   │   │   ├── KeraLua.xml
+│   │   │   └── KeraLua.xml.meta
+│   │   └── netstandard2.0.meta
+│   ├── lib.meta
+│   ├── runtimes
+│   │   ├── linux-x64
+│   │   │   ├── native
+│   │   │   │   ├── liblua54.so
+│   │   │   │   └── liblua54.so.meta
+│   │   │   └── native.meta
+│   │   ├── linux-x64.meta
+│   │   ├── osx
+│   │   │   ├── native
+│   │   │   │   ├── liblua54.dylib
+│   │   │   │   └── liblua54.dylib.meta
+│   │   │   └── native.meta
+│   │   ├── osx.meta
+│   │   ├── win-x64
+│   │   │   ├── native
+│   │   │   │   ├── lua54.dll
+│   │   │   │   └── lua54.dll.meta
+│   │   │   └── native.meta
+│   │   ├── win-x64.meta
+│   │   ├── win-x86
+│   │   │   ├── native
+│   │   │   │   ├── lua54.dll
+│   │   │   │   └── lua54.dll.meta
+│   │   │   └── native.meta
+│   │   └── win-x86.meta
+│   └── runtimes.meta
+├── KeraLua.meta
+├── NLua
+│   ├── LICENSE
+│   ├── LICENSE.meta
+│   ├── lib
+│   │   ├── netstandard2.0
+│   │   │   ├── NLua.dll
+│   │   │   └── NLua.dll.meta
+│   │   └── netstandard2.0.meta
+│   └── lib.meta
+└── NLua.meta
+```
+5) Go through each KeraLua runtime liblua54 files in the Unity inspector and set the correct `Platform settings` for both editor and standalone based on the folder. Don't forget to apply
+
+### Notes for unity
+- you will likely want to append to `package.path` you can do it with something like this `lua.DoString("package.path = package.path .. \";" + Application.persistentDataPath + "/?/?.lua;" + Application.persistentDataPath + "/?.lua\"");`
+- you will want to expose Debug.Log to lua (and override the `print` function to see lua logs)
+- numbers will come back as `double` type
+- fields set on the lua instance may be null and you will need to handle it
+
 
 Copyright (c) 2024 Vinicius Jarina (viniciusjarina@gmail.com)
 
