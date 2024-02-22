@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
@@ -315,6 +315,9 @@ namespace NLua
             }
             _luaState.PushGlobalTable();
             _luaState.GetGlobal("luanet");
+            _luaState.PushString("_G");
+            _luaState.GetGlobal("_G");
+            _luaState.SetTable(-3);
             _luaState.PushString("getmetatable");
             _luaState.GetGlobal("getmetatable");
             _luaState.SetTable(-3);
