@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using NLua.Exceptions;
 using LuaState = KeraLua.Lua;
 
@@ -9,7 +10,7 @@ namespace NLua
     {
         private static volatile ObjectTranslatorPool _instance = new ObjectTranslatorPool();
 
-        private ConcurrentDictionary<LuaState, ObjectTranslator> translators = new ConcurrentDictionary<LuaState, ObjectTranslator>();
+        private ConditionalWeakTable<LuaState, ObjectTranslator> translators = new ConditionalWeakTable<LuaState, ObjectTranslator>();
 
         public static ObjectTranslatorPool Instance => _instance;
 
@@ -36,8 +37,7 @@ namespace NLua
 
         public void Remove(LuaState luaState)
         {
-            ObjectTranslator translator;
-            translators.TryRemove(luaState, out translator);
+            translators.Remove(luaState);
         }
     }
 }

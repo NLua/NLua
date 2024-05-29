@@ -17,6 +17,7 @@ using LuaFunction = NLua.LuaFunction;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 // ReSharper disable StringLiteralTypo
 
@@ -224,6 +225,27 @@ namespace NLuaTest
 
             long endMem = System.Diagnostics.Process.GetCurrentProcess().WorkingSet64;
             Console.WriteLine("Was using " + startingMem / 1024 / 1024 + "MB, now using: " + endMem  / 1024 / 1024 + "MB");
+        }
+
+        [Test]
+        public void TestFinalize()
+        {
+            WeakReference luaRef = CreateInstance();
+            for (int i = 0; i < 3 && luaRef.IsAlive; i++)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+
+            Assert.False(luaRef.IsAlive);
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            WeakReference CreateInstance()
+            {
+                Lua lua = new();
+                _Calc(lua, 42);
+                return new WeakReference(lua);
+            }
         }
 
         private void _Calc(Lua lua, int i)
