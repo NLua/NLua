@@ -104,7 +104,7 @@ namespace NLua.Method
         /// <param name="e">null for no pending exception</param>
         int SetPendingException(Exception e)
         {
-            return _translator.interpreter.SetPendingException(e);
+            return _translator.Interpreter?.SetPendingException(e) ?? 0;
         }
 
         void FillMethodArguments(LuaState luaState, int numStackToSkip)
@@ -175,8 +175,9 @@ namespace NLua.Method
             catch (TargetInvocationException e)
             {
                 // Failure of method invocation
-                if (_translator.interpreter.UseTraceback) 
-                    e.GetBaseException().Data["Traceback"] = _translator.interpreter.GetDebugTraceback();
+                Lua interpreter = _translator.Interpreter;
+                if (interpreter?.UseTraceback is true) 
+                    e.GetBaseException().Data["Traceback"] = interpreter.GetDebugTraceback();
                 return SetPendingException(e.GetBaseException());
             }
             catch (Exception e)

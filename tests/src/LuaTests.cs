@@ -230,7 +230,7 @@ namespace NLuaTest
         [Test]
         public void TestFinalize()
         {
-            WeakReference luaRef = CreateInstance();
+            WeakReference luaRef = CreateWeakReferenceToLuaInstance();
             for (int i = 0; i < 3 && luaRef.IsAlive; i++)
             {
                 GC.Collect();
@@ -238,20 +238,20 @@ namespace NLuaTest
             }
 
             Assert.False(luaRef.IsAlive);
+        }
 
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            WeakReference CreateInstance()
-            {
-                Lua lua = new();
-                _Calc(lua, 42);
-                return new WeakReference(lua);
-            }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private WeakReference CreateWeakReferenceToLuaInstance()
+        {
+            Lua lua = new Lua();
+            _Calc(lua, 42);
+            return new WeakReference(lua);
         }
 
         private void _Calc(Lua lua, int i)
         {
             lua.DoString(
-                        "sqrt = math.sqrt;" +
+                "sqrt = math.sqrt;" +
                 "sqr = function(x) return math.pow(x,2); end;" +
                 "log = math.log;" +
                 "log10 = math.log10;" +

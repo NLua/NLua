@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using NLua.Exceptions;
 using LuaState = KeraLua.Lua;
 
@@ -10,14 +9,14 @@ namespace NLua
     {
         private static volatile ObjectTranslatorPool _instance = new ObjectTranslatorPool();
 
-        private ConditionalWeakTable<LuaState, ObjectTranslator> translators = new ConditionalWeakTable<LuaState, ObjectTranslator>();
+        private ConcurrentDictionary<LuaState, ObjectTranslator> translators = new ConcurrentDictionary<LuaState, ObjectTranslator>();
 
         public static ObjectTranslatorPool Instance => _instance;
 
 
         public void Add(LuaState luaState, ObjectTranslator translator)
         {
-            if(!translators.TryAdd(luaState, translator))
+            if (!translators.TryAdd(luaState, translator))
                 throw new ArgumentException("An item with the same key has already been added. ", "luaState");
         }
 
@@ -25,7 +24,7 @@ namespace NLua
         {
             ObjectTranslator translator;
 
-            if(!translators.TryGetValue(luaState, out translator))
+            if (!translators.TryGetValue(luaState, out translator))
             {
                 LuaState main = luaState.MainThread;
 
@@ -37,8 +36,8 @@ namespace NLua
 
         public void Remove(LuaState luaState)
         {
-            translators.Remove(luaState);
+            ObjectTranslator translator;
+            translators.TryRemove(luaState, out translator);
         }
     }
 }
-

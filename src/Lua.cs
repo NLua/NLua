@@ -1056,8 +1056,7 @@ namespace NLua
             var debug = LuaDebug.FromIntPtr(luaDebug);
 
             ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(state);
-            Lua lua = translator.Interpreter;
-            lua.DebugHookCallbackInternal(debug);
+            translator.Interpreter?.DebugHookCallbackInternal(debug);
         }
 
         private void DebugHookCallbackInternal(LuaDebug luaDebug)
