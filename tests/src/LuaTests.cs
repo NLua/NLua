@@ -228,6 +228,7 @@ namespace NLuaTest
         }
 
         [Test]
+        [Platform(Exclude = "mono", Reason = "The test requires a precise GC.")]
         public void TestFinalize()
         {
             WeakReference luaRef = CreateWeakReferenceToLuaInstance();
