@@ -1350,9 +1350,10 @@ namespace NLua
                 catch (TargetInvocationException e)
                 {
                     // Failure of method invocation
-                    if (_translator.interpreter.UseTraceback)
-                        e.GetBaseException().Data["Traceback"] = _translator.interpreter.GetDebugTraceback();
-                    return  _translator.Interpreter.SetPendingException(e.GetBaseException());
+                    Lua interpreter = _translator.Interpreter;
+                    if (interpreter?.UseTraceback is true)
+                        e.GetBaseException().Data["Traceback"] = interpreter.GetDebugTraceback();
+                    return interpreter?.SetPendingException(e.GetBaseException()) ?? 0;
                 }
                 catch (Exception e)
                 {

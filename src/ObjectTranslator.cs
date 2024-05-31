@@ -58,14 +58,14 @@ namespace NLua
         MetaFunctions metaFunctions;
         List<Assembly> assemblies;
         internal CheckType typeChecker;
-        internal Lua interpreter;
+        private WeakReference<Lua> interpreter;
         /// <summary>
         /// We want to ensure that objects always have a unique ID
         /// </summary>
         int _nextObj;
 
         public MetaFunctions MetaFunctionsInstance => metaFunctions;
-        public Lua Interpreter => interpreter;
+        public Lua Interpreter => interpreter.TryGetTarget(out Lua lua) ? lua : null;
         public IntPtr Tag => _tagPtr;
 
         readonly IntPtr _tagPtr;
@@ -73,7 +73,7 @@ namespace NLua
         public ObjectTranslator(Lua interpreter, LuaState luaState)
         {
             _tagPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(int)));
-            this.interpreter = interpreter;
+            this.interpreter = new WeakReference<Lua>(interpreter);
             typeChecker = new CheckType(this);
             metaFunctions = new MetaFunctions(this);
             assemblies = new List<Assembly>();
@@ -220,10 +220,11 @@ namespace NLua
 
             string message = e as string;
 
+            Lua interpreter = Interpreter;
             if (message != null)
             {
                 // Wrap Lua error (just a string) and store the error location
-                if (interpreter.UseTraceback) 
+                if (interpreter?.UseTraceback is true) 
                     message += Environment.NewLine + interpreter.GetDebugTraceback();
                 e = new LuaScriptException(message, errLocation);
             }
@@ -234,7 +235,7 @@ namespace NLua
                 if (ex != null)
                 {
                     // Wrap generic .NET exception as an InnerException and store the error location
-                    if (interpreter.UseTraceback) ex.Data["Traceback"] = interpreter.GetDebugTraceback();
+                    if (interpreter?.UseTraceback is true) ex.Data["Traceback"] = interpreter.GetDebugTraceback();
                     e = new LuaScriptException(ex, errLocation);
                 }
             }
@@ -907,7 +908,7 @@ namespace NLua
             int reference = luaState.Ref(LuaRegistry.Index);
             if (reference == -1)
                 return null;
-            return new LuaTable(reference, interpreter);
+            return new LuaTable(reference, Interpreter);
         }
 
         /*
@@ -922,7 +923,7 @@ namespace NLua
             int reference = luaState.Ref(LuaRegistry.Index);
             if (reference == -1)
                 return null;
-            return new LuaThread(reference, interpreter);
+            return new LuaThread(reference, Interpreter);
         }
 
         /*
@@ -937,7 +938,7 @@ namespace NLua
             int reference = luaState.Ref(LuaRegistry.Index);
             if (reference == -1)
                 return null;
-            return new LuaUserData(reference, interpreter);
+            return new LuaUserData(reference, Interpreter);
         }
 
         /*
@@ -952,7 +953,7 @@ namespace NLua
             int reference = luaState.Ref(LuaRegistry.Index);
             if (reference == -1)
                 return null;
-            return new LuaFunction(reference, interpreter);
+            return new LuaFunction(reference, Interpreter);
         }
 
         /*

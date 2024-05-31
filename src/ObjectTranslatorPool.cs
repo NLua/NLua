@@ -16,7 +16,7 @@ namespace NLua
 
         public void Add(LuaState luaState, ObjectTranslator translator)
         {
-            if(!translators.TryAdd(luaState, translator))
+            if (!translators.TryAdd(luaState, translator))
                 throw new ArgumentException("An item with the same key has already been added. ", "luaState");
         }
 
@@ -24,7 +24,7 @@ namespace NLua
         {
             ObjectTranslator translator;
 
-            if(!translators.TryGetValue(luaState, out translator))
+            if (!translators.TryGetValue(luaState, out translator))
             {
                 LuaState main = luaState.MainThread;
 
@@ -41,4 +41,3 @@ namespace NLua
         }
     }
 }
-

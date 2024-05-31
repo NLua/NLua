@@ -13,7 +13,7 @@ namespace NLua
 
         protected bool TryGet(out Lua lua)
         {
-            if (_lua.State == null)
+            if (_lua?.State == null)
             {
                 lua = null;
                 return false;
