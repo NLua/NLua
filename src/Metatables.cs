@@ -24,13 +24,13 @@ namespace NLua
     public class MetaFunctions
     {
         public static readonly LuaNativeFunction GcFunction = CollectObject;
-        public static readonly LuaNativeFunction IndexFunction  = GetMethod;
+        public static readonly LuaNativeFunction IndexFunction = GetMethod;
         public static readonly LuaNativeFunction NewIndexFunction = SetFieldOrProperty;
-        public static readonly LuaNativeFunction BaseIndexFunction  = GetBaseMethod;
-        public static readonly LuaNativeFunction ClassIndexFunction  = GetClassMethod;
-        public static readonly LuaNativeFunction ClassNewIndexFunction  = SetClassFieldOrProperty;
-        public static readonly LuaNativeFunction ExecuteDelegateFunction  = RunFunctionDelegate;
-        public static readonly LuaNativeFunction CallConstructorFunction  = CallConstructor;
+        public static readonly LuaNativeFunction BaseIndexFunction = GetBaseMethod;
+        public static readonly LuaNativeFunction ClassIndexFunction = GetClassMethod;
+        public static readonly LuaNativeFunction ClassNewIndexFunction = SetClassFieldOrProperty;
+        public static readonly LuaNativeFunction ExecuteDelegateFunction = RunFunctionDelegate;
+        public static readonly LuaNativeFunction CallConstructorFunction = CallConstructor;
         public static readonly LuaNativeFunction ToStringFunction = ToStringLua;
         public static readonly LuaNativeFunction CallDelegateFunction = CallDelegate;
 
@@ -41,7 +41,7 @@ namespace NLua
         public static readonly LuaNativeFunction ModulosFunction = ModLua;
         public static readonly LuaNativeFunction UnaryNegationFunction = UnaryNegationLua;
         public static readonly LuaNativeFunction EqualFunction = EqualLua;
-        public static readonly LuaNativeFunction LessThanFunction  = LessThanLua;
+        public static readonly LuaNativeFunction LessThanFunction = LessThanLua;
         public static readonly LuaNativeFunction LessThanOrEqualFunction = LessThanOrEqualLua;
 
         readonly Dictionary<object, Dictionary<object, object>> _memberCache = new Dictionary<object, Dictionary<object, object>>();
@@ -51,31 +51,31 @@ namespace NLua
          * __index metafunction for CLR objects. Implemented in Lua.
          */
         public const string LuaIndexFunction = @"local a={}local function b(c,d)local e=getmetatable(c)local f=e.cache[d]if f~=nil then if f==a then return nil end;return f else local g,h=get_object_member(c,d)if h then if g==nil then e.cache[d]=a else e.cache[d]=g end end;return g end end;return b";
-            //@"local fakenil = {}
-            //  local function index(obj, name)
-            //      local meta = getmetatable(obj)
-            //      local cached = meta.cache[name]
-              
-            //      if cached ~= nil then
-            //          if cached == fakenil then
-            //              return nil
-            //          end
-            //          return cached
-              
-            //      else
-            //          local value, isCached = get_object_member(obj, name)
-            //          if isCached then
-            //              if value == nil then
-            //                  meta.cache[name] = fakenil
-            //              else
-            //                  meta.cache[name] = value
-            //              end
-            //          end
-            //          return value
-            //      end
-            //  end
-              
-            //  return index";
+        //@"local fakenil = {}
+        //  local function index(obj, name)
+        //      local meta = getmetatable(obj)
+        //      local cached = meta.cache[name]
+
+        //      if cached ~= nil then
+        //          if cached == fakenil then
+        //              return nil
+        //          end
+        //          return cached
+
+        //      else
+        //          local value, isCached = get_object_member(obj, name)
+        //          if isCached then
+        //              if value == nil then
+        //                  meta.cache[name] = fakenil
+        //              else
+        //                  meta.cache[name] = value
+        //              end
+        //          end
+        //          return value
+        //      end
+        //  end
+
+        //  return index";
 
         public MetaFunctions(ObjectTranslator translator)
         {
@@ -105,7 +105,7 @@ namespace NLua
             if (exception != null)
                 return state.Error();
             return result;
-         }
+        }
 
         /*
          * __gc metafunction of CLR objects.
@@ -298,7 +298,7 @@ namespace NLua
                 translator.ThrowError(luaState, "Cannot negate object (" + type.Name + " does not overload the operator -)");
                 return 1;
             }
-            obj1 = opUnaryNegation.Invoke(obj1, new [] { obj1 });
+            obj1 = opUnaryNegation.Invoke(obj1, new[] { obj1 });
             translator.Push(luaState, obj1);
             return 1;
         }
@@ -384,7 +384,7 @@ namespace NLua
                 if (type == LuaType.UserData)
                 {
                     object obj = translator.GetRawNetObject(luaState, i);
-                    
+
                     strrep = obj == null ? "(null)" : obj.ToString();
                 }
 
@@ -469,9 +469,9 @@ namespace NLua
         }
 
         private bool TryAccessByArray(LuaState luaState,
-            Type objType,
-            object obj,
-            object index)
+                    Type objType,
+                    object obj,
+                    object index)
         {
             if (!objType.IsArray)
                 return false;
@@ -485,74 +485,121 @@ namespace NLua
             if (intIndex == -1)
                 return false;
 
+            intIndex--;
+
             Type type = objType.UnderlyingSystemType;
 
             if (type == typeof(long[]))
             {
                 long[] arr = (long[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
             if (type == typeof(float[]))
             {
                 float[] arr = (float[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
             if (type == typeof(double[]))
             {
                 double[] arr = (double[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
             if (type == typeof(int[]))
             {
                 int[] arr = (int[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
             if (type == typeof(byte[]))
             {
                 byte[] arr = (byte[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
             if (type == typeof(short[]))
             {
                 short[] arr = (short[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
             if (type == typeof(ushort[]))
             {
                 ushort[] arr = (ushort[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
             if (type == typeof(ulong[]))
             {
                 ulong[] arr = (ulong[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
             if (type == typeof(uint[]))
             {
                 uint[] arr = (uint[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
             if (type == typeof(sbyte[]))
             {
                 sbyte[] arr = (sbyte[])obj;
-                _translator.Push(luaState, arr[intIndex]);
-                return true;
+                if (intIndex < arr.Length)
+                {
+                    _translator.Push(luaState, arr[intIndex]);
+                    return true;
+                }
+                return false;
             }
 
             var array = (Array)obj;
-            object element = array.GetValue(intIndex);
-            _translator.Push(luaState, element);
-            return true;
+            if (array != null && intIndex < array.Length)
+            {
+                object element = array.GetValue(intIndex);
+                _translator.Push(luaState, element);
+                return true;
+            }
+            return false;
         }
+
 
         private int GetMethodFallback
         (LuaState luaState,
@@ -656,7 +703,7 @@ namespace NLua
         }
 
 
-        private int TryIndexMethods(LuaState luaState, MethodInfo [] methods, object obj)
+        private int TryIndexMethods(LuaState luaState, MethodInfo[] methods, object obj)
         {
             foreach (MethodInfo methodInfo in methods)
             {
@@ -1244,7 +1291,7 @@ namespace NLua
                 _translator.ThrowError(luaState, "Trying to index an invalid type reference");
                 return 1;
             }
-            
+
             if (luaState.IsNumber(2))
             {
                 int size = (int)luaState.ToNumber(2);
@@ -1574,7 +1621,7 @@ namespace NLua
                     argTypes.Add(methodArg);
                     continue;
                 }
-                
+
                 if (currentLuaParam > nLuaParams)
                 {   // Adds optional parameters
                     if (!currentNetParam.IsOptional)
@@ -1612,7 +1659,7 @@ namespace NLua
 
             if (currentLuaParam != nLuaParams + 1) // Number of parameters does not match
                 return false;
-            
+
             methodCache.args = paramList.ToArray();
             methodCache.cachedMethod = method;
             methodCache.outList = outList.ToArray();
@@ -1644,7 +1691,7 @@ namespace NLua
 
             bool isParamArray = nLuaParams < currentLuaParam;
 
-            LuaType  luaType = luaState.Type(currentLuaParam);
+            LuaType luaType = luaState.Type(currentLuaParam);
 
             if (luaType == LuaType.Table)
             {
