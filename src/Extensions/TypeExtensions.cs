@@ -89,9 +89,28 @@ namespace NLua.Extensions
         {
             return t.GetMethods(flags).Where(m => m.Name == name).ToArray();
         }
+        
+        private static readonly Dictionary<(Type, string, IEnumerable<Assembly>), MethodInfo[]> ExtensionCache = new();
+        internal static void ClearExtensionCache(IEnumerable<Assembly> assemblies)
+        {
+            // ReSharper disable once PossibleUnintendedReferenceComparison
+            IEnumerable<KeyValuePair<(Type, string, IEnumerable<Assembly>), MethodInfo[]>> results = ExtensionCache.Where(((pair, _) => pair.Key.Item3 == assemblies));
+            foreach ((var key, _) in results)
+            {
+                ExtensionCache.Remove(key);
+            }
+        }
 
         public static MethodInfo[] GetExtensionMethods(this Type type, string name, IEnumerable<Assembly> assemblies = null)
         {
+            var cacheKey = (type, name, assemblies ?? []);
+
+            // Check if the result is already in the cache
+            if (ExtensionCache.TryGetValue(cacheKey, out var cachedMethods))
+            {
+                return cachedMethods;
+            }
+            
             var types = new List<Type>();
 
             types.AddRange(type.Assembly.GetTypes().Where(t => t.IsPublic));
@@ -116,7 +135,9 @@ namespace NLua.Extensions
                      type.GetInterfaces().Contains(t.method.GetParameters()[0].ParameterType))
                 .Select(t => t.method);
 
-            return query.ToArray();
+            var methods = query.ToArray();
+            ExtensionCache[cacheKey] = methods;
+            return methods;
         }
 
         /// <summary>
