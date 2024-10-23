@@ -496,10 +496,12 @@ namespace NLua
                 ThrowExceptionFromError(oldTop);
 
             int errorFunctionIndex = 0;
+            int errorFunctionAbsoluteIndex = -1;
 
             if (UseTraceback)
             {
                 errorFunctionIndex = PushDebugTraceback(_luaState, 0);
+                errorFunctionAbsoluteIndex = _luaState.GetTop() + errorFunctionIndex + 1;
                 oldTop++;
             }
 
@@ -512,6 +514,9 @@ namespace NLua
             }
             finally
             {
+                if (errorFunctionAbsoluteIndex != -1)
+                    _luaState.Remove(errorFunctionAbsoluteIndex);
+
                 _executing = false;
             }
         }
@@ -531,10 +536,12 @@ namespace NLua
                 ThrowExceptionFromError(oldTop);
 
             int errorFunctionIndex = 0;
+            int errorFunctionAbsoluteIndex = -1;
 
             if (UseTraceback)
             {
                 errorFunctionIndex = PushDebugTraceback(_luaState, 0);
+                errorFunctionAbsoluteIndex = _luaState.GetTop() + errorFunctionIndex + 1;
                 oldTop++;
             }
 
@@ -547,6 +554,9 @@ namespace NLua
             }
             finally
             {
+                if (errorFunctionAbsoluteIndex != -1)
+                    _luaState.Remove(errorFunctionAbsoluteIndex);
+
                 _executing = false;
             }
         }
@@ -565,9 +575,11 @@ namespace NLua
             _executing = true;
 
             int errorFunctionIndex = 0;
+            int errorFunctionAbsoluteIndex = -1;
             if (UseTraceback)
             {
                 errorFunctionIndex = PushDebugTraceback(_luaState, 0);
+                errorFunctionAbsoluteIndex = _luaState.GetTop() + errorFunctionIndex + 1;
                 oldTop++;
             }
 
@@ -580,6 +592,9 @@ namespace NLua
             }
             finally
             {
+                if (errorFunctionAbsoluteIndex != -1)
+                    _luaState.Remove(errorFunctionAbsoluteIndex);
+
                 _executing = false;
             }
         }
@@ -820,12 +835,14 @@ namespace NLua
 
             _executing = true;
 
+            int errfunctionAbs = -1;
             try
             {
                 int errfunction = 0;
                 if (UseTraceback)
                 {
                     errfunction = PushDebugTraceback(_luaState, nArgs);
+                    errfunctionAbs = _luaState.GetTop() + errfunction + 1;
                     oldTop++;
                 }
 
@@ -835,6 +852,12 @@ namespace NLua
             }
             finally
             {
+                if (errfunctionAbs != -1)
+                {
+                    _luaState.Remove(errfunctionAbs);
+                    oldTop--;
+                }
+
                 _executing = false;
             }
 
