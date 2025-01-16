@@ -30,7 +30,7 @@
 [assembly: AssemblyDescription("NLua library")]
 [assembly: AssemblyCompany("NLua.org")]
 [assembly: AssemblyProduct("NLua")]
-[assembly: AssemblyCopyright("Copyright © Vinicius Jarina 2024")]
+[assembly: AssemblyCopyright("Copyright © Vinicius Jarina 2025")]
 [assembly: AssemblyCulture("")]
 
 

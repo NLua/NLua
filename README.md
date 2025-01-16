@@ -287,7 +287,7 @@ Plugins
 - fields set on the lua instance may be null and you will need to handle it
 
 
-Copyright (c) 2024 Vinicius Jarina (viniciusjarina@gmail.com)
+Copyright (c) 2025 Vinicius Jarina (viniciusjarina@gmail.com)
 
 NLua 1.4.x
 ----------

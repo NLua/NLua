@@ -26,13 +26,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KeraLua" Version="1.4.1">
+    <PackageReference Include="KeraLua" Version="1.4.3">
     </PackageReference>
     <PackageReference Include="nunit" Version="3.14.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 <PrivateAssets>all</PrivateAssets>
 </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\scripts\core\bisect.lua">

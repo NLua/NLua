@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NLua</id>
-    <version>1.4.11</version>
+    <version>1.4.0</version>
     <authors>NLua</authors>
     <owners>Vinicius Jarina</owners>
     <licenseUrl>https://github.com/nlua/NLua/blob/main/LICENSE</licenseUrl>
@@ -12,10 +12,10 @@
     <description>NLua Package.</description>
     <summary>NLua allow use Lua from C#, using Windows, UWP, Linux, Android, Mac, iOS , tvOS.</summary>
     <releaseNotes>Release: 2bffe65</releaseNotes>
-    <copyright>Copyright © NLua 2024</copyright>
+    <copyright>Copyright © NLua 2025</copyright>
     <tags>lua nlua</tags>
     <dependencies>
-      <dependency id="KeraLua" version="1.4.1" />
+      <dependency id="KeraLua" version="1.4.3" />
     </dependencies>
     <repository type="git" url="https://github.com/nlua/nlua" commit="708ba30e982deccb1248d099806bc00e362fbda4" />
   </metadata>
@@ -23,15 +23,24 @@
     <file src="lib\Release\MonoAndroid\NLua.dll" target="lib\MonoAndroid" />
     <file src="lib\Release\MonoAndroid\NLua.pdb" target="lib\MonoAndroid" />
     <file src="lib\Release\net46\NLua.dll" target="lib\net46" />
+    <file src="lib\Release\net46\NLua.pdb" target="lib\net46" />
     <file src="lib\Release\uap10.0\NLua.dll" target="lib\uap10.0" />
+    <file src="lib\Release\uap10.0\NLua.pdb" target="lib\uap10.0" />
     <file src="lib\Release\uap10.0\NLua.pri" target="lib\uap10.0" />
     <file src="lib\Release\net8.0\NLua.dll" target="lib\net8.0" />
+    <file src="lib\Release\net8.0\NLua.pdb" target="lib\net8.0" />
     <file src="lib\Release\net8.0-android\NLua.dll" target="lib\net8.0-android28" />
+    <file src="lib\Release\net8.0-android\NLua.pdb" target="lib\net8.0-android28" />
     <file src="lib\Release\net8.0-ios\NLua.dll" target="lib\net8.0-ios11.0" />
+    <file src="lib\Release\net8.0-ios\NLua.pdb" target="lib\net8.0-ios11.0" />
     <file src="lib\Release\net8.0-maccatalyst\NLua.dll" target="lib\net8.0-maccatalyst13.0" />
+    <file src="lib\Release\net8.0-maccatalyst\NLua.pdb" target="lib\net8.0-maccatalyst13.0" />
     <file src="lib\Release\net8.0-tvos\NLua.dll" target="lib\net8.0-tvos11.0" />
+    <file src="lib\Release\net8.0-tvos\NLua.pdb" target="lib\net8.0-tvos11.0" />
     <file src="lib\Release\net8.0-macos\NLua.dll" target="lib\net8.0-macos10.13" />
+    <file src="lib\Release\net8.0-macos\NLua.pdb" target="lib\net8.0-macos10.13" />
     <file src="lib\Release\netstandard2.0\NLua.dll" target="lib\netstandard2.0" />
+    <file src="lib\Release\netstandard2.0\NLua.pdb" target="lib\netstandard2.0" />
     <file src="lib\Release\xamarinios\NLua.dll" target="lib\xamarinios" />
     <file src="lib\Release\xamarinios\NLua.pdb" target="lib\xamarinios" />
     <file src="lib\Release\xamarinmac\NLua.dll" target="lib\xamarinmac" />
