@@ -15,7 +15,7 @@
     <copyright>Copyright © NLua 2025</copyright>
     <tags>lua nlua</tags>
     <dependencies>
-      <dependency id="KeraLua" version="1.4.3" />
+      <dependency id="KeraLua" version="1.4.4" />
     </dependencies>
     <repository type="git" url="https://github.com/nlua/nlua" commit="708ba30e982deccb1248d099806bc00e362fbda4" />
   </metadata>
