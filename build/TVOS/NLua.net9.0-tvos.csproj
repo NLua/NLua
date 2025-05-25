@@ -5,7 +5,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NLua</RootNamespace>
     <AssemblyName>NLua</AssemblyName>
-    <TargetFramework>net8.0-ios</TargetFramework>
+    <TargetFramework>net9.0-tvos</TargetFramework>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
@@ -21,16 +21,13 @@
     <MtouchDebug>true</MtouchDebug>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <MtouchFastDev>true</MtouchFastDev>
-    <IOSDebuggerPort>37816</IOSDebuggerPort>
+    <IOSDebuggerPort>16365</IOSDebuggerPort>
     <DeviceSpecificBuild>false</DeviceSpecificBuild>
-    <MtouchVerbosity>
-    </MtouchVerbosity>
     <MtouchLink>
     </MtouchLink>
     <MtouchHttpClientHandler>
     </MtouchHttpClientHandler>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CreatePackage>false</CreatePackage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -43,20 +40,21 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <MtouchLink>SdkOnly</MtouchLink>
-    <MtouchVerbosity>
-    </MtouchVerbosity>
     <MtouchHttpClientHandler>
     </MtouchHttpClientHandler>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CreatePackage>false</CreatePackage>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="KeraLua" Version="1.4.4">
+    <PackageReference Include="KeraLua">
+      <Version>1.4.4</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
   </ItemGroup>
   <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Shared.projitems')" />
   <Import Project="..\targets\NLua.Sign.targets" />

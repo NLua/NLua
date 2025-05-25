@@ -5,7 +5,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NLua</RootNamespace>
     <AssemblyName>NLua</AssemblyName>
-    <TargetFramework>net8.0-maccatalyst</TargetFramework>
+    <TargetFramework>net9.0-maccatalyst</TargetFramework>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>

@@ -5,7 +5,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NLua</RootNamespace>
     <AssemblyName>NLua</AssemblyName>
-    <TargetFramework>net8.0-android</TargetFramework>
+    <TargetFramework>net9.0-android</TargetFramework>
     <SupportedOSPlatformVersion>28.0</SupportedOSPlatformVersion>
     <TargetFrameworkVersion>v13.0</TargetFrameworkVersion>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
