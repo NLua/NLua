@@ -22,6 +22,7 @@ stages:
       demands: msbuild
 
     steps:
+    - template: common-linux-ubuntu.yaml@templates
     - template: common-dotnet.yml@templates
 
     # - script: |
