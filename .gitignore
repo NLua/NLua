@@ -45,3 +45,4 @@ tests/build/net8.0/obj/
 tests/build/net8.0/bin/
 build/iOS/obj/*
 build/macOS/obj/*
+.idea/*
