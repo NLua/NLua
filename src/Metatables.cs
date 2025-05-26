@@ -99,7 +99,13 @@ namespace NLua
                 return state.Error();
 
             state.Remove(1);
-            int result = func(luaState);
+            int result;
+            try {
+                result = func(luaState);
+            } catch (LuaException ex) {
+                translator.ThrowError(state, ex);
+                return state.Error();
+            }
             var exception = translator.GetObject(state, -1) as LuaScriptException;
 
             if (exception != null)
