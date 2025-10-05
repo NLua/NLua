@@ -105,12 +105,12 @@ stages:
         solution: NLua.Mac.sln
         configuration: Release
 
-    - script: 'nuget install NUnit.ConsoleRunner -Version 3.16.3 -source "https://api.nuget.org/v3/index.json" -OutputDirectory .'
+    - script: 'nuget install NUnit.ConsoleRunner -Version 3.20.1 -source "https://api.nuget.org/v3/index.json" -OutputDirectory .'
       workingDirectory: ./
       displayName: 'nuget install NUnit.ConsoleRunner'
 
     # reverted back to use NUnit.ConsoleRunner because Microsoft keeps breaking .NET
-    - script: 'mono NUnit.ConsoleRunner.3.16.3/tools/nunit3-console.exe ./tests/build/net46/bin/Release/NLuaTest.dll'
+    - script: 'mono NUnit.ConsoleRunner.3.20.1/tools/nunit3-console.exe ./tests/build/net46/bin/Release/NLuaTest.dll'
       displayName: 'Run OSX tests'
 
     - script: 'mv TestResult.xml ./TEST-Result-Mac.xml'
