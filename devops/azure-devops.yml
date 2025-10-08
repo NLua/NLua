@@ -110,7 +110,7 @@ stages:
       displayName: 'nuget install NUnit.ConsoleRunner'
 
     # reverted back to use NUnit.ConsoleRunner because Microsoft keeps breaking .NET
-    - script: 'mono NUnit.ConsoleRunner.3.20.1/tools/nunit3-console.exe ./tests/build/net46/bin/Release/NLuaTest.dll'
+    - script: 'mono NUnit.ConsoleRunner.3.20.1/tools/nunit3-console.exe ./tests/build/net46/bin/Release/NLuaTest.dll --framework=mono-4.0' 
       displayName: 'Run OSX tests'
 
     - script: 'mv TestResult.xml ./TEST-Result-Mac.xml'
@@ -119,7 +119,7 @@ stages:
     - task: PublishTestResults@2
       displayName: 'Publish Mac Test Results TEST-Result-Mac.xml'
       inputs:
-        testResultsFormat: VSTest
+        testResultsFormat: NUnit
         testResultsFiles: 'TEST-Result-Mac.xml'
         failTaskOnFailedTests: true
 
@@ -308,7 +308,7 @@ stages:
 
     - task: PublishTestResults@2
       inputs:
-        testResultsFormat: 'VSTest'
+        testResultsFormat: 'NUnit'
         testResultsFiles: 'NLua.Windows.xml'
         failTaskOnFailedTests: true
 
