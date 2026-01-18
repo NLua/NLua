@@ -12,10 +12,10 @@
     <description>NLua Package.</description>
     <summary>NLua allow use Lua from C#, using Windows, Linux, Mac, iOS , Android.</summary>
     <releaseNotes>Release: 2bffe65</releaseNotes>
-    <copyright>Copyright © NLua 2025</copyright>
+    <copyright>Copyright © NLua 2026</copyright>
     <tags>lua nlua</tags>
     <dependencies>
-      <dependency id="KeraLua" version="1.4.7" />
+      <dependency id="KeraLua" version="1.4.8" />
     </dependencies>
     <packageTypes>
       <packageType name="SymbolsPackage" />

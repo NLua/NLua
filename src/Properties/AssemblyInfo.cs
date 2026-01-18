@@ -10,7 +10,7 @@
 #elif __ANDROID__
 [assembly: AssemblyTitle ("NLua (Android)")]
 #elif NETCOREAPP
-[assembly: AssemblyTitle ("NLua (.NET Core)")]
+[assembly: AssemblyTitle("NLua (.NET Core)")]
 #elif NETSTANDARD
 [assembly: AssemblyTitle ("NLua (.NET Standard)")]
 #elif __TVOS__
@@ -30,7 +30,7 @@
 [assembly: AssemblyDescription("NLua library")]
 [assembly: AssemblyCompany("NLua.org")]
 [assembly: AssemblyProduct("NLua")]
-[assembly: AssemblyCopyright("Copyright © Vinicius Jarina 2025")]
+[assembly: AssemblyCopyright("Copyright © Vinicius Jarina 2026")]
 [assembly: AssemblyCulture("")]
 
 
