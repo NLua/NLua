@@ -9,6 +9,8 @@
     <RootNamespace>NLua.Android</RootNamespace>
     <AssemblyName>NLua</AssemblyName>
     <TargetFrameworkVersion>v13.0</TargetFrameworkVersion>
+    <_AndroidApiLevel>35</_AndroidApiLevel>
+    <UseLatestAndroidPlatformSdk>false</UseLatestAndroidPlatformSdk>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

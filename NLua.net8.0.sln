@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.net9.0", "tests\build\net8.0\NLuaTest.net9.0.csproj", "{3E63EFA4-AEBA-4F9E-B87A-47EEF4510031}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLuaTest.net9.0", "tests\build\net9.0\NLuaTest.net9.0.csproj", "{3E63EFA4-AEBA-4F9E-B87A-47EEF4510031}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
