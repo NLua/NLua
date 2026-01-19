@@ -48,3 +48,5 @@ build/macOS/obj/*
 .idea/*
 tests/build/net9.0/obj/*
 tests/build/net9.0/bin/*
+tests/build/net10.0/obj/*
+tests/build/net10.0/bin/*
