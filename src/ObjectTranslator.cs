@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
@@ -79,6 +79,7 @@ namespace NLua
             assemblies = new List<Assembly>();
 
             CreateLuaObjectList(luaState);
+            CreateCFunctionWrapperFunction(luaState);
             CreateIndexingMetaFunction(luaState);
             CreateBaseClassMetatable(luaState);
             CreateClassMetatable(luaState);
@@ -103,6 +104,17 @@ namespace NLua
         }
 
         /*
+         * Registers the wrapper function for C functions
+         * to be called from Lua
+         */
+        private void CreateCFunctionWrapperFunction(LuaState luaState)
+        {
+            luaState.PushString("luaNet_cfuncwrapper");
+            luaState.DoString(MetaFunctions.LuaCFunctionWrapper);
+            luaState.RawSet(LuaRegistry.Index);
+        }
+
+        /*
          * Registers the indexing function of CLR objects
          * passed to Lua
          */
@@ -121,16 +133,16 @@ namespace NLua
         {
             luaState.NewMetaTable("luaNet_searchbase");
             luaState.PushString("__gc");
-            luaState.PushCFunction(MetaFunctions.GcFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.GcFunction);
             luaState.SetTable(-3);
             luaState.PushString("__tostring");
-            luaState.PushCFunction(MetaFunctions.ToStringFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.ToStringFunction);
             luaState.SetTable(-3);
             luaState.PushString("__index");
-            luaState.PushCFunction(MetaFunctions.BaseIndexFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.BaseIndexFunction);
             luaState.SetTable(-3);
             luaState.PushString("__newindex");
-            luaState.PushCFunction(MetaFunctions.NewIndexFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.NewIndexFunction);
             luaState.SetTable(-3);
             luaState.SetTop(-2);
         }
@@ -142,19 +154,19 @@ namespace NLua
         {
             luaState.NewMetaTable("luaNet_class");
             luaState.PushString("__gc");
-            luaState.PushCFunction(MetaFunctions.GcFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.GcFunction);
             luaState.SetTable(-3);
             luaState.PushString("__tostring");
-            luaState.PushCFunction(MetaFunctions.ToStringFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.ToStringFunction);
             luaState.SetTable(-3);
             luaState.PushString("__index");
-            luaState.PushCFunction(MetaFunctions.ClassIndexFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.ClassIndexFunction);
             luaState.SetTable(-3);
             luaState.PushString("__newindex");
-            luaState.PushCFunction(MetaFunctions.ClassNewIndexFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.ClassNewIndexFunction);
             luaState.SetTable(-3);
             luaState.PushString("__call");
-            luaState.PushCFunction(MetaFunctions.CallConstructorFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.CallConstructorFunction);
             luaState.SetTable(-3);
             luaState.SetTop(-2);
         }
@@ -164,23 +176,23 @@ namespace NLua
          */
         private void SetGlobalFunctions(LuaState luaState)
         {
-            luaState.PushCFunction(MetaFunctions.IndexFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.IndexFunction);
             luaState.SetGlobal("get_object_member");
-            luaState.PushCFunction(_importTypeFunction);
+            PushWrappedCFunction(luaState, _importTypeFunction);
             luaState.SetGlobal("import_type");
-            luaState.PushCFunction(_loadAssemblyFunction);
+            PushWrappedCFunction(luaState, _loadAssemblyFunction);
             luaState.SetGlobal("load_assembly");
-            luaState.PushCFunction(_registerTableFunction);
+            PushWrappedCFunction(luaState, _registerTableFunction);
             luaState.SetGlobal("make_object");
-            luaState.PushCFunction(_unregisterTableFunction);
+            PushWrappedCFunction(luaState, _unregisterTableFunction);
             luaState.SetGlobal("free_object");
-            luaState.PushCFunction(_getMethodSigFunction);
+            PushWrappedCFunction(luaState, _getMethodSigFunction);
             luaState.SetGlobal("get_method_bysig");
-            luaState.PushCFunction(_getConstructorSigFunction);
+            PushWrappedCFunction(luaState, _getConstructorSigFunction);
             luaState.SetGlobal("get_constructor_bysig");
-            luaState.PushCFunction(_ctypeFunction);
+            PushWrappedCFunction(luaState, _ctypeFunction);
             luaState.SetGlobal("ctype");
-            luaState.PushCFunction(_enumFromIntFunction);
+            PushWrappedCFunction(luaState, _enumFromIntFunction);
             luaState.SetGlobal("enum");
         }
 
@@ -191,10 +203,10 @@ namespace NLua
         {
             luaState.NewMetaTable("luaNet_function");
             luaState.PushString("__gc");
-            luaState.PushCFunction(MetaFunctions.GcFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.GcFunction);
             luaState.SetTable(-3);
             luaState.PushString("__call");
-            luaState.PushCFunction(MetaFunctions.ExecuteDelegateFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.ExecuteDelegateFunction);
             luaState.SetTable(-3);
             luaState.SetTop(-2);
         }
@@ -260,8 +272,8 @@ namespace NLua
             var exception = translator.GetObject(state, -1) as LuaScriptException;
 
             if (exception != null)
-                return state.Error();
-            return result;
+                return translator.ErrorFromWrappedCFunction(state);
+            return translator.ReturnFromWrappedCFunction(state, result);
         }
 
         private int LoadAssemblyInternal(LuaState luaState)
@@ -362,7 +374,7 @@ namespace NLua
         {
             var state = LuaState.FromIntPtr(luaState);
             var translator = ObjectTranslatorPool.Instance.Find(state);
-            return translator.ImportTypeInternal(state);
+            return translator.ReturnFromWrappedCFunction(state, translator.ImportTypeInternal(state));
         }
 
         private int ImportTypeInternal(LuaState luaState)
@@ -396,8 +408,8 @@ namespace NLua
             var exception = translator.GetObject(state, -1) as LuaScriptException;
 
             if (exception != null)
-                return state.Error();
-            return result;
+                return translator.ErrorFromWrappedCFunction(state);
+            return translator.ReturnFromWrappedCFunction(state, result);
         }
 
         private int RegisterTableInternal(LuaState luaState)
@@ -465,8 +477,8 @@ namespace NLua
             var exception = translator.GetObject(state, -1) as LuaScriptException;
 
             if (exception != null)
-                return state.Error();
-            return result;
+                return translator.ErrorFromWrappedCFunction(state);
+            return translator.ReturnFromWrappedCFunction(state, result);
         }
 
         private int UnregisterTableInternal(LuaState luaState)
@@ -524,8 +536,8 @@ namespace NLua
             var exception = translator.GetObject(state, -1) as LuaScriptException;
 
             if (exception != null)
-                return state.Error();
-            return result;
+                return translator.ErrorFromWrappedCFunction(state);
+            return translator.ReturnFromWrappedCFunction(state, result);
         }
 
         private int GetMethodSignatureInternal(LuaState luaState) //-V3009
@@ -591,8 +603,8 @@ namespace NLua
             var exception = translator.GetObject(state, -1) as LuaScriptException;
 
             if (exception != null)
-                return state.Error();
-            return result;
+                return translator.ErrorFromWrappedCFunction(state);
+            return translator.ReturnFromWrappedCFunction(state, result);
         }
 
         private int GetConstructorSignatureInternal(LuaState luaState) //-V3009
@@ -644,6 +656,38 @@ namespace NLua
             PushObject(luaState, func, "luaNet_function");
         }
 
+
+        /*
+         * Pushes a C function, wrapping it so that errors aren't
+         * thrown directly but instead by a small Lua wrapper
+         */
+        internal void PushWrappedCFunction(LuaState luaState, LuaNativeFunction func)
+        {
+            luaState.PushString("luaNet_cfuncwrapper");
+            luaState.RawGet(LuaRegistry.Index);
+            luaState.PushCFunction(func);
+            luaState.PCall(1, 1, 0);
+        }
+
+        /*
+         * Normally returns from a wrapped C function
+         */
+        internal int ReturnFromWrappedCFunction(LuaState luaState, int numRets)
+        {
+            luaState.PushBoolean(false);
+            luaState.Insert(-(numRets + 1));
+            return numRets + 1;
+        }
+
+        /*
+         * Errors out from a wrapped C function
+         */
+        internal int ErrorFromWrappedCFunction(LuaState luaState)
+        {
+            luaState.PushBoolean(true);
+            luaState.Insert(-2);
+            return 2;
+        }
 
         /*
          * Pushes a CLR object into the Lua stack as an userdata
@@ -716,13 +760,13 @@ namespace NLua
                     luaState.RawGet(LuaRegistry.Index);
                     luaState.RawSet(-3);
                     luaState.PushString("__gc");
-                    luaState.PushCFunction(MetaFunctions.GcFunction);
+                    PushWrappedCFunction(luaState, MetaFunctions.GcFunction);
                     luaState.RawSet(-3);
                     luaState.PushString("__tostring");
-                    luaState.PushCFunction(MetaFunctions.ToStringFunction);
+                    PushWrappedCFunction(luaState, MetaFunctions.ToStringFunction);
                     luaState.RawSet(-3);
                     luaState.PushString("__newindex");
-                    luaState.PushCFunction(MetaFunctions.NewIndexFunction);
+                    PushWrappedCFunction(luaState, MetaFunctions.NewIndexFunction);
                     luaState.RawSet(-3);
                     // Bind C# operator with Lua metamethods (__add, __sub, __mul)
                     RegisterOperatorsFunctions(luaState, o.GetType());
@@ -750,7 +794,7 @@ namespace NLua
                 return;
 
             luaState.PushString("__call");
-            luaState.PushCFunction(MetaFunctions.CallDelegateFunction);
+            PushWrappedCFunction(luaState, MetaFunctions.CallDelegateFunction);
             luaState.RawSet(-3);
         }
 
@@ -759,55 +803,55 @@ namespace NLua
             if (type.HasAdditionOperator())
             {
                 luaState.PushString("__add");
-                luaState.PushCFunction(MetaFunctions.AddFunction);
+                PushWrappedCFunction(luaState, MetaFunctions.AddFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasSubtractionOperator())
             {
                 luaState.PushString("__sub");
-                luaState.PushCFunction(MetaFunctions.SubtractFunction);
+                PushWrappedCFunction(luaState, MetaFunctions.SubtractFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasMultiplyOperator())
             {
                 luaState.PushString("__mul");
-                luaState.PushCFunction(MetaFunctions.MultiplyFunction);
+                PushWrappedCFunction(luaState, MetaFunctions.MultiplyFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasDivisionOperator())
             {
                 luaState.PushString("__div");
-                luaState.PushCFunction(MetaFunctions.DivisionFunction);
+                PushWrappedCFunction(luaState, MetaFunctions.DivisionFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasModulusOperator())
             {
                 luaState.PushString("__mod");
-                luaState.PushCFunction(MetaFunctions.ModulosFunction);
+                PushWrappedCFunction(luaState, MetaFunctions.ModulosFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasUnaryNegationOperator())
             {
                 luaState.PushString("__unm");
-                luaState.PushCFunction(MetaFunctions.UnaryNegationFunction);
+                PushWrappedCFunction(luaState, MetaFunctions.UnaryNegationFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasEqualityOperator())
             {
                 luaState.PushString("__eq");
-                luaState.PushCFunction(MetaFunctions.EqualFunction);
+                PushWrappedCFunction(luaState, MetaFunctions.EqualFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasLessThanOperator())
             {
                 luaState.PushString("__lt");
-                luaState.PushCFunction(MetaFunctions.LessThanFunction);
+                PushWrappedCFunction(luaState, MetaFunctions.LessThanFunction);
                 luaState.RawSet(-3);
             }
             if (type.HasLessThanOrEqualOperator())
             {
                 luaState.PushString("__le");
-                luaState.PushCFunction(MetaFunctions.LessThanOrEqualFunction);
+                PushWrappedCFunction(luaState, MetaFunctions.LessThanOrEqualFunction);
                 luaState.RawSet(-3);
             }
         }
@@ -1152,7 +1196,7 @@ namespace NLua
         {
             var state = LuaState.FromIntPtr(luaState);
             var translator = ObjectTranslatorPool.Instance.Find(state);
-            return translator.CTypeInternal(state);
+            return translator.ReturnFromWrappedCFunction(state, translator.CTypeInternal(state));
         }
 
         int CTypeInternal(LuaState luaState)
@@ -1174,7 +1218,7 @@ namespace NLua
         {
             var state = LuaState.FromIntPtr(luaState);
             var translator = ObjectTranslatorPool.Instance.Find(state);
-            return translator.EnumFromIntInternal(state);
+            return translator.ReturnFromWrappedCFunction(state, translator.EnumFromIntInternal(state));
         }
 
         int EnumFromIntInternal(LuaState luaState)
