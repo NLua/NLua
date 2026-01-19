@@ -52,7 +52,7 @@ stages:
       inputs:
         command: custom
         custom: vstest
-        arguments: 'tests/build/net9.0/bin/Release/net9.0/NLuaTest.dll'
+        arguments: 'tests/build/net10.0/bin/Release/net10.0/NLuaTest.dll'
 
     - template: send-telegram.yml@templates
 
@@ -295,7 +295,7 @@ stages:
       inputs:
         command: custom
         custom: vstest
-        arguments: '.\tests\build\net9.0\bin\Release\net9.0\NLuaTest.dll'
+        arguments: '.\tests\build\net10.0\bin\Release\net10.0\NLuaTest.dll'
 
     - script: 'nunit3-console.exe .\tests\build\net46\bin\Release\NLuaTest.dll '
       displayName: 'Run Windows Tests'
