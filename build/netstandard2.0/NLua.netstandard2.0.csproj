@@ -33,7 +33,7 @@
   <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="KeraLua" Version="1.4.8">
+    <PackageReference Include="KeraLua" Version="1.4.9">
     </PackageReference>
   </ItemGroup>
 

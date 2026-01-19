@@ -45,7 +45,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="KeraLua">
-      <Version>1.4.8</Version>
+      <Version>1.4.9</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="..\..\src\NLua.Shared.projitems" Label="Shared" Condition="Exists('..\..\src\NLua.Shared.projitems')" />
