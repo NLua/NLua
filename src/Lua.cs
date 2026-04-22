@@ -510,7 +510,12 @@ namespace NLua
                 if (_luaState.PCall(0, -1, errorFunctionIndex) != LuaStatus.OK)
                     ThrowExceptionFromError(oldTop);
 
-                return _translator.PopValues(_luaState, oldTop);
+                var results = _translator.PopValues(_luaState, oldTop);
+
+                if (UseTraceback)
+                    _luaState.SetTop(oldTop - 1);
+
+                return results;
             }
             finally
             {
@@ -545,7 +550,12 @@ namespace NLua
                 if (_luaState.PCall(0, -1, errorFunctionIndex) != LuaStatus.OK)
                     ThrowExceptionFromError(oldTop);
 
-                return _translator.PopValues(_luaState, oldTop);
+                var results = _translator.PopValues(_luaState, oldTop);
+
+                if (UseTraceback)
+                    _luaState.SetTop(oldTop - 1);
+
+                return results;
             }
             finally
             {
@@ -578,7 +588,12 @@ namespace NLua
                 if (_luaState.PCall(0, -1, errorFunctionIndex) != LuaStatus.OK)
                     ThrowExceptionFromError(oldTop);
 
-                 return _translator.PopValues(_luaState, oldTop);
+                var results = _translator.PopValues(_luaState, oldTop);
+
+                if (UseTraceback)
+                    _luaState.SetTop(oldTop - 1);
+
+                return results;
             }
             finally
             {
@@ -849,10 +864,17 @@ namespace NLua
                 _executing = false;
             }
 
-            if (returnTypes != null)
-                return _translator.PopValues(_luaState, oldTop, returnTypes);
+            object[] results;
 
-            return _translator.PopValues(_luaState, oldTop);
+            if (returnTypes != null)
+                results = _translator.PopValues(_luaState, oldTop, returnTypes);
+            else
+                results = _translator.PopValues(_luaState, oldTop);
+
+            if (UseTraceback)
+                _luaState.SetTop(oldTop - 1);
+
+            return results;
         }
 
         /*

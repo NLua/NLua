@@ -3320,6 +3320,79 @@ namespace NLuaTest
             }
         }
 
+        [Test]
+        public void UseTraceback_CallFunction_NoStackLeak()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.UseTraceback = true;
+                lua.DoString("function test_fn() return 42 end");
+                var fn = lua["test_fn"] as LuaFunction;
+
+                int topBefore = lua.State.GetTop();
+
+                for (int i = 0; i < 10000; i++)
+                    fn.Call();
+
+                int topAfter = lua.State.GetTop();
+                Assert.AreEqual(topBefore, topAfter,
+                    $"Lua stack leaked {topAfter - topBefore} slots over 10000 calls with UseTraceback=true");
+            }
+        }
+
+        [Test]
+        public void UseTraceback_DoString_NoStackLeak()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.UseTraceback = true;
+
+                int topBefore = lua.State.GetTop();
+
+                for (int i = 0; i < 10000; i++)
+                    lua.DoString("return 42");
+
+                int topAfter = lua.State.GetTop();
+                Assert.AreEqual(topBefore, topAfter,
+                    $"Lua stack leaked {topAfter - topBefore} slots over 10000 DoString calls with UseTraceback=true");
+            }
+        }
+
+        [Test]
+        public void UseTraceback_DoString_ReturnsCorrectValues()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.UseTraceback = true;
+
+                var results = lua.DoString("return 1, 'hello', true");
+                Assert.AreEqual(3, results.Length, "Should return all 3 values");
+                Assert.AreEqual((long)1, results[0]);
+                Assert.AreEqual("hello", results[1]);
+                Assert.AreEqual(true, results[2]);
+            }
+        }
+
+        [Test]
+        public void UseTraceback_Disabled_NoStackLeak()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.UseTraceback = false;
+                lua.DoString("function test_fn() return 42 end");
+                var fn = lua["test_fn"] as LuaFunction;
+
+                int topBefore = lua.State.GetTop();
+
+                for (int i = 0; i < 10000; i++)
+                    fn.Call();
+
+                int topAfter = lua.State.GetTop();
+                Assert.AreEqual(topBefore, topAfter,
+                    $"Lua stack leaked {topAfter - topBefore} slots over 10000 calls with UseTraceback=false");
+            }
+        }
+
         static Lua m_lua;
     }
 }
