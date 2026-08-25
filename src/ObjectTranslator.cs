@@ -224,7 +224,7 @@ namespace NLua
             if (message != null)
             {
                 // Wrap Lua error (just a string) and store the error location
-                if (interpreter?.UseTraceback is true) 
+                if (interpreter?.UseTraceback is true)
                     message += Environment.NewLine + interpreter.GetDebugTraceback();
                 e = new LuaScriptException(message, errLocation);
             }
@@ -241,6 +241,26 @@ namespace NLua
             }
 
             Push(luaState, e);
+        }
+
+        /*
+         * Like ThrowError(LuaState, object), but preserves innerException on the LuaScriptException
+         */
+        internal void ThrowError(LuaState luaState, string message, Exception innerException)
+        {
+            int oldTop = luaState.GetTop();
+            luaState.Where(1);
+            var curlev = PopValues(luaState, oldTop);
+
+            string errLocation = string.Empty;
+            if (curlev.Length > 0)
+                errLocation = curlev[0].ToString();
+
+            Lua interpreter = Interpreter;
+            if (interpreter?.UseTraceback is true && innerException != null)
+                innerException.Data["Traceback"] = interpreter.GetDebugTraceback();
+
+            Push(luaState, new LuaScriptException(message, errLocation, innerException));
         }
 
         /*

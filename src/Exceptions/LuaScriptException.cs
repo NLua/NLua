@@ -43,6 +43,19 @@ namespace NLua.Exceptions
             IsNetException = true;
         }
 
+        /// <summary>
+        /// Creates a new .NET wrapping exception with a caller-supplied message.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
+        /// <param name="source">The position in the script where the exception was triggered.</param>
+        /// <param name="innerException">The .NET exception triggered by user-code.</param>
+        public LuaScriptException(string message, string source, Exception innerException)
+            : base(message, innerException)
+        {
+            _source = source;
+            IsNetException = true;
+        }
+
         public override string ToString()
         {
             // Prepend the error source

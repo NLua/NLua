@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BinderClass\LuaTestClassHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CodeGenTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InnerExceptionPreservationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\DoWorkClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\IFoo1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestTypes\IFoo2.cs" />

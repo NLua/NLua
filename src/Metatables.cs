@@ -643,11 +643,15 @@ namespace NLua
                 }
                 catch (TargetInvocationException e)
                 {
-                    // Provide a more readable description for the common case of key not found
+                    // Provide a more readable description for the common case of key not found.
+                    // The original CLR exception is preserved as InnerException so C#-side
+                    // callers can route on the original type rather than string-matching
+                    // the message.
+                    Exception inner = e.InnerException ?? e;
                     if (e.InnerException is KeyNotFoundException)
-                        _translator.ThrowError(luaState, "key '" + index + "' not found ");
+                        _translator.ThrowError(luaState, "key '" + index + "' not found ", inner);
                     else
-                        _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
+                        _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message, inner);
 
                     return 1;
                 }
@@ -689,11 +693,15 @@ namespace NLua
                 }
                 catch (TargetInvocationException e)
                 {
-                    // Provide a more readable description for the common case of key not found
+                    // Provide a more readable description for the common case of key not found.
+                    // The original CLR exception is preserved as InnerException so C#-side
+                    // callers can route on the original type rather than string-matching
+                    // the message.
+                    Exception inner = e.InnerException ?? e;
                     if (e.InnerException is KeyNotFoundException)
-                        _translator.ThrowError(luaState, "key '" + index + "' not found ");
+                        _translator.ThrowError(luaState, "key '" + index + "' not found ", inner);
                     else
-                        _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message);
+                        _translator.ThrowError(luaState, "exception indexing '" + index + "' " + e.Message, inner);
 
                     return 1;
                 }
