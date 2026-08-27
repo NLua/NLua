@@ -494,32 +494,35 @@ namespace NLua
             int oldTop = _luaState.GetTop();
             _executing = true;
 
-            if (_luaState.LoadBuffer(chunk, chunkName) != LuaStatus.OK)
-                ThrowExceptionFromError(oldTop);
-
             int errorFunctionIndex = 0;
-
-            if (UseTraceback)
-            {
-                errorFunctionIndex = PushDebugTraceback(_luaState, 0);
-                oldTop++;
-            }
+            bool tracebackPushed = false;
 
             try
             {
+                if (_luaState.LoadBuffer(chunk, chunkName) != LuaStatus.OK)
+                    ThrowExceptionFromError(oldTop);
+
+                if (UseTraceback)
+                {
+                    errorFunctionIndex = PushDebugTraceback(_luaState, 0);
+                    oldTop++;
+                    tracebackPushed = true;
+                }
+
                 if (_luaState.PCall(0, -1, errorFunctionIndex) != LuaStatus.OK)
                     ThrowExceptionFromError(oldTop);
 
-                var results = _translator.PopValues(_luaState, oldTop);
-
-                if (UseTraceback)
-                    _luaState.SetTop(oldTop - 1);
-
-                return results;
+                return _translator.PopValues(_luaState, oldTop);
             }
             finally
             {
                 _executing = false;
+
+                // Pop the debug.traceback error handler pushed above. This must happen on
+                // every exit path - including the error path, where ThrowExceptionFromError
+                // rewinds only as far as oldTop and so leaves the handler behind.
+                if (tracebackPushed)
+                    _luaState.SetTop(oldTop - 1);
             }
         }
 
@@ -534,32 +537,35 @@ namespace NLua
             int oldTop = _luaState.GetTop();
             _executing = true;
 
-            if (_luaState.LoadString(chunk, chunkName) != LuaStatus.OK)
-                ThrowExceptionFromError(oldTop);
-
             int errorFunctionIndex = 0;
-
-            if (UseTraceback)
-            {
-                errorFunctionIndex = PushDebugTraceback(_luaState, 0);
-                oldTop++;
-            }
+            bool tracebackPushed = false;
 
             try
             {
+                if (_luaState.LoadString(chunk, chunkName) != LuaStatus.OK)
+                    ThrowExceptionFromError(oldTop);
+
+                if (UseTraceback)
+                {
+                    errorFunctionIndex = PushDebugTraceback(_luaState, 0);
+                    oldTop++;
+                    tracebackPushed = true;
+                }
+
                 if (_luaState.PCall(0, -1, errorFunctionIndex) != LuaStatus.OK)
                     ThrowExceptionFromError(oldTop);
 
-                var results = _translator.PopValues(_luaState, oldTop);
-
-                if (UseTraceback)
-                    _luaState.SetTop(oldTop - 1);
-
-                return results;
+                return _translator.PopValues(_luaState, oldTop);
             }
             finally
             {
                 _executing = false;
+
+                // Pop the debug.traceback error handler pushed above. This must happen on
+                // every exit path - including the error path, where ThrowExceptionFromError
+                // rewinds only as far as oldTop and so leaves the handler behind.
+                if (tracebackPushed)
+                    _luaState.SetTop(oldTop - 1);
             }
         }
 
@@ -577,27 +583,31 @@ namespace NLua
             _executing = true;
 
             int errorFunctionIndex = 0;
-            if (UseTraceback)
-            {
-                errorFunctionIndex = PushDebugTraceback(_luaState, 0);
-                oldTop++;
-            }
+            bool tracebackPushed = false;
 
             try
             {
+                if (UseTraceback)
+                {
+                    errorFunctionIndex = PushDebugTraceback(_luaState, 0);
+                    oldTop++;
+                    tracebackPushed = true;
+                }
+
                 if (_luaState.PCall(0, -1, errorFunctionIndex) != LuaStatus.OK)
                     ThrowExceptionFromError(oldTop);
 
-                var results = _translator.PopValues(_luaState, oldTop);
-
-                if (UseTraceback)
-                    _luaState.SetTop(oldTop - 1);
-
-                return results;
+                return _translator.PopValues(_luaState, oldTop);
             }
             finally
             {
                 _executing = false;
+
+                // Pop the debug.traceback error handler pushed above. This must happen on
+                // every exit path - including the error path, where ThrowExceptionFromError
+                // rewinds only as far as oldTop and so leaves the handler behind.
+                if (tracebackPushed)
+                    _luaState.SetTop(oldTop - 1);
             }
         }
 
@@ -845,6 +855,7 @@ namespace NLua
             }
 
             _executing = true;
+            bool tracebackPushed = false;
 
             try
             {
@@ -853,28 +864,28 @@ namespace NLua
                 {
                     errfunction = PushDebugTraceback(_luaState, nArgs);
                     oldTop++;
+                    tracebackPushed = true;
                 }
 
                 LuaStatus error = _luaState.PCall(nArgs, -1, errfunction);
                 if (error != LuaStatus.OK)
                     ThrowExceptionFromError(oldTop);
+
+                if (returnTypes != null)
+                    return _translator.PopValues(_luaState, oldTop, returnTypes);
+
+                return _translator.PopValues(_luaState, oldTop);
             }
             finally
             {
                 _executing = false;
+
+                // Pop the debug.traceback error handler pushed above. This must happen on
+                // every exit path - including the error path, where ThrowExceptionFromError
+                // rewinds only as far as oldTop and so leaves the handler behind.
+                if (tracebackPushed)
+                    _luaState.SetTop(oldTop - 1);
             }
-
-            object[] results;
-
-            if (returnTypes != null)
-                results = _translator.PopValues(_luaState, oldTop, returnTypes);
-            else
-                results = _translator.PopValues(_luaState, oldTop);
-
-            if (UseTraceback)
-                _luaState.SetTop(oldTop - 1);
-
-            return results;
         }
 
         /*

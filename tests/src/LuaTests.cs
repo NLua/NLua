@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using KeraLua;
@@ -3390,6 +3391,165 @@ namespace NLuaTest
                 int topAfter = lua.State.GetTop();
                 Assert.AreEqual(topBefore, topAfter,
                     $"Lua stack leaked {topAfter - topBefore} slots over 10000 calls with UseTraceback=false");
+            }
+        }
+
+        [Test]
+        public void UseTraceback_CallFunction_Error_NoStackLeak()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.UseTraceback = true;
+                lua.DoString("function fail_fn() error('boom') end");
+                var fn = lua["fail_fn"] as LuaFunction;
+
+                int topBefore = lua.State.GetTop();
+
+                for (int i = 0; i < 1000; i++)
+                {
+                    try
+                    {
+                        fn.Call();
+                    }
+                    catch (LuaScriptException)
+                    {
+                    }
+                }
+
+                int topAfter = lua.State.GetTop();
+                Assert.AreEqual(topBefore, topAfter,
+                    $"Lua stack leaked {topAfter - topBefore} slots over 1000 failing calls with UseTraceback=true");
+            }
+        }
+
+        [Test]
+        public void UseTraceback_DoString_Error_NoStackLeak()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.UseTraceback = true;
+
+                int topBefore = lua.State.GetTop();
+
+                for (int i = 0; i < 1000; i++)
+                {
+                    try
+                    {
+                        lua.DoString("error('boom')");
+                    }
+                    catch (LuaScriptException)
+                    {
+                    }
+                }
+
+                int topAfter = lua.State.GetTop();
+                Assert.AreEqual(topBefore, topAfter,
+                    $"Lua stack leaked {topAfter - topBefore} slots over 1000 failing DoString calls with UseTraceback=true");
+            }
+        }
+
+        [Test]
+        public void UseTraceback_DoFile_Error_NoStackLeak()
+        {
+            string path = Path.Combine(Path.GetTempPath(), $"nlua_traceback_err_{Guid.NewGuid():N}.lua");
+            File.WriteAllText(path, "error('boom')");
+
+            try
+            {
+                using (Lua lua = new Lua())
+                {
+                    lua.UseTraceback = true;
+
+                    int topBefore = lua.State.GetTop();
+
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        try
+                        {
+                            lua.DoFile(path);
+                        }
+                        catch (LuaScriptException)
+                        {
+                        }
+                    }
+
+                    int topAfter = lua.State.GetTop();
+                    Assert.AreEqual(topBefore, topAfter,
+                        $"Lua stack leaked {topAfter - topBefore} slots over 1000 failing DoFile calls with UseTraceback=true");
+                }
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+
+        [Test]
+        public void UseTraceback_Disabled_CallFunction_Error_NoStackLeak()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.UseTraceback = false;
+                lua.DoString("function fail_fn() error('boom') end");
+                var fn = lua["fail_fn"] as LuaFunction;
+
+                int topBefore = lua.State.GetTop();
+
+                for (int i = 0; i < 1000; i++)
+                {
+                    try
+                    {
+                        fn.Call();
+                    }
+                    catch (LuaScriptException)
+                    {
+                    }
+                }
+
+                int topAfter = lua.State.GetTop();
+                Assert.AreEqual(topBefore, topAfter,
+                    $"Lua stack leaked {topAfter - topBefore} slots over 1000 failing calls with UseTraceback=false");
+            }
+        }
+
+        [Test]
+        public void UseTraceback_Disabled_DoString_Error_NoStackLeak()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.UseTraceback = false;
+
+                int topBefore = lua.State.GetTop();
+
+                for (int i = 0; i < 1000; i++)
+                {
+                    try
+                    {
+                        lua.DoString("error('boom')");
+                    }
+                    catch (LuaScriptException)
+                    {
+                    }
+                }
+
+                int topAfter = lua.State.GetTop();
+                Assert.AreEqual(topBefore, topAfter,
+                    $"Lua stack leaked {topAfter - topBefore} slots over 1000 failing DoString calls with UseTraceback=false");
+            }
+        }
+
+        [Test]
+        public void UseTraceback_Error_StillProducesTraceback()
+        {
+            using (Lua lua = new Lua())
+            {
+                lua.UseTraceback = true;
+                lua.DoString("function fail_fn() error('boom') end");
+                var fn = lua["fail_fn"] as LuaFunction;
+
+                var ex = Assert.Throws<LuaScriptException>(() => fn.Call());
+                StringAssert.Contains("stack traceback:", ex.Message,
+                    "UseTraceback=true must still deliver a full Lua traceback on the error path");
             }
         }
 
