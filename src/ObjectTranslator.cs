@@ -17,6 +17,7 @@ using NLua.Extensions;
 using LuaState = KeraLua.Lua;
 using LuaNativeFunction = KeraLua.LuaFunction;
 using System.Runtime.CompilerServices;
+using TypeExtensions = NLua.Extensions.TypeExtensions;
 
 namespace NLua
 {
@@ -315,8 +316,13 @@ namespace NLua
                         return 1;
                     }
                 }
+
                 if (assembly != null && !assemblies.Contains(assembly))
+                {
+                    // clear cache for this list of assemblies
+                    TypeExtensions.ClearExtensionCache(assemblies);
                     assemblies.Add(assembly);
+                }
             }
             catch (Exception e)
             {
